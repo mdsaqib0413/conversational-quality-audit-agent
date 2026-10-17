@@ -80,34 +80,52 @@ streamlit run app/streamlit_app.py
 
 The dataset generation pipeline creates ground-truth audited customer support calls across 6 topics with pre-injected compliance adherence, policy violations, and speech gaps.
 
-### 1. Inspect Available Gemini Models
-Run the model discovery utility to check which Gemini models are available for your API key:
+### 1. Verify Environment & Model Setup
+Verify system dependencies, API credentials, model availability, and structured JSON generation using the automated diagnostic checklist:
+```powershell
+python scripts/check_setup.py
+```
+To discover all models available for your API key that support `generateContent`:
 ```powershell
 python scripts/list_models.py
 ```
-Set the selected model in your `.env` file (e.g., `GEMINI_MODEL=gemini-2.0-flash`).
+Set the selected model in your `.env` file (e.g., `GEMINI_MODEL=gemini-2.5-flash` or `GEMINI_MODEL=gemini-flash-latest`).
 
-### 2. Generate Call Transcripts
-Generate the 48-call scenario matrix using the Gemini API (free tier with configurable delay, resumable):
+### 2. Applicable SOP Steps Mapping
+Transcripts use granular, context-dependent step mappings rather than monolithic SOP checklists:
+- **General Call Flow (`GEN-01` to `GEN-08`):** Universal baseline steps applied across all calls.
+  - `GEN-02`: Recording disclosure within the first two turns.
+  - `GEN-03`: Caller verification requiring **both** Order ID AND the last 4 digits of registered phone number.
+- **Refund Inquiries (`REF-S1` to `REF-S7`):** Applied exclusively when `topic == "refund"`.
+- **Customer Complaints (`ANG-01` to `ANG-06`):** Applied exclusively when `topic == "complaint"`.
+- **Hold & Transfer Scenarios (~1/3 of all calls include exactly one scenario):**
+  - `"hold_only"`: `HLD-01`, `HLD-02`, `HLD-03` (courtesy hold with check-in under 2 min).
+  - `"transfer"`: `HLD-04` (warm transfer to supervisor/specialist with briefing).
+  - `"callback"`: `HLD-05` (supervisor callback commitment within 2-4 hours).
+  - `"none"`: No hold/transfer steps.
+- **Ground Truth Isolation:** Each transcript's `ground_truth.sop_steps` contains strictly and exclusively the step IDs enumerated in its `applicable_steps`.
+
+### 3. Generate Call Transcripts
+Generate transcripts using Gemini with native structured JSON output, thinking budget minimization, truncation auto-recovery, and rate limiting:
 ```powershell
-# Generate all 48 calls (rate-limit safe sequential processing)
-python scripts/generate_transcripts.py --sleep 6.0
+# Interleaved generation across all topics and qualities (rate-limited at 8 RPM)
+python scripts/generate_transcripts.py --limit 6 --interleave --rpm 8
 
-# Or generate first 6 calls for testing
-python scripts/generate_transcripts.py --limit 6
+# Filter by a single topic
+python scripts/generate_transcripts.py --topic refund --limit 8
 
-# Offline deterministic generation (no API key required)
-python scripts/generate_transcripts.py --limit 6 --offline
+# Override model via CLI
+python scripts/generate_transcripts.py --limit 6 --interleave --model gemini-flash-latest
 ```
-Transcripts are output to `data/transcripts/call_XXX.json` alongside `data/transcripts/_manifest.csv`.
+Transcripts are output to `data/transcripts/call_XXX.json` alongside `data/transcripts/_manifest.csv`. In case of failed attempts, raw model outputs are saved to `data/transcripts/_failed/<call_id>_attemptN.txt`.
 
-### 3. Validate Transcripts
-Run strict Pydantic validation across all generated transcripts to ensure consecutive turn indexing, valid rubric step mappings, policy clause verification, and quality bucket integrity:
+### 4. Validate Transcripts
+Run strict Pydantic and rule validation to verify consecutive turn indexing, ground-truth step isolation, topic-matched policy violations, prevention of catalog hint leakage, and verification records:
 ```powershell
 python scripts/validate_transcripts.py
 ```
 
-### 4. Synthesize Audio (Edge-TTS + Pydub)
+### 5. Synthesize Audio (Edge-TTS + Pydub)
 Generate realistic Indian English dual-speaker audio without API keys:
 ```powershell
 # Synthesize first 2 calls (mono + channel-separated stereo)

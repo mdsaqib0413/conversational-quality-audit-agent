@@ -1,10 +1,11 @@
-"""Validate all generated customer call transcripts against rubric and policy rules."""
+"""Validate all generated customer call transcripts against rubric, policy rules, and verification contracts."""
 
+import re
 import sys
 import json
 import logging
 from pathlib import Path
-from typing import List, Dict, Any, Literal
+from typing import List, Dict, Any, Optional, Literal
 from pydantic import BaseModel, Field, ValidationError
 
 if sys.stdout.encoding and sys.stdout.encoding.lower() != "utf-8":
@@ -27,7 +28,7 @@ class TranscriptTurnSchema(BaseModel):
     i: int
     speaker: Literal["agent", "customer"]
     text: str
-    pause_before_sec: float = 0.0
+    pause_before_sec: float = Field(0.0, description="Pause duration before turn in seconds")
     interrupts_previous: bool = False
 
 class PolicyViolationSchema(BaseModel):
@@ -50,7 +51,13 @@ class FullTranscriptSchema(BaseModel):
     split: Literal["train", "test"]
     verified: bool
     applicable_sops: List[str]
+    applicable_steps: List[str] = Field(..., description="List of step IDs applicable to this call")
+    hold_scenario: Optional[str] = "none"
+    customer_name: Optional[str] = None
+    agent_name: Optional[str] = None
+    order_id: Optional[str] = None
     customer_persona: str
+    verification_notes: Optional[str] = None
     turns: List[TranscriptTurnSchema]
     ground_truth: GroundTruthSchema
 
@@ -61,10 +68,16 @@ def load_rubric_data() -> Dict[str, Any]:
         return yaml.safe_load(f)
 
 
+def load_violation_catalog() -> List[Dict[str, Any]]:
+    cat_path = REPO_ROOT / "scripts" / "violation_catalog.yaml"
+    with open(cat_path, "r", encoding="utf-8") as f:
+        data = yaml.safe_load(f)
+    return data.get("violations", [])
+
+
 def load_all_policy_clauses() -> set:
     clauses = set()
     policies_dir = REPO_ROOT / "data" / "policies"
-    import re
     clause_pattern = re.compile(r"###?\s*\[?([A-Z]{3}-\d+\.\d+)\]?")
     for p in policies_dir.glob("*.md"):
         content = p.read_text(encoding="utf-8")
@@ -85,12 +98,10 @@ def validate_all_transcripts():
     all_rubric_steps = {s["step_id"]: s for s in rubric.get("sop_steps", [])}
     critical_steps = {s["step_id"] for s in rubric.get("sop_steps", []) if s.get("critical", False)}
     all_policy_clauses = load_all_policy_clauses()
-
-    # SOP to Step ID mappings from rubric
-    sop_to_steps = {}
-    for s in rubric.get("sop_steps", []):
-        sop_file_stem = Path(s["sop_file"]).stem
-        sop_to_steps.setdefault(sop_file_stem, set()).add(s["step_id"])
+    catalog_violations = load_violation_catalog()
+    catalog_by_clause = {}
+    for v in catalog_violations:
+        catalog_by_clause.setdefault(v["clause_id"], []).append(v)
 
     errors = []
     topic_quality_counts = {}
@@ -126,32 +137,66 @@ def validate_all_transcripts():
         if turn_indices != expected_indices:
             errors.append(f"[{call_id}] Turns are not indexed consecutively 1..N. Got {turn_indices[:5]}...")
 
-        # 3. Check SOP steps belong to applicable SOPs and exist in rubric
-        allowed_steps_for_call = set()
-        for sop in transcript.applicable_sops:
-            allowed_steps_for_call.update(sop_to_steps.get(sop, set()))
+        # 3. Ground-truth steps MUST match applicable_steps exactly
+        gt_steps_set = set(transcript.ground_truth.sop_steps.keys())
+        app_steps_set = set(transcript.applicable_steps)
 
-        for step_id, status in transcript.ground_truth.sop_steps.items():
+        outside_steps = gt_steps_set - app_steps_set
+        if outside_steps:
+            errors.append(f"[{call_id}] ground_truth.sop_steps contains steps outside applicable_steps: {outside_steps}")
+
+        missing_app_steps = app_steps_set - gt_steps_set
+        if missing_app_steps:
+            errors.append(f"[{call_id}] ground_truth.sop_steps is missing steps from applicable_steps: {missing_app_steps}")
+
+        for step_id in gt_steps_set:
             if step_id not in all_rubric_steps:
                 errors.append(f"[{call_id}] Step ID '{step_id}' does not exist in data/rubric.yaml")
-            if step_id not in allowed_steps_for_call:
-                errors.append(f"[{call_id}] Step ID '{step_id}' does not belong to applicable SOPs {transcript.applicable_sops}")
 
-        # 4. Check policy violation clauses exist in policy markdown files
-        # and that violation turn numbers are agent turns
+        # 4. Check for catalog hint text leakage into dialogue
+        all_agent_text = " ".join([t.text.lower() for t in transcript.turns if t.speaker == "agent"])
+        for cat_v in catalog_violations:
+            hint_clean = cat_v["wrong_statement_hint"].lower().strip()
+            if hint_clean in all_agent_text:
+                errors.append(f"[{call_id}] Hint leakage detected! Verbatim catalog hint found in dialogue: '{cat_v['wrong_statement_hint']}'")
+
+        # Check for meta-phrases
+        for bad_prefix in ["agent states that", "agent promises to", "agent tells customer", "agent approves an", "agent assures the"]:
+            if bad_prefix in all_agent_text:
+                errors.append(f"[{call_id}] Hint leakage detected! Meta-prompt phrase '{bad_prefix}' found in dialogue.")
+
+        # 5. Check policy violations:
+        # - clause_id must exist in policy files
+        # - violation turn must be an AGENT turn
+        # - topic of call must match catalog entry topics (violation/topic mismatch)
         turn_speaker_map = {t.i: t.speaker for t in transcript.turns}
         for viol in transcript.ground_truth.policy_violations:
             if viol.clause_id not in all_policy_clauses:
                 errors.append(f"[{call_id}] Clause ID '{viol.clause_id}' does not exist in data/policies/*.md")
-            
+
             speaker = turn_speaker_map.get(viol.turn)
             if speaker != "agent":
-                errors.append(f"[{call_id}] Violation assigned to turn {viol.turn} which is speaker '{speaker}' (must be 'agent')")
+                errors.append(f"[{call_id}] Violation assigned to turn {viol.turn} which is '{speaker}' (must be 'agent')")
 
-        # 5. Quality bucket compliance checks
+            # Check topic mismatch
+            matching_cat_entries = catalog_by_clause.get(viol.clause_id, [])
+            valid_for_topic = any(topic in entry.get("topics", []) for entry in matching_cat_entries)
+            if not valid_for_topic:
+                errors.append(
+                    f"[{call_id}] Violation topic mismatch! Clause '{viol.clause_id}' is not mapped to topic '{topic}' in violation catalog."
+                )
+
+        # 6. Check verified=True without verification record
+        if transcript.verified:
+            notes = (transcript.verification_notes or "").strip()
+            if not notes:
+                errors.append(f"[{call_id}] verified=True without a verification record / verification_notes!")
+            elif "failed" in notes.lower() and "passed" not in notes.lower():
+                errors.append(f"[{call_id}] verified=True but verification_notes indicate failure: '{notes}'")
+
+        # 7. Quality bucket compliance checks
         gt = transcript.ground_truth
         if quality == "good":
-            # All steps must be followed
             non_followed = [s for s, st in gt.sop_steps.items() if st != "followed"]
             if non_followed:
                 errors.append(f"[{call_id}] Good call has non-followed steps: {non_followed}")
@@ -159,21 +204,17 @@ def validate_all_transcripts():
                 errors.append(f"[{call_id}] Good call must have 0 policy violations, found {len(gt.policy_violations)}")
 
         elif quality == "mild_deviation":
-            # No critical step may be missed
             missed_critical = [s for s, st in gt.sop_steps.items() if s in critical_steps and st == "missed"]
             if missed_critical:
                 errors.append(f"[{call_id}] Mild deviation call has missed critical step(s): {missed_critical}")
-            # Policy violations must only be minor (at most 1)
             bad_viols = [v for v in gt.policy_violations if v.severity in ["major", "critical"]]
             if bad_viols:
                 errors.append(f"[{call_id}] Mild deviation call cannot have major/critical violations: {[v.clause_id for v in bad_viols]}")
 
         elif quality == "bad_deviation":
-            # At least 1 critical step missed
             missed_critical = [s for s, st in gt.sop_steps.items() if s in critical_steps and st == "missed"]
             if not missed_critical:
                 errors.append(f"[{call_id}] Bad deviation call must have at least 1 missed critical step")
-            # And at least 1 major or critical policy violation
             major_crit_viols = [v for v in gt.policy_violations if v.severity in ["major", "critical"]]
             if not major_crit_viols:
                 errors.append(f"[{call_id}] Bad deviation call must have at least 1 major/critical policy violation")
@@ -205,7 +246,7 @@ def validate_all_transcripts():
             print(f"  ... and {len(errors) - 25} more errors.")
         return 1
 
-    print("\n✅ All transcripts passed strict validation against rubric and policy schemas!")
+    print("\n✅ All transcripts passed strict validation against rubric, policy, and verification schemas!")
     return 0
 
 

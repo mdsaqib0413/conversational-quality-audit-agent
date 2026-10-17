@@ -1,0 +1,205 @@
+{
+  "id": "call_033",
+  "topic": "complaint",
+  "quality": "mild_deviation",
+  "split": "train",
+  "applicable_sops": [
+    "general_call_flow",
+    "angry_customer_sop",
+    "hold_and_transfer_sop"
+  ],
+  "applicable_steps": [
+    "GEN-01",
+    "GEN-02",
+    "GEN-03",
+    "GEN-04",
+    "GEN-05",
+    "GEN-06",
+    "GEN-07",
+    "GEN-08",
+    "ANG-01",
+    "ANG-02",
+    "ANG-03",
+    "ANG-04",
+    "ANG-05",
+    "ANG-06",
+    "HLD-01",
+    "HLD-02",
+    "HLD-03"
+  ],
+  "hold_scenario": "hold_only",
+  "product_name": "Prestige Electric Kettle 1.5L",
+  "product_price": 899,
+  "product_category": "electronics",
+  "order_id": "ORD-81121",
+  "registered_phone_last4": "8633",
+  "agent_name": "Neha Gupta",
+  "customer_name": "Rajesh Kumar",
+  "customer_persona": "Rajesh Kumar is an anxious, family-oriented customer who ordered an electric kettle for his elderly parents and is frustrated by an unexpected shipping delay.",
+  "turns": [
+    {
+      "i": 1,
+      "speaker": "agent",
+      "text": "Thank you for calling ShopEase customer care. My name is Neha Gupta. Please note that this call is being recorded for quality monitoring and training purposes. How may I assist you today?",
+      "pause_before_sec": 0.5,
+      "interrupts_previous": false
+    },
+    {
+      "i": 2,
+      "speaker": "customer",
+      "text": "Hi Neha, this is Rajesh Kumar. I am really frustrated right now. I placed an order for a Prestige Electric Kettle 1.5L which was guaranteed to be delivered yesterday, but nobody turned up, and there was zero communication!",
+      "pause_before_sec": 0.8,
+      "interrupts_previous": false
+    },
+    {
+      "i": 3,
+      "speaker": "agent",
+      "text": "I am truly sorry to hear about the delay, Mr. Kumar. I will certainly look into this for you. To ensure your account security, could you please confirm your Order ID along with the last four digits of your registered mobile number?",
+      "pause_before_sec": 0.7,
+      "interrupts_previous": false
+    },
+    {
+      "i": 4,
+      "speaker": "customer",
+      "text": "Yes, the Order ID is ORD-81121 and the last four digits of my mobile number are 8633.",
+      "pause_before_sec": 0.6,
+      "interrupts_previous": false
+    },
+    {
+      "i": 5,
+      "speaker": "agent",
+      "text": "Thank you for confirming those details, Mr. Kumar. I completely understand how frustrating it is to wait at home expecting a delivery that does not arrive. You have reached the right person, and I will take personal ownership to resolve this for you.",
+      "pause_before_sec": 0.6,
+      "interrupts_previous": false
+    },
+    {
+      "i": 6,
+      "speaker": "customer",
+      "text": "I appreciate that, Neha. I needed the kettle urgently to boil drinking water for my elderly parents, so the delay caused real inconvenience.",
+      "pause_before_sec": 0.9,
+      "interrupts_previous": false
+    },
+    {
+      "i": 7,
+      "speaker": "agent",
+      "text": "I completely understand the urgency in this situation. To help me check the courier logs accurately, did you receive any message or call from the delivery partner yesterday?",
+      "pause_before_sec": 0.5,
+      "interrupts_previous": false
+    },
+    {
+      "i": 8,
+      "speaker": "customer",
+      "text": "No, there was no call or SMS at all. The app showed 'out for delivery' around noon, and by 8 PM it just changed back to 'in transit at local hub'.",
+      "pause_before_sec": 0.8,
+      "interrupts_previous": false
+    },
+    {
+      "i": 9,
+      "speaker": "agent",
+      "text": "Understood. To check the exact status with our local hub dispatch manager and ensure your parcel moves out immediately, may I place your call on a brief hold for about one minute?",
+      "pause_before_sec": 0.7,
+      "interrupts_previous": false
+    },
+    {
+      "i": 10,
+      "speaker": "customer",
+      "text": "Yes, please check and let me know what is happening.",
+      "pause_before_sec": 0.4,
+      "interrupts_previous": false
+    },
+    {
+      "i": 11,
+      "speaker": "agent",
+      "text": "Thank you so much for holding, Mr. Kumar. I truly appreciate your patience while I was looking into this.",
+      "pause_before_sec": 1.1,
+      "interrupts_previous": false
+    },
+    {
+      "i": 12,
+      "speaker": "agent",
+      "text": "I coordinated directly with our hub supervisor. The Prestige Electric Kettle has been assigned to a priority logistics rider for immediate dispatch. Also, because of the one-day shipping delay past your promised delivery window, I have processed 1,000 rupees as wallet credit directly into your ShopEase account as compensation.",
+      "pause_before_sec": 0.6,
+      "interrupts_previous": false
+    },
+    {
+      "i": 13,
+      "speaker": "customer",
+      "text": "Okay, that is helpful. But when exactly can I expect the delivery executive to reach my home today?",
+      "pause_before_sec": 0.9,
+      "interrupts_previous": false
+    },
+    {
+      "i": 14,
+      "speaker": "agent",
+      "text": "The delivery executive will bring the package straight to your doorstep today, and you will receive an SMS alert with their direct contact number as soon as the van leaves the gate.",
+      "pause_before_sec": 0.7,
+      "interrupts_previous": false
+    },
+    {
+      "i": 15,
+      "speaker": "customer",
+      "text": "Alright, as long as it arrives before evening, that works fine for me. Thank you for looking into it so promptly.",
+      "pause_before_sec": 0.8,
+      "interrupts_previous": false
+    },
+    {
+      "i": 16,
+      "speaker": "agent",
+      "text": "To recap, your Prestige Electric Kettle for order ORD-81121 is expedited for delivery today, and the wallet credit has been added to your ShopEase balance. Aside from this, is there anything else I may help you with today, Mr. Kumar?",
+      "pause_before_sec": 0.5,
+      "interrupts_previous": false
+    },
+    {
+      "i": 17,
+      "speaker": "customer",
+      "text": "No, that resolves my concern. Thank you, Neha.",
+      "pause_before_sec": 0.7,
+      "interrupts_previous": false
+    },
+    {
+      "i": 18,
+      "speaker": "agent",
+      "text": "You are most welcome, Mr. Kumar. Thank you for calling ShopEase. We appreciate your patience and hope you have a pleasant day ahead!",
+      "pause_before_sec": 0.5,
+      "interrupts_previous": false
+    }
+  ],
+  "ground_truth": {
+    "sop_steps": {
+      "GEN-01": "followed",
+      "GEN-02": "followed",
+      "GEN-03": "followed",
+      "GEN-04": "partial",
+      "GEN-05": "followed",
+      "GEN-06": "followed",
+      "GEN-07": "followed",
+      "GEN-08": "followed",
+      "ANG-01": "followed",
+      "ANG-02": "followed",
+      "ANG-03": "followed",
+      "ANG-04": "partial",
+      "ANG-05": "followed",
+      "ANG-06": "followed",
+      "HLD-01": "followed",
+      "HLD-02": "followed",
+      "HLD-03": "followed"
+    },
+    "policy_violations": [
+      {
+        "turn": 12,
+        "said": "I coordinated directly with our hub supervisor. The Prestige Electric Kettle has been assigned to a priority logistics rider for immediate dispatch. Also, because of the one-day shipping delay past your promised delivery window, I have processed 1,000 rupees as wallet credit directly into your ShopEase account as compensation.",
+        "clause_id": "SHP-2.3",
+        "severity": "minor",
+        "correct_fact": "Verified operational delay past SLA qualifies for Rs 100 goodwill wallet credit."
+      }
+    ],
+    "customer_emotion_arc": [
+      "frustrated",
+      "neutral",
+      "neutral"
+    ],
+    "gaps": []
+  },
+  "verified": false,
+  "verification_notes": "Failed verification: The transcript failed compliance verification because critical step ANG-05 (supervisor escalation) was not executed by the agent, despite being listed as an expected followed step.; ANG-05 was required to be followed, but the agent resolved the issue directly without executing a supervisor escalation."
+}

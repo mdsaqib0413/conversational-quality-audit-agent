@@ -11,7 +11,7 @@ if sys.stdout.encoding and sys.stdout.encoding.lower() != "utf-8":
     except Exception:
         pass
 
-load_dotenv()
+load_dotenv(override=True)
 
 def list_supported_models():
     api_key = os.getenv("GEMINI_API_KEY", "").strip()

@@ -10,6 +10,7 @@ violations:
     severity: major
     correct_fact: "Electronics return window is strictly 7 calendar days from delivery date."
     wrong_statement_hint: "Agent states that electronics have a 14-day or 30-day return window."
+    detect: ["(?i)electronics.*(14|30)-day.*return window"]
 
   - id: VIOL-REF-002
     topics: ["refund", "general"]
@@ -17,6 +18,7 @@ violations:
     severity: minor
     correct_fact: "Non-electronics (apparel, lifestyle) have a 14-day return window."
     wrong_statement_hint: "Agent mistakenly claims non-electronics items can only be returned within 7 days."
+    detect: ["(?i)non-electronics.*(7).*days.*return"]
 
   - id: VIOL-REF-003
     topics: ["refund", "billing"]
@@ -24,6 +26,7 @@ violations:
     severity: major
     correct_fact: "Approved refunds are processed in 5 to 7 business days following return pickup."
     wrong_statement_hint: "Agent promises the refund will be credited instantly or within 24 hours."
+    detect: ["(?i)refund.*instantly|within 24 hours"]
 
   - id: VIOL-REF-004
     topics: ["refund", "billing"]
@@ -31,6 +34,7 @@ violations:
     severity: minor
     correct_fact: "Approved refunds take 5 to 7 business days."
     wrong_statement_hint: "Agent tells customer to expect their refund in 15 to 20 working days."
+    detect: ["(?i)refund.*15 to 20 working days"]
 
   - id: VIOL-REF-005
     topics: ["refund", "billing"]
@@ -38,6 +42,7 @@ violations:
     severity: critical
     correct_fact: "Refunds must return strictly to the original payment method, or via NEFT for COD."
     wrong_statement_hint: "Agent promises to transfer the refund to an alternate friend's Paytm or Google Pay wallet."
+    detect: ["(?i)transfer.*alternate.*Paytm|Google Pay"]
 
   - id: VIOL-REF-006
     topics: ["refund", "billing"]
@@ -45,6 +50,7 @@ violations:
     severity: major
     correct_fact: "COD refunds are remitted via NEFT bank transfer; delivery partners never hand over cash."
     wrong_statement_hint: "Agent assures the caller that the courier delivery agent will hand them physical cash during pickup."
+    detect: ["(?i)courier.*hand.*cash.*pickup"]
 
   - id: VIOL-REF-007
     topics: ["refund", "complaint"]
@@ -52,6 +58,7 @@ violations:
     severity: critical
     correct_fact: "Frontline agent discretionary refund approval limit is capped at Rs 5,000."
     wrong_statement_hint: "Agent approves an Rs 8,500 refund on their own authority without supervisor clearance."
+    detect: ["(?i)Rs 8,500.*refund.*without supervisor"]
 
   - id: VIOL-REF-008
     topics: ["refund", "complaint"]
@@ -59,6 +66,7 @@ violations:
     severity: major
     correct_fact: "Agent refund approval limit is Rs 5,000; requests above Rs 5,000 require supervisor sign-off."
     wrong_statement_hint: "Agent tells caller they cannot approve an Rs 3,000 refund because their limit is only Rs 1,000."
+    detect: ["(?i)Rs 3,000.*limit.*Rs 1,000"]
 
   - id: VIOL-REF-009
     topics: ["refund", "general"]
@@ -66,6 +74,7 @@ violations:
     severity: major
     correct_fact: "Personal hygiene, cosmetics, and innerwear are non-returnable once opened unless DOA/damaged."
     wrong_statement_hint: "Agent accepts a return for opened cosmetics simply because the customer disliked the fragrance."
+    detect: ["(?i)opened cosmetics.*disliked.*fragrance"]
 
   - id: VIOL-REF-010
     topics: ["refund", "shipping"]
@@ -73,6 +82,7 @@ violations:
     severity: minor
     correct_fact: "Reverse pickup is scheduled within 48 to 72 hours, with up to 3 courier attempts."
     wrong_statement_hint: "Agent tells customer the courier will attempt pickup 5 times over the next two weeks."
+    detect: ["(?i)courier.*attempt pickup.*5 times.*two weeks"]
 
   # --- SHIPPING & DELIVERY (SHP) ---
   - id: VIOL-SHP-001
@@ -81,6 +91,7 @@ violations:
     severity: major
     correct_fact: "Standard delivery SLA is 3 to 7 business days from dispatch."
     wrong_statement_hint: "Agent promises standard shipping will arrive guaranteed within 24 to 48 hours."
+    detect: ["(?i)standard shipping.*24 to 48 hours"]
 
   - id: VIOL-SHP-002
     topics: ["shipping", "general"]
@@ -88,6 +99,7 @@ violations:
     severity: minor
     correct_fact: "Express delivery SLA is 1 to 2 business days for eligible pin codes."
     wrong_statement_hint: "Agent states express delivery takes 4 to 5 business days."
+    detect: ["(?i)express delivery.*4 to 5 business days"]
 
   - id: VIOL-SHP-003
     topics: ["shipping", "billing"]
@@ -95,6 +107,7 @@ violations:
     severity: minor
     correct_fact: "Standard delivery is free on orders >= Rs 499; Rs 49 fee applies below Rs 499."
     wrong_statement_hint: "Agent claims shipping is free only above Rs 1,000 and charges Rs 99 standard shipping."
+    detect: ["(?i)shipping.*free only above Rs 1,000.*Rs 99"]
 
   - id: VIOL-SHP-004
     topics: ["shipping", "complaint"]
@@ -102,6 +115,7 @@ violations:
     severity: minor
     correct_fact: "Couriers execute up to 3 delivery attempts before returning shipment to origin (RTO)."
     wrong_statement_hint: "Agent claims courier will only attempt delivery once and then immediately cancel the order."
+    detect: ["(?i)attempt delivery once.*cancel the order"]
 
   - id: VIOL-SHP-005
     topics: ["shipping", "general"]
@@ -109,6 +123,7 @@ violations:
     severity: major
     correct_fact: "Delivery address cannot be modified once order is marked Shipped or Out For Delivery."
     wrong_statement_hint: "Agent promises to re-route an in-transit Out For Delivery package to a completely different city address."
+    detect: ["(?i)re-route.*different city address"]
 
   - id: VIOL-SHP-006
     topics: ["shipping", "complaint"]
@@ -116,6 +131,7 @@ violations:
     severity: minor
     correct_fact: "Verified operational delay past SLA qualifies for Rs 100 goodwill wallet credit."
     wrong_statement_hint: "Agent promises Rs 1,000 cash credit for a 1-day shipping delay."
+    detect: ["(?i)Rs 1,000 cash credit.*1-day shipping delay"]
 
   - id: VIOL-SHP-007
     topics: ["shipping", "privacy"]
@@ -123,6 +139,7 @@ violations:
     severity: critical
     correct_fact: "Delivery verification OTP must never be disclosed by support agents over the phone."
     wrong_statement_hint: "Agent reads out the secret 4-digit delivery OTP to the caller over the phone."
+    detect: ["(?i)delivery OTP.*read out"]
 
   - id: VIOL-SHP-008
     topics: ["shipping", "warranty"]
@@ -130,6 +147,7 @@ violations:
     severity: major
     correct_fact: "Damaged delivery packages must be reported within 48 hours with unboxing photos."
     wrong_statement_hint: "Agent tells caller they have 14 days to report physical transit damage on delivery cartons."
+    detect: ["(?i)14 days.*report.*transit damage"]
 
   - id: VIOL-SHP-009
     topics: ["shipping", "general"]
@@ -145,6 +163,7 @@ violations:
     severity: major
     correct_fact: "Electronics carry a minimum 12-month manufacturer warranty."
     wrong_statement_hint: "Agent claims electronics warranty is only valid for 30 days after delivery."
+    detect: ["(?i)electronics warranty.*30 days"]
 
   - id: VIOL-WAR-002
     topics: ["warranty", "refund"]
@@ -152,6 +171,7 @@ violations:
     severity: critical
     correct_fact: "Transit damage or dead-on-arrival must be reported within 48 hours of delivery with photo proof."
     wrong_statement_hint: "Agent accepts an unverified broken screen reported 25 days after delivery without requiring any photos."
+    detect: ["(?i)25 days.*broken screen.*no photos"]
 
   - id: VIOL-WAR-003
     topics: ["warranty", "refund"]
@@ -159,6 +179,7 @@ violations:
     severity: major
     correct_fact: "Photo or video proof showing box label and damaged item is mandatory for replacement."
     wrong_statement_hint: "Agent tells customer photo proof is completely unnecessary and they will ship a replacement instantly."
+    detect: ["(?i)photo proof.*unnecessary.*replace instantly"]
 
   - id: VIOL-WAR-004
     topics: ["warranty", "complaint"]
@@ -166,6 +187,7 @@ violations:
     severity: minor
     correct_fact: "Free replacement is dispatched within 24 to 48 hours once damage verification is approved."
     wrong_statement_hint: "Agent tells customer replacement dispatch takes 3 to 4 weeks."
+    detect: ["(?i)replacement dispatch.*3 to 4 weeks"]
 
   - id: VIOL-WAR-005
     topics: ["warranty", "complaint"]
@@ -173,6 +195,7 @@ violations:
     severity: major
     correct_fact: "Defects occurring after the 7-day return window must be routed to authorized brand service centers."
     wrong_statement_hint: "Agent promises ShopEase will unconditionally refund a laptop that developed a glitch in month 8."
+    detect: ["(?i)unconditionally refund.*month 8"]
 
   - id: VIOL-WAR-006
     topics: ["warranty", "general"]
@@ -180,6 +203,7 @@ violations:
     severity: minor
     correct_fact: "Certified refurbished electronics carry a 6-month ShopEase warranty."
     wrong_statement_hint: "Agent states refurbished products have zero warranty coverage of any kind."
+    detect: ["(?i)refurbished.*zero warranty"]
 
   # --- BILLING & PAYMENTS (BIL) ---
   - id: VIOL-BIL-001
@@ -188,6 +212,7 @@ violations:
     severity: minor
     correct_fact: "COD is available for domestic shipments up to a maximum cart limit of Rs 10,000."
     wrong_statement_hint: "Agent tells customer COD is available for an order worth Rs 45,000."
+    detect: ["(?i)COD.*Rs 45,000"]
 
   - id: VIOL-BIL-002
     topics: ["billing", "refund"]
@@ -195,6 +220,7 @@ violations:
     severity: major
     correct_fact: "Failed transaction auto-reversal reflects in customer source account in 5 to 7 business days."
     wrong_statement_hint: "Agent guarantees that money deducted during a failed transaction will reflect in their account within 10 minutes."
+    detect: ["(?i)failed transaction.*10 minutes"]
 
   - id: VIOL-BIL-003
     topics: ["billing", "complaint"]
@@ -202,6 +228,7 @@ violations:
     severity: major
     correct_fact: "Duplicate charges are reversed within 24 hours and reflect in 5 to 7 business days."
     wrong_statement_hint: "Agent informs caller that duplicate charges cannot be refunded and can only be used as store credit."
+    detect: ["(?i)duplicate charges.*cannot be refunded"]
 
   - id: VIOL-BIL-004
     topics: ["billing", "complaint"]
@@ -209,6 +236,7 @@ violations:
     severity: critical
     correct_fact: "Frontline agent financial compensation limit is Rs 5,000."
     wrong_statement_hint: "Agent promises Rs 10,000 in direct bank compensation on their own authority."
+    detect: ["(?i)Rs 10,000.*direct bank compensation"]
 
   - id: VIOL-BIL-005
     topics: ["billing", "general"]
@@ -216,6 +244,7 @@ violations:
     severity: minor
     correct_fact: "ShopEase does not offer retroactive price matching after an order is placed."
     wrong_statement_hint: "Agent agrees to refund the price difference after an item goes on flash sale the next day."
+    detect: ["(?i)refund.*price difference.*flash sale"]
 
   - id: VIOL-BIL-006
     topics: ["billing", "general"]
@@ -223,6 +252,7 @@ violations:
     severity: major
     correct_fact: "GSTIN cannot be revised or re-issued on a tax invoice once the order is invoiced."
     wrong_statement_hint: "Agent promises to re-issue an old tax invoice under a different company GST number."
+    detect: ["(?i)re-issue.*different company GST"]
 
   # --- ESCALATION & SUPERVISION (ESC) ---
   - id: VIOL-ESC-001
@@ -231,6 +261,7 @@ violations:
     severity: critical
     correct_fact: "Escalation to supervisor is mandatory if customer asks twice or issue unresolved after 2 attempts."
     wrong_statement_hint: "Agent flatly refuses supervisor transfer after customer repeatedly asks 3 times for a manager."
+    detect: ["(?i)refuses supervisor transfer.*3 times"]
 
   - id: VIOL-ESC-002
     topics: ["complaint", "billing"]
@@ -238,6 +269,7 @@ violations:
     severity: critical
     correct_fact: "Concessions or refunds exceeding Rs 5,000 must be escalated to a supervisor."
     wrong_statement_hint: "Agent refuses to escalate an Rs 15,000 refund dispute and tells customer to deal with it."
+    detect: ["(?i)refuses to escalate.*Rs 15,000"]
 
   - id: VIOL-ESC-003
     topics: ["complaint", "general"]
@@ -245,6 +277,7 @@ violations:
     severity: critical
     correct_fact: "Maximum hold duration is 2 minutes without performing an active check-in with the customer."
     wrong_statement_hint: "Agent places caller on hold for 4 to 5 minutes straight without a single check-in."
+    detect: ["(?i)hold for 4 to 5 minutes.*no check-in"]
 
   - id: VIOL-ESC-004
     topics: ["complaint", "general"]
@@ -252,6 +285,7 @@ violations:
     severity: critical
     correct_fact: "Representatives are strictly prohibited from cold dropping or hanging up on callers."
     wrong_statement_hint: "Agent abruptly hangs up or drops the call on an agitated customer without warning."
+    detect: ["(?i)hang up.*without warning"]
 
   - id: VIOL-ESC-005
     topics: ["complaint", "general"]
@@ -267,6 +301,7 @@ violations:
     severity: critical
     correct_fact: "Mandatory verification (Order ID + last 4 digits of phone) before sharing any account info."
     wrong_statement_hint: "Agent reveals full customer home address and purchase history before asking for verification."
+    detect: ["(?i)reveals full address.*before verification"]
 
   - id: VIOL-PRV-002
     topics: ["general", "refund", "billing", "shipping", "complaint", "warranty"]
@@ -274,6 +309,7 @@ violations:
     severity: critical
     correct_fact: "Mandatory call recording disclosure must be delivered at the start of every interaction."
     wrong_statement_hint: "Agent completely skips the recorded call disclosure statement during opening greeting."
+    detect: ["(?i)skip.*call disclosure"]
 
   - id: VIOL-PRV-003
     topics: ["privacy", "general"]
@@ -281,6 +317,7 @@ violations:
     severity: critical
     correct_fact: "If caller fails authentication after 2 attempts, no account details may be disclosed."
     wrong_statement_hint: "Agent helps unverified caller by guessing and reading out the account phone number to them."
+    detect: ["(?i)guess.*read out.*account phone"]
 
   - id: VIOL-PRV-004
     topics: ["privacy", "billing"]
@@ -288,6 +325,7 @@ violations:
     severity: critical
     correct_fact: "Agents must never ask for or record CVV codes, card PINs, or login OTPs."
     wrong_statement_hint: "Agent explicitly asks the customer to read out their 3-digit card CVV or login OTP over the phone."
+    detect: ["(?i)ask.*card CVV.*login OTP"]
 
   - id: VIOL-PRV-005
     topics: ["privacy", "shipping"]
@@ -295,3 +333,4 @@ violations:
     severity: minor
     correct_fact: "Address must be partially masked (only name, city, pin code) during verbal confirmation."
     wrong_statement_hint: "Agent reads out caller's full house number, apartment, and street address without masking."
+    detect: ["(?i)full house number.*without masking"]
