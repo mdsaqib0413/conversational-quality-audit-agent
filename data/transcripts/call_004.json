@@ -1,0 +1,155 @@
+{
+  "id": "call_004",
+  "topic": "refund",
+  "quality": "mild_deviation",
+  "split": "train",
+  "verified": true,
+  "applicable_sops": [
+    "general_call_flow",
+    "refund_call_sop"
+  ],
+  "customer_persona": "Customer inquiring about refund on Prestige Electric Kettle 1.5L",
+  "turns": [
+    {
+      "i": 1,
+      "speaker": "agent",
+      "text": "Thank you for calling ShopEase. My name is Rohan. Please note this call is recorded for quality monitoring. How may I assist you today?",
+      "pause_before_sec": 0.0,
+      "interrupts_previous": false
+    },
+    {
+      "i": 2,
+      "speaker": "customer",
+      "text": "Hello Rohan, I purchased the Prestige Electric Kettle 1.5L for Rs 899 last week, and I need help with my refund.",
+      "pause_before_sec": 0.5,
+      "interrupts_previous": false
+    },
+    {
+      "i": 3,
+      "speaker": "agent",
+      "text": "I can certainly assist you with that. For security verification, could you please confirm your Order ID and the last four digits of your registered mobile number?",
+      "pause_before_sec": 0.5,
+      "interrupts_previous": false
+    },
+    {
+      "i": 4,
+      "speaker": "customer",
+      "text": "Yes, my Order ID is ORD-88421 and my phone number ends in 4109.",
+      "pause_before_sec": 0.5,
+      "interrupts_previous": false
+    },
+    {
+      "i": 5,
+      "speaker": "agent",
+      "text": "Thank you for validating your details. I understand you are having an issue with the Prestige Electric Kettle 1.5L, and I will take full ownership to help resolve this.",
+      "pause_before_sec": 0.5,
+      "interrupts_previous": false
+    },
+    {
+      "i": 6,
+      "speaker": "customer",
+      "text": "The item stopped working after 3 days. I want to know what options I have under ShopEase policies.",
+      "pause_before_sec": 0.5,
+      "interrupts_previous": false
+    },
+    {
+      "i": 7,
+      "speaker": "agent",
+      "text": "As per our rules, Agent mistakenly claims non-electronics items can only be returned within 7 days. So I will arrange that for you right away.",
+      "pause_before_sec": 4.5,
+      "interrupts_previous": false
+    },
+    {
+      "i": 8,
+      "speaker": "customer",
+      "text": "Okay, that sounds completely reasonable and clear. How will the courier collect it?",
+      "pause_before_sec": 0.5,
+      "interrupts_previous": false
+    },
+    {
+      "i": 9,
+      "speaker": "agent",
+      "text": "Our logistics partner will visit your address within 48 to 72 hours. Please ensure the product is packed with all original tags and accessories.",
+      "pause_before_sec": 0.5,
+      "interrupts_previous": false
+    },
+    {
+      "i": 10,
+      "speaker": "customer",
+      "text": "Understood. Will I get an SMS notification before the courier arrives?",
+      "pause_before_sec": 0.5,
+      "interrupts_previous": false
+    },
+    {
+      "i": 11,
+      "speaker": "agent",
+      "text": "Yes, absolutely. You will receive an SMS with the courier tracking ID and rider contact details.",
+      "pause_before_sec": 0.5,
+      "interrupts_previous": false
+    },
+    {
+      "i": 12,
+      "speaker": "customer",
+      "text": "Great, thank you for clarifying that for me.",
+      "pause_before_sec": 0.5,
+      "interrupts_previous": false
+    },
+    {
+      "i": 13,
+      "speaker": "agent",
+      "text": "To summarize, I have initiated ticket #SR-77123 for your item. Is there anything else I may help you with today?",
+      "pause_before_sec": 0.5,
+      "interrupts_previous": false
+    },
+    {
+      "i": 14,
+      "speaker": "customer",
+      "text": "No, that covers everything. Thank you for your assistance.",
+      "pause_before_sec": 0.5,
+      "interrupts_previous": false
+    },
+    {
+      "i": 15,
+      "speaker": "agent",
+      "text": "Thank you for choosing ShopEase. We appreciate your patience and wish you a wonderful day ahead!",
+      "pause_before_sec": 0.5,
+      "interrupts_previous": false
+    }
+  ],
+  "ground_truth": {
+    "sop_steps": {
+      "GEN-01": "followed",
+      "GEN-02": "followed",
+      "GEN-03": "followed",
+      "GEN-04": "followed",
+      "GEN-05": "followed",
+      "GEN-06": "followed",
+      "GEN-07": "missed",
+      "GEN-08": "followed",
+      "REF-S1": "followed",
+      "REF-S2": "followed",
+      "REF-S3": "partial",
+      "REF-S4": "followed",
+      "REF-S5": "followed",
+      "REF-S6": "followed",
+      "REF-S7": "followed"
+    },
+    "policy_violations": [
+      {
+        "turn": 7,
+        "said": "As per our rules, Agent mistakenly claims non-electronics items can only be returned within 7 days. So I will arrange that for you right away.",
+        "clause_id": "REF-1.1",
+        "severity": "minor",
+        "correct_fact": "Non-electronics (apparel, lifestyle) have a 14-day return window."
+      }
+    ],
+    "customer_emotion_arc": [
+      "neutral",
+      "neutral",
+      "satisfied"
+    ],
+    "gaps": [
+      "dead_air"
+    ]
+  }
+}

@@ -1,0 +1,40 @@
+# Virtual Environment
+.venv/
+venv/
+ENV/
+env/
+
+# Environment Variables
+.env
+.env.local
+
+# Python cache & build
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+build/
+dist/
+*.egg-info/
+
+# Chroma Vector Database
+chroma_db/
+data/chroma_db/
+.chroma/
+
+# Audio Data (keep directory structure via .gitkeep)
+data/audio/*
+!data/audio/.gitkeep
+
+# Streamlit & Cache
+.streamlit/
+.cache/
+
+# Testing & Coverage
+.pytest_cache/
+.coverage
+htmlcov/
+
+# Logs & temp
+*.log
+scratch/

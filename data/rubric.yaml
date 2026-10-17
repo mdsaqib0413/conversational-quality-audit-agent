@@ -1,0 +1,228 @@
+# ShopEase Customer Support Call Quality Audit Rubric
+# Team: Vibe Check Crew
+version: 1.0
+last_updated: 2026-10-15
+
+categories:
+  sop_adherence: 40
+  policy_compliance: 30
+  empathy: 15
+  communication: 15
+
+scoring_formula:
+  sop_step_points: "weight * multiplier [followed: 1.0, partial: 0.5, missed: 0.0]"
+  category_score_sop: "(total_sop_points_earned / total_sop_points_possible) * 40"
+  policy_compliance_penalties:
+    minor: 3
+    major: 8
+    critical: 15
+  category_score_policy: "max(0, 30 - sum(policy_penalties))"
+  overall_score: "sop_score + policy_score + empathy_score + communication_score"
+  critical_failure_cap:
+    condition: "any critical SOP step marked 'missed' OR critical data privacy disclosure breach"
+    max_overall_score: 70
+
+grade_scale:
+  A:
+    min_score: 90.0
+    max_score: 100.0
+    label: "Exemplary Performance"
+  B:
+    min_score: 80.0
+    max_score: 89.9
+    label: "Proficient Compliance"
+  C:
+    min_score: 70.0
+    max_score: 79.9
+    label: "Needs Improvement"
+  D:
+    min_score: 0.0
+    max_score: 69.9
+    label: "Failing / Critical Infraction"
+
+sop_steps:
+  # General Call Flow SOP (GEN)
+  - step_id: GEN-01
+    description: "Professional Greeting & Identity Introduction"
+    sop_file: "general_call_flow.md"
+    weight: 2
+    critical: false
+    mandatory: true
+
+  - step_id: GEN-02
+    description: "Mandatory Call Recording Disclosure"
+    sop_file: "general_call_flow.md"
+    weight: 5
+    critical: true
+    mandatory: true
+
+  - step_id: GEN-03
+    description: "Caller Identification & Two-Factor Verification"
+    sop_file: "general_call_flow.md"
+    weight: 5
+    critical: true
+    mandatory: true
+
+  - step_id: GEN-04
+    description: "Active Listening & Issue Clarification"
+    sop_file: "general_call_flow.md"
+    weight: 3
+    critical: false
+    mandatory: true
+
+  - step_id: GEN-05
+    description: "Empathy & Ownership Statement"
+    sop_file: "general_call_flow.md"
+    weight: 3
+    critical: false
+    mandatory: true
+
+  - step_id: GEN-06
+    description: "Accurate Policy Explanation & Solution Execution (Not promising out-of-policy refunds)"
+    sop_file: "general_call_flow.md"
+    weight: 5
+    critical: true
+    mandatory: true
+
+  - step_id: GEN-07
+    description: "Additional Assistance & Next Steps Summary"
+    sop_file: "general_call_flow.md"
+    weight: 2
+    critical: false
+    mandatory: true
+
+  - step_id: GEN-08
+    description: "Professional Branded Sign-Off"
+    sop_file: "general_call_flow.md"
+    weight: 2
+    critical: false
+    mandatory: true
+
+  # Refund Call SOP (REF-S)
+  - step_id: REF-S1
+    description: "Authenticate Order and Customer Identity (No sharing account data before verification)"
+    sop_file: "refund_call_sop.md"
+    weight: 5
+    critical: true
+    mandatory: true
+
+  - step_id: REF-S2
+    description: "Determine Return Window Eligibility by Category (7 days electronics / 14 days other)"
+    sop_file: "refund_call_sop.md"
+    weight: 4
+    critical: true
+    mandatory: true
+
+  - step_id: REF-S3
+    description: "Inspect Reason for Return and Evidence (48hr photo proof for transit damage)"
+    sop_file: "refund_call_sop.md"
+    weight: 3
+    critical: false
+    mandatory: true
+
+  - step_id: REF-S4
+    description: "Verify Monetary Approval Threshold Limit (Agent <= Rs 5000, supervisor above)"
+    sop_file: "refund_call_sop.md"
+    weight: 4
+    critical: true
+    mandatory: true
+
+  - step_id: REF-S5
+    description: "Communicate Refund Method and Payment Destination (Original payment method / COD via bank)"
+    sop_file: "refund_call_sop.md"
+    weight: 4
+    critical: true
+    mandatory: true
+
+  - step_id: REF-S6
+    description: "Articulate the 5-7 Business Day SLA Timeline"
+    sop_file: "refund_call_sop.md"
+    weight: 3
+    critical: false
+    mandatory: true
+
+  - step_id: REF-S7
+    description: "Generate Reverse Pickup and Share Reference Ticket"
+    sop_file: "refund_call_sop.md"
+    weight: 3
+    critical: false
+    mandatory: true
+
+  # Angry Customer SOP (ANG)
+  - step_id: ANG-01
+    description: "Emotional Composure & Non-Defensive Tone"
+    sop_file: "angry_customer_sop.md"
+    weight: 4
+    critical: false
+    mandatory: true
+
+  - step_id: ANG-02
+    description: "Sincere Empathy & Acknowledgment"
+    sop_file: "angry_customer_sop.md"
+    weight: 4
+    critical: false
+    mandatory: true
+
+  - step_id: ANG-03
+    description: "Fact-Finding Without Cross-Examination"
+    sop_file: "angry_customer_sop.md"
+    weight: 3
+    critical: false
+    mandatory: true
+
+  - step_id: ANG-04
+    description: "Direct Action Plan & Concrete Timelines"
+    sop_file: "angry_customer_sop.md"
+    weight: 3
+    critical: false
+    mandatory: true
+
+  - step_id: ANG-05
+    description: "Supervisor Escalation Execution (Customer asks twice or unresolved after 2 attempts)"
+    sop_file: "angry_customer_sop.md"
+    weight: 5
+    critical: true
+    mandatory: true
+
+  - step_id: ANG-06
+    description: "Respectful Boundary Setting for Abusive Language"
+    sop_file: "angry_customer_sop.md"
+    weight: 3
+    critical: false
+    mandatory: true
+
+  # Hold and Transfer SOP (HLD)
+  - step_id: HLD-01
+    description: "Request Permission and State Reason for Hold"
+    sop_file: "hold_and_transfer_sop.md"
+    weight: 3
+    critical: false
+    mandatory: true
+
+  - step_id: HLD-02
+    description: "Adhere to Maximum 2-Minute Hold Ceiling (Check-in before 2 min)"
+    sop_file: "hold_and_transfer_sop.md"
+    weight: 4
+    critical: true
+    mandatory: true
+
+  - step_id: HLD-03
+    description: "Return From Hold with Gratitude"
+    sop_file: "hold_and_transfer_sop.md"
+    weight: 2
+    critical: false
+    mandatory: true
+
+  - step_id: HLD-04
+    description: "Execute Warm Transfer with Full Context (Brief supervisor prior to bridge)"
+    sop_file: "hold_and_transfer_sop.md"
+    weight: 4
+    critical: true
+    mandatory: true
+
+  - step_id: HLD-05
+    description: "Supervisor Callback Offer When Transfer Unavailable (2-4 hr SLA)"
+    sop_file: "hold_and_transfer_sop.md"
+    weight: 3
+    critical: false
+    mandatory: true

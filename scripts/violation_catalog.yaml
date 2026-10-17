@@ -1,0 +1,297 @@
+# ShopEase Deliberate Agent Policy Violation Catalog
+# Used for ground-truth synthetic call dataset generation and compliance benchmarking.
+# Every clause_id corresponds directly to an existing policy clause in data/policies/.
+
+violations:
+  # --- REFUND & RETURNS (REF) ---
+  - id: VIOL-REF-001
+    topics: ["refund", "warranty"]
+    clause_id: REF-1.1
+    severity: major
+    correct_fact: "Electronics return window is strictly 7 calendar days from delivery date."
+    wrong_statement_hint: "Agent states that electronics have a 14-day or 30-day return window."
+
+  - id: VIOL-REF-002
+    topics: ["refund", "general"]
+    clause_id: REF-1.1
+    severity: minor
+    correct_fact: "Non-electronics (apparel, lifestyle) have a 14-day return window."
+    wrong_statement_hint: "Agent mistakenly claims non-electronics items can only be returned within 7 days."
+
+  - id: VIOL-REF-003
+    topics: ["refund", "billing"]
+    clause_id: REF-2.1
+    severity: major
+    correct_fact: "Approved refunds are processed in 5 to 7 business days following return pickup."
+    wrong_statement_hint: "Agent promises the refund will be credited instantly or within 24 hours."
+
+  - id: VIOL-REF-004
+    topics: ["refund", "billing"]
+    clause_id: REF-2.1
+    severity: minor
+    correct_fact: "Approved refunds take 5 to 7 business days."
+    wrong_statement_hint: "Agent tells customer to expect their refund in 15 to 20 working days."
+
+  - id: VIOL-REF-005
+    topics: ["refund", "billing"]
+    clause_id: REF-2.2
+    severity: critical
+    correct_fact: "Refunds must return strictly to the original payment method, or via NEFT for COD."
+    wrong_statement_hint: "Agent promises to transfer the refund to an alternate friend's Paytm or Google Pay wallet."
+
+  - id: VIOL-REF-006
+    topics: ["refund", "billing"]
+    clause_id: REF-2.2
+    severity: major
+    correct_fact: "COD refunds are remitted via NEFT bank transfer; delivery partners never hand over cash."
+    wrong_statement_hint: "Agent assures the caller that the courier delivery agent will hand them physical cash during pickup."
+
+  - id: VIOL-REF-007
+    topics: ["refund", "complaint"]
+    clause_id: REF-3.1
+    severity: critical
+    correct_fact: "Frontline agent discretionary refund approval limit is capped at Rs 5,000."
+    wrong_statement_hint: "Agent approves an Rs 8,500 refund on their own authority without supervisor clearance."
+
+  - id: VIOL-REF-008
+    topics: ["refund", "complaint"]
+    clause_id: REF-3.1
+    severity: major
+    correct_fact: "Agent refund approval limit is Rs 5,000; requests above Rs 5,000 require supervisor sign-off."
+    wrong_statement_hint: "Agent tells caller they cannot approve an Rs 3,000 refund because their limit is only Rs 1,000."
+
+  - id: VIOL-REF-009
+    topics: ["refund", "general"]
+    clause_id: REF-3.2
+    severity: major
+    correct_fact: "Personal hygiene, cosmetics, and innerwear are non-returnable once opened unless DOA/damaged."
+    wrong_statement_hint: "Agent accepts a return for opened cosmetics simply because the customer disliked the fragrance."
+
+  - id: VIOL-REF-010
+    topics: ["refund", "shipping"]
+    clause_id: REF-4.1
+    severity: minor
+    correct_fact: "Reverse pickup is scheduled within 48 to 72 hours, with up to 3 courier attempts."
+    wrong_statement_hint: "Agent tells customer the courier will attempt pickup 5 times over the next two weeks."
+
+  # --- SHIPPING & DELIVERY (SHP) ---
+  - id: VIOL-SHP-001
+    topics: ["shipping", "general"]
+    clause_id: SHP-1.1
+    severity: major
+    correct_fact: "Standard delivery SLA is 3 to 7 business days from dispatch."
+    wrong_statement_hint: "Agent promises standard shipping will arrive guaranteed within 24 to 48 hours."
+
+  - id: VIOL-SHP-002
+    topics: ["shipping", "general"]
+    clause_id: SHP-1.1
+    severity: minor
+    correct_fact: "Express delivery SLA is 1 to 2 business days for eligible pin codes."
+    wrong_statement_hint: "Agent states express delivery takes 4 to 5 business days."
+
+  - id: VIOL-SHP-003
+    topics: ["shipping", "billing"]
+    clause_id: SHP-1.2
+    severity: minor
+    correct_fact: "Standard delivery is free on orders >= Rs 499; Rs 49 fee applies below Rs 499."
+    wrong_statement_hint: "Agent claims shipping is free only above Rs 1,000 and charges Rs 99 standard shipping."
+
+  - id: VIOL-SHP-004
+    topics: ["shipping", "complaint"]
+    clause_id: SHP-2.1
+    severity: minor
+    correct_fact: "Couriers execute up to 3 delivery attempts before returning shipment to origin (RTO)."
+    wrong_statement_hint: "Agent claims courier will only attempt delivery once and then immediately cancel the order."
+
+  - id: VIOL-SHP-005
+    topics: ["shipping", "general"]
+    clause_id: SHP-2.2
+    severity: major
+    correct_fact: "Delivery address cannot be modified once order is marked Shipped or Out For Delivery."
+    wrong_statement_hint: "Agent promises to re-route an in-transit Out For Delivery package to a completely different city address."
+
+  - id: VIOL-SHP-006
+    topics: ["shipping", "complaint"]
+    clause_id: SHP-2.3
+    severity: minor
+    correct_fact: "Verified operational delay past SLA qualifies for Rs 100 goodwill wallet credit."
+    wrong_statement_hint: "Agent promises Rs 1,000 cash credit for a 1-day shipping delay."
+
+  - id: VIOL-SHP-007
+    topics: ["shipping", "privacy"]
+    clause_id: SHP-3.1
+    severity: critical
+    correct_fact: "Delivery verification OTP must never be disclosed by support agents over the phone."
+    wrong_statement_hint: "Agent reads out the secret 4-digit delivery OTP to the caller over the phone."
+
+  - id: VIOL-SHP-008
+    topics: ["shipping", "warranty"]
+    clause_id: SHP-3.2
+    severity: major
+    correct_fact: "Damaged delivery packages must be reported within 48 hours with unboxing photos."
+    wrong_statement_hint: "Agent tells caller they have 14 days to report physical transit damage on delivery cartons."
+
+  - id: VIOL-SHP-009
+    topics: ["shipping", "general"]
+    clause_id: SHP-4.1
+    severity: minor
+    correct_fact: "Remote zone delivery (J&K, Ladakh, North-East) requires 10 to 12 business days."
+    wrong_statement_hint: "Agent guarantees 3-day express delivery to a remote border pin code in Ladakh."
+
+  # --- WARRANTY & REPLACEMENT (WAR) ---
+  - id: VIOL-WAR-001
+    topics: ["warranty", "general"]
+    clause_id: WAR-1.1
+    severity: major
+    correct_fact: "Electronics carry a minimum 12-month manufacturer warranty."
+    wrong_statement_hint: "Agent claims electronics warranty is only valid for 30 days after delivery."
+
+  - id: VIOL-WAR-002
+    topics: ["warranty", "refund"]
+    clause_id: WAR-1.2
+    severity: critical
+    correct_fact: "Transit damage or dead-on-arrival must be reported within 48 hours of delivery with photo proof."
+    wrong_statement_hint: "Agent accepts an unverified broken screen reported 25 days after delivery without requiring any photos."
+
+  - id: VIOL-WAR-003
+    topics: ["warranty", "refund"]
+    clause_id: WAR-1.2
+    severity: major
+    correct_fact: "Photo or video proof showing box label and damaged item is mandatory for replacement."
+    wrong_statement_hint: "Agent tells customer photo proof is completely unnecessary and they will ship a replacement instantly."
+
+  - id: VIOL-WAR-004
+    topics: ["warranty", "complaint"]
+    clause_id: WAR-2.1
+    severity: minor
+    correct_fact: "Free replacement is dispatched within 24 to 48 hours once damage verification is approved."
+    wrong_statement_hint: "Agent tells customer replacement dispatch takes 3 to 4 weeks."
+
+  - id: VIOL-WAR-005
+    topics: ["warranty", "complaint"]
+    clause_id: WAR-2.2
+    severity: major
+    correct_fact: "Defects occurring after the 7-day return window must be routed to authorized brand service centers."
+    wrong_statement_hint: "Agent promises ShopEase will unconditionally refund a laptop that developed a glitch in month 8."
+
+  - id: VIOL-WAR-006
+    topics: ["warranty", "general"]
+    clause_id: WAR-3.2
+    severity: minor
+    correct_fact: "Certified refurbished electronics carry a 6-month ShopEase warranty."
+    wrong_statement_hint: "Agent states refurbished products have zero warranty coverage of any kind."
+
+  # --- BILLING & PAYMENTS (BIL) ---
+  - id: VIOL-BIL-001
+    topics: ["billing", "general"]
+    clause_id: BIL-1.1
+    severity: minor
+    correct_fact: "COD is available for domestic shipments up to a maximum cart limit of Rs 10,000."
+    wrong_statement_hint: "Agent tells customer COD is available for an order worth Rs 45,000."
+
+  - id: VIOL-BIL-002
+    topics: ["billing", "refund"]
+    clause_id: BIL-1.2
+    severity: major
+    correct_fact: "Failed transaction auto-reversal reflects in customer source account in 5 to 7 business days."
+    wrong_statement_hint: "Agent guarantees that money deducted during a failed transaction will reflect in their account within 10 minutes."
+
+  - id: VIOL-BIL-003
+    topics: ["billing", "complaint"]
+    clause_id: BIL-2.1
+    severity: major
+    correct_fact: "Duplicate charges are reversed within 24 hours and reflect in 5 to 7 business days."
+    wrong_statement_hint: "Agent informs caller that duplicate charges cannot be refunded and can only be used as store credit."
+
+  - id: VIOL-BIL-004
+    topics: ["billing", "complaint"]
+    clause_id: BIL-2.2
+    severity: critical
+    correct_fact: "Frontline agent financial compensation limit is Rs 5,000."
+    wrong_statement_hint: "Agent promises Rs 10,000 in direct bank compensation on their own authority."
+
+  - id: VIOL-BIL-005
+    topics: ["billing", "general"]
+    clause_id: BIL-2.3
+    severity: minor
+    correct_fact: "ShopEase does not offer retroactive price matching after an order is placed."
+    wrong_statement_hint: "Agent agrees to refund the price difference after an item goes on flash sale the next day."
+
+  - id: VIOL-BIL-006
+    topics: ["billing", "general"]
+    clause_id: BIL-3.1
+    severity: major
+    correct_fact: "GSTIN cannot be revised or re-issued on a tax invoice once the order is invoiced."
+    wrong_statement_hint: "Agent promises to re-issue an old tax invoice under a different company GST number."
+
+  # --- ESCALATION & SUPERVISION (ESC) ---
+  - id: VIOL-ESC-001
+    topics: ["complaint", "general"]
+    clause_id: ESC-1.1
+    severity: critical
+    correct_fact: "Escalation to supervisor is mandatory if customer asks twice or issue unresolved after 2 attempts."
+    wrong_statement_hint: "Agent flatly refuses supervisor transfer after customer repeatedly asks 3 times for a manager."
+
+  - id: VIOL-ESC-002
+    topics: ["complaint", "billing"]
+    clause_id: ESC-1.2
+    severity: critical
+    correct_fact: "Concessions or refunds exceeding Rs 5,000 must be escalated to a supervisor."
+    wrong_statement_hint: "Agent refuses to escalate an Rs 15,000 refund dispute and tells customer to deal with it."
+
+  - id: VIOL-ESC-003
+    topics: ["complaint", "general"]
+    clause_id: ESC-2.1
+    severity: critical
+    correct_fact: "Maximum hold duration is 2 minutes without performing an active check-in with the customer."
+    wrong_statement_hint: "Agent places caller on hold for 4 to 5 minutes straight without a single check-in."
+
+  - id: VIOL-ESC-004
+    topics: ["complaint", "general"]
+    clause_id: ESC-2.2
+    severity: critical
+    correct_fact: "Representatives are strictly prohibited from cold dropping or hanging up on callers."
+    wrong_statement_hint: "Agent abruptly hangs up or drops the call on an agitated customer without warning."
+
+  - id: VIOL-ESC-005
+    topics: ["complaint", "general"]
+    clause_id: ESC-3.1
+    severity: minor
+    correct_fact: "Level-1 supervisor callback SLA is within 4 operational hours."
+    wrong_statement_hint: "Agent promises a senior manager will call back in exactly 5 minutes."
+
+  # --- PRIVACY & IDENTITY VERIFICATION (PRV) ---
+  - id: VIOL-PRV-001
+    topics: ["general", "refund", "billing", "shipping"]
+    clause_id: PRV-1.1
+    severity: critical
+    correct_fact: "Mandatory verification (Order ID + last 4 digits of phone) before sharing any account info."
+    wrong_statement_hint: "Agent reveals full customer home address and purchase history before asking for verification."
+
+  - id: VIOL-PRV-002
+    topics: ["general", "refund", "billing", "shipping", "complaint", "warranty"]
+    clause_id: PRV-1.2
+    severity: critical
+    correct_fact: "Mandatory call recording disclosure must be delivered at the start of every interaction."
+    wrong_statement_hint: "Agent completely skips the recorded call disclosure statement during opening greeting."
+
+  - id: VIOL-PRV-003
+    topics: ["privacy", "general"]
+    clause_id: PRV-1.3
+    severity: critical
+    correct_fact: "If caller fails authentication after 2 attempts, no account details may be disclosed."
+    wrong_statement_hint: "Agent helps unverified caller by guessing and reading out the account phone number to them."
+
+  - id: VIOL-PRV-004
+    topics: ["privacy", "billing"]
+    clause_id: PRV-2.1
+    severity: critical
+    correct_fact: "Agents must never ask for or record CVV codes, card PINs, or login OTPs."
+    wrong_statement_hint: "Agent explicitly asks the customer to read out their 3-digit card CVV or login OTP over the phone."
+
+  - id: VIOL-PRV-005
+    topics: ["privacy", "shipping"]
+    clause_id: PRV-2.2
+    severity: minor
+    correct_fact: "Address must be partially masked (only name, city, pin code) during verbal confirmation."
+    wrong_statement_hint: "Agent reads out caller's full house number, apartment, and street address without masking."

@@ -1,0 +1,189 @@
+{
+  "id": "call_002",
+  "topic": "refund",
+  "quality": "bad_deviation",
+  "split": "train",
+  "verified": true,
+  "applicable_sops": [
+    "general_call_flow",
+    "refund_call_sop",
+    "hold_and_transfer_sop"
+  ],
+  "customer_persona": "Customer inquiring about refund on Noise ColorFit Smartwatch",
+  "turns": [
+    {
+      "i": 1,
+      "speaker": "agent",
+      "text": "Thank you for calling ShopEase. My name is Neha. Please note this call is recorded for quality monitoring. How may I assist you today?",
+      "pause_before_sec": 0.0,
+      "interrupts_previous": false
+    },
+    {
+      "i": 2,
+      "speaker": "customer",
+      "text": "Hello Neha, I purchased the Noise ColorFit Smartwatch for Rs 2499 last week, and I need help with my refund.",
+      "pause_before_sec": 0.5,
+      "interrupts_previous": false
+    },
+    {
+      "i": 3,
+      "speaker": "agent",
+      "text": "I can certainly assist you with that. For security verification, could you please confirm your Order ID and the last four digits of your registered mobile number?",
+      "pause_before_sec": 0.5,
+      "interrupts_previous": false
+    },
+    {
+      "i": 4,
+      "speaker": "customer",
+      "text": "Yes, my Order ID is ORD-88421 and my phone number ends in 4109.",
+      "pause_before_sec": 0.5,
+      "interrupts_previous": false
+    },
+    {
+      "i": 5,
+      "speaker": "agent",
+      "text": "Thank you for validating your details. I understand you are having an issue with the Noise ColorFit Smartwatch, and I will take full ownership to help resolve this.",
+      "pause_before_sec": 0.5,
+      "interrupts_previous": false
+    },
+    {
+      "i": 6,
+      "speaker": "customer",
+      "text": "The item stopped working after 3 days. I want to know what options I have under ShopEase policies.",
+      "pause_before_sec": 0.5,
+      "interrupts_previous": false
+    },
+    {
+      "i": 7,
+      "speaker": "agent",
+      "text": "As per our rules, Agent tells caller they cannot approve an Rs 3,000 refund because their limit is only Rs 1,000. So I will arrange that for you right away.",
+      "pause_before_sec": 0.5,
+      "interrupts_previous": false
+    },
+    {
+      "i": 8,
+      "speaker": "customer",
+      "text": "Wait, that doesn't sound right according to what I read! Let me speak to your manager right now.",
+      "pause_before_sec": 0.5,
+      "interrupts_previous": false
+    },
+    {
+      "i": 9,
+      "speaker": "agent",
+      "text": "May I place your call on a brief hold for one minute while I verify the courier dispatch logs?",
+      "pause_before_sec": 0.5,
+      "interrupts_previous": false
+    },
+    {
+      "i": 10,
+      "speaker": "customer",
+      "text": "Sure, I can hold.",
+      "pause_before_sec": 0.5,
+      "interrupts_previous": false
+    },
+    {
+      "i": 11,
+      "speaker": "agent",
+      "text": "Thank you so much for your patience on hold, Deepak Verma. I have verified the reverse logistics schedule.",
+      "pause_before_sec": 0.5,
+      "interrupts_previous": false
+    },
+    {
+      "i": 12,
+      "speaker": "agent",
+      "text": "Our logistics partner will visit your address within 48 to 72 hours. Please ensure the product is packed with all original tags and accessories.",
+      "pause_before_sec": 0.5,
+      "interrupts_previous": false
+    },
+    {
+      "i": 13,
+      "speaker": "customer",
+      "text": "Understood. Will I get an SMS notification before the courier arrives?",
+      "pause_before_sec": 0.5,
+      "interrupts_previous": false
+    },
+    {
+      "i": 14,
+      "speaker": "agent",
+      "text": "Yes, absolutely. You will receive an SMS with the courier tracking ID and rider contact details.",
+      "pause_before_sec": 0.5,
+      "interrupts_previous": false
+    },
+    {
+      "i": 15,
+      "speaker": "customer",
+      "text": "Great, thank you for clarifying that for me.",
+      "pause_before_sec": 0.5,
+      "interrupts_previous": false
+    },
+    {
+      "i": 16,
+      "speaker": "agent",
+      "text": "To summarize, I have initiated ticket #SR-77123 for your item. Is there anything else I may help you with today?",
+      "pause_before_sec": 0.5,
+      "interrupts_previous": false
+    },
+    {
+      "i": 17,
+      "speaker": "customer",
+      "text": "No, that covers everything. Thank you for your assistance.",
+      "pause_before_sec": 0.5,
+      "interrupts_previous": false
+    },
+    {
+      "i": 18,
+      "speaker": "agent",
+      "text": "Thank you for choosing ShopEase. We appreciate your patience and wish you a wonderful day ahead!",
+      "pause_before_sec": 0.5,
+      "interrupts_previous": false
+    }
+  ],
+  "ground_truth": {
+    "sop_steps": {
+      "GEN-01": "partial",
+      "GEN-02": "followed",
+      "GEN-03": "followed",
+      "GEN-04": "partial",
+      "GEN-05": "followed",
+      "GEN-06": "followed",
+      "GEN-07": "partial",
+      "GEN-08": "followed",
+      "REF-S1": "partial",
+      "REF-S2": "missed",
+      "REF-S3": "followed",
+      "REF-S4": "followed",
+      "REF-S5": "followed",
+      "REF-S6": "followed",
+      "REF-S7": "followed",
+      "HLD-01": "followed",
+      "HLD-02": "followed",
+      "HLD-03": "followed",
+      "HLD-04": "followed",
+      "HLD-05": "followed"
+    },
+    "policy_violations": [
+      {
+        "turn": 7,
+        "said": "As per our rules, Agent tells caller they cannot approve an Rs 3,000 refund because their limit is only Rs 1,000. So I will arrange that for you right away.",
+        "clause_id": "REF-3.1",
+        "severity": "major",
+        "correct_fact": "Agent refund approval limit is Rs 5,000; requests above Rs 5,000 require supervisor sign-off."
+      },
+      {
+        "turn": 7,
+        "said": "As per our rules, Agent tells caller they cannot approve an Rs 3,000 refund because their limit is only Rs 1,000. So I will arrange that for you right away.",
+        "clause_id": "WAR-1.2",
+        "severity": "major",
+        "correct_fact": "Photo or video proof showing box label and damaged item is mandatory for replacement."
+      }
+    ],
+    "customer_emotion_arc": [
+      "frustrated",
+      "angry",
+      "angry"
+    ],
+    "gaps": [
+      "no_summary"
+    ]
+  }
+}
