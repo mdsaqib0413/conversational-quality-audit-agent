@@ -1,0 +1,27 @@
+# Core LLM & framework
+google-genai>=1.0.0
+python-dotenv>=1.0.0
+pydantic>=2.5.0
+pyyaml>=6.0.1
+requests>=2.31.0
+
+# Speech processing
+faster-whisper>=1.0.0
+pydub>=0.25.1
+edge-tts>=6.1.9
+soundfile>=0.12.1
+
+# Embeddings for retrieval (optional at runtime: BM25 is used if they cannot load)
+sentence-transformers>=2.2.2
+numpy>=1.26.0
+
+# Web dashboard & report
+streamlit>=1.32.0
+plotly>=5.19.0
+pandas>=2.2.0
+jinja2>=3.1.3
+xhtml2pdf>=0.2.15
+matplotlib>=3.8.0
+
+# Testing
+pytest>=8.0.0
