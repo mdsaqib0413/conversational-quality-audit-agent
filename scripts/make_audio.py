@@ -1,284 +1,146 @@
-"""Convert call transcripts to realistic synthetic audio using edge-tts and pydub.
+"""Turn transcripts into varied call recordings (free, uses edge-tts).
 
-Features:
-- Indian English Neural voices for Agent (en-IN-NeerjaNeural) and Customer (en-IN-PrabhatNeural)
-- Stitches dialogue turns with pauses, honoring pause_before_sec and turn interruptions
-- Inflects angry customer turns with faster rate (+15%) and higher pitch (+5Hz)
-- Dual export: mono mixed audio (<id>.mp3) and channel-separated stereo (<id>_stereo.mp3)
-- Optional subtle background acoustic noise (--noise)
-- Manifest tracking via data/audio/_audio_manifest.csv
-- Clean error messaging if FFmpeg is missing
+Every call gets its own caller and agent voices (accent, gender, speaking speed), emotion-driven delivery per turn,
+optional phone-line filtering and background noise. Both a mono and a stereo (agent left / customer right) file are written.
+
+  python scripts/make_audio.py --all            # new calls only
+  python scripts/make_audio.py --all --force    # redo every call with the new voice variety
+  python scripts/make_audio.py --id call_106 --noise 2
 """
-
-import os
-import io
-import sys
-import csv
+import argparse
+import asyncio
 import json
 import random
-import asyncio
-import logging
-import argparse
+import sys
+import tempfile
 from pathlib import Path
-from typing import Dict, Any, List, Optional
 
-if sys.stdout.encoding and sys.stdout.encoding.lower() != "utf-8":
+ROOT = Path(__file__).resolve().parent.parent
+sys.path.insert(0, str(ROOT))
+
+from src.audit.voices import agent_tone, customer_emotions, guess_gender, pick_voices, prosody_args  # noqa: E402
+
+TRANS, AUDIO = ROOT / "data" / "transcripts", ROOT / "data" / "audio"
+
+
+def assemble(raw: dict, synth, rng: random.Random, phone: bool = True, noise_db: float | None = None):
+    """synth(turn, speaker, emotion) -> AudioSegment. Returns (mono, stereo)."""
+    from pydub import AudioSegment
+    from pydub.effects import normalize
+
+    placed, prev_end = [], 0
+    emos = customer_emotions(raw)
+    for i, t in enumerate(raw["turns"]):
+        emo = emos.get(t["i"]) if t["speaker"] == "customer" else agent_tone(raw, t)
+        seg = synth(t, t["speaker"], emo or "neutral")
+        pause = t.get("pause_before_sec")
+        gap = int((pause if pause is not None else rng.uniform(0.3, 0.7)) * 1000)
+        start = 0 if i == 0 else (max(0, prev_end - 400) if t.get("interrupts_previous") else prev_end + gap)
+        placed.append((start, t["speaker"], seg))
+        prev_end = start + len(seg)
+    total = prev_end + 500
+    tracks = {s: AudioSegment.silent(total) for s in ("agent", "customer")}
+    for start, spk, seg in placed:
+        tracks[spk] = tracks[spk].overlay(seg, position=start)
+    if phone:
+        tracks = {k: v.high_pass_filter(300).low_pass_filter(3400) for k, v in tracks.items()}
+    if noise_db is not None:
+        from pydub.generators import WhiteNoise
+
+        for k in tracks:
+            tracks[k] = tracks[k].overlay(WhiteNoise().to_audio_segment(duration=total, volume=noise_db))
+    mono = tracks["agent"].overlay(tracks["customer"])
+    stereo = AudioSegment.from_mono_audiosegments(tracks["agent"], tracks["customer"])
+    return normalize(mono), stereo
+
+
+async def _edge(text, voice, rate, pitch, volume, path):
+    import edge_tts
+
+    await edge_tts.Communicate(text, voice, rate=rate, pitch=pitch, volume=volume).save(path)
+
+
+def make_one(raw: dict, voices, args):
+    from pydub import AudioSegment
+
+    rng = random.Random(f"{raw['id']}-{args.seed}")
+    ag_g, cu_g = guess_gender(raw.get("agent_name", ""), rng), guess_gender(raw.get("customer_name", ""), rng)
+    ag_v = pick_voices(voices, ag_g, rng) if voices else None
+    cu_v = pick_voices(voices, cu_g, rng, avoid=ag_v or "") if voices else None
+    from src.audit.voices import FALLBACK
+
+    ag_v, cu_v = ag_v or FALLBACK[ag_g], cu_v or FALLBACK[cu_g]
+    base = {"agent": rng.choice([-6, -3, 0, 3]), "customer": rng.choice([-8, -4, 0, 4, 8])}
+    phone = not args.no_phone and rng.random() < 0.7
+    noise = {"auto": rng.choice([None, None, -48.0, -42.0]), "0": None, "1": -48.0, "2": -42.0, "3": -36.0}[args.noise]
+    tmp = Path(tempfile.mkdtemp())
+
+    def synth(turn, speaker, emotion):
+        voice = ag_v if speaker == "agent" else cu_v
+        kw = prosody_args(emotion, base[speaker])
+        p = str(tmp / f"{turn['i']}.mp3")
+        asyncio.run(_edge(turn["text"], voice, kw["rate"], kw["pitch"], kw["volume"], p))
+        return AudioSegment.from_file(p)
+
+    mono, stereo = assemble(raw, synth, rng, phone, noise)
+    AUDIO.mkdir(parents=True, exist_ok=True)
+    mono.export(AUDIO / f"{raw['id']}.mp3", format="mp3")
+    stereo.export(AUDIO / f"{raw['id']}_stereo.mp3", format="mp3")
+    return {"agent": {"name": raw.get("agent_name"), "voice": ag_v, "speed_offset_pct": base["agent"]},
+            "customer": {"name": raw.get("customer_name"), "voice": cu_v, "speed_offset_pct": base["customer"]},
+            "phone_filter": phone, "noise_db": noise, "seconds": round(len(mono) / 1000, 1)}
+
+
+def main() -> int:
+    ap = argparse.ArgumentParser()
+    ap.add_argument("--id")
+    ap.add_argument("--all", action="store_true")
+    ap.add_argument("--first", type=int, default=0)
+    ap.add_argument("--force", action="store_true")
+    ap.add_argument("--no-phone", action="store_true")
+    ap.add_argument("--noise", choices=["auto", "0", "1", "2", "3"], default="auto")
+    ap.add_argument("--seed", default="1")
+    ap.add_argument("--list-voices", action="store_true")
+    args = ap.parse_args()
+    import shutil
+
+    if not shutil.which("ffmpeg"):
+        print("ffmpeg is missing. Install it with: winget install ffmpeg")
+        return 1
     try:
-        sys.stdout.reconfigure(encoding="utf-8")
-        sys.stderr.reconfigure(encoding="utf-8")
-    except Exception:
-        pass
+        import edge_tts
 
-REPO_ROOT = Path(__file__).resolve().parent.parent
-sys.path.insert(0, str(REPO_ROOT))
-
-from pydub import AudioSegment
-from pydub.generators import WhiteNoise
-from pydub.utils import which
-import edge_tts
-
-logging.basicConfig(level=logging.INFO, format="%(asctime)s [%(levelname)s] %(message)s")
-logger = logging.getLogger("make_audio")
-
-ANGRY_KEYWORDS = [
-    "angry", "ridiculous", "horrible", "cheat", "scam", "worst", "unacceptable",
-    "manager", "supervisor", "fraud", "court", "complaint", "refuse", "disgusted"
-]
-
-
-def check_ffmpeg() -> bool:
-    """Verifies ffmpeg is accessible on system PATH."""
-    ffmpeg_bin = which("ffmpeg")
-    if not ffmpeg_bin:
-        print("\n" + "!" * 70)
-        print("❌ CRITICAL ERROR: FFmpeg is not installed or not found on PATH.")
-        print("FFmpeg is required by pydub to encode and export MP3 audio.")
-        print("Installation instructions for Windows:")
-        print("  1. Run in PowerShell: winget install Gyan.FFmpeg")
-        print("  2. Or download from: https://www.gyan.dev/ffmpeg/builds/")
-        print("     and add the 'bin' folder to your system PATH.")
-        print("!" * 70 + "\n")
-        return False
-    return True
-
-
-async def synthesize_turn_audio(
-    text: str,
-    voice: str,
-    rate: str = "+0%",
-    pitch: str = "+0Hz"
-) -> AudioSegment:
-    """Synthesizes text turn via edge-tts into an in-memory AudioSegment."""
-    comm = edge_tts.Communicate(text=text, voice=voice, rate=rate, pitch=pitch)
-    mp3_bytes = b""
-    async for chunk in comm.stream():
-        if chunk["type"] == "audio":
-            mp3_bytes += chunk["data"]
-
-    if not mp3_bytes:
-        # Fallback 1 second silence if empty
-        return AudioSegment.silent(duration=1000)
-
-    return AudioSegment.from_file(io.BytesIO(mp3_bytes), format="mp3")
-
-
-async def render_transcript_audio(
-    transcript_path: Path,
-    output_dir: Path,
-    agent_voice: str = "en-IN-NeerjaNeural",
-    customer_voice: str = "en-IN-PrabhatNeural",
-    add_noise: bool = False
-) -> Dict[str, Any]:
-    """Renders both mono and stereo audio files for a single transcript JSON."""
-    with open(transcript_path, "r", encoding="utf-8") as f:
-        data = json.load(f)
-
-    call_id = data["id"]
-    turns = data.get("turns", [])
-    if not turns:
-        logger.warning(f"No turns found in {transcript_path}")
-        return {}
-
-    mono_path = output_dir / f"{call_id}.mp3"
-    stereo_path = output_dir / f"{call_id}_stereo.mp3"
-
-    combined_mono = AudioSegment.empty()
-    agent_track = AudioSegment.empty()
-    customer_track = AudioSegment.empty()
-
-    for idx, turn in enumerate(turns):
-        speaker = turn["speaker"].lower()
-        text = turn["text"].strip()
-        pause_before = turn.get("pause_before_sec", 0.0)
-        interrupts = turn.get("interrupts_previous", False)
-
-        # Determine voice & emotion inflections
-        voice = agent_voice if speaker == "agent" else customer_voice
-        rate = "+0%"
-        pitch = "+0Hz"
-
-        if speaker == "customer":
-            text_lower = text.lower()
-            is_angry = any(kw in text_lower for kw in ANGRY_KEYWORDS) or (
-                data.get("quality") == "bad_deviation" and idx < 4
-            )
-            if is_angry:
-                rate = "+15%"
-                pitch = "+5Hz"
-
-        turn_audio = await synthesize_turn_audio(text, voice, rate=rate, pitch=pitch)
-
-        # Handle pause before turn
-        if pause_before > 0.0:
-            pause_ms = int(pause_before * 1000)
-        elif idx > 0:
-            pause_ms = random.randint(300, 700)
-        else:
-            pause_ms = 0
-
-        silence_segment = AudioSegment.silent(duration=pause_ms)
-
-        # Stitch Mono
-        if interrupts and len(combined_mono) > 400:
-            # Overlap turn ~400ms onto previous turn
-            overlap_ms = 400
-            base_len = len(combined_mono)
-            needed_len = (base_len - overlap_ms) + len(turn_audio)
-            if needed_len > base_len:
-                combined_mono = combined_mono + AudioSegment.silent(duration=needed_len - base_len)
-            combined_mono = combined_mono.overlay(turn_audio, position=base_len - overlap_ms)
-        else:
-            if pause_ms > 0:
-                combined_mono += silence_segment
-            combined_mono += turn_audio
-
-        # Stitch Stereo (Agent: Left channel, Customer: Right channel)
-        if pause_ms > 0:
-            agent_track += silence_segment
-            customer_track += silence_segment
-
-        if speaker == "agent":
-            agent_track += turn_audio
-            customer_track += AudioSegment.silent(duration=len(turn_audio))
-        else:
-            customer_track += turn_audio
-            agent_track += AudioSegment.silent(duration=len(turn_audio))
-
-    # Equalize stereo channel lengths to exact sample frame boundaries
-    max_stereo_len = max(len(agent_track), len(customer_track))
-    if len(agent_track) < max_stereo_len:
-        agent_track += AudioSegment.silent(duration=max_stereo_len - len(agent_track))
-    if len(customer_track) < max_stereo_len:
-        customer_track += AudioSegment.silent(duration=max_stereo_len - len(customer_track))
-
-    # Match raw byte frames exactly to prevent slice mismatch
-    sw = agent_track.sample_width
-    min_frames = min(len(agent_track.raw_data) // sw, len(customer_track.raw_data) // sw)
-    exact_bytes = min_frames * sw
-    agent_aligned = agent_track._spawn(agent_track.raw_data[:exact_bytes])
-    customer_aligned = customer_track._spawn(customer_track.raw_data[:exact_bytes])
-
-    combined_stereo = AudioSegment.from_mono_audiosegments(agent_aligned, customer_aligned)
-
-    # Optional light acoustic background noise (-36 dBFS)
-    if add_noise:
-        noise = WhiteNoise().to_audio_segment(duration=len(combined_mono)).apply_gain(-36)
-        combined_mono = combined_mono.overlay(noise)
-        noise_stereo = WhiteNoise().to_audio_segment(duration=len(combined_stereo)).apply_gain(-36)
-        combined_stereo = combined_stereo.overlay(noise_stereo)
-
-    # Export MP3s
-    combined_mono.export(mono_path, format="mp3", bitrate="128k")
-    combined_stereo.export(stereo_path, format="mp3", bitrate="128k")
-
-    duration_sec = round(len(combined_mono) / 1000.0, 2)
-    logger.info(f"Exported {call_id}.mp3 & {call_id}_stereo.mp3 ({duration_sec}s)")
-
-    return {
-        "id": call_id,
-        "file_mono": mono_path.name,
-        "file_stereo": stereo_path.name,
-        "duration_sec": duration_sec,
-        "has_noise": add_noise,
-        "agent_voice": agent_voice,
-        "customer_voice": customer_voice
-    }
-
-
-def main():
-    parser = argparse.ArgumentParser(description="Generate synthetic MP3 audio calls from transcripts.")
-    parser.add_argument("--id", type=str, default=None, help="Specific transcript ID to process (e.g. call_001)")
-    parser.add_argument("--first", type=int, default=None, help="Process first N transcripts")
-    parser.add_argument("--all", action="store_true", help="Process all available transcripts")
-    parser.add_argument("--noise", action="store_true", help="Add light background white noise")
-    parser.add_argument("--agent-voice", type=str, default="en-IN-NeerjaNeural", help="Edge-TTS voice for agent")
-    parser.add_argument("--customer-voice", type=str, default="en-IN-PrabhatNeural", help="Edge-TTS voice for customer")
-    args = parser.parse_args()
-
-    if not check_ffmpeg():
-        sys.exit(1)
-
-    transcripts_dir = REPO_ROOT / "data" / "transcripts"
-    audio_dir = REPO_ROOT / "data" / "audio"
-    audio_dir.mkdir(parents=True, exist_ok=True)
-
-    # Gather target files
+        voices = asyncio.run(edge_tts.list_voices())
+        voices = [v for v in voices if v.get("Locale", "").startswith("en-")]
+    except Exception as exc:  # noqa: BLE001
+        print(f"Could not load the voice list ({str(exc)[:80]}); using the default voices.")
+        voices = []
+    if args.list_voices:
+        for v in sorted(voices, key=lambda v: (v["Locale"], v["Gender"])):
+            print(v["Locale"], v["Gender"], v["ShortName"])
+        return 0
+    files = sorted(TRANS.glob("call_*.json"))
     if args.id:
-        target_files = [transcripts_dir / f"{args.id}.json"]
-    else:
-        target_files = sorted(list(transcripts_dir.glob("call_*.json")))
-        if args.first:
-            target_files = target_files[:args.first]
-
-    if not target_files:
-        print("⚠️ No transcripts found to synthesize.")
-        sys.exit(0)
-
-    manifest_path = audio_dir / "_audio_manifest.csv"
-    existing_manifest = {}
-    if manifest_path.exists():
-        with open(manifest_path, "r", encoding="utf-8") as f:
-            reader = csv.DictReader(f)
-            for row in reader:
-                existing_manifest[row["id"]] = row
-
-    audio_rows = list(existing_manifest.values())
-
-    print(f"🎙️ Starting audio synthesis for {len(target_files)} calls using Edge-TTS...")
-    for idx, t_file in enumerate(target_files, start=1):
-        call_id = t_file.stem
-        mono_out = audio_dir / f"{call_id}.mp3"
-        stereo_out = audio_dir / f"{call_id}_stereo.mp3"
-
-        if mono_out.exists() and stereo_out.exists():
-            print(f"[{idx}/{len(target_files)}] Skipping existing audio: {call_id}")
+        files = [TRANS / f"{args.id}.json"]
+    elif args.first:
+        files = files[: args.first]
+    elif not args.all:
+        print("Use --id, --first N or --all")
+        return 1
+    prof_path = AUDIO / "_voice_profiles.json"
+    profiles = json.loads(prof_path.read_text(encoding="utf-8")) if prof_path.exists() else {}
+    for n, p in enumerate(files, 1):
+        raw = json.loads(p.read_text(encoding="utf-8"))
+        if (AUDIO / f"{raw['id']}.mp3").exists() and not args.force and raw["id"] in profiles:
+            print(f"[{n}/{len(files)}] skipping {raw['id']} (already has varied voices; use --force to redo)")
             continue
-
-        print(f"[{idx}/{len(target_files)}] Synthesizing audio for {call_id}...")
-        try:
-            row = asyncio.run(
-                render_transcript_audio(
-                    transcript_path=t_file,
-                    output_dir=audio_dir,
-                    agent_voice=args.agent_voice,
-                    customer_voice=args.customer_voice,
-                    add_noise=args.noise
-                )
-            )
-            if row:
-                audio_rows.append(row)
-        except Exception as e:
-            logger.error(f"Failed to synthesize audio for {call_id}: {e}")
-
-    # Write audio manifest
-    with open(manifest_path, "w", newline="", encoding="utf-8") as f:
-        fieldnames = ["id", "file_mono", "file_stereo", "duration_sec", "has_noise", "agent_voice", "customer_voice"]
-        writer = csv.DictWriter(f, fieldnames=fieldnames)
-        writer.writeheader()
-        writer.writerows(audio_rows)
-
-    print(f"\n✅ Audio generation completed. Manifest saved to {manifest_path}")
+        profiles[raw["id"]] = make_one(raw, voices, args)
+        pr = profiles[raw["id"]]
+        print(f"[{n}/{len(files)}] {raw['id']}: agent {pr['agent']['voice']}, customer {pr['customer']['voice']}, {pr['seconds']}s, phone={pr['phone_filter']}, noise={pr['noise_db']}")
+        AUDIO.mkdir(parents=True, exist_ok=True)
+        prof_path.write_text(json.dumps(profiles, indent=2), encoding="utf-8")
+    return 0
 
 
 if __name__ == "__main__":
-    main()
+    raise SystemExit(main())

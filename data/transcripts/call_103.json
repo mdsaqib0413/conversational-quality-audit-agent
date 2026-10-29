@@ -1,0 +1,189 @@
+{
+  "id": "call_103",
+  "topic": "billing",
+  "quality": "good",
+  "split": "test",
+  "applicable_sops": [
+    "general_call_flow"
+  ],
+  "applicable_steps": [
+    "GEN-01",
+    "GEN-02",
+    "GEN-03",
+    "GEN-04",
+    "GEN-05",
+    "GEN-06",
+    "GEN-07",
+    "GEN-08"
+  ],
+  "hold_scenario": "none",
+  "order_id": "ORD-61905",
+  "registered_phone_last4": "3340",
+  "agent_name": "Meera Pillai",
+  "customer_name": "Arjun Nair",
+  "customer_persona": "Arjun Nair is worried about a duplicate UPI debit but stays polite.",
+  "verified": true,
+  "verification_notes": "Hand-written and checked against data/policies and data/sops; labels written together with the dialogue.",
+  "source": "handwritten",
+  "turns": [
+    {
+      "i": 1,
+      "speaker": "agent",
+      "text": "Thank you for calling ShopEase. My name is Meera Pillai. Please note that this call is recorded for quality assurance and training purposes. How may I help you today?",
+      "pause_before_sec": 0.5,
+      "interrupts_previous": false
+    },
+    {
+      "i": 2,
+      "speaker": "customer",
+      "text": "Hello Meera, I am Arjun Nair. I placed an order yesterday and my bank statement shows that the payment of Rs 2,199 was deducted twice. I am quite worried about this double charge.",
+      "pause_before_sec": 0.5,
+      "interrupts_previous": false
+    },
+    {
+      "i": 3,
+      "speaker": "agent",
+      "text": "I understand your concern, Mr. Nair, and I will look into this right away. First, for your security, could you please share your Order ID and the last four digits of your registered mobile number?",
+      "pause_before_sec": 1.1,
+      "interrupts_previous": false
+    },
+    {
+      "i": 4,
+      "speaker": "customer",
+      "text": "Yes, the order ID is ORD-61905 and the last four digits are 3340.",
+      "pause_before_sec": 0.7,
+      "interrupts_previous": false
+    },
+    {
+      "i": 5,
+      "speaker": "agent",
+      "text": "Thank you, you are verified. Just to make sure I have understood correctly, you placed one order for Rs 2,199 but your bank shows two debits of the same amount. Is that correct?",
+      "pause_before_sec": 0.4,
+      "interrupts_previous": false
+    },
+    {
+      "i": 6,
+      "speaker": "customer",
+      "text": "Yes, that is exactly it. Two debits within a minute of each other, both through UPI.",
+      "pause_before_sec": 1.0,
+      "interrupts_previous": false
+    },
+    {
+      "i": 7,
+      "speaker": "agent",
+      "text": "I am sorry for the worry this has caused, Mr. Nair, and I will personally follow this through until it is resolved. Let me check the payment gateway logs.",
+      "pause_before_sec": 0.8,
+      "interrupts_previous": false
+    },
+    {
+      "i": 8,
+      "speaker": "customer",
+      "text": "Sure, please check.",
+      "pause_before_sec": 0.6,
+      "interrupts_previous": false
+    },
+    {
+      "i": 9,
+      "speaker": "agent",
+      "text": "I can see the second debit was caused by a gateway re-attempt while the first payment was being confirmed. It has already been flagged by our automated audit reconciliation as a duplicate.",
+      "pause_before_sec": 1.2,
+      "interrupts_previous": false
+    },
+    {
+      "i": 10,
+      "speaker": "customer",
+      "text": "Okay. So what happens to the extra amount?",
+      "pause_before_sec": 0.6,
+      "interrupts_previous": false
+    },
+    {
+      "i": 11,
+      "speaker": "agent",
+      "text": "Under our policy, the full duplicate amount of Rs 2,199 is released to your original payment source, your UPI bank account, within 24 hours. After that, it can take 5 to 7 business days to show in your bank statement.",
+      "pause_before_sec": 0.9,
+      "interrupts_previous": false
+    },
+    {
+      "i": 12,
+      "speaker": "customer",
+      "text": "So it may take up to a week to see it in my statement?",
+      "pause_before_sec": 0.5,
+      "interrupts_previous": false
+    },
+    {
+      "i": 13,
+      "speaker": "agent",
+      "text": "Yes, the release from our side happens within 24 hours, but the bank's own clearance can take 5 to 7 business days to reflect. Your actual order for Rs 2,199 is confirmed and will not be affected.",
+      "pause_before_sec": 1.1,
+      "interrupts_previous": false
+    },
+    {
+      "i": 14,
+      "speaker": "customer",
+      "text": "That is a relief. Will I get any confirmation?",
+      "pause_before_sec": 0.7,
+      "interrupts_previous": false
+    },
+    {
+      "i": 15,
+      "speaker": "agent",
+      "text": "I have logged this under ticket number BIL-30871, and you will receive an SMS once the release is initiated.",
+      "pause_before_sec": 0.4,
+      "interrupts_previous": false
+    },
+    {
+      "i": 16,
+      "speaker": "customer",
+      "text": "Great, thank you.",
+      "pause_before_sec": 1.0,
+      "interrupts_previous": false
+    },
+    {
+      "i": 17,
+      "speaker": "agent",
+      "text": "To summarise, one duplicate debit of Rs 2,199 on order ORD-61905 has been flagged, the amount is released to your UPI source within 24 hours, and the bank statement will reflect it in 5 to 7 business days. The reference is BIL-30871. Is there anything else I can help you with?",
+      "pause_before_sec": 0.8,
+      "interrupts_previous": false
+    },
+    {
+      "i": 18,
+      "speaker": "customer",
+      "text": "No, that covers everything. Thanks for sorting it out quickly.",
+      "pause_before_sec": 0.6,
+      "interrupts_previous": false
+    },
+    {
+      "i": 19,
+      "speaker": "agent",
+      "text": "You are most welcome, Mr. Nair. Thank you for contacting ShopEase. Have a great day!",
+      "pause_before_sec": 1.2,
+      "interrupts_previous": false
+    },
+    {
+      "i": 20,
+      "speaker": "customer",
+      "text": "Bye.",
+      "pause_before_sec": 0.6,
+      "interrupts_previous": false
+    }
+  ],
+  "ground_truth": {
+    "sop_steps": {
+      "GEN-01": "followed",
+      "GEN-02": "followed",
+      "GEN-03": "followed",
+      "GEN-04": "followed",
+      "GEN-05": "followed",
+      "GEN-06": "followed",
+      "GEN-07": "followed",
+      "GEN-08": "followed"
+    },
+    "policy_violations": [],
+    "customer_emotion_arc": [
+      "anxious",
+      "neutral",
+      "satisfied"
+    ],
+    "gaps": []
+  }
+}

@@ -1,0 +1,122 @@
+{
+  "call_001": {
+    "agent": {
+      "name": "Priya Nair",
+      "voice": "en-US-AvaNeural",
+      "speed_offset_pct": 0
+    },
+    "customer": {
+      "name": "Rajesh Kumar",
+      "voice": "en-IN-PrabhatNeural",
+      "speed_offset_pct": 0
+    },
+    "phone_filter": false,
+    "noise_db": null,
+    "seconds": 369.4
+  },
+  "call_009": {
+    "agent": {
+      "name": "Rohan Verma",
+      "voice": "en-IN-PrabhatNeural",
+      "speed_offset_pct": 0
+    },
+    "customer": {
+      "name": "Karan Patel",
+      "voice": "en-US-GuyNeural",
+      "speed_offset_pct": 4
+    },
+    "phone_filter": true,
+    "noise_db": null,
+    "seconds": 252.4
+  },
+  "call_017": {
+    "agent": {
+      "name": "Ananya Sen",
+      "voice": "en-IN-NeerjaExpressiveNeural",
+      "speed_offset_pct": -3
+    },
+    "customer": {
+      "name": "Karan Patel",
+      "voice": "en-US-AndrewNeural",
+      "speed_offset_pct": -4
+    },
+    "phone_filter": false,
+    "noise_db": null,
+    "seconds": 218.2
+  },
+  "call_025": {
+    "agent": {
+      "name": "Rohan Verma",
+      "voice": "en-US-EricNeural",
+      "speed_offset_pct": 3
+    },
+    "customer": {
+      "name": "Anjali Mehta",
+      "voice": "en-US-AnaNeural",
+      "speed_offset_pct": 4
+    },
+    "phone_filter": true,
+    "noise_db": -48.0,
+    "seconds": 193.8
+  },
+  "call_033": {
+    "agent": {
+      "name": "Neha Gupta",
+      "voice": "en-GB-MaisieNeural",
+      "speed_offset_pct": -3
+    },
+    "customer": {
+      "name": "Rajesh Kumar",
+      "voice": "en-IN-PrabhatNeural",
+      "speed_offset_pct": 8
+    },
+    "phone_filter": true,
+    "noise_db": null,
+    "seconds": 230.4
+  },
+  "call_041": {
+    "agent": {
+      "name": "Amit Patel",
+      "voice": "en-IN-PrabhatNeural",
+      "speed_offset_pct": -6
+    },
+    "customer": {
+      "name": "Karan Patel",
+      "voice": "en-US-EricNeural",
+      "speed_offset_pct": 8
+    },
+    "phone_filter": true,
+    "noise_db": -48.0,
+    "seconds": 272.3
+  },
+  "call_101": {
+    "agent": {
+      "name": "Sneha Iyer",
+      "voice": "en-GB-SoniaNeural",
+      "speed_offset_pct": -3
+    },
+    "customer": {
+      "name": "Pooja Menon",
+      "voice": "en-US-JennyNeural",
+      "speed_offset_pct": 0
+    },
+    "phone_filter": true,
+    "noise_db": -48.0,
+    "seconds": 205.0
+  },
+  "call_102": {
+    "agent": {
+      "name": "Ravi",
+      "voice": "en-US-AndrewNeural",
+      "speed_offset_pct": 0
+    },
+    "customer": {
+      "name": "Vikram Rao",
+      "voice": "en-IN-PrabhatNeural",
+      "speed_offset_pct": 0
+    },
+    "phone_filter": true,
+    "noise_db": null,
+    "seconds": 85.5
+  }
+}

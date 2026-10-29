@@ -1,40 +1,29 @@
-# Virtual Environment
-.venv/
-venv/
-ENV/
-env/
-
-# Environment Variables
+# Environment variables / secrets
 .env
-.env.local
+.env.*
+!.env.example
 
-# Python cache & build
+# Python virtual environments
+env/
+env*/
+.venv/
+.venv*/
+
+# Python cache
 __pycache__/
 *.py[cod]
-*$py.class
-*.so
-build/
-dist/
-*.egg-info/
-
-# Chroma Vector Database
-chroma_db/
-data/chroma_db/
-.chroma/
-
-# Audio Data (keep directory structure via .gitkeep)
-data/audio/*
-!data/audio/.gitkeep
-
-# Streamlit & Cache
-.streamlit/
-.cache/
-
-# Testing & Coverage
-.pytest_cache/
-.coverage
-htmlcov/
-
-# Logs & temp
-*.log
+.cadra/
 scratch/
+scripts/.request_budget.json
+eval/*.csv
+eval/feature_report.json
+
+# Data cache and raw audio datasets
+data/cache/
+data/index_cache/
+data/telugu/*.mp3
+data/telugu/*.wav
+data/telugu/*.zip
+data/audio/*.mp3
+data/audio/*.wav
+call-center-speech-dataset/

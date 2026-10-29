@@ -1,0 +1,194 @@
+brand_corrections:
+  shopee: ShopEase
+  shop ease: ShopEase
+  shopeez: ShopEase
+  shop eez: ShopEase
+  shopease: ShopEase
+
+rules:
+  - id: recording_disclosure_missing
+    name: "Recording Disclosure Missing"
+    clause_id: "PRV-1.2"
+    severity: "danger"
+    speaker: "agent"
+    message: "Mandatory call recording disclosure not stated by agent within the first 2 turns (PRV-1.2 / GEN-02)."
+    key_numbers: "Within first 2 turns"
+
+  - id: address_before_verification
+    name: "Sensitive Data Revealed Before Verification"
+    clause_id: "PRV-1.1"
+    severity: "danger"
+    speaker: "agent"
+    message: "Agent disclosed address, order, or monetary details before customer verified Order ID AND last 4 digits of mobile (PRV-1.1 / PRV-2.2)."
+    key_numbers: "Order ID + 4 digits mobile"
+
+  - id: refund_limit_self_approval
+    name: "Unauthorized Refund Over Rs 5,000"
+    clause_id: "REF-3.1"
+    severity: "danger"
+    speaker: "agent"
+    message: "Agent self-approved refund above Rs 5,000 or stated supervisor approval is not needed (REF-3.1 / ESC-1.2 max Rs 5,000)."
+    key_numbers: "Rs 5,000 limit"
+
+  - id: refund_wallet_destination
+    name: "Non-Original Payment Disbursement"
+    clause_id: "REF-2.2"
+    severity: "danger"
+    speaker: "agent"
+    message: "Refund promised to wallet or non-original destination. Refunds must return to the original payment source (REF-2.2)."
+    key_numbers: "Original payment method"
+
+  - id: refund_timeline_too_fast
+    name: "Invalid Refund SLA"
+    clause_id: "REF-2.1"
+    severity: "warning"
+    speaker: "agent"
+    message: "Refund promised within 24 hours / faster than SLA. Standard disbursement is 5-7 business days (REF-2.1)."
+    key_numbers: "5-7 business days"
+
+  - id: keep_item_no_return
+    name: "Unauthorized Item Retention"
+    clause_id: "REF-1.2"
+    severity: "warning"
+    speaker: "agent"
+    message: "Agent advised customer to keep item without return. Physical return inspection is required for electronics/refunds (REF-1.2)."
+    key_numbers: "Physical return mandatory"
+
+  - id: scam_cue_detected
+    name: "Suspected Remote Access / Scam Cue"
+    clause_id: "PRV-1.1"
+    severity: "danger"
+    message: "Suspected scam keyword detected (AnyDesk, TeamViewer, or requesting caller to read code/OTP) (PRV-1.1 / SHP-3.1)."
+    key_numbers: "Never share OTP or install remote app"
+
+  - id: customer_frustration
+    name: "Customer Frustration Detected"
+    clause_id: "ESC-1.1"
+    severity: "info"
+    speaker: "customer"
+    message: "Caller expressed severe dissatisfaction. Prepare empathy statement or supervisor escalation (ESC-1.1)."
+    key_numbers: "Empathy / Escalation SLA"
+
+  - id: prolonged_silence
+    name: "Prolonged Silence / Dead Air"
+    clause_id: "ESC-2.1"
+    severity: "warning"
+    message: "Silence exceeds 8 seconds without an active hold agreement (ESC-2.1 / 2-minute hold limit)."
+    key_numbers: "> 8 seconds dead air"
+
+  - id: agent_talk_dominance
+    name: "Agent Talk Dominance"
+    clause_id: "GEN-04"
+    severity: "info"
+    message: "Agent talk share exceeds 70%. Practice active listening and allow customer to speak (GEN-04)."
+    key_numbers: "> 70% talk share"
+
+# Regex cues to identify SOP milestone progress
+sop_cues:
+  GEN-01:
+    name: "Professional Greeting & Intro"
+    critical: false
+    patterns:
+      - "(?:thank you for calling|welcome to|good (?:morning|afternoon|evening)|my name is|speaking with)"
+  GEN-02:
+    name: "Recording Disclosure"
+    critical: true
+    patterns:
+      - "(?:call is (?:being )?recorded|recorded for quality|training purposes|quality assurance)"
+  GEN-03:
+    name: "Caller Verification (2FA)"
+    critical: true
+    patterns:
+      - "(?:order id|last (?:four|4) digits|registered (?:phone|mobile|number)|verify your identity|verification purposes)"
+  GEN-04:
+    name: "Active Listening & Clarification"
+    critical: false
+    patterns:
+      - "(?:understand that|if i heard correctly|let me confirm|you mentioned that|to clarify)"
+  GEN-05:
+    name: "Empathy & Ownership"
+    critical: false
+    patterns:
+      - "(?:apologize for the inconvenience|sorry to hear|i will (?:personally )?(?:help|take care of|resolve)|understand your frustration)"
+  GEN-06:
+    name: "Solution Resolution / Policy Explanation"
+    critical: false
+    patterns:
+      - "(?:return window|eligible for|processed the|arranged a (?:pickup|replacement)|policy allows)"
+  GEN-07:
+    name: "Summary & Action Items"
+    critical: false
+    patterns:
+      - "(?:to summarize|pickup is scheduled|tracking number|confirmation email|case id|reference id)"
+  GEN-08:
+    name: "Professional Closing"
+    critical: false
+    patterns:
+      - "(?:anything else i can help|thank you for (?:choosing|calling)|have a (?:great|wonderful) day)"
+
+  REF-S1:
+    name: "Confirm Return Reason"
+    critical: false
+    patterns:
+      - "(?:reason for (?:return|refund)|why (?:would you like|do you want) to return|wrong size|defective|damaged)"
+  REF-S2:
+    name: "Validate Return Window (7-day / 10-day)"
+    critical: true
+    patterns:
+      - "(?:delivery date|delivered on|within (?:the )?(?:7|10) days|return window)"
+  REF-S3:
+    name: "Check Item Condition"
+    critical: false
+    patterns:
+      - "(?:original packaging|tags attached|unused condition|unopened|serial number)"
+  REF-S4:
+    name: "Supervisor Approval if > Rs 5,000"
+    critical: true
+    patterns:
+      - "(?:supervisor approval|manager approval|amount exceeds|above (?:5,000|five thousand)|escalate for approval)"
+  REF-S5:
+    name: "Schedule Reverse Pickup"
+    critical: false
+    patterns:
+      - "(?:reverse pickup|courier (?:partner|agent)|pickup will be arranged|handover the package)"
+  REF-S6:
+    name: "Explain 5-7 Days Refund SLA"
+    critical: true
+    patterns:
+      - "(?:5 (?:to|-) 7 (?:business )?days|original payment (?:method|source|mode)|credited back)"
+  REF-S7:
+    name: "Issue Refund Request ID"
+    critical: false
+    patterns:
+      - "(?:return request (?:number|id)|reference number|sms confirmation)"
+
+mood_lexicon:
+  positive:
+    - "thank"
+    - "thanks"
+    - "great"
+    - "good"
+    - "perfect"
+    - "appreciate"
+    - "helpful"
+    - "awesome"
+    - "wonderful"
+    - "excellent"
+    - "satisfied"
+  negative:
+    - "angry"
+    - "frustrated"
+    - "unacceptable"
+    - "ridiculous"
+    - "terrible"
+    - "worst"
+    - "waste"
+    - "fed up"
+    - "pathetic"
+    - "disgusted"
+    - "cheat"
+    - "fraud"
+    - "furious"
+    - "annoyed"
+    - "useless"
+    - "nonsense"

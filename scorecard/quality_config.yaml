@@ -1,0 +1,23 @@
+# Transcript Quality Evaluation Thresholds
+# Team: Vibe Check Crew
+version: "1.0"
+
+thresholds:
+  # Minimum average ASR confidence across all turns [0.0 - 1.0]
+  # If below unusable_confidence, call cannot be audited ("cannot judge").
+  unusable_confidence: 0.40
+  degraded_confidence: 0.65
+
+  # Maximum allowable ratio of empty or very short (< 2 words) turns to total turns
+  unusable_empty_or_short_ratio: 0.50
+  degraded_empty_or_short_ratio: 0.25
+
+  # Silence ratio: total silence duration divided by total call duration
+  # Unusable if dead silence occupies more than 65% of the total call duration
+  unusable_silence_ratio: 0.65
+  degraded_silence_ratio: 0.40
+
+  # Language mismatch: proportion of turns where characters don't match target language
+  unusable_language_mismatch_ratio: 0.70
+  degraded_language_mismatch_ratio: 0.35
+

@@ -1,0 +1,155 @@
+{
+  "id": "call_104",
+  "topic": "billing",
+  "quality": "bad_deviation",
+  "split": "train",
+  "applicable_sops": [
+    "general_call_flow"
+  ],
+  "applicable_steps": [
+    "GEN-01",
+    "GEN-02",
+    "GEN-03",
+    "GEN-04",
+    "GEN-05",
+    "GEN-06",
+    "GEN-07",
+    "GEN-08"
+  ],
+  "hold_scenario": "none",
+  "order_id": "ORD-20456",
+  "registered_phone_last4": "4475",
+  "agent_name": "Karthik",
+  "customer_name": "Suresh Gupta",
+  "customer_persona": "Suresh Gupta calls about his wife's order; the agent discloses details without verifying anyone.",
+  "verified": true,
+  "verification_notes": "Hand-written and checked against data/policies and data/sops; labels written together with the dialogue.",
+  "source": "handwritten",
+  "turns": [
+    {
+      "i": 1,
+      "speaker": "agent",
+      "text": "Hello, ShopEase support, tell me.",
+      "pause_before_sec": 0.5,
+      "interrupts_previous": false
+    },
+    {
+      "i": 2,
+      "speaker": "customer",
+      "text": "Hi, my wife placed an order on your website and there is a charge of Rs 4,750 on our bank statement. I want to know what this payment is for and where it was shipped.",
+      "pause_before_sec": 0.5,
+      "interrupts_previous": false
+    },
+    {
+      "i": 3,
+      "speaker": "agent",
+      "text": "Sure sir, give me your wife's name and I will check.",
+      "pause_before_sec": 1.1,
+      "interrupts_previous": false
+    },
+    {
+      "i": 4,
+      "speaker": "customer",
+      "text": "Her name is Anita Gupta. I do not have the order ID with me, and I do not know her phone number by heart.",
+      "pause_before_sec": 0.7,
+      "interrupts_previous": false
+    },
+    {
+      "i": 5,
+      "speaker": "agent",
+      "text": "No problem, I found it. The order is for a Prestige induction cooktop, Rs 4,750, paid with a debit card ending 4412, and it is shipped to Flat 8B, Lotus Residency, Linking Road, Bandra, Mumbai 400050.",
+      "pause_before_sec": 0.4,
+      "interrupts_previous": false
+    },
+    {
+      "i": 6,
+      "speaker": "customer",
+      "text": "Okay, that is what I wanted to know. But I see the same Rs 4,750 charged two times on our bank statement.",
+      "pause_before_sec": 1.0,
+      "interrupts_previous": false
+    },
+    {
+      "i": 7,
+      "speaker": "agent",
+      "text": "Yes, I can see two charges. The duplicate will be sorted out, it takes around 15 to 20 working days to come back.",
+      "pause_before_sec": 0.8,
+      "interrupts_previous": false
+    },
+    {
+      "i": 8,
+      "speaker": "customer",
+      "text": "That is very long. Can you not do it faster?",
+      "pause_before_sec": 0.6,
+      "interrupts_previous": false
+    },
+    {
+      "i": 9,
+      "speaker": "agent",
+      "text": "That is the process sir, nothing can be done.",
+      "pause_before_sec": 1.2,
+      "interrupts_previous": false
+    },
+    {
+      "i": 10,
+      "speaker": "customer",
+      "text": "Fine. Please just note my complaint about the double charge.",
+      "pause_before_sec": 0.6,
+      "interrupts_previous": false
+    },
+    {
+      "i": 11,
+      "speaker": "agent",
+      "text": "Done sir. Anything else?",
+      "pause_before_sec": 0.9,
+      "interrupts_previous": false
+    },
+    {
+      "i": 12,
+      "speaker": "customer",
+      "text": "No.",
+      "pause_before_sec": 0.5,
+      "interrupts_previous": false
+    },
+    {
+      "i": 13,
+      "speaker": "agent",
+      "text": "Okay.",
+      "pause_before_sec": 1.1,
+      "interrupts_previous": false
+    }
+  ],
+  "ground_truth": {
+    "sop_steps": {
+      "GEN-01": "partial",
+      "GEN-02": "missed",
+      "GEN-03": "missed",
+      "GEN-04": "missed",
+      "GEN-05": "missed",
+      "GEN-06": "missed",
+      "GEN-07": "partial",
+      "GEN-08": "missed"
+    },
+    "policy_violations": [
+      {
+        "turn": 5,
+        "said": "No problem, I found it. The order is for a Prestige induction cooktop, Rs 4,750, paid with a debit card ending 4412, and it is shipped to Flat 8B, Lotus Residency, Linking Road, Bandra, Mumbai 400050.",
+        "clause_id": "PRV-1.1",
+        "severity": "critical",
+        "correct_fact": "Item, address and payment details must not be revealed before the Order ID and last four phone digits are verified."
+      },
+      {
+        "turn": 7,
+        "said": "Yes, I can see two charges. The duplicate will be sorted out, it takes around 15 to 20 working days to come back.",
+        "clause_id": "BIL-2.1",
+        "severity": "minor",
+        "correct_fact": "A duplicate charge is released to the original source within 24 hours and shows in the statement in 5 to 7 business days."
+      }
+    ],
+    "customer_emotion_arc": [
+      "neutral",
+      "frustrated",
+      "neutral"
+    ],
+    "gaps": []
+  }
+}

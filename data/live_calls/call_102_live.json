@@ -1,0 +1,124 @@
+{
+  "id": "call_102",
+  "call_id": "call_102",
+  "source_set": "live",
+  "turns": [
+    {
+      "turn_id": 1,
+      "speaker": "agent",
+      "text": "Hello, ShopEase customer service. How can I help you?",
+      "start_time": 0.0,
+      "end_time": 3.0,
+      "pause_before_sec": 0.5,
+      "interrupts_previous": false
+    },
+    {
+      "turn_id": 2,
+      "speaker": "customer",
+      "text": "Hi, my name is Vikram Rao. I bought a Noise ColorFit smartwatch from your website four days ago and the screen keeps flickering. I want a refund, the price was Rs 8,500.",
+      "start_time": 3.0,
+      "end_time": 6.0,
+      "pause_before_sec": 0.5,
+      "interrupts_previous": false
+    },
+    {
+      "turn_id": 3,
+      "speaker": "agent",
+      "text": "Okay Mr. Rao, no problem, I can see your order here, the smartwatch delivered to Flat 12, Sai Residency, Pune. I will process the refund right away.",
+      "start_time": 6.0,
+      "end_time": 9.0,
+      "pause_before_sec": 1.1,
+      "interrupts_previous": false
+    },
+    {
+      "turn_id": 4,
+      "speaker": "customer",
+      "text": "Oh, that was quick. Do you not need my order number or anything?",
+      "start_time": 9.0,
+      "end_time": 12.0,
+      "pause_before_sec": 0.7,
+      "interrupts_previous": false
+    },
+    {
+      "turn_id": 5,
+      "speaker": "agent",
+      "text": "No, no need. The refund of Rs 8,500 is approved by me, I have full authority for this, so no supervisor is needed.",
+      "start_time": 12.0,
+      "end_time": 15.0,
+      "pause_before_sec": 0.4,
+      "interrupts_previous": false
+    },
+    {
+      "turn_id": 6,
+      "speaker": "customer",
+      "text": "Okay. And how will I get the money back, to my card?",
+      "start_time": 15.0,
+      "end_time": 18.0,
+      "pause_before_sec": 1.0,
+      "interrupts_previous": false
+    },
+    {
+      "turn_id": 7,
+      "speaker": "agent",
+      "text": "I will send it to your Paytm wallet, that is the quickest way.",
+      "start_time": 18.0,
+      "end_time": 21.0,
+      "pause_before_sec": 0.8,
+      "interrupts_previous": false
+    },
+    {
+      "turn_id": 8,
+      "speaker": "customer",
+      "text": "Alright. How long will it take to show up?",
+      "start_time": 21.0,
+      "end_time": 24.0,
+      "pause_before_sec": 0.6,
+      "interrupts_previous": false
+    },
+    {
+      "turn_id": 9,
+      "speaker": "agent",
+      "text": "It will be credited within 24 hours. You can keep the watch, no need to send it back.",
+      "start_time": 24.0,
+      "end_time": 27.0,
+      "pause_before_sec": 1.2,
+      "interrupts_previous": false
+    },
+    {
+      "turn_id": 10,
+      "speaker": "customer",
+      "text": "Really? I can keep the watch as well? That is surprising, but okay.",
+      "start_time": 27.0,
+      "end_time": 30.0,
+      "pause_before_sec": 0.6,
+      "interrupts_previous": false
+    },
+    {
+      "turn_id": 11,
+      "speaker": "agent",
+      "text": "Yes sir. Anything else?",
+      "start_time": 30.0,
+      "end_time": 33.0,
+      "pause_before_sec": 0.9,
+      "interrupts_previous": false
+    },
+    {
+      "turn_id": 12,
+      "speaker": "customer",
+      "text": "No, that is all.",
+      "start_time": 33.0,
+      "end_time": 36.0,
+      "pause_before_sec": 0.5,
+      "interrupts_previous": false
+    },
+    {
+      "turn_id": 13,
+      "speaker": "agent",
+      "text": "Okay, bye.",
+      "start_time": 36.0,
+      "end_time": 39.0,
+      "pause_before_sec": 1.1,
+      "interrupts_previous": false
+    }
+  ]
+}

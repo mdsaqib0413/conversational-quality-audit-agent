@@ -1,0 +1,1130 @@
+{
+  "call_001": {
+    "candidate_steps_must_include": [
+      "GEN-01",
+      "GEN-02",
+      "GEN-03",
+      "GEN-04",
+      "GEN-05",
+      "GEN-06",
+      "GEN-07",
+      "GEN-08",
+      "HLD-05",
+      "REF-S1",
+      "REF-S2",
+      "REF-S3",
+      "REF-S4",
+      "REF-S5",
+      "REF-S6",
+      "REF-S7"
+    ],
+    "emotion": {
+      "agent": "mostly_positive",
+      "customer_end": "positive",
+      "customer_start": "neutral",
+      "customer_trend": "improved"
+    },
+    "gaps_forbidden": [
+      "dead_air",
+      "interruption",
+      "hold_too_long"
+    ],
+    "gaps_required": [],
+    "metrics": {
+      "agent_interruptions": 0,
+      "agent_talk_ratio": 0.732,
+      "agent_turns": 13,
+      "customer_turns": 13,
+      "dead_air_events": 0,
+      "holds": 0,
+      "holds_over_limit": 0,
+      "longest_hold_sec": 0.0
+    },
+    "quality": "good",
+    "requests_max": 3,
+    "score": {
+      "critical_failure_expected": false,
+      "critical_step_missed": [],
+      "grade_in": [
+        "A",
+        "B"
+      ],
+      "max_overall_if_critical": 70.0,
+      "overall_band": [
+        88,
+        100
+      ],
+      "overall_estimate": 95.0,
+      "overall_estimate_tolerance": 14.0,
+      "policy_score_expected": 30,
+      "sop_score_expected": 40.0,
+      "sop_score_tolerance": 8.0
+    },
+    "signals_required": [
+      "callback"
+    ],
+    "steps": {
+      "GEN-01": "followed",
+      "GEN-02": "followed",
+      "GEN-03": "followed",
+      "GEN-04": "followed",
+      "GEN-05": "followed",
+      "GEN-06": "followed",
+      "GEN-07": "followed",
+      "GEN-08": "followed",
+      "HLD-05": "followed",
+      "REF-S1": "followed",
+      "REF-S2": "followed",
+      "REF-S3": "followed",
+      "REF-S4": "followed",
+      "REF-S5": "followed",
+      "REF-S6": "followed",
+      "REF-S7": "followed"
+    },
+    "topic": {
+      "also_ok": [],
+      "also_ok_if_angry": false,
+      "label": "refund"
+    },
+    "violations": []
+  },
+  "call_009": {
+    "candidate_steps_must_include": [
+      "GEN-01",
+      "GEN-02",
+      "GEN-03",
+      "GEN-04",
+      "GEN-05",
+      "GEN-06",
+      "GEN-07",
+      "GEN-08"
+    ],
+    "emotion": {
+      "agent": "any",
+      "customer_end": "neutral",
+      "customer_start": "negative",
+      "customer_trend": "improved"
+    },
+    "gaps_forbidden": [
+      "interruption",
+      "hold_too_long"
+    ],
+    "gaps_required": [
+      "dead_air"
+    ],
+    "metrics": {
+      "agent_interruptions": 0,
+      "agent_talk_ratio": 0.711,
+      "agent_turns": 10,
+      "customer_turns": 10,
+      "dead_air_events": 1,
+      "holds": 0,
+      "holds_over_limit": 0,
+      "longest_hold_sec": 0.0
+    },
+    "quality": "mild_deviation",
+    "requests_max": 3,
+    "score": {
+      "critical_failure_expected": false,
+      "critical_step_missed": [],
+      "grade_in": [
+        "A",
+        "B",
+        "C"
+      ],
+      "max_overall_if_critical": 70.0,
+      "overall_band": [
+        60,
+        100
+      ],
+      "overall_estimate": 91.5,
+      "overall_estimate_tolerance": 14.0,
+      "policy_score_expected": 30,
+      "sop_score_expected": 38.5,
+      "sop_score_tolerance": 8.0
+    },
+    "signals_required": [],
+    "steps": {
+      "GEN-01": "partial",
+      "GEN-02": "followed",
+      "GEN-03": "followed",
+      "GEN-04": "followed",
+      "GEN-05": "followed",
+      "GEN-06": "followed",
+      "GEN-07": "followed",
+      "GEN-08": "followed"
+    },
+    "topic": {
+      "also_ok": [],
+      "also_ok_if_angry": false,
+      "label": "billing"
+    },
+    "violations": []
+  },
+  "call_017": {
+    "candidate_steps_must_include": [
+      "GEN-01",
+      "GEN-02",
+      "GEN-03",
+      "GEN-04",
+      "GEN-05",
+      "GEN-06",
+      "GEN-07",
+      "GEN-08"
+    ],
+    "emotion": {
+      "agent": "any",
+      "customer_end": "neutral",
+      "customer_start": "neutral",
+      "customer_trend": "flat"
+    },
+    "gaps_forbidden": [
+      "dead_air",
+      "interruption",
+      "hold_too_long"
+    ],
+    "gaps_required": [],
+    "metrics": {
+      "agent_interruptions": 0,
+      "agent_talk_ratio": 0.679,
+      "agent_turns": 10,
+      "customer_turns": 10,
+      "dead_air_events": 0,
+      "holds": 0,
+      "holds_over_limit": 0,
+      "longest_hold_sec": 0.0
+    },
+    "quality": "mild_deviation",
+    "requests_max": 3,
+    "score": {
+      "critical_failure_expected": false,
+      "critical_step_missed": [],
+      "grade_in": [
+        "A",
+        "B",
+        "C"
+      ],
+      "max_overall_if_critical": 70.0,
+      "overall_band": [
+        60,
+        100
+      ],
+      "overall_estimate": 85.6,
+      "overall_estimate_tolerance": 14.0,
+      "policy_score_expected": 27,
+      "sop_score_expected": 35.6,
+      "sop_score_tolerance": 8.0
+    },
+    "signals_required": [],
+    "steps": {
+      "GEN-01": "followed",
+      "GEN-02": "followed",
+      "GEN-03": "followed",
+      "GEN-04": "missed",
+      "GEN-05": "followed",
+      "GEN-06": "followed",
+      "GEN-07": "followed",
+      "GEN-08": "followed"
+    },
+    "topic": {
+      "also_ok": [],
+      "also_ok_if_angry": false,
+      "label": "shipping"
+    },
+    "violations": [
+      {
+        "clause": "SHP-2.1",
+        "severity": "minor",
+        "turn": 9
+      }
+    ]
+  },
+  "call_025": {
+    "candidate_steps_must_include": [
+      "GEN-01",
+      "GEN-02",
+      "GEN-03",
+      "GEN-04",
+      "GEN-05",
+      "GEN-06",
+      "GEN-07",
+      "GEN-08"
+    ],
+    "emotion": {
+      "agent": "any",
+      "customer_end": "neutral",
+      "customer_start": "neutral",
+      "customer_trend": "flat"
+    },
+    "gaps_forbidden": [
+      "dead_air",
+      "interruption",
+      "hold_too_long"
+    ],
+    "gaps_required": [
+      "no_empathy"
+    ],
+    "metrics": {
+      "agent_interruptions": 0,
+      "agent_talk_ratio": 0.664,
+      "agent_turns": 9,
+      "customer_turns": 9,
+      "dead_air_events": 0,
+      "holds": 0,
+      "holds_over_limit": 0,
+      "longest_hold_sec": 0.0
+    },
+    "quality": "mild_deviation",
+    "requests_max": 3,
+    "score": {
+      "critical_failure_expected": false,
+      "critical_step_missed": [],
+      "grade_in": [
+        "A",
+        "B",
+        "C"
+      ],
+      "max_overall_if_critical": 70.0,
+      "overall_band": [
+        60,
+        100
+      ],
+      "overall_estimate": 78.1,
+      "overall_estimate_tolerance": 14.0,
+      "policy_score_expected": 27,
+      "sop_score_expected": 34.1,
+      "sop_score_tolerance": 8.0
+    },
+    "signals_required": [],
+    "steps": {
+      "GEN-01": "followed",
+      "GEN-02": "followed",
+      "GEN-03": "followed",
+      "GEN-04": "followed",
+      "GEN-05": "missed",
+      "GEN-06": "followed",
+      "GEN-07": "followed",
+      "GEN-08": "partial"
+    },
+    "topic": {
+      "also_ok": [],
+      "also_ok_if_angry": false,
+      "label": "warranty"
+    },
+    "violations": [
+      {
+        "clause": "WAR-2.1",
+        "severity": "minor",
+        "turn": 7
+      }
+    ]
+  },
+  "call_041": {
+    "candidate_steps_must_include": [
+      "GEN-01",
+      "GEN-02",
+      "GEN-03",
+      "GEN-04",
+      "GEN-05",
+      "GEN-06",
+      "GEN-07",
+      "GEN-08"
+    ],
+    "emotion": {
+      "agent": "any",
+      "customer_end": "positive",
+      "customer_start": "neutral",
+      "customer_trend": "improved"
+    },
+    "gaps_forbidden": [
+      "dead_air",
+      "hold_too_long"
+    ],
+    "gaps_required": [
+      "interruption",
+      "no_empathy"
+    ],
+    "metrics": {
+      "agent_interruptions": 1,
+      "agent_talk_ratio": 0.634,
+      "agent_turns": 11,
+      "customer_turns": 11,
+      "dead_air_events": 0,
+      "holds": 0,
+      "holds_over_limit": 0,
+      "longest_hold_sec": 0.0
+    },
+    "quality": "mild_deviation",
+    "requests_max": 3,
+    "score": {
+      "critical_failure_expected": false,
+      "critical_step_missed": [],
+      "grade_in": [
+        "A",
+        "B",
+        "C"
+      ],
+      "max_overall_if_critical": 70.0,
+      "overall_band": [
+        60,
+        100
+      ],
+      "overall_estimate": 79.6,
+      "overall_estimate_tolerance": 14.0,
+      "policy_score_expected": 27,
+      "sop_score_expected": 35.6,
+      "sop_score_tolerance": 8.0
+    },
+    "signals_required": [],
+    "steps": {
+      "GEN-01": "followed",
+      "GEN-02": "followed",
+      "GEN-03": "followed",
+      "GEN-04": "followed",
+      "GEN-05": "missed",
+      "GEN-06": "followed",
+      "GEN-07": "followed",
+      "GEN-08": "followed"
+    },
+    "topic": {
+      "also_ok": [
+        "warranty",
+        "shipping"
+      ],
+      "also_ok_if_angry": false,
+      "label": "general"
+    },
+    "violations": [
+      {
+        "clause": "WAR-3.2",
+        "severity": "minor",
+        "turn": 9
+      }
+    ]
+  },
+  "call_101": {
+    "candidate_steps_must_include": [
+      "GEN-01",
+      "GEN-02",
+      "GEN-03",
+      "GEN-04",
+      "GEN-05",
+      "GEN-06",
+      "GEN-07",
+      "GEN-08",
+      "REF-S1",
+      "REF-S2",
+      "REF-S3",
+      "REF-S4",
+      "REF-S5",
+      "REF-S6",
+      "REF-S7"
+    ],
+    "emotion": {
+      "agent": "mostly_positive",
+      "customer_end": "positive",
+      "customer_start": "neutral",
+      "customer_trend": "improved"
+    },
+    "gaps_forbidden": [
+      "dead_air",
+      "interruption",
+      "hold_too_long"
+    ],
+    "gaps_required": [],
+    "metrics": {
+      "agent_interruptions": 0,
+      "agent_talk_ratio": 0.736,
+      "agent_turns": 10,
+      "customer_turns": 10,
+      "dead_air_events": 0,
+      "holds": 0,
+      "holds_over_limit": 0,
+      "longest_hold_sec": 0.0
+    },
+    "quality": "good",
+    "requests_max": 3,
+    "score": {
+      "critical_failure_expected": false,
+      "critical_step_missed": [],
+      "grade_in": [
+        "A",
+        "B"
+      ],
+      "max_overall_if_critical": 70.0,
+      "overall_band": [
+        88,
+        100
+      ],
+      "overall_estimate": 95.0,
+      "overall_estimate_tolerance": 14.0,
+      "policy_score_expected": 30,
+      "sop_score_expected": 40.0,
+      "sop_score_tolerance": 8.0
+    },
+    "signals_required": [],
+    "steps": {
+      "GEN-01": "followed",
+      "GEN-02": "followed",
+      "GEN-03": "followed",
+      "GEN-04": "followed",
+      "GEN-05": "followed",
+      "GEN-06": "followed",
+      "GEN-07": "followed",
+      "GEN-08": "followed",
+      "REF-S1": "followed",
+      "REF-S2": "followed",
+      "REF-S3": "followed",
+      "REF-S4": "followed",
+      "REF-S5": "followed",
+      "REF-S6": "followed",
+      "REF-S7": "followed"
+    },
+    "topic": {
+      "also_ok": [],
+      "also_ok_if_angry": false,
+      "label": "refund"
+    },
+    "violations": []
+  },
+  "call_102": {
+    "candidate_steps_must_include": [
+      "GEN-01",
+      "GEN-02",
+      "GEN-03",
+      "GEN-04",
+      "GEN-05",
+      "GEN-06",
+      "GEN-07",
+      "GEN-08",
+      "REF-S1",
+      "REF-S2",
+      "REF-S3",
+      "REF-S4",
+      "REF-S5",
+      "REF-S6",
+      "REF-S7"
+    ],
+    "emotion": {
+      "agent": "any",
+      "customer_end": "neutral",
+      "customer_start": "neutral",
+      "customer_trend": "flat"
+    },
+    "gaps_forbidden": [
+      "dead_air",
+      "interruption",
+      "hold_too_long"
+    ],
+    "gaps_required": [
+      "no_empathy"
+    ],
+    "metrics": {
+      "agent_interruptions": 0,
+      "agent_talk_ratio": 0.536,
+      "agent_turns": 7,
+      "customer_turns": 6,
+      "dead_air_events": 0,
+      "holds": 0,
+      "holds_over_limit": 0,
+      "longest_hold_sec": 0.0
+    },
+    "quality": "bad_deviation",
+    "requests_max": 3,
+    "score": {
+      "critical_failure_expected": true,
+      "critical_step_missed": [
+        "GEN-02",
+        "GEN-03",
+        "GEN-06",
+        "REF-S1",
+        "REF-S2",
+        "REF-S4",
+        "REF-S5"
+      ],
+      "grade_in": [
+        "C",
+        "D"
+      ],
+      "max_overall_if_critical": 70.0,
+      "overall_band": [
+        0,
+        70
+      ],
+      "overall_estimate": 16.4,
+      "overall_estimate_tolerance": 14.0,
+      "policy_score_expected": 0,
+      "sop_score_expected": 3.4,
+      "sop_score_tolerance": 8.0
+    },
+    "signals_required": [],
+    "steps": {
+      "GEN-01": "partial",
+      "GEN-02": "missed",
+      "GEN-03": "missed",
+      "GEN-04": "missed",
+      "GEN-05": "missed",
+      "GEN-06": "missed",
+      "GEN-07": "partial",
+      "GEN-08": "partial",
+      "REF-S1": "missed",
+      "REF-S2": "missed",
+      "REF-S3": "partial",
+      "REF-S4": "missed",
+      "REF-S5": "missed",
+      "REF-S6": "missed",
+      "REF-S7": "missed"
+    },
+    "topic": {
+      "also_ok": [],
+      "also_ok_if_angry": false,
+      "label": "refund"
+    },
+    "violations": [
+      {
+        "clause": "PRV-1.1",
+        "severity": "critical",
+        "turn": 3
+      },
+      {
+        "clause": "REF-3.1",
+        "severity": "critical",
+        "turn": 5
+      },
+      {
+        "clause": "REF-2.2",
+        "severity": "major",
+        "turn": 7
+      },
+      {
+        "clause": "REF-2.1",
+        "severity": "major",
+        "turn": 9
+      }
+    ]
+  },
+  "call_103": {
+    "candidate_steps_must_include": [
+      "GEN-01",
+      "GEN-02",
+      "GEN-03",
+      "GEN-04",
+      "GEN-05",
+      "GEN-06",
+      "GEN-07",
+      "GEN-08"
+    ],
+    "emotion": {
+      "agent": "mostly_positive",
+      "customer_end": "positive",
+      "customer_start": "negative",
+      "customer_trend": "improved"
+    },
+    "gaps_forbidden": [
+      "dead_air",
+      "interruption",
+      "hold_too_long"
+    ],
+    "gaps_required": [],
+    "metrics": {
+      "agent_interruptions": 0,
+      "agent_talk_ratio": 0.744,
+      "agent_turns": 10,
+      "customer_turns": 10,
+      "dead_air_events": 0,
+      "holds": 0,
+      "holds_over_limit": 0,
+      "longest_hold_sec": 0.0
+    },
+    "quality": "good",
+    "requests_max": 3,
+    "score": {
+      "critical_failure_expected": false,
+      "critical_step_missed": [],
+      "grade_in": [
+        "A",
+        "B"
+      ],
+      "max_overall_if_critical": 70.0,
+      "overall_band": [
+        88,
+        100
+      ],
+      "overall_estimate": 95.0,
+      "overall_estimate_tolerance": 14.0,
+      "policy_score_expected": 30,
+      "sop_score_expected": 40.0,
+      "sop_score_tolerance": 8.0
+    },
+    "signals_required": [],
+    "steps": {
+      "GEN-01": "followed",
+      "GEN-02": "followed",
+      "GEN-03": "followed",
+      "GEN-04": "followed",
+      "GEN-05": "followed",
+      "GEN-06": "followed",
+      "GEN-07": "followed",
+      "GEN-08": "followed"
+    },
+    "topic": {
+      "also_ok": [],
+      "also_ok_if_angry": false,
+      "label": "billing"
+    },
+    "violations": []
+  },
+  "call_104": {
+    "candidate_steps_must_include": [
+      "GEN-01",
+      "GEN-02",
+      "GEN-03",
+      "GEN-04",
+      "GEN-05",
+      "GEN-06",
+      "GEN-07",
+      "GEN-08"
+    ],
+    "emotion": {
+      "agent": "any",
+      "customer_end": "neutral",
+      "customer_start": "neutral",
+      "customer_trend": "flat"
+    },
+    "gaps_forbidden": [
+      "dead_air",
+      "interruption",
+      "hold_too_long"
+    ],
+    "gaps_required": [
+      "no_closing",
+      "no_empathy"
+    ],
+    "metrics": {
+      "agent_interruptions": 0,
+      "agent_talk_ratio": 0.466,
+      "agent_turns": 7,
+      "customer_turns": 6,
+      "dead_air_events": 0,
+      "holds": 0,
+      "holds_over_limit": 0,
+      "longest_hold_sec": 0.0
+    },
+    "quality": "bad_deviation",
+    "requests_max": 3,
+    "score": {
+      "critical_failure_expected": true,
+      "critical_step_missed": [
+        "GEN-02",
+        "GEN-03",
+        "GEN-06"
+      ],
+      "grade_in": [
+        "C",
+        "D"
+      ],
+      "max_overall_if_critical": 70.0,
+      "overall_band": [
+        0,
+        70
+      ],
+      "overall_estimate": 28.0,
+      "overall_estimate_tolerance": 14.0,
+      "policy_score_expected": 12,
+      "sop_score_expected": 3.0,
+      "sop_score_tolerance": 8.0
+    },
+    "signals_required": [],
+    "steps": {
+      "GEN-01": "partial",
+      "GEN-02": "missed",
+      "GEN-03": "missed",
+      "GEN-04": "missed",
+      "GEN-05": "missed",
+      "GEN-06": "missed",
+      "GEN-07": "partial",
+      "GEN-08": "missed"
+    },
+    "topic": {
+      "also_ok": [],
+      "also_ok_if_angry": false,
+      "label": "billing"
+    },
+    "violations": [
+      {
+        "clause": "PRV-1.1",
+        "severity": "critical",
+        "turn": 5
+      },
+      {
+        "clause": "BIL-2.1",
+        "severity": "minor",
+        "turn": 7
+      }
+    ]
+  },
+  "call_105": {
+    "candidate_steps_must_include": [
+      "ANG-01",
+      "ANG-02",
+      "ANG-03",
+      "ANG-04",
+      "ANG-05",
+      "GEN-01",
+      "GEN-02",
+      "GEN-03",
+      "GEN-04",
+      "GEN-05",
+      "GEN-06",
+      "GEN-07",
+      "GEN-08",
+      "HLD-01",
+      "HLD-02",
+      "HLD-03",
+      "HLD-05"
+    ],
+    "emotion": {
+      "agent": "mostly_positive",
+      "customer_end": "positive",
+      "customer_start": "negative",
+      "customer_trend": "improved"
+    },
+    "gaps_forbidden": [
+      "dead_air",
+      "interruption",
+      "hold_too_long"
+    ],
+    "gaps_required": [],
+    "metrics": {
+      "agent_interruptions": 0,
+      "agent_talk_ratio": 0.741,
+      "agent_turns": 11,
+      "customer_turns": 11,
+      "dead_air_events": 0,
+      "holds": 1,
+      "holds_over_limit": 0,
+      "longest_hold_sec": 75.0
+    },
+    "quality": "good",
+    "requests_max": 3,
+    "score": {
+      "critical_failure_expected": false,
+      "critical_step_missed": [],
+      "grade_in": [
+        "A",
+        "B"
+      ],
+      "max_overall_if_critical": 70.0,
+      "overall_band": [
+        88,
+        100
+      ],
+      "overall_estimate": 95.0,
+      "overall_estimate_tolerance": 14.0,
+      "policy_score_expected": 30,
+      "sop_score_expected": 40.0,
+      "sop_score_tolerance": 8.0
+    },
+    "signals_required": [
+      "angry_customer",
+      "callback",
+      "hold",
+      "supervisor_request"
+    ],
+    "steps": {
+      "ANG-01": "followed",
+      "ANG-02": "followed",
+      "ANG-03": "followed",
+      "ANG-04": "followed",
+      "ANG-05": "followed",
+      "GEN-01": "followed",
+      "GEN-02": "followed",
+      "GEN-03": "followed",
+      "GEN-04": "followed",
+      "GEN-05": "followed",
+      "GEN-06": "followed",
+      "GEN-07": "followed",
+      "GEN-08": "followed",
+      "HLD-01": "followed",
+      "HLD-02": "followed",
+      "HLD-03": "followed",
+      "HLD-05": "followed"
+    },
+    "topic": {
+      "also_ok": [],
+      "also_ok_if_angry": true,
+      "label": "complaint"
+    },
+    "violations": []
+  },
+  "call_106": {
+    "candidate_steps_must_include": [
+      "ANG-01",
+      "ANG-02",
+      "ANG-03",
+      "ANG-04",
+      "ANG-05",
+      "GEN-01",
+      "GEN-02",
+      "GEN-03",
+      "GEN-04",
+      "GEN-05",
+      "GEN-06",
+      "GEN-07",
+      "GEN-08",
+      "HLD-01",
+      "HLD-02",
+      "HLD-03"
+    ],
+    "emotion": {
+      "agent": "has_negative",
+      "customer_end": "negative",
+      "customer_start": "negative",
+      "customer_trend": "flat"
+    },
+    "gaps_forbidden": [
+      "dead_air"
+    ],
+    "gaps_required": [
+      "hold_too_long",
+      "interruption",
+      "no_closing",
+      "no_empathy",
+      "no_summary"
+    ],
+    "metrics": {
+      "agent_interruptions": 1,
+      "agent_talk_ratio": 0.567,
+      "agent_turns": 9,
+      "customer_turns": 7,
+      "dead_air_events": 0,
+      "holds": 1,
+      "holds_over_limit": 1,
+      "longest_hold_sec": 135.0
+    },
+    "quality": "bad_deviation",
+    "requests_max": 3,
+    "score": {
+      "critical_failure_expected": true,
+      "critical_step_missed": [
+        "GEN-06",
+        "ANG-05",
+        "HLD-02"
+      ],
+      "grade_in": [
+        "C",
+        "D"
+      ],
+      "max_overall_if_critical": 70.0,
+      "overall_band": [
+        0,
+        70
+      ],
+      "overall_estimate": 28.0,
+      "overall_estimate_tolerance": 14.0,
+      "policy_score_expected": 7,
+      "sop_score_expected": 8.0,
+      "sop_score_tolerance": 8.0
+    },
+    "signals_required": [
+      "angry_customer",
+      "hold",
+      "supervisor_request"
+    ],
+    "steps": {
+      "ANG-01": "missed",
+      "ANG-02": "missed",
+      "ANG-03": "missed",
+      "ANG-04": "missed",
+      "ANG-05": "missed",
+      "GEN-01": "followed",
+      "GEN-02": "followed",
+      "GEN-03": "partial",
+      "GEN-04": "missed",
+      "GEN-05": "missed",
+      "GEN-06": "missed",
+      "GEN-07": "missed",
+      "GEN-08": "missed",
+      "HLD-01": "partial",
+      "HLD-02": "missed",
+      "HLD-03": "missed"
+    },
+    "topic": {
+      "also_ok": [],
+      "also_ok_if_angry": true,
+      "label": "complaint"
+    },
+    "violations": [
+      {
+        "clause": "ESC-1.1",
+        "severity": "critical",
+        "turn": 7
+      },
+      {
+        "clause": "SHP-2.3",
+        "severity": "major",
+        "turn": 9
+      }
+    ]
+  },
+  "call_107": {
+    "candidate_steps_must_include": [
+      "GEN-01",
+      "GEN-02",
+      "GEN-03",
+      "GEN-04",
+      "GEN-05",
+      "GEN-06",
+      "GEN-07",
+      "GEN-08"
+    ],
+    "emotion": {
+      "agent": "any",
+      "customer_end": "negative",
+      "customer_start": "neutral",
+      "customer_trend": "worsened"
+    },
+    "gaps_forbidden": [
+      "dead_air",
+      "interruption",
+      "hold_too_long"
+    ],
+    "gaps_required": [],
+    "metrics": {
+      "agent_interruptions": 0,
+      "agent_talk_ratio": 0.663,
+      "agent_turns": 7,
+      "customer_turns": 6,
+      "dead_air_events": 0,
+      "holds": 0,
+      "holds_over_limit": 0,
+      "longest_hold_sec": 0.0
+    },
+    "quality": "bad_deviation",
+    "requests_max": 3,
+    "score": {
+      "critical_failure_expected": true,
+      "critical_step_missed": [
+        "GEN-06"
+      ],
+      "grade_in": [
+        "C",
+        "D"
+      ],
+      "max_overall_if_critical": 70.0,
+      "overall_band": [
+        0,
+        70
+      ],
+      "overall_estimate": 58.9,
+      "overall_estimate_tolerance": 14.0,
+      "policy_score_expected": 11,
+      "sop_score_expected": 28.9,
+      "sop_score_tolerance": 8.0
+    },
+    "signals_required": [],
+    "steps": {
+      "GEN-01": "followed",
+      "GEN-02": "followed",
+      "GEN-03": "followed",
+      "GEN-04": "followed",
+      "GEN-05": "partial",
+      "GEN-06": "missed",
+      "GEN-07": "partial",
+      "GEN-08": "followed"
+    },
+    "topic": {
+      "also_ok": [],
+      "also_ok_if_angry": false,
+      "label": "warranty"
+    },
+    "violations": [
+      {
+        "clause": "WAR-1.2",
+        "severity": "major",
+        "turn": 7
+      },
+      {
+        "clause": "REF-1.1",
+        "severity": "major",
+        "turn": 7
+      },
+      {
+        "clause": "WAR-1.1",
+        "severity": "minor",
+        "turn": 9
+      }
+    ]
+  },
+  "call_108": {
+    "candidate_steps_must_include": [
+      "GEN-01",
+      "GEN-02",
+      "GEN-03",
+      "GEN-04",
+      "GEN-05",
+      "GEN-06",
+      "GEN-07",
+      "GEN-08"
+    ],
+    "emotion": {
+      "agent": "mostly_positive",
+      "customer_end": "positive",
+      "customer_start": "neutral",
+      "customer_trend": "improved"
+    },
+    "gaps_forbidden": [
+      "dead_air",
+      "interruption",
+      "hold_too_long"
+    ],
+    "gaps_required": [],
+    "metrics": {
+      "agent_interruptions": 0,
+      "agent_talk_ratio": 0.765,
+      "agent_turns": 9,
+      "customer_turns": 9,
+      "dead_air_events": 0,
+      "holds": 0,
+      "holds_over_limit": 0,
+      "longest_hold_sec": 0.0
+    },
+    "quality": "good",
+    "requests_max": 3,
+    "score": {
+      "critical_failure_expected": false,
+      "critical_step_missed": [],
+      "grade_in": [
+        "A",
+        "B"
+      ],
+      "max_overall_if_critical": 70.0,
+      "overall_band": [
+        88,
+        100
+      ],
+      "overall_estimate": 95.0,
+      "overall_estimate_tolerance": 14.0,
+      "policy_score_expected": 30,
+      "sop_score_expected": 40.0,
+      "sop_score_tolerance": 8.0
+    },
+    "signals_required": [],
+    "steps": {
+      "GEN-01": "followed",
+      "GEN-02": "followed",
+      "GEN-03": "followed",
+      "GEN-04": "followed",
+      "GEN-05": "followed",
+      "GEN-06": "followed",
+      "GEN-07": "followed",
+      "GEN-08": "followed"
+    },
+    "topic": {
+      "also_ok": [],
+      "also_ok_if_angry": false,
+      "label": "shipping"
+    },
+    "violations": []
+  }
+}

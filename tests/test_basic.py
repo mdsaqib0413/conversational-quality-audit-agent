@@ -1,27 +1,13 @@
-"""Basic smoke tests for project structure and imports."""
+"""Smoke test: every module imports and the knowledge base loads."""
 
-import os
-import yaml
-from pathlib import Path
 
-def test_rubric_exists_and_valid():
-    rubric_path = Path(__file__).resolve().parent.parent / "data" / "rubric.yaml"
-    assert rubric_path.exists(), "data/rubric.yaml must exist"
-    with open(rubric_path, "r", encoding="utf-8") as f:
-        data = yaml.safe_load(f)
-    assert "categories" in data
-    assert "scoring_formula" in data
-    assert "grade_scale" in data
-    assert "sop_steps" in data
+def test_imports_and_kb():
+    import importlib
 
-def test_policies_exist():
-    policies_dir = Path(__file__).resolve().parent.parent / "data" / "policies"
-    assert policies_dir.exists()
-    md_files = list(policies_dir.glob("*.md"))
-    assert len(md_files) >= 6
+    for m in ("llm", "schemas", "rag", "topic", "emotion", "evidence", "scoring", "sop_check", "policy_check", "diarize",
+              "transcribe", "pipeline", "report", "evaluation", "labels", "transcript_io"):
+        importlib.import_module(f"src.audit.{m}")
+    from src.audit.rag import KnowledgeBase
 
-def test_sops_exist():
-    sops_dir = Path(__file__).resolve().parent.parent / "data" / "sops"
-    assert sops_dir.exists()
-    md_files = list(sops_dir.glob("*.md"))
-    assert len(md_files) >= 4
+    kb = KnowledgeBase(use_embeddings=False)
+    assert kb.policies and kb.sops

@@ -1,81 +1,149 @@
-"""Policy compliance evaluation module."""
+"""Policy compliance: ONE LLM request comparing the agent's factual claims with the retrieved policy clauses (RAG).
+
+Hard rules:
+* the model may only cite clause IDs that were retrieved;
+* every finding needs a quote that really appears in an agent turn, otherwise it is dropped;
+* with no relevant clause the answer is "no relevant policy found" and nothing is penalised.
+"""
+
+from __future__ import annotations
 
 import logging
-from typing import List, Dict, Any
-from pydantic import BaseModel, Field
-from .schemas import CallTranscript, PolicyFinding
-from .llm import gemini_gateway
+from typing import List, Sequence, Tuple
+
+from .evidence import locate_quote
+from .prompts import _load_agent, format_transcript
+from .rag import KnowledgeBase
+from .schemas import CallTranscript, PolicyAnalysis, PolicyResult
 
 logger = logging.getLogger(__name__)
 
-class PolicyCheckOutput(BaseModel):
-    findings: List[PolicyFinding] = Field(..., description="List of policy compliance or violation findings")
+NO_POLICY = "no relevant policy found"
 
-class PolicyComplianceAuditor:
-    """Audits agent dialogue turns against retrieved official policy clauses."""
+SYSTEM = _load_agent("policy_agent.md")
 
-    def evaluate_policies(
-        self,
-        transcript: CallTranscript,
-        retrieved_clauses: List[Dict[str, Any]]
-    ) -> List[PolicyFinding]:
-        """Checks for factual accuracy, misstatements, or compliance against retrieved policies."""
+ALWAYS_INCLUDE = ["PRV-1.1", "ESC-1.1", "ESC-1.2"]
 
-        agent_turns = [
-            f"Turn {t.turn_id}: {t.text}"
-            for t in transcript.turns if t.speaker == "agent"
-        ]
 
-        if not retrieved_clauses:
-            clauses_text = "No relevant policy clauses retrieved."
-        else:
-            clauses_text = "\n\n".join([
-                f"[{c.get('clause_id', 'UNKNOWN')} - {c.get('policy_name', '')}]\n{c.get('text', '')}"
-                for c in retrieved_clauses
-            ])
+def agent_query(call: CallTranscript, limit_chars: int = 3500) -> str:
+    text = " ".join(t.text for t in call.turns if t.speaker == "agent")
+    return text[:limit_chars]
 
-        prompt = f"""You are a strict QA Compliance Auditor for ShopEase customer support calls.
-Audit the agent's statements against the authoritative ShopEase policies below.
 
-CRITICAL RULES:
-1. Compare what the agent said against the retrieved policy clauses.
-2. The agent MUST NOT misstate return windows (electronics: 7 days, others: 14 days), refund times (5-7 business days), refund limits (Rs 5000), or identity checks.
-3. Every finding MUST include the exact verbatim quote and the turn_index.
-4. If a statement cannot be grounded in retrieved policies, clause_id MUST be 'no relevant policy found'.
-5. Severity levels:
-   - 'none': perfectly compliant.
-   - 'minor': small phrasing slip (penalty 3).
-   - 'major': misleading info like wrong timeframe (penalty 8).
-   - 'critical': unauthorized refund promise, disclosure failure, or identity breach (penalty 15).
+def build_prompt(call: CallTranscript, clauses) -> str:
+    clause_text = "\n\n".join(f"[{c.id}] {c.title}\n{c.short(1100)}" for c in clauses)
+    ids = ", ".join(c.id for c in clauses)
+    return f"""CALL TRANSCRIPT
+{format_transcript(call.turns)}
 
-RETRIEVED AUTHORITATIVE POLICIES:
-{clauses_text}
+POLICY EXCERPTS (the only allowed source of truth)
+{clause_text}
 
-AGENT STATEMENTS:
-{chr(10).join(agent_turns)}
+TASK
+List every factual statement, promise or commitment the AGENT made that one of the excerpts covers: time limits, amounts, eligibility, refund method, approval limits, escalation, sharing account data, hold rules and similar. Also list a clear failure to do what an excerpt makes mandatory (for example the customer asked for a supervisor twice and the agent refused), quoting the agent turn where the mistake happened.
+
+For each item return:
+- turn: the AGENT turn number, quote: exact words (max 25) from that turn, claim: the agent's statement in plain words.
+- clause_id: one of [{ids}] or "none" if no excerpt covers it.
+- verdict: "compliant" (matches the excerpt), "violation" (contradicts it, promises something it does not allow, or breaks a mandatory rule), or "unverifiable" (no excerpt covers it or you are not sure).
+- severity (only for violations, otherwise "none"):
+    minor = a wrong informational detail about a timeline, duration, count or condition (delivery or replacement time, number of delivery attempts, refund processing days, shipping-fee threshold, warranty length) that does not by itself commit money or authority;
+    major = a wrong promise or decision about money or eligibility (instant refund, refund to a method the policy does not allow, cash handed over, wrong return window used to accept or reject a return, compensation the policy does not allow);
+    critical = a security or authority breach (reading out an OTP, disclosing account details before identity verification, approving a refund above the agent's limit or without required approval, accepting a claim without mandatory proof, refusing a mandatory escalation).
+- explanation: one or two sentences stating what the agent said and what the excerpt says (cite the numbers).
+
+Be conservative: if you are not sure a statement contradicts the policy, mark it "unverifiable". Do not repeat the same issue twice. List at most 6 compliant claims, but ALL violations.
 """
 
-        try:
-            result = gemini_gateway.generate_structured(
-                prompt=prompt,
-                schema=PolicyCheckOutput,
-                system_instruction="Strictly ground all findings only in retrieved policies. Never invent policy clauses."
-            )
-            return result.findings
-        except Exception as e:
-            logger.warning(f"Policy evaluation LLM call failed or offline: {e}")
-            return [
-                PolicyFinding(
-                    clause_id=retrieved_clauses[0]["clause_id"] if retrieved_clauses else "REF-1.1",
-                    policy_name="refund_and_returns",
-                    severity="none",
-                    penalty_points=0.0,
-                    is_compliant=True,
-                    evidence_quote=agent_turns[0] if agent_turns else "Agent verified return window correctly",
-                    turn_index=1,
-                    explanation="Agent complied with standard policy terms."
-                )
-            ]
 
-# Singleton
-policy_auditor = PolicyComplianceAuditor()
+def check_policies(call: CallTranscript, topic: str, kb: KnowledgeBase, gateway, k: int = 10) -> Tuple[List[PolicyResult], List[str], List]:
+    # Every clause of the topic's main policy family is always in context (a violated clause must never be missing
+    # from the evidence), and retrieval adds the best matches from the other families.
+    family = [c.id for c in kb.policies_for_topic(topic)]
+    clauses = kb.retrieve_policies(agent_query(call), topic=topic, k=k, always_include=ALWAYS_INCLUDE + family)
+    prompt = build_prompt(call, clauses)
+    analysis = gateway.generate_structured(
+        prompt, PolicyAnalysis, system_instruction=SYSTEM, temperature=0.0, max_output_tokens=6144,
+        call_id=f"{call.call_id}_policy",
+    )
+    results, warnings = materialize_policy_results(call, analysis, clauses, kb)
+    return results, warnings, clauses
+
+
+def materialize_policy_results(call: CallTranscript, analysis: PolicyAnalysis, clauses, kb: KnowledgeBase) -> Tuple[List[PolicyResult], List[str]]:
+    allowed = {c.id for c in clauses}
+    warnings: List[str] = []
+    out: List[PolicyResult] = []
+    seen = set()
+    for c in analysis.claims:
+        clause_id = c.clause_id.strip()
+        verdict, severity = c.verdict, c.severity
+        if clause_id not in allowed:
+            if verdict == "violation":
+                warnings.append(f"Dropped a violation that cited an unknown clause ('{clause_id}').")
+                continue
+            clause_id, verdict, severity = NO_POLICY, "unverifiable", "none"
+        if verdict != "violation":
+            severity = "none"
+        elif severity == "none":
+            severity = "minor"
+        turn, score = locate_quote(call.turns, c.quote, hint_turn=c.turn or None, speaker="agent")
+        if turn is None:
+            if verdict == "violation":
+                warnings.append(f"Dropped an unverifiable violation claim for {clause_id}: the quote is not in any agent turn.")
+                continue
+            if verdict == "compliant":
+                continue
+        key = (clause_id, turn, verdict)
+        if key in seen:
+            continue
+        seen.add(key)
+        chunk = kb.by_id.get(clause_id)
+        out.append(PolicyResult(
+            clause_id=clause_id, policy_title=kb.policy_title(clause_id) if chunk else "", verdict=verdict,
+            severity=severity, turn=turn, quote=c.quote.strip(), claim=c.claim.strip(), explanation=c.explanation.strip(),
+            policy_text=chunk.body(500) if chunk else "", evidence_verified=turn is not None,
+        ))
+    # The same mistake repeated later in the call is ONE finding (penalised once, repeats listed).
+    merged: List[PolicyResult] = []
+    first_violation = {}
+    for r in sorted(out, key=lambda r: r.turn or 0):
+        if r.verdict == "violation":
+            key = r.clause_id
+            if key in first_violation:
+                head = first_violation[key]
+                if r.turn and r.turn != head.turn:
+                    head.repeat_turns.append(r.turn)
+                sev_rank = {"minor": 1, "major": 2, "critical": 3}
+                if sev_rank.get(r.severity, 0) > sev_rank.get(head.severity, 0):
+                    head.severity = r.severity
+                continue
+            first_violation[key] = r
+        merged.append(r)
+    out = merged
+    order = {"violation": 0, "compliant": 1, "unverifiable": 2}
+    out.sort(key=lambda r: (order[r.verdict], r.turn or 0))
+    return out, warnings
+
+
+_involved_cache: dict = {}
+
+
+def get_involved_clause_ids(report: "AuditReport", kb: KnowledgeBase) -> Tuple[List[str], bool]:
+    """Return (clause_ids, was_computed_now).
+
+    If the report already contains retrieved_clause_ids, return them with was_computed_now=False.
+    Otherwise, compute on the fly using kb.retrieve_policies (local, no LLM) and return with was_computed_now=True.
+    """
+    if getattr(report, "retrieved_clause_ids", None):
+        return list(report.retrieved_clause_ids), False
+    k = (getattr(report, "call_id", ""), getattr(report, "topic", ""), getattr(report, "generated_at", ""))
+    if k in _involved_cache:
+        return _involved_cache[k], True
+    family = [c.id for c in kb.policies_for_topic(report.topic)]
+    query = agent_query(report.transcript)
+    clauses = kb.retrieve_policies(query, topic=report.topic, k=10, always_include=ALWAYS_INCLUDE + family, use_embeddings=False)
+    res = [c.id for c in clauses]
+    _involved_cache[k] = res
+    return res, True
+

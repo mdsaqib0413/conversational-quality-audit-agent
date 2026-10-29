@@ -1,0 +1,15 @@
+id,file_mono,file_stereo,duration_sec,has_noise,agent_voice,customer_voice
+call_001,call_001.mp3,call_001_stereo.mp3,398.93,False,en-IN-NeerjaNeural,en-IN-PrabhatNeural
+call_009,call_009.mp3,call_009_stereo.mp3,252.3,False,en-IN-NeerjaNeural,en-IN-PrabhatNeural
+call_017,call_017.mp3,call_017_stereo.mp3,238.0,False,en-IN-NeerjaNeural,en-IN-PrabhatNeural
+call_025,call_025.mp3,call_025_stereo.mp3,219.66,False,en-IN-NeerjaNeural,en-IN-PrabhatNeural
+call_033,call_033.mp3,call_033_stereo.mp3,239.43,False,en-IN-NeerjaNeural,en-IN-PrabhatNeural
+call_041,call_041.mp3,call_041_stereo.mp3,279.92,False,en-IN-NeerjaNeural,en-IN-PrabhatNeural
+call_101,call_101.mp3,call_101_stereo.mp3,228.05,False,en-IN-NeerjaNeural,en-IN-PrabhatNeural
+call_102,call_102.mp3,call_102_stereo.mp3,94.83,False,en-IN-NeerjaNeural,en-IN-PrabhatNeural
+call_103,call_103.mp3,call_103_stereo.mp3,219.8,False,en-IN-NeerjaNeural,en-IN-PrabhatNeural
+call_104,call_104.mp3,call_104_stereo.mp3,101.24,False,en-IN-NeerjaNeural,en-IN-PrabhatNeural
+call_105,call_105.mp3,call_105_stereo.mp3,351.74,False,en-IN-NeerjaNeural,en-IN-PrabhatNeural
+call_106,call_106.mp3,call_106_stereo.mp3,272.05,False,en-IN-NeerjaNeural,en-IN-PrabhatNeural
+call_107,call_107.mp3,call_107_stereo.mp3,121.23,False,en-IN-NeerjaNeural,en-IN-PrabhatNeural
+call_108,call_108.mp3,call_108_stereo.mp3,182.12,False,en-IN-NeerjaNeural,en-IN-PrabhatNeural

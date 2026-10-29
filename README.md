@@ -1,3 +1,58 @@
+# Conversational Quality Audit Agent (ShopEase) - Team Vibe Check Crew
+
+Upload a customer-support call (MP3/WAV) and get an evidence-backed audit: transcript with speaker separation,
+emotion arc and conversation gaps, SOP adherence, policy compliance via RAG over the company policies/SOPs,
+a 0-100 score with grade, and a coaching report (PDF) for the agent.
+
+## Quick start
+
+```powershell
+pip install -r requirements.txt
+copy .env.example .env         # then put your key + a model from `python scripts/list_models.py`
+python -m pytest tests -q      # 60+ offline tests, no API needed
+python -m streamlit run app/streamlit_app.py --server.fileWatcherType none --server.runOnSave false --browser.gatherUsageStats false
+```
+
+> **Tip:** Use the helper scripts `run_app.bat` (Windows cmd) or `run_app.ps1` (PowerShell) — they run the command above from the project root automatically.
+
+
+Command line: `python scripts/audit_cli.py data/audio/call_001_stereo.mp3 --pdf`
+Free checks (0 API requests): `python eval/run_eval.py --no-llm` and `python scripts/audio_smoke_test.py data/audio/call_001_stereo.mp3`
+
+## How an audit works (2 API requests per call, 3 for mono audio)
+
+```
+audio -> faster-whisper -> speaker separation (stereo channels | 1 LLM request for mono)
+      -> metrics + topic + situation signals            (deterministic, no LLM; reusable live in Phase 2)
+      -> LLM request 1: SOP steps + empathy/communication + customer emotions + gaps
+      -> RAG: retrieve policy clauses (BM25 + embeddings) -> LLM request 2: what did the agent promise vs the policy
+      -> every quote is verified against the transcript (unverifiable claims are dropped or downgraded)
+      -> deterministic scoring from data/rubric.yaml (critical-step cap, policy penalties)
+      -> report (UI, PDF, JSON). Audits are cached, so repeating a call costs 0 requests.
+```
+
+Design rules: no fake data on failure (errors are raised and shown), every finding cites a transcript turn,
+the model may only cite retrieved clause IDs, scoring is code, not LLM.
+
+## LLM configuration (.env)
+`GEMINI_MODEL` + optional `GEMINI_FALLBACK_MODELS` (switched automatically when a model's daily free quota is gone), and an
+optional OpenAI-compatible fallback (Groq, OpenRouter, local Ollama) via `LLM_FALLBACK_PROVIDER=openai_compat`.
+The app sidebar shows the model in use and how many requests were made today.
+
+---
+
+## Real call data
+
+Source: [axondata/call-center-speech-dataset](https://www.kaggle.com/datasets/axondata/call-center-speech-dataset) on Kaggle.
+
+Two English calls are used as `data/audio/real_calls/en_real_001.mp3` and `en_real_002.mp3` (both 8 kHz mono, ~11–14 min).
+
+> ⚠️ **These are financial fraud / scam call recordings**, not ShopEase support calls. Policy compliance is not meaningful; the pipeline correctly reports 0/30 for the policy dimension. They are used as a robustness test for transcription and diarization on real 8 kHz mono telephony audio.
+
+`data/audio/real_calls/` and `call-center-speech-dataset/` are in `.gitignore` (licensed sample, do not commit). Run `python scripts/ingest_real_calls.py` to audit them.
+
+---
+
 # Conversational Quality Audit Agent (ShopEase)
 **Team:** Vibe Check Crew  
 **Context:** AI-Powered Customer Support Quality Assurance & Compliance Platform for ShopEase India.

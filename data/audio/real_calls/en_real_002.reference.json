@@ -1,0 +1,15 @@
+{
+  "call_id": "en_real_002",
+  "source_folder": "1755884171.51632 (EN Support-Billing)",
+  "language": "en",
+  "dataset": "axondata/call-center-speech-dataset",
+  "dataset_url": "https://www.kaggle.com/datasets/axondata/call-center-speech-dataset",
+  "summary": {
+    "conversation_type": "Customer Support Call – The call is focused on addressing the customer’s concerns regarding the withdrawal process, tax implications, and alternative transfer options.",
+    "key_points": "The customer, Benjamin, is discussing the process of withdrawing funds from Atomic, a cryptocurrency wallet, and the associated tax implications. The agent, Jorgen, explains that the refund from Atomic may not be taxable if the transfer is from a non-crypto account. The customer is interested in transferring the funds directly to a Canadian bank account and avoiding taxes by using a different platform (EdEx) instead of Amdex. The agent acknowledges the potential tax implications and suggests verifying the details with Atomic.",
+    "customer_sentiment": "The customer appears concerned about tax implications and the process of withdrawing funds. He is curious about the tax-free nature of the refund and determined to find a way to minimize taxes. He also shows appreciation for the agent's advice and is open to further discussion .",
+    "next_steps": "Benjamin should contact Atomic to confirm the refund process and whether the transfer can be made directly to a Canadian bank account. Benjamin should inquire whether the refund includes taxes and how it will be justified. Benjamin should send a screenshot of the communication with Atomic to Jorgen for further review.",
+    "primary_purpose": "The main purpose of the conversation was to discuss the process of withdrawing funds from Atomic, the tax implications of the withdrawal, and the possibility of transferring the funds to a Canadian bank account to avoid taxes."
+  },
+  "note": "These are financial fraud/scam call recordings, not ShopEase support calls. Policy compliance scores are not meaningful."
+}

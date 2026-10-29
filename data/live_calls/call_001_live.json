@@ -1,0 +1,313 @@
+{
+  "id": "call_001",
+  "call_id": "call_001",
+  "source_set": "live",
+  "turns": [
+    {
+      "turn_id": 1,
+      "speaker": "agent",
+      "text": "Thank you for calling ShopEase customer support. My name is Priya Nair. Please note that the ████████ Next note that this call is being recorded for quality monitoring... and training purposes How may I say S*** How may I assist you today?",
+      "start_time": 0.0,
+      "end_time": 13.0,
+      "pause_before_sec": 0.0,
+      "interrupts_previous": false
+    },
+    {
+      "turn_id": 2,
+      "speaker": "customer",
+      "text": "Hello pre- Hello Priya, my name is Rajesh Kumar Walmart I recently ordered an electric. kettle from your website, but it But it's not working properly, so I would... like to get a return and refund for it",
+      "start_time": 10.0,
+      "end_time": 25.5,
+      "pause_before_sec": 0.0,
+      "interrupts_previous": true
+    },
+    {
+      "turn_id": 3,
+      "speaker": "agent",
+      "text": "I will certainly",
+      "start_time": 25.0,
+      "end_time": 28.0,
+      "pause_before_sec": 0.0,
+      "interrupts_previous": true
+    },
+    {
+      "turn_id": 4,
+      "speaker": "customer",
+      "text": "and for it.",
+      "start_time": 25.0,
+      "end_time": 28.0,
+      "pause_before_sec": 0.0,
+      "interrupts_previous": true
+    },
+    {
+      "turn_id": 5,
+      "speaker": "agent",
+      "text": "You will certainly be glad to assist you with your refund request today. Trust today, Mr. Kumar. To ensure your account security- may I please have your order ID? ShopEase, Rs, rupees, order ID, and the last 4 digits of your registered mobile number... Group Mobile Number",
+      "start_time": 27.5,
+      "end_time": 40.5,
+      "pause_before_sec": 0.0,
+      "interrupts_previous": true
+    },
+    {
+      "turn_id": 6,
+      "speaker": "customer",
+      "text": "Yes, of course The order ID is... ORD 85674 ShopEase Rs. $1.04 and the last 4 digits of my $1.04.04. Of my registered phone number R41",
+      "start_time": 37.5,
+      "end_time": 50.5,
+      "pause_before_sec": 0.0,
+      "interrupts_previous": true
+    },
+    {
+      "turn_id": 7,
+      "speaker": "agent",
+      "text": "Thank you.",
+      "start_time": 50.0,
+      "end_time": 53.0,
+      "pause_before_sec": 0.0,
+      "interrupts_previous": true
+    },
+    {
+      "turn_id": 8,
+      "speaker": "customer",
+      "text": "Rs, rupees, order ID, supervisor, refund, warranty, any",
+      "start_time": 50.0,
+      "end_time": 53.0,
+      "pause_before_sec": 0.0,
+      "interrupts_previous": true
+    },
+    {
+      "turn_id": 9,
+      "speaker": "agent",
+      "text": "Thank you for verifying those details, Mr. Kumar, if I understand correctly you received your Prestige Electric Cuddle Electric Kettle 1.5L and found that... it is not functioning properly. So you would like to initiate a return for a complete refund- Is that correct?",
+      "start_time": 52.5,
+      "end_time": 70.5,
+      "pause_before_sec": 0.0,
+      "interrupts_previous": true
+    },
+    {
+      "turn_id": 10,
+      "speaker": "customer",
+      "text": "Yes, that is correct. When I plug it in, the heating plate Clean plate does not heat up at all.",
+      "start_time": 70.0,
+      "end_time": 78.0,
+      "pause_before_sec": 0.0,
+      "interrupts_previous": true
+    },
+    {
+      "turn_id": 11,
+      "speaker": "agent",
+      "text": "I'm truly sorry for the trouble- this has caused you, Mr. Kumar I understand how disappointing it is to receive a new ShopEase, Rs, rupees, And I will personally take ownership to ensure this re- This refund process is completely seamless. for you.",
+      "start_time": 77.5,
+      "end_time": 95.5,
+      "pause_before_sec": 0.0,
+      "interrupts_previous": true
+    },
+    {
+      "turn_id": 12,
+      "speaker": "customer",
+      "text": "Thank you! I appreciate that.",
+      "start_time": 92.5,
+      "end_time": 98.0,
+      "pause_before_sec": 0.0,
+      "interrupts_previous": true
+    },
+    {
+      "turn_id": 13,
+      "speaker": "agent",
+      "text": "Could you please confirm if there is any... visible physical damage to the kettle or core- or cord and whether you were able to test it on an all- Sit on an alternate power outlet",
+      "start_time": 97.5,
+      "end_time": 108.0,
+      "pause_before_sec": 0.0,
+      "interrupts_previous": true
+    },
+    {
+      "turn_id": 14,
+      "speaker": "customer",
+      "text": "There is no physical damage whatsoever The Applions and Out and outer box look brand new I tried to separate sockets in my case. In my kitchen, but the indicator light simply might simply does not turn on.",
+      "start_time": 107.5,
+      "end_time": 123.0,
+      "pause_before_sec": 0.0,
+      "interrupts_previous": true
+    },
+    {
+      "turn_id": 15,
+      "speaker": "agent",
+      "text": "Thank you for testing that and confirming the and confirming I have checked your order record and this... cuddle was delivered 3 days ago. Under ShopEase Policy, Products in the Elective In the electronics category have a 7-calendar day with a 8- Order Day return window from delivery compared to ████████. Compared to 14 calendar days for non-electronics Serenix Since you are contacting us well within this ShopEase, Rs, rupees, order ID, supervisor, refund, warranty, Your return is fully eligible",
+      "start_time": 122.5,
+      "end_time": 148.0,
+      "pause_before_sec": 0.0,
+      "interrupts_previous": true
+    },
+    {
+      "turn_id": 16,
+      "speaker": "customer",
+      "text": "Done! That is good to know. Thank you.",
+      "start_time": 145.0,
+      "end_time": 150.5,
+      "pause_before_sec": 0.0,
+      "interrupts_previous": true
+    },
+    {
+      "turn_id": 17,
+      "speaker": "agent",
+      "text": "Furthermore, the item that... Item value is 899 Rs. ShopEase, Rs, rupees, Rs, rupees Agent Discretionary Approval Limit of Rs. 5000 Rs,000- rupees Therefore, I can approve- Prove your refund immediately without needing secondary mail. Secondary Management Sign Off",
+      "start_time": 150.0,
+      "end_time": 168.0,
+      "pause_before_sec": 0.0,
+      "interrupts_previous": true
+    },
+    {
+      "turn_id": 18,
+      "speaker": "customer",
+      "text": "That's it. That is wonderful! How well the re- Will the refund amount be sent back to me?",
+      "start_time": 165.0,
+      "end_time": 173.0,
+      "pause_before_sec": 0.0,
+      "interrupts_previous": true
+    },
+    {
+      "turn_id": 19,
+      "speaker": "agent",
+      "text": "For our company policy Refunds return strictly to the original payment method used during checkout or ████████. or via any FT Bank transfer for cash on a- Cash on delivery orders As our delivery agent... Every agents never disperse cash at the doorstep. Since you paid online using UPI The refund of 899 Rs. Repease will be remitted to your source bank account within a few days. Withn5 to 7 business days following pick up and warehouse verification",
+      "start_time": 172.5,
+      "end_time": 200.5,
+      "pause_before_sec": 0.0,
+      "interrupts_previous": true
+    },
+    {
+      "turn_id": 20,
+      "speaker": "customer",
+      "text": "understood that timeline works for me. Also, Priya, I had an issue. and issue during delivery. The delivery... person was quite rude and argued. with my elderly mother at our... doorstep. I would like to speak. with a supervisor right now to log in. ShopEase",
+      "start_time": 200.0,
+      "end_time": 223.0,
+      "pause_before_sec": 0.0,
+      "interrupts_previous": true
+    },
+    {
+      "turn_id": 21,
+      "speaker": "agent",
+      "text": "I...",
+      "start_time": 222.5,
+      "end_time": 225.5,
+      "pause_before_sec": 0.0,
+      "interrupts_previous": true
+    },
+    {
+      "turn_id": 22,
+      "speaker": "customer",
+      "text": "at co-rear behavior",
+      "start_time": 222.5,
+      "end_time": 225.5,
+      "pause_before_sec": 0.0,
+      "interrupts_previous": true
+    },
+    {
+      "turn_id": 23,
+      "speaker": "agent",
+      "text": "I am deeply sorry to hear about that experience. Mr. Kumar That is entirely... unacceptable conduct from our logistics Partner May I place your call on a brief... hold for up to 2 minutes while I check if this was a good day. Check if the supervisor is currently available to take over Gover",
+      "start_time": 225.0,
+      "end_time": 243.0,
+      "pause_before_sec": 0.0,
+      "interrupts_previous": true
+    },
+    {
+      "turn_id": 24,
+      "speaker": "customer",
+      "text": "Yes, please go! ahead. I will wait.",
+      "start_time": 240.0,
+      "end_time": 245.5,
+      "pause_before_sec": 0.0,
+      "interrupts_previous": true
+    },
+    {
+      "turn_id": 25,
+      "speaker": "agent",
+      "text": "Thank you for holding... Overholding Mr. Kumar and I sincerely apologize for your attention. I really apologize for the wait. Our senior Super are currently assisting other callers Order colors on escalated lines. Rather... than keeping you waiting indefinitely, I can s- I can schedule a confirmed supervisor callback for your Call back for you within the next 2 to 4 hours Rs, would that work for you?",
+      "start_time": 245.0,
+      "end_time": 268.0,
+      "pause_before_sec": 0.0,
+      "interrupts_previous": true
+    },
+    {
+      "turn_id": 26,
+      "speaker": "customer",
+      "text": "Yes that sounds fair Please arrange the call back.",
+      "start_time": 265.0,
+      "end_time": 273.0,
+      "pause_before_sec": 0.0,
+      "interrupts_previous": true
+    },
+    {
+      "turn_id": 27,
+      "speaker": "agent",
+      "text": "I have created supervisor called... Callback Ticket Hashtag CB 6041 and confirmed that the manager will reach you a- will reach you on your registered mobile number ending in 41- S4150 within 2 to 4 hours In the meantime, I have scheduled your reverse pick- for tomorrow between 10am and 6pm. and 6 p.m. under return reference ticket hash- Make it hashtag RTN88310 3-1-0 Please ensure the kettle is placed in a ████████ Placed in its original prestige box along with the power... Base and User Manual for handoff",
+      "start_time": 272.5,
+      "end_time": 303.0,
+      "pause_before_sec": 0.0,
+      "interrupts_previous": true
+    },
+    {
+      "turn_id": 28,
+      "speaker": "customer",
+      "text": "Perfect, I have the original... Box and All Accessories Pack Fact and Ready.",
+      "start_time": 302.5,
+      "end_time": 310.5,
+      "pause_before_sec": 0.0,
+      "interrupts_previous": true
+    },
+    {
+      "turn_id": 29,
+      "speaker": "agent",
+      "text": "To recap our call today, Mr. Kumar RQMR, Return Ticket hashtag RTN. TN, 88310 has been general- has been generated for your prestige electric kettle. ShopEase, Rs, rupees, order ID, supervisor, refund, warranty, any your full refund of 899-898-890-890-890-890-890. Rs, rupees will be credited to your original UPE- Professional UPI account within 5-7 business days following pickup. Additionally... Charlie, Priority Callback Ticket-Hashtag CB 6041 is logged and a super- will call your number ending in 41- 4150 within 2 to 4 hours regarding the delivery concern. Is there anything else I've... Anything else I may assist you with today?",
+      "start_time": 310.0,
+      "end_time": 348.0,
+      "pause_before_sec": 0.0,
+      "interrupts_previous": true
+    },
+    {
+      "turn_id": 30,
+      "speaker": "customer",
+      "text": "Nope No Priya, that is everything You have handled this very efficiently. and address all my concerns. Sons. Thank you.",
+      "start_time": 345.0,
+      "end_time": 358.0,
+      "pause_before_sec": 0.0,
+      "interrupts_previous": true
+    },
+    {
+      "turn_id": 31,
+      "speaker": "agent",
+      "text": "It was truly my pleasure assisting you today. Investing you today. Thank you for contacting ShopEase.",
+      "start_time": 357.5,
+      "end_time": 363.0,
+      "pause_before_sec": 0.0,
+      "interrupts_previous": true
+    },
+    {
+      "turn_id": 32,
+      "speaker": "agent",
+      "text": "Full rest of your day.",
+      "start_time": 365.0,
+      "end_time": 369.39,
+      "pause_before_sec": 2.0,
+      "interrupts_previous": false
+    },
+    {
+      "turn_id": 33,
+      "speaker": "customer",
+      "text": "Thank you, goodbye.",
+      "start_time": 362.5,
+      "end_time": 369.39,
+      "pause_before_sec": 0.0,
+      "interrupts_previous": true
+    },
+    {
+      "turn_id": 34,
+      "speaker": "agent",
+      "text": "ShopEase, RQM.",
+      "start_time": 362.5,
+      "end_time": 365.5,
+      "pause_before_sec": 0.0,
+      "interrupts_previous": true
+    }
+  ]
+}

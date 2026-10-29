@@ -1,0 +1,113 @@
+# The contract: what each feature must achieve, written BEFORE running anything.
+# `metric` names are computed by src/audit/featuretests.py from the per-call expected results in expected_results.json.
+# level: hard = a miss is a FAIL (blocks release); soft = a miss is a WARN (worth a look).
+version: 1
+features:
+  - id: topic
+    title: "Topic detection"
+    plain: "Works out what the call is about (refund, billing, shipping, warranty, complaint)."
+    needs_ai: false
+    checks:
+      - {metric: topic_accuracy, label: "Calls whose topic is recognised", op: ">=", value: 0.85, level: hard}
+
+  - id: signals
+    title: "Situation signals"
+    plain: "Notices angry customers, holds, transfers, callbacks and supervisor requests, because they decide which script steps apply."
+    needs_ai: false
+    checks:
+      - {metric: signals_recall, label: "Expected signals that were detected", op: ">=", value: 1.0, level: hard}
+
+  - id: candidate_steps
+    title: "Choosing the script steps to judge"
+    plain: "Picks the right script (SOP) steps for each call, so nothing that should be checked is skipped."
+    needs_ai: false
+    checks:
+      - {metric: candidate_coverage, label: "Labelled steps that were put up for judging", op: ">=", value: 1.0, level: hard}
+
+  - id: timing
+    title: "Silences, holds and interruptions"
+    plain: "Measures dead air, holds longer than 2 minutes, and the agent talking over the customer, straight from the timing."
+    needs_ai: false
+    checks:
+      - {metric: timing_exact, label: "Counts that match exactly", op: ">=", value: 1.0, level: hard}
+      - {metric: talk_ratio_ok, label: "Agent talk share within 6 points of expected", op: ">=", value: 0.95, level: soft}
+
+  - id: scoring_formula
+    title: "Score arithmetic"
+    plain: "The scoring rules (weights, penalties, 70 cap) give exactly the points an independent calculation gives from the same findings."
+    needs_ai: false
+    checks:
+      - {metric: formula_sop_ok, label: "Script score matches independent arithmetic", op: ">=", value: 1.0, level: hard}
+      - {metric: formula_policy_ok, label: "Rules score matches independent arithmetic", op: ">=", value: 1.0, level: hard}
+      - {metric: formula_cap_ok, label: "A missed critical step never scores above 70", op: ">=", value: 1.0, level: hard}
+
+  - id: sop_steps
+    title: "Script (SOP) judging"
+    plain: "Decides, step by step, whether the agent did it, did part of it, or missed it."
+    needs_ai: true
+    checks:
+      - {metric: step_exact, label: "Steps judged exactly as labelled", op: ">=", value: 0.90, level: hard}
+      - {metric: deviation_recall, label: "Real problems that were caught", op: ">=", value: 0.85, level: hard}
+      - {metric: deviation_precision, label: "Flagged problems that were real", op: ">=", value: 0.90, level: hard}
+
+  - id: policy
+    title: "Company-rule (policy) check"
+    plain: "Finds statements where the agent contradicted company policy and rates how serious they are."
+    needs_ai: true
+    checks:
+      - {metric: violation_recall, label: "Real rule violations that were found", op: ">=", value: 0.90, level: hard}
+      - {metric: violation_precision, label: "Reported violations that were real", op: ">=", value: 0.85, level: hard}
+      - {metric: severity_agreement, label: "Severity matches the label", op: ">=", value: 0.75, level: soft}
+
+  - id: evidence
+    title: "Evidence integrity"
+    plain: "Every finding quotes words that really appear in the transcript. Nothing is invented."
+    needs_ai: true
+    checks:
+      - {metric: evidence_ok, label: "Audits with no unverifiable quote", op: ">=", value: 0.98, level: hard}
+
+  - id: scoring_outcome
+    title: "Scores and grades"
+    plain: "Good calls score high, bad calls score low, and critical failures are capped."
+    needs_ai: true
+    checks:
+      - {metric: grade_ok, label: "Grade inside the expected range", op: ">=", value: 1.0, level: hard}
+      - {metric: band_ok, label: "Score inside the expected band", op: ">=", value: 1.0, level: hard}
+      - {metric: critical_ok, label: "Critical failures flagged and capped", op: ">=", value: 1.0, level: hard}
+      - {metric: sop_score_ok, label: "Script score near the expected value", op: ">=", value: 0.90, level: soft}
+      - {metric: overall_estimate_ok, label: "Overall score near the estimate", op: ">=", value: 0.80, level: soft}
+
+  - id: emotion
+    title: "Emotion and tone"
+    plain: "Follows the customer's mood from start to end and how the agent comes across."
+    needs_ai: true
+    checks:
+      - {metric: customer_start_ok, label: "Customer's starting mood", op: ">=", value: 0.75, level: soft}
+      - {metric: customer_end_ok, label: "Customer's ending mood", op: ">=", value: 0.75, level: soft}
+      - {metric: customer_trend_ok, label: "Mood trend (better / same / worse)", op: ">=", value: 0.70, level: soft}
+      - {metric: agent_tone_ok, label: "Agent tone matches expectation", op: ">=", value: 0.80, level: soft}
+
+  - id: gaps
+    title: "Conversation gaps"
+    plain: "Reports silences, holds, interruptions, missing empathy and missing recaps, and nothing that did not happen."
+    needs_ai: true
+    checks:
+      - {metric: timing_gap_ok, label: "Timing gaps reported exactly", op: ">=", value: 1.0, level: hard}
+      - {metric: ai_gap_recall, label: "Expected empathy / recap / closing gaps reported", op: ">=", value: 0.60, level: soft}
+
+  - id: efficiency
+    title: "AI request budget"
+    plain: "An audit stays within 3 AI requests, so the free daily quota lasts."
+    needs_ai: true
+    checks:
+      - {metric: requests_ok, label: "Audits within budget", op: ">=", value: 1.0, level: hard}
+
+  - id: report_outputs
+    title: "Report outputs"
+    plain: "The HTML, PDF and JSON reports contain every section and open correctly."
+    needs_ai: false
+    checks:
+      - {metric: html_sections_ok, label: "HTML has every section", op: ">=", value: 1.0, level: hard}
+      - {metric: pdf_ok, label: "PDF is produced", op: ">=", value: 1.0, level: hard}
+      - {metric: json_roundtrip_ok, label: "JSON reloads to the same report", op: ">=", value: 1.0, level: hard}
+      - {metric: html_safe_ok, label: "Text from calls cannot inject HTML", op: ">=", value: 1.0, level: hard}

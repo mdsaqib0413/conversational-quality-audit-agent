@@ -1,0 +1,15 @@
+{
+  "call_id": "en_real_001",
+  "source_folder": "1735404531.458927 (EN customer support )",
+  "language": "en",
+  "dataset": "axondata/call-center-speech-dataset",
+  "dataset_url": "https://www.kaggle.com/datasets/axondata/call-center-speech-dataset",
+  "summary": {
+    "conversation_type": "Customer Support Call",
+    "key_points": "The agent, Steven from ____ finance department, contacted the customer, Maria, to assist with a quick and easy withdrawal of funds from the platform to her bank. A solution was identified, and the agent attempted to guide Maria through the process using AnyDesk. However, technical issues arose with the Pixel phone, leading to the need for a Samsung phone. The process was partially completed, but the Cash App verification could not be finalized due to regional restrictions.",
+    "customer_sentiment": "The customer appeared cooperative and patient throughout the call. She followed instructions and was willing to switch phones to resolve the issue. There were moments of confusion and frustration when technical problems occurred, but she remained calm and engaged.",
+    "next_steps": "The agent will double-check the Cash App verification process and reach out to Maria again to complete it. Maria will ensure her Samsung phone is ready for the next attempt. The agent will confirm if the regional restriction is due to a VPN or account settings.",
+    "primary_purpose": "To assist the customer with a withdrawal from the _____ platform to her bank account by guiding her through the verification process using AnyDesk and Cash App."
+  },
+  "note": "These are financial fraud/scam call recordings, not ShopEase support calls. Policy compliance scores are not meaningful."
+}

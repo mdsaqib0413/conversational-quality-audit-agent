@@ -1,0 +1,5 @@
+# Human corrections applied on top of the expectations derived from the labels.
+# Keep this file small: every entry is a judgement call that a reviewer should be able to read and challenge.
+call_041:
+  topic:
+    also_ok: [warranty, shipping]     # one call about a delivery status AND a warranty question: either reading is right

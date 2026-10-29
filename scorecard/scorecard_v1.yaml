@@ -1,0 +1,152 @@
+# Conversational Quality Audit Scorecard - Version 1.0 (Prodloop Capstone / Telugu-Ready)
+# Team: Vibe Check Crew
+version: "1.0"
+last_updated: "2026-10-29"
+
+rubric_alignment:
+  sop_adherence_weight: 40
+  policy_compliance_weight: 30
+  empathy_weight: 15
+  communication_weight: 15
+  critical_failure_cap:
+    max_overall_score: 70.0
+    triggers:
+      - "Missed critical mandatory criterion (e.g., identity_verification before account disclosure)"
+      - "Critical policy breach (e.g., PRV-1.1 unauthorized PII disclosure)"
+
+criteria:
+  - id: identity_verification
+    name: "Customer Identity & Account Verification"
+    description: "Agent must confirm caller identity (Order ID + registered phone last 4 digits) BEFORE discussing, displaying, or disclosing account or order details."
+    type: mandatory
+    severity: critical
+    observable_or_inferred: observable
+    evidence_required: "Verbatim quote of verification request and customer confirmation prior to any account-detail discussion turn."
+    grading_levels:
+      followed:
+        points_multiplier: 1.0
+        definition: "Full verification completed before discussing or confirming account details."
+      partial:
+        points_multiplier: 0.5
+        definition: "Only partial details requested (e.g., Order ID without phone last 4 digits)."
+      missed:
+        points_multiplier: 0.0
+        definition: "Account details disclosed or discussed with no verification performed prior, or customer verification skipped entirely."
+      not_applicable:
+        points_multiplier: 1.0
+        definition: "General inquiry where no customer account or personal order details are accessed."
+
+  - id: greeting_and_recording_disclosure
+    name: "Professional Greeting & Call Recording Disclosure"
+    description: "Agent must state company name (ShopEase), their name, and explicitly inform the caller that the call is being recorded for quality/training purposes."
+    type: mandatory
+    severity: major
+    observable_or_inferred: observable
+    evidence_required: "Verbatim quote of opening greeting and call-recording disclosure statement in opening turns."
+    grading_levels:
+      followed:
+        points_multiplier: 1.0
+        definition: "Brand greeting, agent name, and recording disclosure all explicitly spoken in first 2 agent turns."
+      partial:
+        points_multiplier: 0.5
+        definition: "Brand greeting provided, but agent name or recording disclosure omitted."
+      missed:
+        points_multiplier: 0.0
+        definition: "No standard greeting or missing mandatory recording disclosure statement."
+
+  - id: hold_handling
+    name: "Hold & Transfer Protocol Adherence"
+    description: "When putting a customer on hold, agent must request permission, state the reason and expected duration (< 2 minutes), and thank the customer upon return."
+    type: mandatory
+    severity: major
+    observable_or_inferred: observable
+    evidence_required: "Timestamped quote of permission request, reason, return gratitude, and measured dead-air duration."
+    grading_levels:
+      followed:
+        points_multiplier: 1.0
+        definition: "Permission requested, reason stated, return with gratitude, duration under 2-minute ceiling."
+      partial:
+        points_multiplier: 0.5
+        definition: "Hold placed without stating expected time, or returned without thank you."
+      missed:
+        points_multiplier: 0.0
+        definition: "Hold placed without permission (silent hold > 15s) or hold exceeded 2 minutes without check-in."
+      not_applicable:
+        points_multiplier: 1.0
+        definition: "No hold occurred during the call."
+
+  - id: issue_understood_and_resolved
+    name: "Holistic Issue Comprehension & Resolution"
+    description: "Agent actively understands the root problem across the WHOLE interaction and executes or commits to a concrete, policy-compliant resolution."
+    type: graded
+    severity: major
+    observable_or_inferred: observable
+    evidence_required: "Transcript evidence of customer issue clarification and agent resolution action plan / reference ticket."
+    grading_levels:
+      excellent:
+        score: 5
+        definition: "Accurately diagnoses the issue, explains the solution clearly, and initiates immediate resolution."
+      proficient:
+        score: 4
+        definition: "Resolves the core issue but requires repetitive customer explanation."
+      adequate:
+        score: 3
+        definition: "Issue resolved with slight delays or vague timeline commitments."
+      deficient:
+        score: 1
+        definition: "Misunderstands root cause or leaves issue open without concrete next steps."
+      failed:
+        score: 0
+        definition: "Completely fails to resolve the issue or provides contradictory information."
+
+  - id: closure_and_next_steps
+    name: "Clear Closure, Next Steps & Ambiguity Handling"
+    description: "Agent recaps agreed action items, provides reference ticket or timeline, and confirms caller satisfaction before branded sign-off. Ambiguous customer responses must not be recorded as satisfied."
+    type: graded
+    severity: minor
+    observable_or_inferred: observable
+    evidence_required: "Verbatim quote of recap, reference number/timeline, and closing customer response."
+    grading_levels:
+      excellent:
+        score: 5
+        definition: "Clear recap with timelines, explicit customer confirmation of satisfaction, branded sign-off."
+      adequate:
+        score: 3
+        definition: "Recap provided, but closing response from customer is ambiguous (e.g., 'sare, chuddam le') and left unaddressed."
+      deficient:
+        score: 1
+        definition: "No recap of next steps or abrupt disconnect."
+
+  - id: empathy_and_communication
+    name: "Empathy, Tone & Communication Quality"
+    description: "Evaluates conversational rapport, active listening, non-defensive composure, and empathetic acknowledgement of customer frustration. Always designated as an INFERRED interpretation."
+    type: graded
+    severity: minor
+    observable_or_inferred: inferred
+    evidence_required: "Verbatim quote showing best or worst emotional acknowledgement and tonal composure."
+    grading_levels:
+      exemplary:
+        score: 5
+        definition: "Proactively validates emotion, adapts tone warmly to distress, takes sincere ownership."
+      proficient:
+        score: 4
+        definition: "Polite and courteous, acknowledges customer situation adequately."
+      scripted:
+        score: 2
+        definition: "Generic robotic apology at inappropriate moments, dismissive or indifferent tone."
+      unprofessional:
+        score: 0
+        definition: "Defensive, argumentative, or rude phrasing."
+
+  - id: policy_compliance
+    name: "RAG Policy & Clause Compliance"
+    description: "Verifies that factual agent statements adhere strictly to authoritative retrieved ShopEase policy clauses (refund windows, thresholds, payment methods)."
+    type: mandatory
+    severity: critical
+    observable_or_inferred: observable
+    evidence_required: "Verbatim quote matched against retrieved clause ID with factual contradiction highlighted."
+    penalties:
+      minor: 3
+      major: 8
+      critical: 15
+

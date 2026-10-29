@@ -38,6 +38,7 @@ load_dotenv(dotenv_path=REPO_ROOT / ".env", override=True)
 
 import yaml
 from src.audit.llm import gemini_gateway
+from src.audit.labels import best_overlap_agent_turn
 
 logging.basicConfig(level=logging.INFO, format="%(asctime)s [%(levelname)s] %(message)s")
 logger = logging.getLogger("generate_transcripts")
@@ -671,8 +672,13 @@ def generate_single_call_with_verification(spec: Dict[str, Any], step_definition
                         matched_turn = t["i"]
                         break
             if not matched_turn:
-                agent_turn_ids = [t["i"] for t in turns if t["speaker"] == "agent"]
-                matched_turn = agent_turn_ids[len(agent_turn_ids) // 2] if agent_turn_ids else 3
+                # Never guess a turn: find the agent turn that actually states the wrong claim.
+                matched_turn = best_overlap_agent_turn(turns, f"{v.get('hint', '')} {v.get('correct_fact', '')}")
+            if not matched_turn:
+                last_failure_notes = [f"Could not locate the agent turn stating the injected violation {v['clause_id']}."]
+                logger.warning(last_failure_notes[0])
+                resolved_viols = None
+                break
 
             resolved_viols.append({
                 "turn": matched_turn,
@@ -681,6 +687,8 @@ def generate_single_call_with_verification(spec: Dict[str, Any], step_definition
                 "severity": v["severity"],
                 "correct_fact": v["correct_fact"]
             })
+        if resolved_viols is None:
+            continue  # regenerate: the violation could not be located in the dialogue
         call_data["ground_truth"]["policy_violations"] = resolved_viols
 
         # Step C: LLM Verification Pass (temperature 0)
