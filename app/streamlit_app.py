@@ -36,6 +36,7 @@ from src.audit.topic import detect_topic, get_live_context
 from src.audit.transcript_io import find_transcripts, load_transcript_json
 from src.live.engine import LiveSession
 from src.live.player import LiveSimulator
+from observability import render_observability_dashboard
 
 st.set_page_config(page_title="AuditIQ · Call quality", page_icon="🎧", layout="wide", initial_sidebar_state="expanded")
 
@@ -56,7 +57,7 @@ if _is_model_in_hf_cache():
 
 AUDIT_DIR = ROOT / "data" / "cache" / "audits"
 LIVE_CALLS_DIR = ROOT / "data" / "live_calls"
-PAGES = ["Dashboard", "Audit a call", "Report", "Policy lookup", "Live assist", "Test lab"]
+PAGES = ["Dashboard", "Audit a call", "Report", "Policy lookup", "Live assist", "Test lab", "Observability"]
 
 
 # ------------------------------------------------------------------------------ cached resource helpers
@@ -238,6 +239,7 @@ with st.sidebar:
     st.write("")
     st.radio("Navigate", PAGES, key="nav", label_visibility="collapsed")
     st.write("")
+    st.info("🔒 **Data Privacy Notice:** Calls may contain customer personal data (PII). Real customer audio must not be uploaded without approval. See docs/PRIVACY.md.")
     st.divider()
     dark_mode = st.toggle("Dark mode", value=st.session_state["dark_mode"], key="sidebar_dark_toggle")
     st.session_state["dark_mode"] = dark_mode
@@ -504,7 +506,7 @@ def page_report() -> None:
 
     html(U.score_cards(rep))
     rep = apply_reviews_to_report(rep)
-    tabs = st.tabs(["Overview", "QA Review", "Timeline", "Call script", "Company rules", "Coaching", "Transcript", "Score breakdown", "Details"])
+    tabs = st.tabs(["Overview", "QA Review", "Timeline", "Call script", "Company rules", "Coaching", "Transcript", "Score breakdown", "Details", "Trace"])
     with tabs[0]:
         html(U.summary_card(rep))
         html(U.section_title("The call in numbers", "what each number means"))
@@ -528,7 +530,7 @@ def page_report() -> None:
                             st.markdown("**Evidence Quotes:**")
                             for ev in f.evidence:
                                 ts = f"[{int(ev.start_s//60):02d}:{int(ev.start_s%60):02d}-{int(ev.end_s//60):02d}:{int(ev.end_s%60):02d}]" if ev.end_s else f"[Turn {ev.turn_id}]"
-                                st.markdown(f"- `{ts}` *{ev.speaker.upper()}*: "{ev.quote}"")
+                                st.markdown(f'- `{ts}` *{ev.speaker.upper()}*: "{ev.quote}"')
                         if f.explanation:
                             st.info(f.explanation)
                     with c_r:
@@ -945,7 +947,7 @@ def page_test_lab() -> None:
 
 
 ROUTER = {"Dashboard": page_dashboard, "Audit a call": page_audit, "Report": page_report, "Policy lookup": page_policy,
-          "Live assist": page_live, "Test lab": page_test_lab}
+          "Live assist": page_live, "Test lab": page_test_lab, "Observability": render_observability_dashboard}
 
 t_render_start = time.perf_counter()
 ROUTER[page]()

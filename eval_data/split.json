@@ -1,0 +1,33 @@
+{
+  "_description": "Frozen evaluation splits for conversational audit pipeline. Heldout calls must never appear in prompts, few-shots, or quality configs.",
+  "rule": "Calls used for few-shot citations, prompt design, and threshold calibration (call_001, call_009, call_017, call_025, call_041, call_101, call_102, call_103, call_107, plus synthetic fixtures) are assigned to 'dev'. Frozen evaluation calls (call_033, call_104, call_105, call_106, call_108, te_heldout_001, te_heldout_002) are strictly isolated as 'heldout'.",
+  "dev": [
+    "call_001",
+    "call_009",
+    "call_017",
+    "call_025",
+    "call_041",
+    "call_101",
+    "call_102",
+    "call_103",
+    "call_107",
+    "te_synthetic_scenario_a",
+    "te_synthetic_scenario_b",
+    "te_synthetic_unusable",
+    "te_synthetic_degraded",
+    "te_synthetic_long_56turns",
+    "te_synthetic_no_holds",
+    "te_synthetic_verification_ok",
+    "te_synthetic_out_of_scope"
+  ],
+  "heldout": [
+    "call_033",
+    "call_104",
+    "call_105",
+    "call_106",
+    "call_108",
+    "te_heldout_001",
+    "te_heldout_002"
+  ]
+}
+

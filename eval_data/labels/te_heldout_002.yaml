@@ -1,0 +1,62 @@
+call_id: te_heldout_002
+source: real_human_annotation_pending
+annotator_id: ''
+annotator_role: primary
+annotated_at: ''
+cannot_judge: false
+cannot_judge_reason: ''
+criteria:
+  identity_verification:
+    type: mandatory
+    severity: critical
+    kind: observed
+    expected_verdict: ''
+    evidence_turn_ids: []
+    evidence_timestamps: []
+    evidence_quote: ''
+    notes: 'EMPTY: Pending human auditor completion'
+  greeting_and_recording_disclosure:
+    type: mandatory
+    severity: major
+    kind: observed
+    expected_verdict: ''
+    evidence_turn_ids: []
+    evidence_timestamps: []
+    evidence_quote: ''
+    notes: 'EMPTY: Pending human auditor completion'
+  hold_handling:
+    type: mandatory
+    severity: major
+    kind: observed
+    expected_verdict: ''
+    evidence_turn_ids: []
+    evidence_timestamps: []
+    evidence_quote: ''
+    notes: 'EMPTY: Pending human auditor completion'
+  issue_understood_and_resolved:
+    type: graded
+    severity: major
+    kind: observed
+    expected_verdict: ''
+    evidence_turn_ids: []
+    evidence_timestamps: []
+    evidence_quote: ''
+    notes: 'EMPTY: Pending human auditor completion'
+  closure_and_next_steps:
+    type: graded
+    severity: minor
+    kind: inferred
+    expected_verdict: ''
+    evidence_turn_ids: []
+    evidence_timestamps: []
+    evidence_quote: ''
+    notes: 'EMPTY: Pending human auditor completion'
+  empathy_and_communication:
+    type: graded
+    severity: minor
+    kind: inferred
+    expected_verdict: ''
+    evidence_turn_ids: []
+    evidence_timestamps: []
+    evidence_quote: ''
+    notes: 'EMPTY: Pending human auditor completion'

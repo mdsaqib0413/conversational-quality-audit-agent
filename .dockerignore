@@ -1,0 +1,49 @@
+# Git and version control
+.git/
+.gitignore
+
+# Python cache & virtual environments
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.Python
+env/
+venv/
+.venv/
+
+# Testing & Coverage
+.pytest_cache/
+.coverage
+htmlcov/
+
+# Local cache, traces, and reviews
+cache/
+data/cache/
+data/chroma_db/
+traces/
+reviews/
+eval/results/
+
+# Raw audio files and proprietary datasets
+*.mp3
+*.wav
+*.flac
+*.m4a
+data/audio/
+data/telugu/
+data/raw/
+
+# Environment files and credentials
+.env
+.env.*
+*.pem
+*.key
+credentials.json
+
+# IDE and OS
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
+

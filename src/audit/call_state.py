@@ -21,6 +21,11 @@ _ACCOUNT_DETAILS_RE = re.compile(
     r"\b(delivered\s*to|residency|flat\s*\d+|street|pincode|bank\s*account|wallet|(?:delivery\s+|your\s+)?address\s+(?:is|was|in|at|:)|rs\.?\s*\d+)\b|(?:విలాసం|అడ్రస్|రెసిడెన్సీ|ఫ్లాట్|ఖాతా|రూపాయ|రూ\.?)",
     re.IGNORECASE,
 )
+_HOLD_CLEAN_RETURNS = re.compile(
+    r"\b(thank\s*(?:you)?\s*for\s*your\s*patience\s*on\s*hold|patience\s*on\s*hold|thank\s*(?:you)?\s*for\s*(?:waiting|holding|your\s*patience)|thanks\s*for\s*(?:waiting|holding))\b"
+    r"|(?:వేచి\s*ఉన్నందుకు|లైన్\s*లో\s*వేచి)",
+    re.IGNORECASE,
+)
 _HOLD_RE = re.compile(r"\b(hold|brief\s*hold)\b|(?:హోల్డ్|ఆగండి|లైన్లో\s*ఉండండి)", re.IGNORECASE)
 
 
@@ -78,8 +83,9 @@ def compute_call_state(turns: Sequence[DialogueTurn], early_window: int = 15) ->
 
     # 2. Identity verification & Account details sequencing
     for t in turns:
-        # Check hold events
-        if _HOLD_RE.search(t.text):
+        # Check hold events (excluding pure return-from-hold phrases)
+        t_cleaned = _HOLD_CLEAN_RETURNS.sub("", t.text)
+        if _HOLD_RE.search(t_cleaned):
             state.holds_count += 1
             state.hold_turns.append(t.turn_id)
 

@@ -1,0 +1,106 @@
+graph TB
+    subgraph INGESTION["1. Audio Ingestion & Preprocessing"]
+        AudioIn["Audio File (.wav / .mp3)"]
+        ChannelRouter{"Channel Check"}
+        DualASR["Dual-Channel Separator<br/>(Left: Agent / Right: Customer)"]
+        MonoASR["Mono Diarizer Fallback<br/>(Energy / Overlap Split)"]
+        ASREngine["faster-whisper Engine<br/>(language='te', provisional)"]
+        QualityGate{"Quality Gate<br/>(src/audit/quality.py)"}
+    end
+
+    subgraph STORES["Data Stores & Registries"]
+        RubricStore[("Scorecard Registry<br/>scorecard/scorecard_v1.yaml")]
+        ChromaStore[("ChromaDB Vector Store<br/>bge-small-en-v1.5 embeddings")]
+        TraceStore[("Trace Store<br/>traces/*.jsonl")]
+        ReviewStore[("Review Store<br/>reviews/*.json")]
+        EvalStore[("Evaluation Registry<br/>eval_data/ (dev / heldout)")]
+    end
+
+    subgraph CORE["2. Deterministic Core & Gateways"]
+        CallState["Early Call State Tracker<br/>(Plain Code: Turns 1..15)"]
+        TopicDet["Deterministic Topic Classifier<br/>(Lexicon & Situational Signals)"]
+        RAGRetriever["RAG Policy Retriever<br/>(Top-k Policy Clauses)"]
+        SingleGateway["Single LLM Gateway<br/>(src/audit/llm.py - Gemini API)"]
+        Tracer["Step-by-Step Tracer<br/>(src/audit/tracer.py)"]
+    end
+
+    subgraph AUDIT["3. Audit Pipeline & Scoring"]
+        SOPGrader["SOP Adherence Grader<br/>(Mandatory & Graded Criteria)"]
+        PolicyGrader["Policy Compliance Grader<br/>(Grounding & Violations)"]
+        FindingsBuilder["Findings & Separation Engine<br/>(Observed vs Inferred)"]
+        ScoringEngine["Scoring & Cap Calculator<br/>(70.0 Cap on Critical Breach)"]
+        ReviewLoop["Reviewer Override Loop<br/>(src/audit/review.py)"]
+        FinalReport["Structured Audit Report<br/>(AuditReport schema)"]
+    end
+
+    subgraph UI["4. Presentation & Observability (Streamlit)"]
+        TabAudit["Tab 1: Call Audit & Transcript"]
+        TabReview["Tab 2: Reviewer Workspace"]
+        TabGolden["Tab 3: Golden Benchmarks"]
+        TabLive["Tab 4: Live Assist Preview"]
+        TabTrace["Tab 5: Execution Trace"]
+        PageObs["Observability & Eval Dashboard<br/>(app/observability.py)"]
+    end
+
+    subgraph EVAL["5. Offline Evaluation Harness"]
+        EvalEngine["Evaluation Runner<br/>(eval/run_eval.py)"]
+        PricingTable["Pricing Model<br/>(eval/pricing.yaml)"]
+        PassRules["Pass / Fail Gating<br/>(eval/PASS_RULE.md)"]
+    end
+
+    %% Ingestion flows
+    AudioIn --> ChannelRouter
+    ChannelRouter -->|Dual-Channel| DualASR
+    ChannelRouter -->|Mono| MonoASR
+    DualASR --> ASREngine
+    MonoASR --> ASREngine
+    ASREngine --> QualityGate
+
+    %% Quality routing
+    QualityGate -->|Unusable / Out of Scope| FinalReport
+    QualityGate -->|Good / Degraded| CallState
+
+    %% Core orchestration
+    CallState --> TopicDet
+    TopicDet --> RAGRetriever
+    ChromaStore -.-> RAGRetriever
+    RubricStore -.-> SOPGrader
+
+    TopicDet --> SOPGrader
+    RAGRetriever --> PolicyGrader
+    SOPGrader <--> SingleGateway
+    PolicyGrader <--> SingleGateway
+
+    SOPGrader --> FindingsBuilder
+    PolicyGrader --> FindingsBuilder
+    CallState --> FindingsBuilder
+    FindingsBuilder --> ScoringEngine
+    ScoringEngine --> FinalReport
+
+    %% Review and Tracing
+    FinalReport <--> ReviewLoop
+    ReviewLoop <--> ReviewStore
+    Tracer -.-> TraceStore
+    CORE -.-> Tracer
+    AUDIT -.-> Tracer
+
+    %% UI & Eval bindings
+    FinalReport --> TabAudit
+    FinalReport --> TabTrace
+    ReviewLoop --> TabReview
+    EvalStore --> EvalEngine
+    PricingTable --> EvalEngine
+    PassRules --> EvalEngine
+    EvalEngine --> PageObs
+    TraceStore --> PageObs
+
+    classDef storeStyle fill:#e1f5fe,stroke:#0288d1,stroke-width:2px;
+    classDef modelStyle fill:#fff3e0,stroke:#f57c00,stroke-width:2px;
+    classDef plainCode fill:#f1f8e9,stroke:#558b2f,stroke-width:2px;
+    classDef uiStyle fill:#f3e5f5,stroke:#7b1fa2,stroke-width:2px;
+
+    class RubricStore,ChromaStore,TraceStore,ReviewStore,EvalStore storeStyle;
+    class SingleGateway,ASREngine modelStyle;
+    class DualASR,MonoASR,QualityGate,CallState,TopicDet,RAGRetriever,FindingsBuilder,ScoringEngine,Tracer,ReviewLoop,EvalEngine plainCode;
+    class TabAudit,TabReview,TabGolden,TabLive,TabTrace,PageObs uiStyle;
+

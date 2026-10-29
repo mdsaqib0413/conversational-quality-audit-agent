@@ -1,0 +1,36 @@
+# Gemini API Token Pricing Configuration
+# Source: Google Cloud Vertex AI & Google AI Studio official published pricing
+# Reference Date: 2024-09-01 (Verified against public rates)
+# Note: All cost calculations derived from this table are estimates.
+
+currency: "USD"
+pricing_date: "2024-09-01"
+source_url: "https://ai.google.dev/pricing"
+
+models:
+  # Gemini 1.5 Flash default pricing
+  gemini-1.5-flash:
+    description: "Gemini 1.5 Flash (under 128k prompt context)"
+    cost_per_million_input_tokens: 0.075
+    cost_per_million_output_tokens: 0.300
+    free_tier: true
+
+  # Gemini 2.0 Flash
+  gemini-2.0-flash:
+    description: "Gemini 2.0 Flash experimental/preview"
+    cost_per_million_input_tokens: 0.100
+    cost_per_million_output_tokens: 0.400
+    free_tier: true
+
+  # Gemini 1.5 Pro
+  gemini-1.5-pro:
+    description: "Gemini 1.5 Pro (standard tier)"
+    cost_per_million_input_tokens: 1.250
+    cost_per_million_output_tokens: 5.000
+    free_tier: false
+
+  # Default fallback model estimate
+  default:
+    cost_per_million_input_tokens: 0.075
+    cost_per_million_output_tokens: 0.300
+

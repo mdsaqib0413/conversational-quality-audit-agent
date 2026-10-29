@@ -180,8 +180,8 @@
     },
     "policy_violations": [
       {
-        "turn": 11,
-        "said": "Yes, absolutely. An automated Out-For-Delivery text was sent to your phone this morning containing the delivery associate's direct contact number, so you can reach out directly to coordinate your arrival.",
+        "turn": 9,
+        "said": "As per our courier guidelines, the delivery agent will make only one single delivery attempt at your door. If you are not available during that visit, they will immediately cancel the order and return the parcel back to our origin warehouse.",
         "clause_id": "SHP-2.1",
         "severity": "minor",
         "correct_fact": "Couriers execute up to 3 delivery attempts before returning shipment to origin (RTO)."

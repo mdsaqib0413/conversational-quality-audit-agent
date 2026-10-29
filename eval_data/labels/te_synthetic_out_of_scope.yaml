@@ -1,0 +1,6 @@
+call_id: te_synthetic_out_of_scope
+source: synthetic
+annotator_id: synth_spec
+cannot_judge: true
+cannot_judge_reason: Out-of-scope conversational domain (personal conversation, non-customer-support)
+criteria: {}

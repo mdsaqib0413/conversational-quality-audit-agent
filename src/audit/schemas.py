@@ -272,6 +272,13 @@ class AuditMeta(BaseModel):
     cache_hit: bool = False
     warnings: List[str] = Field(default_factory=list)
     source_set: str = "synthetic"   # "synthetic" | "real"
+    trace_id: str = ""
+    status: Literal["ok", "degraded", "handoff", "failed"] = "ok"
+    failed_step: Optional[str] = None
+    completed_steps: List[str] = Field(default_factory=list)
+    estimated_cost_usd: float = 0.0
+    tokens_in: int = 0
+    tokens_out: int = 0
 
 
 class AuditReport(BaseModel):
@@ -291,6 +298,9 @@ class AuditReport(BaseModel):
     cannot_judge: bool = False
     cannot_judge_reason: str = ""
     unreadable_parts: List[str] = Field(default_factory=list)
+    status: Literal["ok", "degraded", "handoff", "failed"] = "ok"
+    failed_step: Optional[str] = None
+    completed_steps: List[str] = Field(default_factory=list)
     emotion: EmotionArc = Field(default_factory=EmotionArc)          # the customer
     agent_tone: EmotionArc = Field(default_factory=EmotionArc)       # the agent
     metrics: ConversationMetrics = Field(default_factory=ConversationMetrics)

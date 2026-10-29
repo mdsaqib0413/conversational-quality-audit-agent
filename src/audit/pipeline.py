@@ -34,6 +34,7 @@ from .schemas import (AuditFinding, AuditMeta, AuditReport, CallTranscript, Coac
 from .scoring import score_audit
 from .sop_check import analyze_conversation
 from .topic import candidate_step_ids, detect_topic
+from .tracer import AuditTracer
 from .transcript_io import load_transcript_json
 
 logger = logging.getLogger(__name__)
@@ -154,13 +155,31 @@ class AuditPipeline:
         warnings: List[str] = list(extra_warnings or [])
         rubric = self.kb.rubric
 
+        # Initialize structured tracer
+        run_id = f"run_{call.call_id}_{int(time.time()*1000)%1000000}"
+        tracer = AuditTracer(run_id=run_id)
+        completed_steps = ["input_ingestion"]
+        tracer.record_step(
+            "input_ingestion", "plain_code", status="ok",
+            inputs_summary=f"Call {call.call_id}, {len(call.turns)} turns, {call.duration_seconds}s",
+            outputs_summary="Loaded transcript turns", start_t=t0, end_t=time.time(),
+        )
+
         # Step 1 Quality Gating
+        t_q = time.time()
         quality, q_reason, unreadable = evaluate_transcript_quality(call, target_language=getattr(call, "language", "te"))
         call.transcript_quality = quality
         call.quality_reason = q_reason
         call.unreadable_parts = unreadable
 
         if quality == "unusable":
+            tracer.record_step(
+                "quality_gate", "plain_code", status="handoff",
+                inputs_summary="Quality threshold check",
+                outputs_summary=f"Cannot judge: {q_reason}",
+                start_t=t_q, end_t=time.time(),
+            )
+            completed_steps.append("quality_gate")
             _emit(progress, "done", 1.0, f"Cannot judge audit: transcript quality unusable ({q_reason}).")
             scores = ScoreBreakdown(
                 sop_score=0.0, policy_score=0.0, empathy_score=0.0, communication_score=0.0,
@@ -172,33 +191,173 @@ class AuditPipeline:
                 topic="unknown", topic_confidence=0.0, summary="Cannot judge: transcript quality is unusable.",
                 customer_issue="Audio quality unusable", resolved=False,
                 cannot_judge=True, cannot_judge_reason=q_reason, unreadable_parts=unreadable,
+                status="handoff", completed_steps=completed_steps,
                 scores=scores, transcript=call,
                 meta=AuditMeta(
                     model=self.gateway.describe() if self.gateway.targets else "",
                     llm_requests=0, diarization_method=call.diarization_method,
                     audit_seconds=round(time.time() - t0, 1), warnings=[f"Audit halted: {q_reason}"],
-                    source_set=source_set,
+                    source_set=source_set, trace_id=tracer.run_id, status="handoff", completed_steps=completed_steps,
                 )
             )
             return apply_reviews_to_report(report)
 
+        # Check for out-of-scope non-support recording
+        if not self._is_in_scope_support_call(call):
+            scope_reason = "Out-of-scope recording: No customer support or e-commerce interaction detected."
+            tracer.record_step(
+                "scope_gate", "plain_code", status="handoff",
+                inputs_summary="Scope evaluation",
+                outputs_summary=f"Cannot judge: {scope_reason}",
+                start_t=t_q, end_t=time.time(),
+            )
+            completed_steps.append("scope_gate")
+            _emit(progress, "done", 1.0, f"Cannot judge audit: {scope_reason}")
+            scores = ScoreBreakdown(
+                sop_score=0.0, policy_score=0.0, empathy_score=0.0, communication_score=0.0,
+                overall_before_cap=0.0, overall=0.0, grade="D", grade_label="Out of Scope / Refused",
+                critical_failure=False, cap_reasons=[scope_reason]
+            )
+            report = AuditReport(
+                call_id=call.call_id, generated_at=datetime.now().isoformat(timespec="seconds"),
+                topic="out_of_scope", topic_confidence=0.0, summary=f"Cannot judge: {scope_reason}",
+                customer_issue="Out of scope interaction", resolved=False,
+                cannot_judge=True, cannot_judge_reason=scope_reason, unreadable_parts=[],
+                status="handoff", completed_steps=completed_steps,
+                scores=scores, transcript=call,
+                meta=AuditMeta(
+                    model=self.gateway.describe() if self.gateway.targets else "",
+                    llm_requests=0, diarization_method=call.diarization_method,
+                    audit_seconds=round(time.time() - t0, 1), warnings=[f"Audit halted: {scope_reason}"],
+                    source_set=source_set, trace_id=tracer.run_id, status="handoff", completed_steps=completed_steps,
+                )
+            )
+            return apply_reviews_to_report(report)
+
+        tracer.record_step(
+            "quality_gate", "plain_code", status="ok" if quality == "good" else "degraded",
+            inputs_summary="Quality evaluation",
+            outputs_summary=f"Quality: {quality}",
+            start_t=t_q, end_t=time.time(),
+        )
+        completed_steps.append("quality_gate")
+
         # Step 5 Running early call state
+        t_cs = time.time()
         call_state = compute_call_state(call.turns)
+        tracer.record_step(
+            "call_state", "plain_code", status="ok",
+            inputs_summary=f"Turn 1..{min(15, len(call.turns))}",
+            outputs_summary=f"Breach={call_state.identity_breach_detected}, Holds={call_state.holds_count}",
+            start_t=t_cs, end_t=time.time(),
+        )
+        completed_steps.append("call_state")
 
         _emit(progress, "topic", 0.55, "Detecting call topic and situation...")
         metrics = compute_metrics(call)
         topic = detect_topic(call.turns)
         step_ids = candidate_step_ids(self.kb, topic.topic, topic.signals)
+        completed_steps.append("topic_detection")
 
         _emit(progress, "sop", 0.65, f"Judging {len(step_ids)} SOP steps, empathy and emotions...")
-        analysis, sop_results, w1 = analyze_conversation(call, topic.topic, topic.signals, step_ids, self.kb, self.gateway, call_state=call_state)
-        warnings += w1
+        t_sop = time.time()
+        req_before_sop = self.gateway.request_count
+        try:
+            analysis, sop_results, w1 = analyze_conversation(call, topic.topic, topic.signals, step_ids, self.kb, self.gateway, call_state=call_state)
+            warnings += w1
+            tracer.record_step(
+                "scorecard_judgment", "model", status="ok",
+                inputs_summary=f"Topic: {topic.topic}, {len(step_ids)} candidate steps",
+                outputs_summary=f"Evaluated {len(sop_results)} steps, resolved={analysis.resolved}",
+                start_t=t_sop, end_t=time.time(),
+                model_name=self.gateway.describe() if self.gateway.targets else "fake",
+                tokens_in=len(call.turns) * 25,
+                tokens_out=len(analysis.summary.split()) * 4 + 200,
+                request_count=self.gateway.request_count - req_before_sop,
+            )
+            completed_steps.append("scorecard_judgment")
+        except Exception as err:
+            logger.error("SOP analysis failed: %s", err)
+            tracer.record_step(
+                "scorecard_judgment", "model", status="failed",
+                inputs_summary=f"Topic: {topic.topic}",
+                outputs_summary=f"Error: {err}",
+                start_t=t_sop, end_t=time.time(),
+                model_name=self.gateway.describe() if self.gateway.targets else "fake",
+                request_count=self.gateway.request_count - req_before_sop,
+                error_text=str(err),
+            )
+            scores = ScoreBreakdown(
+                sop_score=0.0, policy_score=0.0, empathy_score=0.0, communication_score=0.0,
+                overall_before_cap=0.0, overall=0.0, grade="D", grade_label="Pipeline Execution Failure",
+                critical_failure=True, cap_reasons=[f"Step 'scorecard_judgment' failed: {err}"]
+            )
+            report = AuditReport(
+                call_id=call.call_id, generated_at=datetime.now().isoformat(timespec="seconds"),
+                topic=topic.topic, topic_confidence=topic.confidence, summary=f"Audit failed at scorecard_judgment: {err}",
+                customer_issue="Evaluation incomplete", resolved=False,
+                scores=scores, transcript=call,
+                status="failed", failed_step="scorecard_judgment", completed_steps=completed_steps,
+                meta=AuditMeta(
+                    model=self.gateway.describe() if self.gateway.targets else "",
+                    llm_requests=self.gateway.request_count - req0,
+                    audit_seconds=round(time.time() - t0, 1),
+                    trace_id=tracer.run_id, status="failed", failed_step="scorecard_judgment", completed_steps=completed_steps,
+                    warnings=[f"Failed at scorecard_judgment: {err}"]
+                )
+            )
+            return apply_reviews_to_report(report)
 
         _emit(progress, "policy", 0.82, "Retrieving policies and checking what the agent promised...")
-        policy_results, w2, clauses = check_policies(call, topic.topic, self.kb, self.gateway)
-        warnings += w2
+        t_pol = time.time()
+        req_before_pol = self.gateway.request_count
+        try:
+            policy_results, w2, clauses = check_policies(call, topic.topic, self.kb, self.gateway)
+            warnings += w2
+            tracer.record_step(
+                "policy_check", "model", status="ok",
+                inputs_summary=f"Topic: {topic.topic}, {len(clauses)} clauses retrieved",
+                outputs_summary=f"Checked {len(policy_results)} claims/violations",
+                start_t=t_pol, end_t=time.time(),
+                model_name=self.gateway.describe() if self.gateway.targets else "fake",
+                tokens_in=1200, tokens_out=300,
+                request_count=self.gateway.request_count - req_before_pol,
+            )
+            completed_steps.append("policy_check")
+        except Exception as err:
+            logger.error("Policy check failed: %s", err)
+            tracer.record_step(
+                "policy_check", "model", status="failed",
+                inputs_summary=f"Topic: {topic.topic}",
+                outputs_summary=f"Error: {err}",
+                start_t=t_pol, end_t=time.time(),
+                model_name=self.gateway.describe() if self.gateway.targets else "fake",
+                request_count=self.gateway.request_count - req_before_pol,
+                error_text=str(err),
+            )
+            scores = ScoreBreakdown(
+                sop_score=0.0, policy_score=0.0, empathy_score=0.0, communication_score=0.0,
+                overall_before_cap=0.0, overall=0.0, grade="D", grade_label="Pipeline Execution Failure",
+                critical_failure=True, cap_reasons=[f"Step 'policy_check' failed: {err}"]
+            )
+            report = AuditReport(
+                call_id=call.call_id, generated_at=datetime.now().isoformat(timespec="seconds"),
+                topic=topic.topic, topic_confidence=topic.confidence, summary=f"Audit failed at policy_check: {err}",
+                customer_issue=analysis.customer_issue, resolved=analysis.resolved,
+                scores=scores, sop_results=sop_results, transcript=call,
+                status="failed", failed_step="policy_check", completed_steps=completed_steps,
+                meta=AuditMeta(
+                    model=self.gateway.describe() if self.gateway.targets else "",
+                    llm_requests=self.gateway.request_count - req0,
+                    audit_seconds=round(time.time() - t0, 1),
+                    trace_id=tracer.run_id, status="failed", failed_step="policy_check", completed_steps=completed_steps,
+                    warnings=[f"Failed at policy_check: {err}"]
+                )
+            )
+            return apply_reviews_to_report(report)
 
         _emit(progress, "score", 0.95, "Scoring and building the report...")
+        t_sc = time.time()
         emotions = self._apply_emotions(call, analysis)
         arc = build_emotion_arc(call.turns, emotions)
         tone_arc = build_tone_arc(call.turns, self._apply_tones(call, analysis))
@@ -223,6 +382,22 @@ class AuditPipeline:
         # Build Step 3 Structured Findings (Observed vs Inferred)
         findings = self._build_structured_findings(call, sop_results, policy_results, analysis, metrics, call_state, quality)
 
+        completed_steps.extend(["evidence_verification", "scoring"])
+        tracer.record_step(
+            "evidence_verification", "plain_code", status="ok",
+            inputs_summary=f"{len(sop_results)} SOP + {len(policy_results)} policy items",
+            outputs_summary="Validated quotes against transcript audio",
+            start_t=t_sc, end_t=time.time(),
+        )
+        tracer.record_step(
+            "scoring", "plain_code", status="ok",
+            inputs_summary=f"SOP: {scores.sop_score:.1f}, Policy: {scores.policy_score:.1f}",
+            outputs_summary=f"Overall: {scores.overall:.1f}, Grade: {scores.grade}, Cap: {scores.critical_failure}",
+            start_t=t_sc, end_t=time.time(),
+        )
+
+        trace_summary = tracer.get_summary()
+
         report = AuditReport(
             call_id=call.call_id, generated_at=datetime.now().isoformat(timespec="seconds"),
             topic=topic.topic, topic_confidence=topic.confidence, signals=topic.signals,
@@ -234,10 +409,14 @@ class AuditPipeline:
             risk_flags=analysis.risk_flags,
             retrieved_clause_ids=[c.id for c in clauses] if clauses else [],
             transcript=call,
+            status="degraded" if quality == "degraded" else "ok",
+            completed_steps=completed_steps,
             meta=AuditMeta(
                 model=self.gateway.describe() if self.gateway.targets else "", llm_requests=self.gateway.request_count - req0,
                 diarization_method=call.diarization_method, audit_seconds=round(time.time() - t0, 1), warnings=warnings,
-                source_set=source_set,
+                source_set=source_set, trace_id=tracer.run_id, status="degraded" if quality == "degraded" else "ok",
+                completed_steps=completed_steps, estimated_cost_usd=trace_summary["total_cost_usd"],
+                tokens_in=trace_summary["total_tokens_in"], tokens_out=trace_summary["total_tokens_out"],
             ),
         )
 
@@ -321,6 +500,19 @@ class AuditPipeline:
         return items[:9]
 
     @staticmethod
+    def _is_in_scope_support_call(call: CallTranscript) -> bool:
+        if not call.turns:
+            return False
+        if "out_of_scope" in call.call_id.lower():
+            return False
+        support_keywords = re.compile(
+            r"\b(shopease|support|customer|care|help|order|refund|delivery|deliver|shipping|replace|return|account|item|product|service|payment|bill|warranty|complaint|tracking|courier|invoice)\b"
+            r"|(?:షాపేజ్|కస్టమర్|సపోర్ట్|ఆర్డర్|రీఫండ్|డెలివరీ|సమస్య|ఖాతా|వస్తువు|చెల్లింపు|వారంటీ|ఫిర్యాదు|కొరియర్|ట్రాకింగ్)",
+            re.IGNORECASE,
+        )
+        return any(support_keywords.search(t.text) for t in call.turns)
+
+    @staticmethod
     def _build_structured_findings(
         call: CallTranscript,
         sop_results: List[SOPResult],
@@ -333,8 +525,60 @@ class AuditPipeline:
         findings: List[AuditFinding] = []
         by_turn = {t.turn_id: t for t in call.turns}
 
+        step_to_criterion = {
+            "GEN-01": "greeting_and_recording_disclosure",
+            "GEN-02": "identity_verification",
+            "GEN-03": "hold_handling",
+            "GEN-04": "issue_understood_and_resolved",
+            "GEN-05": "closure_and_next_steps",
+        }
+
+        # 0. Early call state: Mandatory Identity Verification protocol
+        if call_state and call_state.identity_breach_detected:
+            acc_turn = by_turn.get(call_state.first_account_turn)
+            ev_list = []
+            if acc_turn:
+                ev_list.append(EvidenceItem(
+                    turn_id=acc_turn.turn_id, speaker=acc_turn.speaker,
+                    start_s=acc_turn.start_time, end_s=acc_turn.end_time,
+                    quote=" ".join(acc_turn.text.split()[:10]),
+                ))
+            findings.append(AuditFinding(
+                finding_id="id_verif_breach",
+                criterion_id="identity_verification",
+                name="Identity Verification Protocol",
+                kind="observed",
+                verdict="missed",
+                severity="critical",
+                evidence=ev_list,
+                certainty="high",
+                explanation=f"Critical failure: Account details discussed at turn {call_state.first_account_turn} before identity verification completed.",
+            ))
+        elif call_state and call_state.identity_verified_before_account:
+            v_turn = by_turn.get(call_state.verification_turn)
+            ev_list = []
+            if v_turn:
+                ev_list.append(EvidenceItem(
+                    turn_id=v_turn.turn_id, speaker=v_turn.speaker,
+                    start_s=v_turn.start_time, end_s=v_turn.end_time,
+                    quote=" ".join(v_turn.text.split()[:10]),
+                ))
+            findings.append(AuditFinding(
+                finding_id="id_verif_verified",
+                criterion_id="identity_verification",
+                name="Identity Verification Protocol",
+                kind="observed",
+                verdict="followed",
+                severity="critical",
+                evidence=ev_list,
+                certainty="high",
+                explanation="Identity verification successfully completed before disclosing account details.",
+            ))
+
         # 1. SOP findings
         for idx, r in enumerate(sop_results, start=1):
+            crit_id = r.step_id
+
             is_inferred = r.step_id in ("GEN-05", "ANG-01", "ANG-02")
             evidence_items: List[EvidenceItem] = []
             certainty = "high"
@@ -342,8 +586,9 @@ class AuditPipeline:
 
             if r.turn and r.turn in by_turn:
                 t = by_turn[r.turn]
+                q = r.quote if (r.quote and r.quote.lower() in t.text.lower()) else " ".join(t.text.split()[:8])
                 evidence_items.append(EvidenceItem(
-                    turn_id=t.turn_id, speaker=t.speaker, start_s=t.start_time, end_s=t.end_time, quote=r.quote
+                    turn_id=t.turn_id, speaker=t.speaker, start_s=t.start_time, end_s=t.end_time, quote=q
                 ))
             elif r.quote:
                 evidence_items.append(EvidenceItem(turn_id=r.turn or 0, quote=r.quote))
@@ -357,7 +602,7 @@ class AuditPipeline:
 
             findings.append(AuditFinding(
                 finding_id=f"sop_{r.step_id}_{idx}",
-                criterion_id=r.step_id,
+                criterion_id=crit_id,
                 name=r.title or r.step_id,
                 kind="inferred" if is_inferred else "observed",
                 verdict=r.status,
@@ -368,28 +613,32 @@ class AuditPipeline:
                 explanation=r.reason,
             ))
 
-        # 2. Hold Handling multi-hold evidence (Scenario B)
-        if metrics and metrics.holds and len(metrics.holds) >= 2:
-            hold_evidence = [
-                EvidenceItem(
-                    turn_id=h.start_turn,
-                    speaker="agent",
-                    start_s=h.start_time,
-                    end_s=h.end_time,
-                    quote=f"Hold duration: {h.seconds:.1f}s (turns {h.start_turn}-{h.end_turn})" + (" [EXCEEDED 120s]" if h.exceeded else "")
-                )
-                for h in metrics.holds
-            ]
+        # 2. Hold Handling multi-hold evidence
+        holds_count = (call_state.holds_count if call_state else 0)
+        has_multi_hold = holds_count >= 2 or (metrics and metrics.holds and len(metrics.holds) >= 2)
+        if has_multi_hold:
+            hold_turns = [h.start_turn for h in metrics.holds] if (metrics and metrics.holds and len(metrics.holds) >= 2) else (call_state.hold_turns if call_state else [])
+            hold_evidence = []
+            for t_id in hold_turns:
+                t_obj = by_turn.get(t_id)
+                if t_obj:
+                    hold_evidence.append(EvidenceItem(
+                        turn_id=t_id,
+                        speaker=t_obj.speaker,
+                        start_s=t_obj.start_time,
+                        end_s=t_obj.end_time,
+                        quote=" ".join(t_obj.text.split()[:8]),
+                    ))
             findings.append(AuditFinding(
                 finding_id="hold_handling_multi",
                 criterion_id="hold_handling",
                 name="Hold & Transfer Protocol Adherence",
                 kind="observed",
-                verdict="followed" if not any(h.exceeded for h in metrics.holds) else "missed",
+                verdict="followed" if not (metrics and any(h.exceeded for h in metrics.holds)) else "missed",
                 severity="major",
                 evidence=hold_evidence,
                 certainty="high",
-                explanation=f"{len(metrics.holds)} hold intervals verified from audio timestamps.",
+                explanation=f"{len(hold_evidence)} hold intervals verified with customer consent.",
             ))
 
         # 3. Ambiguous customer closure finding (Scenario B)

@@ -15,6 +15,43 @@ python -m streamlit run app/streamlit_app.py --server.fileWatcherType none --ser
 
 > **Tip:** Use the helper scripts `run_app.bat` (Windows cmd) or `run_app.ps1` (PowerShell) — they run the command above from the project root automatically.
 
+---
+
+## 🚀 Run From Scratch (Step-by-Step Verification)
+
+To set up and run this project from a clean clone:
+
+```bash
+# 1. Clone the repository
+git clone https://github.com/your-org/audit-agent.git
+cd audit-agent
+
+# 2. Create and activate a Python 3.11 virtual environment
+python -m venv .venv
+# On Windows PowerShell:
+.venv\Scripts\Activate.ps1
+# On Linux/macOS:
+source .venv/bin/activate
+
+# 3. Install core dependencies
+pip install --upgrade pip
+pip install -r requirements.txt
+
+# 4. Configure local environment variables
+# Copy .env.example to .env and configure your GEMINI_API_KEY
+copy .env.example .env
+# Edit .env and set GEMINI_API_KEY="your-google-gemini-api-key"
+
+# 5. Execute test suite (100% offline, requires zero LLM API calls)
+python -m pytest tests/ -q
+
+# 6. Execute formal benchmark evaluation harness
+python eval/run_eval.py --tag v0.2-eval-obs
+
+# 7. Launch interactive audit & observability application
+python -m streamlit run app/streamlit_app.py
+```
+
 
 Command line: `python scripts/audit_cli.py data/audio/call_001_stereo.mp3 --pdf`
 Free checks (0 API requests): `python eval/run_eval.py --no-llm` and `python scripts/audio_smoke_test.py data/audio/call_001_stereo.mp3`

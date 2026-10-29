@@ -1,0 +1,63 @@
+flowchart TD
+    Start(["Raw Audio Ingestion (.wav / .mp3)"]) --> Diarize{"Dual-Channel Available?"}
+
+    %% Channel routing
+    Diarize -->|Yes: Stereo| SplitCh["Split Stereo Channels (Code)<br/>Ch0: Agent, Ch1: Customer"]
+    Diarize -->|No: Mono| FallbackDiar["Energy/Overlap Diarization Fallback (Code)"]
+    SplitCh --> ASR["faster-whisper Engine (Model)<br/>Provisional Telugu 'te'"]
+    FallbackDiar --> ASR
+
+    %% Quality Filter
+    ASR --> QualityGate{"Quality Evaluation (Plain Code)<br/>Confidence < 0.40 OR Silence > 65%?"}
+    QualityGate -->|Unusable| HandoffUnusable["HALT: Return 'cannot_judge' (Code)<br/>Status='handoff', 0 LLM calls, Reason logged"]
+    QualityGate -->|Good / Degraded| ScopeGate{"Scope Check (Plain Code)<br/>Support Keywords Detected?"}
+
+    %% Scope Gate
+    ScopeGate -->|No: Non-Support| HandoffScope["HALT: Return 'cannot_judge' (Code)<br/>Status='handoff', 0 LLM calls, Refused"]
+    ScopeGate -->|Yes: Support Call| CallState["Compute Early Call State (Code)<br/>Check Turns 1..15 for Verification & Account Disclosure"]
+
+    %% Early breach check
+    CallState --> BreachCheck{"Account Details Discussed<br/>Before Verification?"}
+    BreachCheck -->|Yes: Breach| FlagBreach["Flag Critical Failure Cap (Code)<br/>Overall Score Capped at 70.0"]
+    BreachCheck -->|No: Compliant| NormalSeq["Identity Verification Compliant"]
+    FlagBreach --> TopicDetect["Deterministic Topic Classifier (Code)<br/>Detect Refund / Shipping / Billing etc."]
+    NormalSeq --> TopicDetect
+
+    %% Analysis & Retrieval
+    TopicDetect --> RAG["ChromaDB Policy Retrieval (Code)<br/>Top-3 Relevant SOP & Policy Clauses"]
+    TopicDetect --> SOPPrompt["Single LLM Call: Conversation Analysis (Model)<br/>Gate: src/audit/llm.py"]
+    RAG --> PolicyPrompt["Single LLM Call: Policy Compliance Check (Model)<br/>Gate: src/audit/llm.py"]
+
+    %% Error Resilience
+    SOPPrompt --> SOPCheck{"Model Call Succeeded?"}
+    SOPCheck -->|Error| FailSOP["Structured Fallback (Code)<br/>Status='failed', Score=0.0, Grade='D'"]
+    SOPCheck -->|Success| MergeFindings["Merge Findings Engine (Code)<br/>Strict Observed vs Inferred Separation"]
+
+    PolicyPrompt --> PolCheck{"Model Call Succeeded?"}
+    PolCheck -->|Error| FailPol["Structured Fallback (Code)<br/>Status='failed', Score=0.0, Grade='D'"]
+    PolCheck -->|Success| MergeFindings
+
+    %% Scoring & Human Loop
+    MergeFindings --> DegradedCheck{"Was Audio Degraded?"}
+    DegradedCheck -->|Yes| MarkCertainty["Tag Affected Findings 'medium/low certainty'"]
+    DegradedCheck -->|No| HighCertainty["Tag Findings 'high certainty'"]
+    MarkCertainty --> ScoreEngine["Rubric Scoring & Evidence Verification (Code)"]
+    HighCertainty --> ScoreEngine
+
+    ScoreEngine --> EmitReport["Generate AuditReport & Trace (Code)<br/>Emit traces/<run_id>.jsonl"]
+    EmitReport --> HumanReview{"Human Reviewer Action (Human)"}
+
+    HumanReview -->|Accept| CommitAudit["Final Approved Audit"]
+    HumanReview -->|Overturn Verdict| OverturnFinding["Store Human Override in reviews/ (Code)<br/>Update Overturn Metrics"]
+    OverturnFinding --> CommitAudit
+
+    classDef plainCode fill:#f1f8e9,stroke:#558b2f,stroke-width:2px;
+    classDef modelCall fill:#fff3e0,stroke:#f57c00,stroke-width:2px;
+    classDef humanNode fill:#fce4ec,stroke:#c2185b,stroke-width:2px;
+    classDef stopNode fill:#ffebee,stroke:#d32f2f,stroke-width:2px;
+
+    class SplitCh,FallbackDiar,QualityGate,ScopeGate,CallState,BreachCheck,FlagBreach,NormalSeq,TopicDetect,RAG,MergeFindings,DegradedCheck,MarkCertainty,HighCertainty,ScoreEngine,EmitReport,OverturnFinding plainCode;
+    class ASR,SOPPrompt,PolicyPrompt modelCall;
+    class HumanReview humanNode;
+    class HandoffUnusable,HandoffScope,FailSOP,FailPol stopNode;
+

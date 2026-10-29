@@ -2,11 +2,16 @@
 
 The repository is configured to audit bilingual and Telugu (`te`) call center conversations.
 
+> [!WARNING]
+> **DATASET STATUS: UNVERIFIED (dataset not inspected)**  
+> The physical dataset files have not yet been placed in this directory. Specifications below are provisional.
+
 ## Kaggle Dataset Details
 - **Source:** [Infobay AI Audio Call Center Telugu](https://www.kaggle.com/datasets/infobayai/audio-call-center-telugu)
 - **Dataset identifier:** `infobayai/audio-call-center-telugu`
-- **License:** CC-BY-4.0 / Open Data (check Kaggle card for commercial terms)
-- **Content:** Dual-channel and mono customer support calls recorded in Telugu across telecom, banking, and e-commerce domains.
+- **License:** UNVERIFIED (dataset not inspected; Kaggle page lists CC-BY-4.0)
+- **Channel layout & format:** UNVERIFIED (dataset not inspected; assumed dual-channel 8kHz/16kHz)
+- **Content:** UNVERIFIED (dataset not inspected; assumed customer support calls recorded in Telugu)
 
 ## Download Instructions
 
@@ -40,4 +45,3 @@ print(f"Dataset downloaded to {dest}")
 3. Extract the contents directly into `data/telugu/` within this repository root.
 
 Audio files placed into `data/telugu/` (`*.wav`, `*.mp3`) will automatically be recognized by the audit pipeline when specifying `--language te`.
-

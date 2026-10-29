@@ -1,0 +1,46 @@
+call_id: te_synthetic_verification_ok
+source: synthetic
+annotator_id: synth_spec
+cannot_judge: false
+criteria:
+  identity_verification:
+    type: mandatory
+    severity: critical
+    kind: observed
+    expected_verdict: followed
+    evidence_turn_ids:
+    - 1
+    - 2
+  greeting_and_recording_disclosure:
+    type: mandatory
+    severity: major
+    kind: observed
+    expected_verdict: followed
+    evidence_turn_ids:
+    - 1
+  hold_handling:
+    type: mandatory
+    severity: major
+    kind: observed
+    expected_verdict: not_applicable
+    evidence_turn_ids: []
+  issue_understood_and_resolved:
+    type: graded
+    severity: major
+    kind: observed
+    expected_verdict: excellent
+    evidence_turn_ids:
+    - 3
+  closure_and_next_steps:
+    type: graded
+    severity: minor
+    kind: inferred
+    expected_verdict: excellent
+    evidence_turn_ids:
+    - 5
+  empathy_and_communication:
+    type: graded
+    severity: minor
+    kind: inferred
+    expected_verdict: proficient
+    evidence_turn_ids: []

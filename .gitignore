@@ -26,4 +26,8 @@ data/telugu/*.wav
 data/telugu/*.zip
 data/audio/*.mp3
 data/audio/*.wav
+# Local run traces and eval caches
 call-center-speech-dataset/
+eval/results/*/cache/
+traces/*.jsonl
+!traces/.gitkeep

@@ -1,0 +1,6 @@
+call_id: te_synthetic_unusable
+source: synthetic
+annotator_id: synth_spec
+cannot_judge: true
+cannot_judge_reason: Transcript quality unusable (<0.40 confidence or excessive silence)
+criteria: {}

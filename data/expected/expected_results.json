@@ -315,7 +315,7 @@
       {
         "clause": "WAR-2.1",
         "severity": "minor",
-        "turn": 7
+        "turn": 5
       }
     ]
   },
@@ -398,7 +398,7 @@
       {
         "clause": "WAR-3.2",
         "severity": "minor",
-        "turn": 9
+        "turn": 11
       }
     ]
   },

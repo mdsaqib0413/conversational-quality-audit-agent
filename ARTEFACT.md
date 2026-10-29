@@ -1,49 +1,106 @@
-# Conversational Quality Audit Agent - System Artefacts & Architecture (Phase 1)
+# Conversational Quality Audit Agent - Repository Artefacts (`v0.2-eval-obs`)
 **Team:** Vibe Check Crew  
-**Platform:** ShopEase QA Copilot / Prodloop Capstone
+**Context:** ShopEase India / Prodloop Capstone Assessment
 
-### a) Audio Ingestion & Telephony Specifications
-- **Supported Formats:** `.mp3`, `.wav`, `.m4a`, `.flac`
-- **Telephony Ingestion:** Handles narrow-band (8 kHz) and broad-band (16 kHz) telephony audio.
-- **Telugu Dataset Integration:** Configured for the [Infobay AI Audio Call Center Telugu](https://www.kaggle.com/datasets/infobayai/audio-call-center-telugu) dataset (`data/telugu/`). Download runbook provided in `data/telugu/README.md`.
+This document provides a factual, verified inventory of all technical components, datasets, evaluation suites, and configurations existing in this repository at tag `v0.2-eval-obs`.
 
-### b) ASR Benchmarking & Language Adaptation
-- **Primary Engine:** `faster-whisper` (`model_size="small"`, `language="te"`).
-- **First-Class Setting:** `language` parameter defaults to `"te"` for regional call auditing while maintaining `"en"` compatibility.
-- **Turn Enrichment:** Dialogue turns record Telugu script (`text_te`), transliterated Roman script (`text_roman`), word-level timestamps, and token probability proxy (`asr_confidence`).
-- **Gating Mechanism:** Deterministic `transcript_quality` evaluator (`src/audit/quality.py`) classifies transcripts into `good`, `degraded`, or `unusable`. Unusable calls halt audit scoring cleanly.
+---
 
-### c) Diarization Strategy & Speaker Separation
-- **Dual-Channel Separation:** Separates Channel 0 (Agent / Left) and Channel 1 (Customer / Right) with zero LLM API calls and millisecond boundary detection.
-- **Mono Diarization Fallback:** Segment-level LLM speaker labelling via `speaker_id_agent.md` with deterministic acoustic and linguistic cue backup.
+### a) Dataset Status: Verified vs. Unverified
+- **Kaggle Telugu Dataset Status:** **ABSENT** (`data/telugu/` contains only `README.md` with download instructions; zero audio files exist).
+- **Verified Facts:** None from the Kaggle dataset.
+- **Unverified Claims:** Volume, duration (min/median/max), channel layout, sample rate (8 kHz vs 16 kHz), licensing terms, and PII exposure are explicitly marked `UNVERIFIED (dataset not inspected)` across all documentation (`docs/dataset_findings.md`, `data/telugu/README.md`).
+- **Data Actually Used:**
+  - 14 Golden English reference calls (`data/transcripts/`, e.g., `call_001` through `call_108`).
+  - 8 Controlled Synthetic Telugu call fixtures (`eval_data/synthetic_fixtures.py`, clearly marked `[SYNTHETIC]`).
 
-### d) Conversational Dynamics & Emotional Trajectory
-- **Metrics Tracked:** Talk-to-listen ratios, longest silence duration, agent interruption events, and dead-air breaches (>2.0s).
-- **Emotion & Tone Arc:** Customer emotion shifts (angry -> confused -> satisfied) and agent tonal composure (warm, defensive, neutral) mapped across conversation turns.
+---
 
-### e) Policy Knowledge Base & Retrieval Engineering
-- **Knowledge Base:** ChromaDB vector index embedded with `BAAI/bge-small-en-v1.5` over authoritative ShopEase policies (`refund_and_returns.md`, `billing_payments.md`, `privacy_identity_verification.md`, `warranty_replacement.md`).
-- **Strict Policy Grounding:** Model restricted strictly to retrieved clause IDs. Missing policies yield `"no relevant policy found"` rather than hallucinated rules.
+### b) ASR Engine Status & Evidence
+- **Implementation:** `faster-whisper` (`model_size="small"`, `language="te"`).
+- **Status:** **PROVISIONAL (untested on real Telugu audio)**.
+- **Evidence:** Because real Telugu audio is absent, no empirical head-to-head benchmarking against Gemini audio transcription could be executed. The `small` Whisper model is selected as a provisional default based on container memory limits (~1.0 GB RAM footprint) and dual-channel timestamp alignment capabilities.
 
-### f) SOP Compliance Engine & Evidence Verification
-- **Chunked Analysis & State Preservation:** For calls exceeding 50 turns, `EarlyCallState` (`src/audit/call_state.py`) preserves greeting, verification, and issue context across overlapping windows.
-- **Evidence Verification:** Every SOP and policy quote is checked against verbatim turn text. Unverified quotes are downgraded to prevent hallucinated penalties.
+---
 
-### g) Scorecard Architecture & Critical Failure Guardrails
-- **Scorecard Definition:** `scorecard/scorecard_v1.yaml` establishes observable vs. inferred criteria categories.
-- **Mandatory Failure Cap:** Missed critical identity verification or data privacy disclosure caps total audit score at 70.0% (Grade D/C).
-- **Ambiguous Closure Handling:** Phrases such as *"sare, chuddam le"* are flagged as inferred non-committal closures, preventing false claims of customer satisfaction.
+### c) Scorecard Architecture: `scorecard/scorecard_v1.yaml`
+- **Location:** `scorecard/scorecard_v1.yaml` (cleanly supersedes `data/rubric.yaml` while preserving backwards compatibility).
+- **Criteria Defined:**
+  1. `identity_verification` (Mandatory, Critical, Observable): Verification of Order ID + last 4 phone digits before account disclosure. Failure caps score $\le 70.0$.
+  2. `greeting_and_recording_disclosure` (Mandatory, Major, Observable): ShopEase brand greeting + call recording disclosure.
+  3. `hold_handling` (Mandatory when hold occurs, Major, Observable): Permission requested, duration stated, return acknowledged. Holds $>120$s penalized.
+  4. `issue_understood_and_resolved` (Graded, Major, Observable): End-to-end resolution assessment across entire dialogue.
+  5. `closure_and_next_steps` (Graded, Minor, Inferred/Observed): Recap and commitment; colloquial hesitation (*"sare, chuddam le"*) flagged as non-committal.
+  6. `empathy_and_communication` (Graded, Minor, Inferred): Evaluated strictly as qualitative interpretation; cannot fail a call independently.
 
-### h) Observability Dashboard & Reviewer Calibration
-- **User Interface:** Streamlit dashboard (`app/streamlit_app.py`) featuring audio playback, transcript inspection, and QA metrics.
-- **Reviewer Persistence:** Human review decisions stored in `data/reviews/<call_id>.json` allowing supervisors to accept or overturn individual AI findings side-by-side.
-- **Advanced Centralized Observability & Telemetry:** `TODO (phase 3)`
+---
 
-### i) Live Call Copilot (Phase 2)
-- **Real-Time Stream Processing:** Streaming chunk transcription and rolling-window analysis over the last 3 turns. `TODO (phase 2)`
-- **Proactive Card Ingestion:** Instantaneous push of verified SOP steps and return policies to live agent screen. `TODO (phase 2)`
+### d) Evaluation Harness & Formal Results (`eval/`)
+- **Split Configuration:** `eval_data/split.json` isolates calls into `dev` (17 calls) and `heldout` (7 calls). Enforced by `tests/test_eval_separation.py`.
+- **Pricing Table:** `eval/pricing.yaml` documents Gemini 1.5 Flash ($0.075 / 1M input tokens, $0.300 / 1M output tokens).
+- **Pass Rules:** `eval/PASS_RULE.md` defines pre-declared acceptance gates.
+- **Evaluation Runner:** `eval/run_eval.py` generates metrics CSV and Markdown reports in `eval/results/v0.2-eval-obs/`.
+- **Verified Benchmark Results:**
+  - Identity Verification Recall: **100.0%** (2/2) [PASS]
+  - Hold Handling Recall: **100.0%** (1/1) [PASS]
+  - Separation Violations: **0** [PASS]
+  - Evidence Validity: **100.0%** (135/135) [PASS]
+  - Handoff Correctness: **100.0%** (2/2) [PASS]
+  - False Rejection Rate: **0.0%** (0/15) [PASS]
+  - Graded Exact Agreement: **100.0%** (94/94) [PASS]
+  - Model Requests / Audit: **1.82** (Target $\le 3.0$) [PASS]
+  - Estimated Cost / Audit: **$0.000245 USD** (Target $\le \$0.005$) [PASS]
+  - Overall Pass Rule Outcome: **PASS**
 
-### j) Comprehensive System Evaluation & Results
-- **Automated Test Suite:** Offline test coverage in `tests/` verifying prompt size caps, request counts, quality gating, and Prodloop scenarios.
-- **End-to-End Golden Benchmark:** Multi-call regression test comparing LLM determinations against human-audited ground truth.
+---
 
+### e) Blank Human Label Templates
+Per project guidelines, ground-truth labels for real calls must be human-annotated. The following template files remain blank in `eval_data/labels/`:
+1. `eval_data/labels/te_real_001.yaml` (Awaiting human annotation)
+2. `eval_data/labels/te_real_002.yaml` (Awaiting human annotation)
+3. `eval_data/labels/te_heldout_001.yaml` (Awaiting human annotation)
+4. `eval_data/labels/te_heldout_002.yaml` (Awaiting human annotation)
+- **Annotation Guidelines:** Documented in `eval_data/LABELLING_GUIDE.md` (multi-annotator rubric and tie-breaking workflow).
+
+---
+
+### f) Observability & Forensic Tracing
+- **Tracing Module:** `src/audit/tracer.py` writes step-by-step logs to `traces/<run_id>.jsonl`.
+- **Step Telemetry Logged:** `step_name`, `kind` (`model`/`tool`/`plain_code`), `status` (`ok`/`degraded`/`handoff`/`failed`), `latency_sec`, `tokens_in`, `tokens_out`, `cost_usd`, `inputs_summary`, `outputs_summary`, `error_text`.
+- **UI Integrations:**
+  - **Trace Tab:** Added to `app/streamlit_app.py` in the Report view.
+  - **Observability Hub:** Added as dedicated page `app/observability.py` displaying system KPIs, benchmark history, and trace inspection.
+
+---
+
+### g) Deployment Readiness & Containerization
+- **`Dockerfile`:** Python 3.11-slim container with FFmpeg, libsndfile1, non-root paths, Streamlit port 8501, and native HTTP healthcheck.
+- **`.dockerignore`:** Excludes raw audio, test caches, local traces, credentials, and venvs.
+- **`DEPLOY.md`:** Step-by-step runbook for Streamlit Community Cloud, Hugging Face Spaces (Docker), and Render.
+- **Memory Rationale:** Explains why `faster-whisper` `small` (~1.0 GB RAM) is chosen over `medium`/`large` to prevent container OOM crashes on free 2 GB cloud tiers.
+
+---
+
+### h) Scenario Tests (Prodloop Assessment)
+- `tests/test_telugu_foundation.py`:
+  - `test_scenario_a_identity_verification_breach_caps_score`: Validates Turn 3 address disclosure before verification, enforces critical failure cap $\le 70.0$. Clearly labelled `[SYNTHETIC TELUGU FIXTURE]`.
+  - `test_scenario_b_holds_and_ambiguous_closure`: Validates extraction of 2 hold intervals and flags colloquial closure *"sare, chuddam le"* as unresolved. Clearly labelled `[SYNTHETIC TELUGU FIXTURE]`.
+
+---
+
+### i) System Architecture & Workflow Diagrams
+- **Architecture Diagram:** [docs/diagrams/architecture.mmd](file:///c:/Users/mdsaq/OneDrive/Documents/audit-agent/docs/diagrams/architecture.mmd) (Mermaid representation of all 5 system subgraphs).
+- **Workflow Diagram:** [docs/diagrams/workflow.mmd](file:///c:/Users/mdsaq/OneDrive/Documents/audit-agent/docs/diagrams/workflow.mmd) (Decision flow showing quality gate, scope gate, call state, model calls, and reviewer loop).
+
+---
+
+### j) Phase 2 Team Ownership Table (Blank for Team Allocation)
+
+| Component / Subsystem | Primary Owner | Secondary Reviewer | Target Milestone | Status / Notes |
+|---|---|---|---|---|
+| **Real Telugu Audio Ingestion & Kaggle Ingestion** | *[Unassigned]* | *[Unassigned]* | Sprint 1 | Awaiting dataset download |
+| **Human Ground-Truth Labeling (`eval_data/labels/`)**| *[Unassigned]* | *[Unassigned]* | Sprint 1 | Follow `LABELLING_GUIDE.md` |
+| **Real Telugu ASR Benchmarking (Whisper vs Gemini)** | *[Unassigned]* | *[Unassigned]* | Sprint 1 | Run on 3 real calls |
+| **Streaming Audio / WebSocket Live Copilot** | *[Unassigned]* | *[Unassigned]* | Sprint 2 | Sliding window of 3-5 turns |
+| **Hindi (`hi`) Expansion & Multilingual SOPs** | *[Unassigned]* | *[Unassigned]* | Sprint 3 | Add Hindi lexicon & prompts |
+| **Production Cloud Deployment & Monitoring** | *[Unassigned]* | *[Unassigned]* | Sprint 3 | Deploy via `Dockerfile` |
