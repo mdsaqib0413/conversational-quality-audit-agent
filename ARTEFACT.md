@@ -7,10 +7,14 @@ This document provides a factual, verified inventory of all technical components
 ---
 
 ### a) Dataset Status: Verified vs. Unverified
-- **Kaggle Telugu Dataset Status:** **ABSENT** (`data/telugu/` contains only `README.md` with download instructions; zero audio files exist).
-- **Verified Facts:** None from the Kaggle dataset.
-- **Unverified Claims:** Volume, duration (min/median/max), channel layout, sample rate (8 kHz vs 16 kHz), licensing terms, and PII exposure are explicitly marked `UNVERIFIED (dataset not inspected)` across all documentation (`docs/dataset_findings.md`, `data/telugu/README.md`).
-- **Data Actually Used:**
+- **Kaggle Telugu Dataset Status:** Directly inspected on disk under `data/telugu/` (Samples 01, 02, 03).
+- **Verified Facts (Measured Directly):**
+  - `Sample - 01`: 2 mono WAV files (`SPEAKER_00.wav`, `SPEAKER_01.wav`), 8000 Hz, 349.6s each.
+  - `Sample - 02`: 3 mono WAV files (`SPEAKER_00/01/02.wav`), 8000 Hz, 448.6s each.
+  - `Sample - 03`: 3 mono WAV files (`SPEAKER_00/01/02.wav`), 8000 Hz, 379.4s each.
+  - Format is time-aligned mono tracks on a shared timeline, NOT dual-channel stereo.
+- **Unverified Items:** License, Telugu language acoustic confirmation, domain/call-center content, acoustic bleed-through between tracks, and PII presence.
+- **Data Used in Current Evaluation Benchmark:**
   - 14 Golden English reference calls (`data/transcripts/`, e.g., `call_001` through `call_108`).
   - 8 Controlled Synthetic Telugu call fixtures (`eval_data/synthetic_fixtures.py`, clearly marked `[SYNTHETIC]`).
 
@@ -19,7 +23,7 @@ This document provides a factual, verified inventory of all technical components
 ### b) ASR Engine Status & Evidence
 - **Implementation:** `faster-whisper` (`model_size="small"`, `language="te"`).
 - **Status:** **PROVISIONAL (untested on real Telugu audio)**.
-- **Evidence:** Because real Telugu audio is absent, no empirical head-to-head benchmarking against Gemini audio transcription could be executed. The `small` Whisper model is selected as a provisional default based on container memory limits (~1.0 GB RAM footprint) and dual-channel timestamp alignment capabilities.
+- **Evidence:** The `small` Whisper model is selected as a provisional default based on container memory limits (~1.0 GB RAM footprint). Empirical benchmarking against Gemini audio on the Telugu dataset tracks remains to be conducted.
 
 ---
 
@@ -55,11 +59,11 @@ This document provides a factual, verified inventory of all technical components
 ---
 
 ### e) Blank Human Label Templates
-Per project guidelines, ground-truth labels for real calls must be human-annotated. The following template files remain blank in `eval_data/labels/`:
-1. `eval_data/labels/te_real_001.yaml` (Awaiting human annotation)
-2. `eval_data/labels/te_real_002.yaml` (Awaiting human annotation)
-3. `eval_data/labels/te_heldout_001.yaml` (Awaiting human annotation)
-4. `eval_data/labels/te_heldout_002.yaml` (Awaiting human annotation)
+Per project guidelines, ground-truth labels for real calls must be human-annotated. The following template files remain blank and have been explicitly moved to `eval_data/labels/templates/`:
+1. `eval_data/labels/templates/te_real_001.template.yaml` (Awaiting human annotation)
+2. `eval_data/labels/templates/te_real_002.template.yaml` (Awaiting human annotation)
+3. `eval_data/labels/templates/te_heldout_001.template.yaml` (Awaiting human annotation)
+4. `eval_data/labels/templates/te_heldout_002.template.yaml` (Awaiting human annotation)
 - **Annotation Guidelines:** Documented in `eval_data/LABELLING_GUIDE.md` (multi-annotator rubric and tie-breaking workflow).
 
 ---

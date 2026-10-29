@@ -306,6 +306,7 @@ def run_evaluation(tag: str, limit: int = 0) -> Dict[str, Any]:
         "evidence_validity (>= 85%)": evidence_val_pct >= 85.0,
         "handoff_correctness (>= 90%)": handoff_pct >= 90.0,
         "false_rejection_rate (<= 5%)": false_rej_pct <= 5.0,
+        "p95_latency (<= 8.0s)": p95_lat <= 8.0,
     }
     all_passed = all(pass_rules.values())
 
@@ -324,33 +325,34 @@ def run_evaluation(tag: str, limit: int = 0) -> Dict[str, Any]:
     p_ev = '[PASS]' if pass_rules['evidence_validity (>= 85%)'] else '[FAIL]'
     p_ho = '[PASS]' if pass_rules['handoff_correctness (>= 90%)'] else '[FAIL]'
     p_fr = '[PASS]' if pass_rules['false_rejection_rate (<= 5%)'] else '[FAIL]'
+    p_lat = '[PASS]' if pass_rules['p95_latency (<= 8.0s)'] else '[FAIL]'
     p_ge = '[PASS]' if graded_exact_pct >= 80 else '[WARN]'
     p_gw = '[PASS]' if graded_within1_pct >= 95 else '[WARN]'
 
     summary_md = f"""# Evaluation Report: `{tag}`
 **Generated at:** {datetime.now().isoformat(timespec='seconds')}  
 **Split Evaluated:** `dev` ({len(rows)} calls: {len(english_files)} English reference, {len(synth_calls)} Synthetic Telugu)  
-**Overall Pass Rule Outcome:** **{'PASS' if all_passed else 'FAIL'}**
+**Overall Pass Rule Outcome:** **{'PASS' if all_passed else 'FAIL'}** (p95 latency: {p95_lat}s vs limit <= 8.0s)
 
 ---
 
 ## 1. Key Evaluation Metrics vs. Baselines
 
-| Metric | Target / Rule | Baseline A (No-LLM Rules) | Baseline B (Single Whole-Call Prompt) | **Prototype ({tag})** | Pass Status |
-|---|---|---|---|---|---|
-| **Identity Verification Recall** | $\\ge 90.0\\%$ | 75.0% | 70.0% | **{id_recall}%** ({id_verif_tp}/{id_verif_total or 1}) | {p_id} |
-| **Hold Handling Recall** | $\\ge 85.0\\%$ | 80.0% | 60.0% | **{hold_recall}%** ({hold_tp}/{hold_total or 1}) | {p_hold} |
-| **Separation Violations** | **Strict 0** | 0 | 4 | **{separation_violations_count}** | {p_sep} |
-| **Evidence Validity** | $\\ge 85.0\\%$ | 100.0% | 72.0% | **{evidence_val_pct}%** ({total_valid_evidence}/{total_evidence}) | {p_ev} |
-| **Handoff Correctness** | $\\ge 90.0\\%$ | 80.0% | 50.0% | **{handoff_pct}%** ({handoff_correct}/{handoff_total or 1}) | {p_ho} |
-| **False Rejection Rate** | $\\le 5.0\\%$ | 0.0% | 0.0% | **{false_rej_pct}%** ({false_rejections}/{total_good_calls}) | {p_fr} |
-| **Graded Exact Agreement** | $\\ge 80.0\\%$ | 62.5% | 71.0% | **{graded_exact_pct}%** ({graded_exact_matches}/{total_graded or 1}) | {p_ge} |
-| **Graded Within-1 Agreement** | $\\ge 95.0\\%$ | 81.0% | 88.0% | **{graded_within1_pct}%** ({graded_within1_matches}/{total_graded or 1}) | {p_gw} |
-| **Overturn Rate** | Operational | 0.0% | n/a | **{overturn_rate_pct}%** ({overturns_found}/{reviews_found} reviews) | Operational |
-| **p50 Pipeline Latency** | Operational | 0.02s | 1.45s | **{p50_lat}s** | OK |
-| **p95 Pipeline Latency** | $\\le 8.0$s | 0.05s | 3.20s | **{p95_lat}s** | OK |
-| **Model Requests / Audit** | $\\le 3.0$ | 0.0 | 1.0 | **{avg_reqs}** | OK |
-| **Estimated Cost / Audit** | $\\le \\$0.005$ | \\$0.00 | \\$0.00065 | **\\${avg_cost:.6f} USD** | OK |
+| Metric | Target / Rule | Baseline A (No-LLM Rules) | Baseline B (Single Whole-Call Prompt) | **Prototype ({tag})** | Pass Status | Dataset Composition & Denominator (n) |
+|---|---|---|---|---|---|---|
+| **Identity Verification Recall** | $\ge 90.0\%$ | 75.0% | 70.0% | **{id_recall}%** | {p_id} | n={id_verif_total} (2 synthetic Telugu fixtures: 1 breach, 1 compliant) |
+| **Hold Handling Recall** | $\ge 85.0\%$ | 80.0% | 60.0% | **{hold_recall}%** | {p_hold} | n={hold_total} (1 synthetic Telugu multi-hold fixture) |
+| **Separation Violations** | **Strict 0** | 0 | 4 | **{separation_violations_count}** | {p_sep} | n={len(rows)} calls ({len(english_files)} real-English, {len(synth_calls)} synthetic Telugu) |
+| **Evidence Validity** | $\ge 85.0\%$ | 100.0% | 72.0% | **{evidence_val_pct}%** | {p_ev} | n={total_evidence} total findings across 17 dev calls |
+| **Handoff Correctness** | $\ge 90.0\%$ | 80.0% | 50.0% | **{handoff_pct}%** | {p_ho} | n={handoff_total} (2 synthetic Telugu fixtures: unusable audio + out-of-scope) |
+| **False Rejection Rate** | $\le 5.0\%$ | 0.0% | 0.0% | **{false_rej_pct}%** | {p_fr} | n={total_good_calls} valid calls ({len(english_files)} real-English, 6 synthetic Telugu) |
+| **Graded Exact Agreement** | $\ge 80.0\%$ | 62.5% | 71.0% | **{graded_exact_pct}%** | {p_ge} | n={total_graded} graded SOP steps across 9 real-English calls |
+| **Graded Within-1 Agreement** | $\ge 95.0\%$ | 81.0% | 88.0% | **{graded_within1_pct}%** | {p_gw} | n={total_graded} graded SOP steps across 9 real-English calls |
+| **Overturn Rate** | Operational | 0.0% | n/a | **{overturn_rate_pct}%** | Operational | n={reviews_found} human reviewer decisions |
+| **p50 Pipeline Latency** | Operational | 0.02s | 1.45s | **{p50_lat}s** | OK | n={len(latencies)} calls in dev split |
+| **p95 Pipeline Latency** | $\le 8.0$s | 0.05s | 3.20s | **{p95_lat}s** | {p_lat} | n={len(latencies)} calls in dev split |
+| **Model Requests / Audit** | $\le 3.0$ | 0.0 | 1.0 | **{avg_reqs}** | OK | Average across dev split |
+| **Estimated Cost / Audit** | $\le \$0.005$ | \$0.00 | \$0.00065 | **\${avg_cost:.6f} USD** | OK | Average across dev split |
 
 ---
 

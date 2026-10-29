@@ -1,50 +1,48 @@
-# Dataset & ASR Technical Findings (Telugu Foundation)
+# Telugu Dataset Findings: Kaggle Audio Call Center Telugu
 
-> [!WARNING]
-> **DATASET STATUS: UNVERIFIED (dataset not inspected)**  
-> The Kaggle Telugu dataset (`infobayai/audio-call-center-telugu`) is not present in local workspace storage (`data/telugu/`). All volume, duration, sample rate, channel layout, licence, and PII statements below are provisional and unverified against physical files.
+## 1. Verified Facts (Direct File Measurements)
+The following audio files under `data/telugu/` were directly inspected and measured:
 
----
+- **Sample - 01:**
+  - `SPEAKER_00.wav`, `SPEAKER_01.wav`
+  - Audio Format: Mono, 8000 Hz sample rate
+  - Duration: 349.6 seconds each
+  - Channel Layout: 2 individual mono files with identical duration (time-aligned per-speaker tracks on a shared timeline).
 
-## 1. Step 0 Dataset Inspection
+- **Sample - 02:**
+  - `SPEAKER_00.wav`, `SPEAKER_01.wav`, `SPEAKER_02.wav`
+  - Audio Format: Mono, 8000 Hz sample rate
+  - Duration: 448.6 seconds each
+  - Channel Layout: 3 individual mono files with identical duration (time-aligned per-speaker tracks on a shared timeline).
 
-### Availability Status
-- **Local status:** Absent in the local workspace directory (`data/telugu/` contains only download instructions).
-- **Target source:** [Infobay AI Audio Call Center Telugu](https://www.kaggle.com/datasets/infobayai/audio-call-center-telugu) (`infobayai/audio-call-center-telugu`).
-- **Download runbook:** Documented in `data/telugu/README.md`.
+- **Sample - 03:**
+  - `SPEAKER_00.wav`, `SPEAKER_01.wav`, `SPEAKER_02.wav`
+  - Audio Format: Mono, 8000 Hz sample rate
+  - Duration: 379.4 seconds each
+  - Channel Layout: 3 individual mono files with identical duration (time-aligned per-speaker tracks on a shared timeline).
 
-### Dataset Specifications & Channel Layout
-- **Call volume:** UNVERIFIED (dataset not inspected; assumed ~50–100 calls from external card).
-- **Duration range:** UNVERIFIED (dataset not inspected; min/median/max duration unknown until downloaded).
-- **Channel layout:** UNVERIFIED (dataset not inspected; telephony layout assumed dual-channel agent-left/customer-right, but not verified on real files).
-- **Sampling rate:** UNVERIFIED (dataset not inspected; 8 kHz vs 16 kHz unconfirmed).
-- **Transcripts / Ground truth labels:** UNVERIFIED (dataset not inspected; existence of native transcripts or speaker labels unverified).
-- **Licence:** UNVERIFIED (dataset not inspected; listed as CC-BY-4.0 on Kaggle page, but physical metadata license file not inspected).
-- **PII & Data privacy:** UNVERIFIED (dataset not inspected; presence of customer phone numbers, names, or addresses unverified).
-
----
-
-## 2. Telugu ASR Engine Selection
-
-> [!NOTE]
-> **ASR STATUS: PROVISIONAL (untested on real Telugu audio)**  
-> Because real Telugu audio was absent during Phase 1, `faster-whisper` (`model_size="small"`, `language="te"`) is selected **provisionally** based on architectural zero-quota constraints and local processing capability, not empirical WER/CER benchmarks. Real comparative testing against Gemini audio will occur when audio files are downloaded.
-
-### Provisional Selection Rationale:
-1. **Zero Quota Footprint:** Preserves the single Gemini API key strictly for compliance & policy reasoning.
-2. **Word Timestamps:** Word-level timestamps are required to measure dead air (>2.0s), hold durations (<120s ceiling), and interruption metrics.
-3. **Dual-Channel Isolation:** Transcribing left (agent) and right (customer) channels locally provides clean speaker separation without LLM diarization calls.
-4. **Observable Quality Proxy:** Token probability log-probs yield an explicit `asr_confidence` metric [0.0–1.0], enabling our deterministic `transcript_quality` evaluator.
+### Key Architectural Discovery
+**This dataset is NOT dual-channel stereo audio.** Across all inspected samples, the data consists of multiple separate mono tracks (2 tracks in Sample 01, 3 tracks in Samples 02 and 03) sharing an identical timeline duration. Any assumption of "dual-channel agent-left / customer-right" is incorrect for this dataset and must not be used for the Telugu pipeline.
 
 ---
 
-## 3. Model Requests Per Audit (Short Call vs. Long Call)
+## 2. Preliminary Observations (Unverified - Not Citations of Fact)
+- **Track Activity Dynamics:** A preliminary loudness scan suggested Sample 01's two tracks show alternating active speech with silence gaps, whereas Sample 02 and Sample 03's three tracks exhibit near-continuous energy on most tracks across much of the recording.
+- **Human Review Requirement:** This observation is not a conclusion regarding turn-taking; a human must listen carefully to the 3-speaker tracks of Samples 02 and 03 to determine whether conversational turn-taking, crosstalk, or background audio explains the activity patterns.
 
-The pipeline preserves the single LLM gateway (`src/audit/llm.py`) with zero framework overhead.
+---
 
-| Call Type | Stereo Audio | Mono Audio | Notes |
-|---|---|---|---|
-| **Pre-Refactor Audit** | 2 requests | 3 requests | Request 1: SOP + Empathy; Request 2: Policy Compliance; Mono adds Request 0: Diarize. |
-| **Telugu Short Call (< 60 turns)** | 2 requests | 3 requests | Same request budget. Quality evaluation and call state run locally in deterministic code. |
-| **Telugu Long Call (>= 60 turns)** | 3 requests | 4 requests | Early `call_state` extracted locally; Chunk 1 judges early turns; Chunk 2 judges resolution/closure; Request 3: Policy RAG. |
-| **Unusable Audio (< 0.40 quality)** | **0 requests** | **0 requests** | Gated before LLM invocation. Returns structured "cannot judge" report with specific failure causes. |
+## 3. Not Yet Verified (Requires Direct Human Inspection)
+The following items remain strictly **UNVERIFIED**:
+1. **License & Redistribution Rights:** Dataset licensing terms from the publisher/Kaggle metadata have not been formally confirmed.
+2. **Telugu Language Confirmation:** Acoustic verification that spoken dialogue is exclusively or predominantly Telugu requires human listening.
+3. **Domain & Call-Center Content:** Whether the calls represent actual e-commerce/retail customer support or general conversational inquiries requires human listening.
+4. **Channel Isolation vs Bleed-Through:** Whether the separate speaker tracks represent clean independent acoustic capture or contain acoustic cross-bleed from the same physical room requires human listening.
+5. **PII Exposure:** Whether real customer names, phone numbers, addresses, or financial data are present in the recordings requires human listening and compliance review.
+
+---
+
+## 4. Open Action Items for Human Auditors
+- [ ] Listen to `Sample - 01` (Tracks 00 & 01): Identify speaker roles (which track corresponds to agent vs customer).
+- [ ] Listen to `Sample - 02` & `Sample - 03` (Tracks 00, 01 & 02): Identify who the third speaker is (supervisor, automated IVR, teleconference participant, or background noise) and verify turn alternation.
+- [ ] Determine track acoustic purity (clean microphone separation vs room bleed).

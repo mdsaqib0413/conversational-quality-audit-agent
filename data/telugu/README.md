@@ -2,15 +2,15 @@
 
 The repository is configured to audit bilingual and Telugu (`te`) call center conversations.
 
-> [!WARNING]
-> **DATASET STATUS: UNVERIFIED (dataset not inspected)**  
-> The physical dataset files have not yet been placed in this directory. Specifications below are provisional.
+> [!NOTE]
+> **DATASET STATUS: DIRECTLY INSPECTED (Sample 01, 02, 03 verified)**  
+> Files measured: Mono 8000 Hz time-aligned multi-track audio. See docs/dataset_findings.md for verified details.
 
 ## Kaggle Dataset Details
 - **Source:** [Infobay AI Audio Call Center Telugu](https://www.kaggle.com/datasets/infobayai/audio-call-center-telugu)
 - **Dataset identifier:** `infobayai/audio-call-center-telugu`
 - **License:** UNVERIFIED (dataset not inspected; Kaggle page lists CC-BY-4.0)
-- **Channel layout & format:** UNVERIFIED (dataset not inspected; assumed dual-channel 8kHz/16kHz)
+- **Channel layout & format:** VERIFIED: Separate time-aligned mono WAV tracks per speaker at 8000 Hz (Sample 01 has 2 speaker tracks, Samples 02 & 03 have 3 speaker tracks). NOT dual-channel stereo.
 - **Content:** UNVERIFIED (dataset not inspected; assumed customer support calls recorded in Telugu)
 
 ## Download Instructions

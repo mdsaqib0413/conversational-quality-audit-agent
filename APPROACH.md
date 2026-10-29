@@ -42,8 +42,8 @@ graph LR
    Call topic detection (Refund, Billing, Shipping, Warranty, Complaint, General) is computed via deterministic regex lexicons and acoustic situational signals with zero LLM API calls. This guarantees 0ms latency, zero API costs, and predictable execution.
 3. **Policy Retrieval via RAG (`src/audit/rag.py`):**  
    Authoritative ShopEase policies are indexed in ChromaDB using `BAAI/bge-small-en-v1.5` embeddings. For any classified topic, the top-3 relevant policy clauses are retrieved. The LLM is prohibited from hallucinating policies and can only evaluate adherence against retrieved clause IDs.
-4. **Dual-Channel Telephony Ingestion (`src/audit/diarize.py`):**  
-   Stereo calls are split into Channel 0 (Agent / Left) and Channel 1 (Customer / Right), transcribing each independently to produce speaker-attributed turns with exact start/end timestamps and zero LLM calls. Mono calls use a diarization fallback.
+4. **Telephony Ingestion & Diarization (`src/audit/diarize.py`):**  
+   For retail English stereo audio, channels are split (Agent Left / Customer Right). For the Telugu dataset (`data/telugu/`), files are measured as time-aligned mono tracks per speaker at 8000 Hz (not stereo dual-channel). Mono recordings utilize diarization fallback.
 
 ---
 
