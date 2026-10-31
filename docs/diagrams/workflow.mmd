@@ -24,7 +24,7 @@ flowchart TD
     NormalSeq --> TopicDetect
 
     %% Analysis & Retrieval
-    TopicDetect --> RAG["ChromaDB Policy Retrieval (Code)<br/>Top-3 Relevant SOP & Policy Clauses"]
+    TopicDetect --> RAG["Qdrant Policy Retrieval (Code)<br/>Relevant SOP & Policy Clauses"]
     TopicDetect --> SOPPrompt["Single LLM Call: Conversation Analysis (Model)<br/>Gate: src/audit/llm.py"]
     RAG --> PolicyPrompt["Single LLM Call: Policy Compliance Check (Model)<br/>Gate: src/audit/llm.py"]
 

@@ -93,8 +93,8 @@ Per project guidelines, ground-truth labels for real calls must be human-annotat
 ---
 
 ### i) System Architecture & Workflow Diagrams
-- **Architecture Diagram:** [docs/diagrams/architecture.mmd](file:///c:/Users/mdsaq/OneDrive/Documents/audit-agent/docs/diagrams/architecture.mmd) (Mermaid representation of all 5 system subgraphs).
-- **Workflow Diagram:** [docs/diagrams/workflow.mmd](file:///c:/Users/mdsaq/OneDrive/Documents/audit-agent/docs/diagrams/workflow.mmd) (Decision flow showing quality gate, scope gate, call state, model calls, and reviewer loop).
+- **Architecture Diagram:** [docs/diagrams/architecture.mmd](docs/diagrams/architecture.mmd) (Mermaid representation of all 5 system subgraphs).
+- **Workflow Diagram:** [docs/diagrams/workflow.mmd](docs/diagrams/workflow.mmd) (Decision flow showing quality gate, scope gate, call state, model calls, and reviewer loop).
 
 ---
 

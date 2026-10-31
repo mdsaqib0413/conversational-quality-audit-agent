@@ -18,7 +18,7 @@ Auditing regional language customer support calls—specifically in **Telugu (`t
 
 ## Section B: System Architecture
 
-See detailed architecture diagram: [docs/diagrams/architecture.mmd](file:///c:/Users/mdsaq/OneDrive/Documents/audit-agent/docs/diagrams/architecture.mmd)
+See detailed architecture diagram: [docs/diagrams/architecture.mmd](docs/diagrams/architecture.mmd)
 
 ```mermaid
 graph LR
@@ -26,7 +26,7 @@ graph LR
     DualMono --> QGate["Quality & Scope Gates"]
     QGate --> CallState["Early Call State (Turns 1..15)"]
     CallState --> DetTopic["Deterministic Topic Classifier"]
-    DetTopic --> RAG["ChromaDB Policy Retrieval"]
+    DetTopic --> RAG["Qdrant Policy Retrieval"]
     DetTopic --> Gateway["Single Gateway (src/audit/llm.py)"]
     RAG --> Gateway
     Gateway --> Findings["Structured Findings (Observed vs Inferred)"]
@@ -41,7 +41,7 @@ graph LR
 2. **Deterministic Topic Classifier (`src/audit/topic.py`):**  
    Call topic detection (Refund, Billing, Shipping, Warranty, Complaint, General) is computed via deterministic regex lexicons and acoustic situational signals with zero LLM API calls. This guarantees 0ms latency, zero API costs, and predictable execution.
 3. **Policy Retrieval via RAG (`src/audit/rag.py`):**  
-   Authoritative ShopEase policies are indexed in ChromaDB using `BAAI/bge-small-en-v1.5` embeddings. For any classified topic, the top-3 relevant policy clauses are retrieved. The LLM is prohibited from hallucinating policies and can only evaluate adherence against retrieved clause IDs.
+   Authoritative ShopEase policies are indexed in Qdrant using hybrid BM25 + `BAAI/bge-small-en-v1.5` embeddings. For any classified topic, relevant policy clauses are retrieved. The LLM is prohibited from hallucinating policies and can only evaluate adherence against retrieved clause IDs.
 4. **Telephony Ingestion & Diarization (`src/audit/diarize.py`):**  
    For retail English stereo audio, channels are split (Agent Left / Customer Right). For the Telugu dataset (`data/telugu/`), files are measured as time-aligned mono tracks per speaker at 8000 Hz (not stereo dual-channel). Mono recordings utilize diarization fallback.
 
@@ -49,7 +49,7 @@ graph LR
 
 ## Section C: End-to-End Workflow & Operational Gates
 
-See detailed workflow diagram: [docs/diagrams/workflow.mmd](file:///c:/Users/mdsaq/OneDrive/Documents/audit-agent/docs/diagrams/workflow.mmd)
+See detailed workflow diagram: [docs/diagrams/workflow.mmd](docs/diagrams/workflow.mmd)
 
 The pipeline executes a deterministic, fail-safe evaluation trajectory:
 1. **Quality Gate (`src/audit/quality.py`):**  

@@ -10,7 +10,7 @@ graph TB
 
     subgraph STORES["Data Stores & Registries"]
         RubricStore[("Scorecard Registry<br/>scorecard/scorecard_v1.yaml")]
-        ChromaStore[("ChromaDB Vector Store<br/>bge-small-en-v1.5 embeddings")]
+        QdrantStore[("Qdrant Vector Store<br/>bge-small-en-v1.5 embeddings")]
         TraceStore[("Trace Store<br/>traces/*.jsonl")]
         ReviewStore[("Review Store<br/>reviews/*.json")]
         EvalStore[("Evaluation Registry<br/>eval_data/ (dev / heldout)")]
@@ -63,7 +63,7 @@ graph TB
     %% Core orchestration
     CallState --> TopicDet
     TopicDet --> RAGRetriever
-    ChromaStore -.-> RAGRetriever
+    QdrantStore -.-> RAGRetriever
     RubricStore -.-> SOPGrader
 
     TopicDet --> SOPGrader
@@ -99,7 +99,7 @@ graph TB
     classDef plainCode fill:#f1f8e9,stroke:#558b2f,stroke-width:2px;
     classDef uiStyle fill:#f3e5f5,stroke:#7b1fa2,stroke-width:2px;
 
-    class RubricStore,ChromaStore,TraceStore,ReviewStore,EvalStore storeStyle;
+    class RubricStore,QdrantStore,TraceStore,ReviewStore,EvalStore storeStyle;
     class SingleGateway,ASREngine modelStyle;
     class DualASR,MonoASR,QualityGate,CallState,TopicDet,RAGRetriever,FindingsBuilder,ScoringEngine,Tracer,ReviewLoop,EvalEngine plainCode;
     class TabAudit,TabReview,TabGolden,TabLive,TabTrace,PageObs uiStyle;
