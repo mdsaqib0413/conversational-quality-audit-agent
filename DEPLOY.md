@@ -34,7 +34,7 @@ Streamlit Community Cloud connects directly to your GitHub repository and serves
 4. Expand **"Advanced settings..."** -> **"Secrets"** and enter your API configuration in TOML format:
    ```toml
    GEMINI_API_KEY = "AIzaSy..."
-   GEMINI_MODEL = "gemini-1.5-flash"
+   GEMINI_MODEL = "gemini-2.5-flash" # or any model printed by `python scripts/list_models.py`
    ```
 5. Click **"Deploy!"**. The build will automatically install `packages.txt` (`ffmpeg`) and `requirements.txt`.
 
@@ -58,7 +58,7 @@ Hugging Face Spaces provides 2 vCPU and 16 GB RAM free on CPU Basic tier, runnin
      - Value: `AIzaSy...`
    - Click **"New variable"**:
      - Key: `GEMINI_MODEL`
-     - Value: `gemini-1.5-flash`
+     - Value: `gemini-2.5-flash` (or a model printed by `python scripts/list_models.py`)
 5. The container builds from `Dockerfile` and listens on port `8501`.
 
 ---
@@ -71,7 +71,7 @@ Hugging Face Spaces provides 2 vCPU and 16 GB RAM free on CPU Basic tier, runnin
 4. Plan: `Free` or `Starter` ($7/mo for persistent RAM).
 5. Under **Environment Variables**, add:
    - `GEMINI_API_KEY`: `AIzaSy...`
-   - `GEMINI_MODEL`: `gemini-1.5-flash`
+   - `GEMINI_MODEL`: `gemini-2.5-flash` (or a model printed by `python scripts/list_models.py`)
    - `STREAMLIT_SERVER_PORT`: `8501`
    - `STREAMLIT_SERVER_ADDRESS`: `0.0.0.0`
 

@@ -28,7 +28,7 @@ Designed from day one to support real-time agent co-piloting:
 - **Application & Visualization:** `Streamlit`, `Plotly`
 - **Report Generation:** `Jinja2`, `xhtml2pdf` / PDF export engine
 - **Synthetic Audio & Tooling:** `edge-tts`, `pyyaml`, `pydantic`
-- **LLM Gateway:** Google Gemini API (Free tier / `gemini-1.5-flash` or `gemini-2.0-flash`), isolated strictly behind `src/audit/llm.py` with retry backoff and rate-limit handling.
+- **LLM Gateway:** Google Gemini API (e.g. `gemini-2.5-flash`; set `GEMINI_MODEL` to a model printed by `python scripts/list_models.py`), isolated strictly behind `src/audit/llm.py` with retry backoff and rate-limit handling.
 
 ## 5. Non-Negotiable Operational Rules
 1. **Single LLM Gateway:** All LLM access MUST go through `src/audit/llm.py`. No direct API calls elsewhere in the codebase.
