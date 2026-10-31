@@ -4,57 +4,67 @@ Upload a customer-support call (MP3/WAV) and get an evidence-backed audit: trans
 emotion arc and conversation gaps, SOP adherence, policy compliance via RAG over the company policies/SOPs,
 a 0-100 score with grade, and a coaching report (PDF) for the agent.
 
-## Quick start
+## 🚀 Setup and Run
 
+**Python 3.11 required.**
+
+### 1. Prerequisites
+- **Python 3.11** (64-bit)
+- **Git**
+- **FFmpeg** (installed and available on system `PATH`, required for audio processing):
+  - Windows (`winget`): `winget install Gyan.FFmpeg` (or download from [gyan.dev](https://www.gyan.dev/ffmpeg/builds/) and add `bin` to your user `PATH`)
+  - Linux/macOS: `sudo apt install ffmpeg` or `brew install ffmpeg`
+  - Verify with: `ffmpeg -version`
+
+### 2. Clone & Environment Setup
+On Windows (PowerShell):
 ```powershell
-pip install -r requirements.txt
-copy .env.example .env         # then put your key + a model from `python scripts/list_models.py`
-python -m pytest tests -q      # 60+ offline tests, no API needed
-python -m streamlit run app/streamlit_app.py --server.fileWatcherType none --server.runOnSave false --browser.gatherUsageStats false
-```
-
-> **Tip:** Use the helper scripts `run_app.bat` (Windows cmd) or `run_app.ps1` (PowerShell) — they run the command above from the project root automatically.
-
----
-
-## 🚀 Run From Scratch (Step-by-Step Verification)
-
-To set up and run this project from a clean clone:
-
-```bash
-# 1. Clone the repository
-git clone https://github.com/your-org/audit-agent.git
-cd audit-agent
-
-# 2. Create and activate a Python 3.11 virtual environment
+git clone https://github.com/mdsaqib0413/conversational-quality-audit-agent.git
+cd conversational-quality-audit-agent
 python -m venv .venv
-# On Windows PowerShell:
-.venv\Scripts\Activate.ps1
-# On Linux/macOS:
-source .venv/bin/activate
+.\.venv\Scripts\Activate.ps1
+```
+*(On Linux/macOS: use `source .venv/bin/activate`)*
 
-# 3. Install core dependencies
+### 3. Install Dependencies
+```powershell
 pip install --upgrade pip
 pip install -r requirements.txt
-
-# 4. Configure local environment variables
-# Copy .env.example to .env and configure your GEMINI_API_KEY
-copy .env.example .env
-# Edit .env and set GEMINI_API_KEY="your-google-gemini-api-key"
-
-# 5. Execute test suite (100% offline, requires zero LLM API calls)
-python -m pytest tests/ -q
-
-# 6. Execute formal benchmark evaluation harness
-python eval/run_eval.py --tag v0.2-eval-obs
-
-# 7. Launch interactive audit & observability application
-python -m streamlit run app/streamlit_app.py
 ```
 
+### 4. Configure Environment Variables
+Copy `.env.example` to `.env` and supply your Gemini API key:
+```powershell
+Copy-Item .env.example .env    # Linux/macOS: cp .env.example .env
+```
+Edit `.env` and configure:
+```ini
+GEMINI_API_KEY=your_actual_gemini_api_key_here
+GEMINI_MODEL=gemini-2.5-flash
+WHISPER_MODEL=small
+```
+> **Note:** Set `GEMINI_MODEL` to a model printed by `python scripts/list_models.py` (e.g. `gemini-2.5-flash`).
 
-Command line: `python scripts/audit_cli.py data/audio/call_001_stereo.mp3 --pdf`
-Free checks (0 API requests): `python eval/run_eval.py --no-llm` and `python scripts/audio_smoke_test.py data/audio/call_001_stereo.mp3`
+### 5. Run the Offline Test Suite
+Verify your installation (requires zero API calls):
+```powershell
+python -m pytest tests -q
+```
+
+### 6. Launch the Application
+Launch the interactive Streamlit audit dashboard:
+```powershell
+streamlit run app/streamlit_app.py
+```
+> **Tip:** You can also run `run_app.bat` (Windows cmd) or `run_app.ps1` (PowerShell), or pass explicit options:
+> `python -m streamlit run app/streamlit_app.py --server.fileWatcherType none --server.runOnSave false --browser.gatherUsageStats false`
+
+**CLI & Benchmark Verification:**
+- Audit via CLI: `python scripts/audit_cli.py data/audio/call_001_stereo.mp3 --pdf`
+- Free checks (0 API requests): `python eval/run_eval.py --no-llm` and `python scripts/audio_smoke_test.py data/audio/call_001_stereo.mp3`
+- Benchmark evaluation harness: `python eval/run_eval.py --tag v0.2-eval-obs`
+
+---
 
 ## How an audit works (2 API requests per call, 3 for mono audio)
 
@@ -114,57 +124,6 @@ The **Conversational Quality Audit Agent** is an end-to-end QA and compliance pl
 4. **Vector Embeddings:** Uses `BAAI/bge-small-en-v1.5` for RAG chunk embeddings, indexed in Qdrant (embedded local mode, persisted in `data/qdrant_db/`; set `QDRANT_URL` for a server or Qdrant Cloud, or `VECTOR_STORE=numpy` to disable).
 5. **PDF Engine:** Uses `xhtml2pdf` alongside `Jinja2` to provide native, cross-platform PDF export on Windows without requiring complex GTK/Cairo binaries.
 6. **Diarization & Audio Pipeline:** If multi-channel audio is not present, speaker attribution relies on `faster-whisper` timestamps combined with speaker energy clustering or turn heuristics. Synthetic call evaluation scripts use `edge-tts` with distinct Indian English voices.
-
----
-
-## 🚀 Setup Steps for Windows
-
-### 1. Prerequisites
-- **Python 3.11** (64-bit)
-- **Git for Windows**
-- **FFmpeg**:
-  Install via `winget`:
-  ```powershell
-  winget install Gyan.FFmpeg
-  ```
-  Or download from [gyan.dev](https://www.gyan.dev/ffmpeg/builds/) and add the `bin` directory to your user `PATH`. Verify with:
-  ```powershell
-  ffmpeg -version
-  ```
-
-### 2. Environment Setup
-Clone the repository and create a Python virtual environment:
-```powershell
-cd c:\Users\mdsaq\OneDrive\Documents\audit-agent
-python -m venv .venv
-.\.venv\Scripts\Activate.ps1
-```
-
-### 3. Install Dependencies
-```powershell
-pip install --upgrade pip
-pip install -r requirements.txt
-```
-
-### 4. Configure Environment Variables
-Copy `.env.example` to `.env` and supply your Gemini API key:
-```powershell
-Copy-Item .env.example .env
-```
-Edit `.env`:
-```ini
-GEMINI_API_KEY=your_actual_gemini_api_key_here
-GEMINI_MODEL=gemini-1.5-flash
-WHISPER_MODEL=small
-```
-
----
-
-## 🏃 Running the Application
-Launch the Streamlit interactive audit dashboard:
-```powershell
-streamlit run app/streamlit_app.py
-```
 
 ---
 
