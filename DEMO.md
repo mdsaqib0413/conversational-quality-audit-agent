@@ -32,7 +32,7 @@
 **Page:** Report → tab **Call script**
 
 - Switch to **Table** view.
-- Show the **Missed** column: GEN-02 (identity verification), GEN-03 (recording disclosure), REF-S1 (eligibility check) — all red, marked CRITICAL.
+- Show the **Missed** column: GEN-02 (recording disclosure), GEN-03 (identity verification), REF-S1 (eligibility check) — all red, marked CRITICAL.
 - Click any step card to expand the verbatim **evidence quote** and **turn number**.
 
 > _"Every finding cites the exact words and the turn it came from — no hallucination."_
