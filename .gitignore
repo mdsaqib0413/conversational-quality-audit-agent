@@ -31,3 +31,7 @@ call-center-speech-dataset/
 eval/results/*/cache/
 traces/*.jsonl
 !traces/.gitkeep
+
+# Local vector database
+data/qdrant_db/
+data/index_cache/

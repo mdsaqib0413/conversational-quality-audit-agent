@@ -11,7 +11,7 @@ This document provides deployment guidelines for hosting the **Conversational Qu
 | **Streamlit UI + Python Runtime** | ~350 MB | ~500 MB base container | 1 vCPU / 1 GB RAM minimum |
 | **`faster-whisper` (`small` model)** | ~1.0 GB RAM | ~480 MB model weights | 2 vCPU / 2-4 GB RAM recommended |
 | **`bge-small-en-v1.5` (Embeddings)** | ~300 MB RAM | ~130 MB weights | Shared with Python runtime |
-| **ChromaDB Vector Store** | ~150 MB RAM | ~50 MB index | Local ephemeral storage |
+| **Qdrant Vector Store (embedded local)** | ~150 MB RAM | ~1 MB index | Local ephemeral storage |
 | **Total Operational Sizing** | **~2.0 – 2.5 GB RAM** | **~1.5 GB free disk** | Free/Starter Tier (Hugging Face Spaces, Streamlit Cloud, Render) |
 
 > [!IMPORTANT]

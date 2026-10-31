@@ -219,6 +219,7 @@ class KnowledgeBase:
         self.by_id: Dict[str, Chunk] = {c.id: c for c in self.policies + self.sops}
         self._bm25 = BM25([tokenize(c.text) for c in self.policies])
         self._emb_matrix, self._emb_tried = None, False
+        self._store, self._store_tried = None, False
 
     @property
     def version(self) -> str:
@@ -242,6 +243,7 @@ class KnowledgeBase:
             cache = CACHE_DIR / f"policy_emb_{self.version}.npy"
             if cache.exists():
                 self._emb_matrix = np.load(cache)
+                self._attach_store()
                 return True
             from sentence_transformers import SentenceTransformer
 
@@ -250,11 +252,67 @@ class KnowledgeBase:
             mat = self._embedder.encode([c.text for c in self.policies], normalize_embeddings=True)
             np.save(cache, mat)
             self._emb_matrix = mat
+            self._attach_store()
             return True
         except Exception as exc:  # noqa: BLE001
             logger.warning("Embeddings unavailable (%s). Falling back to BM25-only retrieval.", exc)
             self._emb_matrix = None
             return False
+
+    def _attach_store(self) -> None:
+        """Index the policy embeddings in Qdrant (once per knowledge-base version). Never raises."""
+        if self._store_tried:
+            return
+        self._store_tried = True
+        try:
+            from .vectorstore import PolicyVectorStore, vector_store_enabled
+
+            if not vector_store_enabled():
+                return
+            store = PolicyVectorStore(self.data_dir)
+            store.sync(self.policies, self._emb_matrix, self.version)
+            self._store = store
+        except Exception as exc:  # noqa: BLE001
+            logger.warning("Qdrant unavailable (%s). Using the in-memory embedding matrix.", exc)
+            self._store = None
+
+    @property
+    def vector_backend(self) -> str:
+        """Which backend answers similarity queries right now (for the UI / traces)."""
+        if self._store is not None:
+            return f"qdrant ({self._store.mode})"
+        if self._emb_matrix is not None:
+            return "numpy matrix"
+        return "bm25 only"
+
+    def _vector_sims(self, query: str) -> List[float]:
+        """Cosine similarity of `query` to every policy clause, in self.policies order."""
+        qv = self._embed_query(query)
+        if self._store is not None:
+            try:
+                hits = self._store.search(qv, limit=len(self.policies))
+                return [hits.get(c.id, 0.0) for c in self.policies]
+            except Exception as exc:  # noqa: BLE001
+                logger.warning("Qdrant query failed (%s); using the in-memory matrix.", exc)
+                self._store = None
+        return (self._emb_matrix @ qv).tolist()
+
+    def vector_search(self, query: str, k: int = 5, families: Optional[Iterable[str]] = None) -> List[tuple]:
+        """Pure semantic search with an optional metadata filter -> [(Chunk, score)]. Used by Policy lookup / demos."""
+        if not self.policies or not self._load_embeddings():
+            return []
+        qv = self._embed_query(query)
+        if self._store is not None:
+            try:
+                hits = self._store.search(qv, limit=k, families=families)
+                return [(self.by_id[i], s) for i, s in sorted(hits.items(), key=lambda x: -x[1]) if i in self.by_id]
+            except Exception as exc:  # noqa: BLE001
+                logger.warning("Qdrant query failed (%s); using the in-memory matrix.", exc)
+                self._store = None
+        fams = set(families or [])
+        sims = (self._emb_matrix @ qv).tolist()
+        ranked = sorted(((s, c) for s, c in zip(sims, self.policies) if not fams or c.family in fams), key=lambda x: -x[0])
+        return [(c, s) for s, c in ranked[:k]]
 
     def _embed_query(self, query: str):
         import numpy as np
@@ -278,7 +336,7 @@ class KnowledgeBase:
             try:
                 import numpy as np
 
-                sims = (self._emb_matrix @ self._embed_query(query)).tolist()
+                sims = self._vector_sims(query)
                 scores = [0.5 * a + 0.5 * b for a, b in zip(lex, _normalize(sims))]
             except Exception as exc:  # noqa: BLE001
                 logger.warning("Embedding query failed (%s); using BM25 only.", exc)

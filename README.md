@@ -100,7 +100,7 @@ Two English calls are used as `data/audio/real_calls/en_real_001.mp3` and `en_re
 The **Conversational Quality Audit Agent** is an end-to-end QA and compliance platform for audio customer support calls:
 1. **Audio Ingestion & Transcription:** Transcribes customer calls using `faster-whisper`, performing speaker diarization (Agent vs. Customer).
 2. **Conversational Dynamics:** Analyzes silence/gap intervals, talk-to-listen ratios, interruptions, and turn-level emotion/sentiment trajectories.
-3. **Policy & SOP Auditing (RAG):** Uses `sentence-transformers` (`bge-small`) and ChromaDB to match dialogue turns against ShopEase policies and Standard Operating Procedures (SOPs).
+3. **Policy & SOP Auditing (RAG):** Uses `sentence-transformers` (`bge-small`) and a Qdrant vector store (BM25 hybrid) to match dialogue turns against ShopEase policies and Standard Operating Procedures (SOPs).
 4. **LLM Evaluation Gateway:** Executes structured verification through a centralized Gemini wrapper (`src/audit/llm.py`), ensuring every compliance finding links directly to verbatim conversational evidence and specific policy clauses.
 5. **Interactive UI & PDF Audit Reports:** Delivers an interactive Streamlit dashboard and exports comprehensive PDF coaching reports via Jinja2.
 6. **Phase 2 Readiness:** Standalone sliding-window topic detection and policy retrieval functions designed for real-time live call agent assistance.
@@ -111,7 +111,7 @@ The **Conversational Quality Audit Agent** is an end-to-end QA and compliance pl
 1. **Operating System & Audio Engine:** The system runs on Windows with Python 3.11. Audio files are converted to 16kHz mono WAV internally for uniform processing.
 2. **FFmpeg Requirement:** FFmpeg is assumed to be installed and available on the Windows system `PATH` (essential for `pydub`, `librosa`, and `faster-whisper`).
 3. **LLM Access & Rate Limits:** Gemini API Free Tier has strict requests-per-minute (RPM) limits. The audit pipeline is designed to minimize LLM calls (e.g., batching turn evaluations into concise prompt payloads) and employs exponential backoff retry logic.
-4. **Vector Embeddings:** Uses `BAAI/bge-small-en-v1.5` for RAG chunk embeddings, persisted locally in `data/chroma_db/`.
+4. **Vector Embeddings:** Uses `BAAI/bge-small-en-v1.5` for RAG chunk embeddings, indexed in Qdrant (embedded local mode, persisted in `data/qdrant_db/`; set `QDRANT_URL` for a server or Qdrant Cloud, or `VECTOR_STORE=numpy` to disable).
 5. **PDF Engine:** Uses `xhtml2pdf` alongside `Jinja2` to provide native, cross-platform PDF export on Windows without requiring complex GTK/Cairo binaries.
 6. **Diarization & Audio Pipeline:** If multi-channel audio is not present, speaker attribution relies on `faster-whisper` timestamps combined with speaker energy clustering or turn heuristics. Synthetic call evaluation scripts use `edge-tts` with distinct Indian English voices.
 
@@ -251,7 +251,7 @@ audit-agent/
 │   ├── llm.py                        # Centralized Gemini LLM client with retries
 │   ├── pipeline.py                   # Master end-to-end audit orchestrator
 │   ├── policy_check.py               # RAG-grounded policy compliance checker
-│   ├── rag.py                        # Sentence-transformers + ChromaDB indexer
+│   ├── rag.py                        # KB parsing + hybrid retrieval (BM25 + Qdrant)
 │   ├── report.py                     # Jinja2 PDF audit report builder
 │   ├── schemas.py                    # Strict Pydantic models for validation
 │   ├── scoring.py                    # Rubric penalty calculation & grade calculator

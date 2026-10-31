@@ -20,7 +20,8 @@ htmlcov/
 # Local cache, traces, and reviews
 cache/
 data/cache/
-data/chroma_db/
+data/qdrant_db/
+data/index_cache/
 traces/
 reviews/
 eval/results/

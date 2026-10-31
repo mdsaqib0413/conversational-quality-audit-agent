@@ -13,7 +13,7 @@ The **Conversational Quality Audit Agent** automates call audit end-to-end:
 1. **Audio Ingestion:** Ingest customer support audio recordings (`.mp3` / `.wav`).
 2. **Transcription & Diarization:** High-precision speech-to-text using `faster-whisper` and speaker role separation (Agent vs. Customer).
 3. **Conversational Metrics & Emotion:** Detect conversational gaps, prolonged silences, talk-to-listen ratios, and turn-level sentiment/emotion shifts.
-4. **RAG-Powered Compliance Auditing:** Retrieve authoritative company policies and SOP clauses via ChromaDB (`bge-small` embeddings) and evaluate whether the agent adhered to standard operating procedures and accurately stated policies.
+4. **RAG-Powered Compliance Auditing:** Retrieve authoritative company policies and SOP clauses via hybrid BM25 + Qdrant vector search (`bge-small` embeddings) and evaluate whether the agent adhered to standard operating procedures and accurately stated policies.
 5. **Structured Audit Reporting:** Compute standard rubric scores (SOP Adherence, Policy Compliance, Empathy, Communication) and generate an exportable Jinja2-rendered PDF report with specific turn-level evidence.
 
 ## 3. Phase 2 Vision: Live Call Assistance
@@ -24,7 +24,7 @@ Designed from day one to support real-time agent co-piloting:
 ## 4. Technical Stack
 - **Language & Runtime:** Python 3.11
 - **Speech Processing:** `faster-whisper`, `pydub`, `librosa`, `soundfile`
-- **Vector Store & Embeddings:** `sentence-transformers` (`BAAI/bge-small-en-v1.5`), `ChromaDB`
+- **Vector Store & Embeddings:** `sentence-transformers` (`BAAI/bge-small-en-v1.5`), `Qdrant` (`qdrant-client`, embedded local mode)
 - **Application & Visualization:** `Streamlit`, `Plotly`
 - **Report Generation:** `Jinja2`, `xhtml2pdf` / PDF export engine
 - **Synthetic Audio & Tooling:** `edge-tts`, `pyyaml`, `pydantic`
