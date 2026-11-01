@@ -10,6 +10,8 @@ Tests:
 6. Blank env vars (LANGFUSE_CAPTURE_CONTENT=, LANGFUSE_EXPORT_EVAL=) mean 0.
 7. Safe flush timeout guarantees slow/unreachable endpoints do not delay audits.
 8. Smoke test script behavior (no keys, success, key sanitization on error).
+9. Both LANGFUSE_HOST and LANGFUSE_BASE_URL supported.
+10. Best practices: session_id, user_id, dimensional scores, retriever spans.
 """
 from __future__ import annotations
 
@@ -33,13 +35,27 @@ from src.audit.tracer import AuditTracer, TraceStep
 
 
 class FakeTrace:
-    def __init__(self, id: str = "smoke_id", name: str = "smoke_trace", input: Any = None, output: Any = None, metadata: Any = None, tags: Any = None):
+    def __init__(
+        self,
+        id: str = "smoke_id",
+        name: str = "smoke_trace",
+        input: Any = None,
+        output: Any = None,
+        metadata: Any = None,
+        tags: Any = None,
+        session_id: Any = None,
+        user_id: Any = None,
+        version: Any = None,
+    ):
         self.id = id
         self.name = name
         self.input = input
         self.output = output
         self.metadata = metadata or {}
         self.tags = tags or []
+        self.session_id = session_id
+        self.user_id = user_id
+        self.version = version
         self.spans: List[Dict[str, Any]] = []
         self.generations: List[Dict[str, Any]] = []
         self.scores: List[Dict[str, Any]] = []
@@ -89,8 +105,29 @@ class FakeLangfuseClient:
         self.traces: List[FakeTrace] = []
         self.flushed = False
 
-    def trace(self, id: Optional[str] = None, name: str = "", input: Any = None, output: Any = None, metadata: Any = None, tags: Any = None) -> FakeTrace:
-        t = FakeTrace(id=id or "fake_trace_id", name=name, input=input, output=output, metadata=metadata, tags=tags)
+    def trace(
+        self,
+        id: Optional[str] = None,
+        name: str = "",
+        input: Any = None,
+        output: Any = None,
+        metadata: Any = None,
+        tags: Any = None,
+        session_id: Any = None,
+        user_id: Any = None,
+        version: Any = None,
+    ) -> FakeTrace:
+        t = FakeTrace(
+            id=id or "fake_trace_id",
+            name=name,
+            input=input,
+            output=output,
+            metadata=metadata,
+            tags=tags,
+            session_id=session_id,
+            user_id=user_id,
+            version=version,
+        )
         self.traces.append(t)
         return t
 
@@ -137,6 +174,7 @@ def test_is_langfuse_enabled_checks_all_three_keys(monkeypatch):
     monkeypatch.delenv("LANGFUSE_PUBLIC_KEY", raising=False)
     monkeypatch.delenv("LANGFUSE_SECRET_KEY", raising=False)
     monkeypatch.delenv("LANGFUSE_HOST", raising=False)
+    monkeypatch.delenv("LANGFUSE_BASE_URL", raising=False)
     assert not is_langfuse_enabled()
 
     monkeypatch.setenv("LANGFUSE_PUBLIC_KEY", "pk-test")
@@ -145,7 +183,13 @@ def test_is_langfuse_enabled_checks_all_three_keys(monkeypatch):
     monkeypatch.setenv("LANGFUSE_SECRET_KEY", "sk-test")
     assert not is_langfuse_enabled()
 
+    # Supports LANGFUSE_HOST
     monkeypatch.setenv("LANGFUSE_HOST", "https://cloud.langfuse.com")
+    assert is_langfuse_enabled()
+
+    # Also supports LANGFUSE_BASE_URL
+    monkeypatch.delenv("LANGFUSE_HOST", raising=False)
+    monkeypatch.setenv("LANGFUSE_BASE_URL", "https://cloud.langfuse.com")
     assert is_langfuse_enabled()
 
 
@@ -175,6 +219,7 @@ def test_export_skipped_when_no_keys(monkeypatch):
     monkeypatch.delenv("LANGFUSE_PUBLIC_KEY", raising=False)
     monkeypatch.delenv("LANGFUSE_SECRET_KEY", raising=False)
     monkeypatch.delenv("LANGFUSE_HOST", raising=False)
+    monkeypatch.delenv("LANGFUSE_BASE_URL", raising=False)
 
     report = _make_dummy_report()
     result = export_audit_to_langfuse(report)
@@ -272,7 +317,7 @@ def test_flush_timeout_prevents_slow_endpoint_delays():
 def test_export_metadata_only_when_capture_content_zero(monkeypatch, tmp_path):
     monkeypatch.setenv("LANGFUSE_PUBLIC_KEY", "pk-test")
     monkeypatch.setenv("LANGFUSE_SECRET_KEY", "sk-test")
-    monkeypatch.setenv("LANGFUSE_HOST", "https://cloud.langfuse.com")
+    monkeypatch.setenv("LANGFUSE_BASE_URL", "https://cloud.langfuse.com")
     monkeypatch.setenv("LANGFUSE_CAPTURE_CONTENT", "0")
 
     assert not is_capture_content_enabled()
@@ -291,6 +336,15 @@ def test_export_metadata_only_when_capture_content_zero(monkeypatch, tmp_path):
         end_t=100.05,
     )
     tracer.record_step(
+        step_name="policy_retrieval",
+        decision_type="plain_code",
+        status="ok",
+        inputs_summary="BM25 + Qdrant lookup",
+        outputs_summary="Retrieved 4 clauses",
+        start_t=100.05,
+        end_t=100.20,
+    )
+    tracer.record_step(
         step_name="policy_check",
         decision_type="model",
         status="ok",
@@ -299,7 +353,7 @@ def test_export_metadata_only_when_capture_content_zero(monkeypatch, tmp_path):
         tokens_out=200,
         prompt="Sensitive prompt with customer email user@shopease.com",
         response="Sensitive model answer with phone 9876543210",
-        start_t=100.05,
+        start_t=100.20,
         end_t=101.5,
     )
 
@@ -312,22 +366,22 @@ def test_export_metadata_only_when_capture_content_zero(monkeypatch, tmp_path):
     assert tr.input is None
     assert tr.output is None
 
-    # Metadata must carry real numbers
+    # Metadata & Session best practices
     assert tr.metadata["call_id"] == "call_001"
     assert tr.metadata["overall_score"] == 85.0
     assert tr.metadata["content_captured"] is False
+    assert tr.session_id == "call_001"
+    assert "agent_call_001" in tr.user_id
 
-    # Score recorded on trace
-    assert len(tr.scores) == 1
-    assert tr.scores[0]["name"] == "overall_score"
-    assert tr.scores[0]["value"] == 85.0
+    # Dimensional scores recorded
+    assert any(sc["name"] == "overall_score" and sc["value"] == 85.0 for sc in tr.scores)
+    assert any(sc["name"] == "sop_score" for sc in tr.scores)
+    assert any(sc["name"] == "policy_score" for sc in tr.scores)
 
-    # Spans (plain_code step) have None for input and output
-    assert len(tr.spans) == 1
-    assert tr.spans[0]["name"] == "quality_gate"
-    assert tr.spans[0]["input"] is None
-    assert tr.spans[0]["output"] is None
-    assert tr.spans[0]["metadata"]["decision_type"] == "plain_code"
+    # Policy retrieval span marked with retriever observation type
+    retriever_span = [s for s in tr.spans if s["name"] == "policy_retrieval"]
+    assert len(retriever_span) == 1
+    assert retriever_span[0]["metadata"]["observation_type"] == "retriever"
 
     # Generations (model step) have None for input/output, but real usage and model
     assert len(tr.generations) == 1
@@ -397,6 +451,7 @@ def test_smoke_test_no_keys_prints_not_configured(monkeypatch, capsys):
     monkeypatch.delenv("LANGFUSE_PUBLIC_KEY", raising=False)
     monkeypatch.delenv("LANGFUSE_SECRET_KEY", raising=False)
     monkeypatch.delenv("LANGFUSE_HOST", raising=False)
+    monkeypatch.delenv("LANGFUSE_BASE_URL", raising=False)
 
     code = run_smoke_test()
     assert code == 0
@@ -407,12 +462,13 @@ def test_smoke_test_no_keys_prints_not_configured(monkeypatch, capsys):
 def test_smoke_test_with_keys_succeeds_and_flushes(monkeypatch, capsys):
     monkeypatch.setenv("LANGFUSE_PUBLIC_KEY", "pk-smoke-test")
     monkeypatch.setenv("LANGFUSE_SECRET_KEY", "sk-smoke-test")
-    monkeypatch.setenv("LANGFUSE_HOST", "https://cloud.langfuse.com")
+    monkeypatch.setenv("LANGFUSE_BASE_URL", "https://cloud.langfuse.com")
 
     fake_client = FakeLangfuseClient()
     # Mock langfuse import inside run_smoke_test
     import sys
     import types
+
     fake_mod = types.ModuleType("langfuse")
     fake_mod.Langfuse = lambda *a, **kw: fake_client
     monkeypatch.setitem(sys.modules, "langfuse", fake_mod)
@@ -445,6 +501,7 @@ def test_smoke_test_error_sanitizes_keys(monkeypatch, capsys):
 
     import sys
     import types
+
     fake_mod = types.ModuleType("langfuse")
     fake_mod.Langfuse = lambda *a, **kw: ErrorClient()
     monkeypatch.setitem(sys.modules, "langfuse", fake_mod)

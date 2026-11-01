@@ -30,7 +30,7 @@ if env_path.exists():
 def run_smoke_test() -> int:
     pk = os.environ.get("LANGFUSE_PUBLIC_KEY", "").strip()
     sk = os.environ.get("LANGFUSE_SECRET_KEY", "").strip()
-    host = os.environ.get("LANGFUSE_HOST", "").strip()
+    host = (os.environ.get("LANGFUSE_HOST") or os.environ.get("LANGFUSE_BASE_URL") or "").strip().rstrip("/")
 
     if not (pk and sk and host):
         print("Langfuse not configured")
@@ -64,6 +64,7 @@ def run_smoke_test() -> int:
 
         # Flush with timeout
         from src.audit.langfuse_export import _safe_flush
+
         _safe_flush(client, timeout=5.0)
 
         print("sent")
