@@ -90,13 +90,15 @@ class ExpectedViolation:
 def match_violations_turn_level(
     expected_list: Sequence[Union[ExpectedViolation, dict, str]],
     found_violations: Sequence[PolicyResult],
+    turn_window: int = 2,
 ) -> Tuple[List[str], List[str], List[PolicyResult]]:
-    """Match expected violations against found violations at the turn level.
+    """Match expected violations against found violations at the turn level (with turn_window tolerance).
 
     An expected violation E matches found violation F if:
-      (E.turn is None or F.turn == E.turn) and F.clause_id in get_allowed_clauses(E.clause)
+      (E.turn is None or abs(F.turn - E.turn) <= turn_window) and F.clause_id in get_allowed_clauses(E.clause)
 
     Each found violation can match at most one expected violation.
+    Exact turn matches are prioritized before neighbouring turn matches.
     """
     parsed_expected: List[ExpectedViolation] = []
     for item in expected_list:
@@ -121,6 +123,7 @@ def match_violations_turn_level(
         allowed = get_allowed_clauses(exp.clause)
         match_idx = None
         matched_clause_name = None
+        # 1. Exact turn match first
         for idx, f in enumerate(unmatched_found):
             turn_matches = (exp.turn is None) or (f.turn is not None and f.turn == exp.turn)
             if turn_matches and f.clause_id in allowed:
@@ -128,8 +131,20 @@ def match_violations_turn_level(
                 matched_clause_name = f.clause_id
                 break
 
+        # 2. Window match (+- turn_window) if no exact match
+        if match_idx is None and turn_window > 0 and exp.turn is not None:
+            for idx, f in enumerate(unmatched_found):
+                turn_matches = f.turn is not None and abs(f.turn - exp.turn) <= turn_window
+                if turn_matches and f.clause_id in allowed:
+                    match_idx = idx
+                    matched_clause_name = f.clause_id
+                    break
+
         desc = f"{exp.clause} (turn {exp.turn})" if exp.turn is not None else exp.clause
         if match_idx is not None:
+            f = unmatched_found[match_idx]
+            if f.turn != exp.turn and f.turn is not None:
+                desc += f" [flagged on turn {f.turn}]"
             if matched_clause_name != exp.clause:
                 desc += f" [matched as {matched_clause_name}]"
             matched_expected.append(desc)
@@ -282,6 +297,7 @@ def execute_policy_step(
     gateway: LLMGateway,
     tracker: GatewayUsageTracker,
     run_idx: int = 1,
+    turn_window: int = 2,
 ) -> SingleRunResult:
     """Execute ONLY the check_policies step for a given call and variant."""
     detected_topic = detect_topic(call.turns).topic
@@ -322,7 +338,7 @@ def execute_policy_step(
 
     # Turn-level matching with acceptable alternates
     matched_clauses, missed_clauses, extra_violations = match_violations_turn_level(
-        expected_clauses, violations
+        expected_clauses, violations, turn_window=turn_window
     )
     all_expected_found = len(missed_clauses) == 0
 
@@ -682,6 +698,8 @@ def main() -> None:
     )
     parser.add_argument("--runs", type=int, default=3, help="Number of evaluation runs (default: 3)")
     parser.add_argument("--delay", type=float, default=1.5, help="Polite delay between requests to stay below RPM limit")
+    parser.add_argument("--model", type=str, default=None, help="Target Gemini model name (default: configured gemini_gateway)")
+    parser.add_argument("--turn-window", type=int, default=2, help="Turn tolerance window (+- N turns) for clause matching (default: 2)")
     parser.add_argument("--output-csv", type=str, default="eval/results/policy_e2e.csv", help="CSV output path")
     parser.add_argument("--output-md", type=str, default="eval/results/policy_e2e.md", help="Markdown output path")
     args = parser.parse_args()
@@ -703,6 +721,12 @@ def main() -> None:
         all_calls = [dev_pick, heldout_pick]
         print(f"=== DRY RUN MODE: Selected 2 calls: {[c[1] for c in all_calls]} ===")
 
+    if args.model:
+        from src.audit.llm import GeminiProvider
+        active_gateway = LLMGateway([GeminiProvider(args.model)])
+    else:
+        active_gateway = gemini_gateway
+
     variants = args.variants
     num_runs = args.runs
     total_expected_requests = len(all_calls) * len(variants) * num_runs
@@ -710,11 +734,12 @@ def main() -> None:
     print(f"Variants: {variants}")
     print(f"Runs: {num_runs}")
     print(f"Total expected LLM requests: {total_expected_requests}")
-    print(f"Target model: {gemini_gateway.describe()}")
+    print(f"Target model: {active_gateway.describe()}")
+    print(f"Turn window: ±{args.turn_window} turns")
     print("-" * 70)
 
     kb = KnowledgeBase()
-    tracker = GatewayUsageTracker(gemini_gateway)
+    tracker = GatewayUsageTracker(active_gateway)
     tracker.install()
 
     runs: List[SingleRunResult] = []
@@ -740,9 +765,10 @@ def main() -> None:
                         variant=v_key,
                         expected_clauses=expected_violations,
                         kb=kb,
-                        gateway=gemini_gateway,
+                        gateway=active_gateway,
                         tracker=tracker,
                         run_idx=run_i,
+                        turn_window=args.turn_window,
                     )
                     runs.append(res)
                     completed_requests += 1

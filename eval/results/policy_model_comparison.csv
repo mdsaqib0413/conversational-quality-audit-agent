@@ -1,0 +1,6 @@
+run_idx,split,call_id,variant,detected_topic,clauses_sent_count,expected_clauses_count,expected_clauses,found_violations_count,found_clauses,matched_count,matched_clauses,missed_count,missed_clauses,all_expected_found,extra_count,extra_clauses,extra_violations_details,input_tokens,output_tokens,total_tokens,latency_s
+1,dev,call_001,G,refund,22,0,,0,,0,,0,,True,0,,[],6067,822,6889,30.75
+1,dev,call_009,G,billing,22,0,,0,,0,,0,,True,0,,[],5562,684,6246,4.6
+1,dev,call_017,G,shipping,20,1,SHP-2.1 (turn 9),1,SHP-2.1,1,SHP-2.1 (turn 9),0,,True,0,,[],5149,697,5846,17.19
+1,dev,call_025,G,warranty,21,1,WAR-2.1 (turn 5),1,WAR-2.1,1,WAR-2.1 (turn 5) [flagged on turn 7],0,,True,0,,[],5205,773,5978,5.46
+1,dev,call_041,G,warranty,23,1,WAR-3.2 (turn 11),1,WAR-3.2,1,WAR-3.2 (turn 11) [flagged on turn 9],0,,True,0,,[],5744,666,6410,4.26
