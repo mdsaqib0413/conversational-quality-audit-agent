@@ -13,6 +13,12 @@ This document defines the terms, conditions, reporting timeframes, and claim pro
 ---
 
 ### [WAR-1.1] Standard Electronics Warranty Coverage
+- **Topics:** warranty
+- **Situations:** none
+- **Numeric Limit:** 12 months
+- **Default Severity:** minor
+- **Kind:** informational
+
 1. All consumer electronics, computer peripherals, home appliances, and audio gear sold on ShopEase are backed by a minimum **12-month manufacturer warranty** against functional defects, manufacturing anomalies, and component failures.
 2. The warranty coverage period begins on the recorded date of delivery invoice issuance.
 3. Items damaged due to water immersion (non-waterproof models), physical drops, unauthorized dismantling, or electrical power surges are categorically excluded from standard warranty benefits.
@@ -20,6 +26,12 @@ This document defines the terms, conditions, reporting timeframes, and claim pro
 ---
 
 ### [WAR-1.2] Dead on Arrival (DOA) and Transit Damage Reporting
+- **Topics:** warranty, shipping, refund
+- **Situations:** none
+- **Numeric Limit:** 48 hours
+- **Default Severity:** major
+- **Kind:** must_say
+
 1. Customers are entitled to a **free replacement** without any restocking fee or return shipping cost if a product is received damaged, defective, or dead-on-arrival.
 2. **Mandatory Reporting Window:** The customer must report the transit damage or defective condition within **48 hours of delivery**.
 3. **Mandatory Evidence Requirement:** The customer must furnish clear unboxing photographs or video showing:
@@ -31,6 +43,12 @@ This document defines the terms, conditions, reporting timeframes, and claim pro
 ---
 
 ### [WAR-2.1] Free Replacement Workflow
+- **Topics:** warranty, refund
+- **Situations:** none
+- **Numeric Limit:** 5 to 7 business days
+- **Default Severity:** minor
+- **Kind:** informational
+
 1. Once damage/defect evidence is validated by our verification team (within 24 hours of ticket submission):
    - A replacement consignment is generated and dispatched within 24 to 48 hours.
    - Reverse pickup of the defective unit will be executed simultaneously or upon delivery of the replacement unit.
@@ -39,6 +57,12 @@ This document defines the terms, conditions, reporting timeframes, and claim pro
 ---
 
 ### [WAR-2.2] Authorized Brand Service Center Escalation
+- **Topics:** warranty, refund
+- **Situations:** none
+- **Numeric Limit:** 7 days
+- **Default Severity:** major
+- **Kind:** must_say
+
 1. For items experiencing operational defects after the initial 7-day electronics return window (`[REF-1.1]`) has expired, service requests must be routed to the respective brand's authorized service center.
 2. Agents must provide the customer with:
    - Official brand customer care toll-free contact numbers.
@@ -48,6 +72,12 @@ This document defines the terms, conditions, reporting timeframes, and claim pro
 ---
 
 ### [WAR-2.3] ShopEase Assured Warranty Facilitation
+- **Topics:** warranty, refund
+- **Situations:** none
+- **Numeric Limit:** 14 business days
+- **Default Severity:** minor
+- **Kind:** informational
+
 1. For items marketed under the "ShopEase Assured" badge where the manufacturer does not have a physical service center within 30 km of the customer's residential pin code:
    - ShopEase provides doorstep pickup and complimentary courier transit to the regional service hub.
    - Maximum turnaround time (TAT) for repair or replacement is 14 business days.
@@ -56,11 +86,23 @@ This document defines the terms, conditions, reporting timeframes, and claim pro
 ---
 
 ### [WAR-3.1] Extended Warranty and Accidental Protection Plans
+- **Topics:** warranty
+- **Situations:** none
+- **Numeric Limit:** 12 months
+- **Default Severity:** minor
+- **Kind:** informational
+
 1. Extended warranty packages purchased at checkout take effect immediately upon the conclusion of the first 12-month manufacturer warranty window.
 2. Accidental damage coverage allows for one (1) screen replacement or hardware repair per rolling 12-month policy year, subject to a fixed Rs 250 processing deductible.
 
 ---
 
 ### [WAR-3.2] Refurbished and Open-Box Warranty Rules
+- **Topics:** warranty, refund
+- **Situations:** none
+- **Numeric Limit:** 6 months
+- **Default Severity:** minor
+- **Kind:** informational
+
 1. Certified refurbished and open-box electronic devices carry a **6-month ShopEase warranty** instead of the standard 12 months.
 2. Certified refurbished devices remain subject to the standard 7-day return window and 48-hour transit damage notification rule.

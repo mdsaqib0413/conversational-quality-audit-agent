@@ -80,6 +80,15 @@ class Chunk:
     what_good: str = ""
     example: str = ""
     description: str = ""
+    topics: List[str] = field(default_factory=list)
+    situations: List[str] = field(default_factory=list)
+    numeric_limit: Optional[str] = None
+    default_severity: str = "minor"
+    clause_kind: str = "informational"
+
+    @property
+    def policy_kind(self) -> str:
+        return self.clause_kind
 
     def body(self, limit: int = 600) -> str:
         """The clause text without its leading 'ID Title' line and without markdown noise."""
@@ -115,6 +124,17 @@ def _first_example(block: str) -> str:
     return re.sub(r"\s+", " ", m.group(1)).strip() if m else ""
 
 
+def _parse_list_field(val: str) -> List[str]:
+    if not val or val.lower() == "none":
+        return []
+    return [x.strip() for x in val.split(",") if x.strip() and x.strip().lower() != "none"]
+
+
+def _meta_field(block: str, label: str) -> str:
+    m = re.search(rf"-\s*\*\*{re.escape(label)}:\*\*\s*([^\r\n]+)", block)
+    return m.group(1).strip() if m else ""
+
+
 def _family(chunk_id: str) -> str:
     m = re.match(r"([A-Z]+-S?)\d", chunk_id)
     prefix = m.group(1) if m else chunk_id
@@ -133,6 +153,15 @@ def parse_markdown_file(path: Path) -> List[Chunk]:
         block = body[m.end():end]
         block = re.split(r"\n---\s*\n", block)[0]
         cid, title = m.group(1), m.group(2).strip()
+        topics_raw = _meta_field(block, "Topics")
+        topics = _parse_list_field(topics_raw)
+        situations_raw = _meta_field(block, "Situations")
+        situations = _parse_list_field(situations_raw)
+        num_lim = _meta_field(block, "Numeric Limit")
+        numeric_limit = None if (not num_lim or num_lim.lower() == "none") else num_lim
+        default_sev = _meta_field(block, "Default Severity") or ("critical" if kind == "sop" and _field(block, "Critical").lower().startswith("y") else "minor")
+        clause_kind = _meta_field(block, "Kind") or ("must_say" if kind == "sop" else "informational")
+
         chunks.append(
             Chunk(
                 id=cid, kind=kind, title=title, text=f"{cid} {title}\n{block.strip()}", file=path.name,
@@ -142,6 +171,11 @@ def parse_markdown_file(path: Path) -> List[Chunk]:
                 what_good=_field(block, "What Good Looks Like"),
                 example=_first_example(block),
                 description=_field(block, "Description"),
+                topics=topics,
+                situations=situations,
+                numeric_limit=numeric_limit,
+                default_severity=default_sev,
+                clause_kind=clause_kind,
             )
         )
     return chunks

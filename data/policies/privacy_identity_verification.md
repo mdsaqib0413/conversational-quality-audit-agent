@@ -13,6 +13,12 @@ This document defines mandatory protocols for caller authentication, customer da
 ---
 
 ### [PRV-1.1] Mandatory Two-Factor Customer Identity Verification
+- **Topics:** general, refund, billing, shipping
+- **Situations:** identity_verification, data_disclosure
+- **Numeric Limit:** none
+- **Default Severity:** critical
+- **Kind:** must_not_do
+
 1. To safeguard customer accounts and prevent unauthorized data leaks, frontline representatives **must perform two-factor verification before disclosing any account details**, order histories, delivery addresses, payment instruments, or processing refund instructions.
 2. **Mandatory Verification Pair:**
    - **Order ID** (e.g., `ORD-XXXXX`) or registered Account Email Address.
@@ -22,6 +28,12 @@ This document defines mandatory protocols for caller authentication, customer da
 ---
 
 ### [PRV-1.2] Mandatory Call Recording Disclosure
+- **Topics:** general
+- **Situations:** none
+- **Numeric Limit:** none
+- **Default Severity:** critical
+- **Kind:** must_say
+
 1. Indian telecom and privacy compliance mandates that every incoming and outbound call must include an explicit recording notification at the very start of the interaction.
 2. Representatives must recite the approved disclosure statement during their initial call greeting:
    - *"Please note this call is recorded for quality assurance and training purposes."*
@@ -30,6 +42,12 @@ This document defines mandatory protocols for caller authentication, customer da
 ---
 
 ### [PRV-1.3] Handling Unauthenticated Callers
+- **Topics:** general
+- **Situations:** identity_verification, data_disclosure
+- **Numeric Limit:** none
+- **Default Severity:** critical
+- **Kind:** must_not_do
+
 1. If a caller cannot provide the correct Order ID or the last 4 digits of the registered mobile phone number after two consecutive attempts:
    - The agent must not provide any order information, address details, or tracking updates.
    - The agent must direct the caller to access their registered ShopEase mobile app to verify their credentials or trigger a self-service password reset.
@@ -38,6 +56,12 @@ This document defines mandatory protocols for caller authentication, customer da
 ---
 
 ### [PRV-2.1] Sensitive Personal Data Redaction
+- **Topics:** general, billing
+- **Situations:** otp_request, data_disclosure
+- **Numeric Limit:** none
+- **Default Severity:** critical
+- **Kind:** must_not_do
+
 1. Agents must never ask for, record, or repeat out loud:
    - Full 16-digit credit card or debit card numbers.
    - 3-digit CVV / CVC security codes.
@@ -47,6 +71,12 @@ This document defines mandatory protocols for caller authentication, customer da
 ---
 
 ### [PRV-2.2] Delivery Address Masking and Privacy
+- **Topics:** shipping, general
+- **Situations:** data_disclosure
+- **Numeric Limit:** none
+- **Default Severity:** major
+- **Kind:** must_not_do
+
 1. When confirming shipping details with an authenticated caller, representatives must use partial masking:
    - Quote only the recipient's first name, city, and pin code.
    - Never recite the complete street address or door number out loud unless the customer recites it first for confirmation.
@@ -54,5 +84,11 @@ This document defines mandatory protocols for caller authentication, customer da
 ---
 
 ### [PRV-3.1] Right to Data Erasure and Privacy Requests
+- **Topics:** general
+- **Situations:** none
+- **Numeric Limit:** 30 days
+- **Default Severity:** minor
+- **Kind:** informational
+
 1. Requests for customer account deletion, data retrieval under privacy regulations, or marketing unsubscribe requests must be logged under Privacy Service Request tickets.
 2. The agent must inform the customer that account deletion requests are processed by the Data Protection Officer within **30 calendar days**.

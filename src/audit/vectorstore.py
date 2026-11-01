@@ -92,6 +92,11 @@ class PolicyVectorStore:
                 payload={
                     "clause_id": c.id, "family": c.family, "kind": c.kind, "title": c.title,
                     "category": c.category, "file": c.file,
+                    "topics": getattr(c, "topics", []),
+                    "situations": getattr(c, "situations", []),
+                    "numeric_limit": getattr(c, "numeric_limit", None),
+                    "default_severity": getattr(c, "default_severity", "minor"),
+                    "clause_kind": getattr(c, "clause_kind", "informational"),
                 },
             )
             for c, v in zip(chunks, vectors)
