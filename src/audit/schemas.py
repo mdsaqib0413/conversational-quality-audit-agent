@@ -276,9 +276,9 @@ class AuditMeta(BaseModel):
     status: Literal["ok", "degraded", "handoff", "failed"] = "ok"
     failed_step: Optional[str] = None
     completed_steps: List[str] = Field(default_factory=list)
-    estimated_cost_usd: float = 0.0
-    tokens_in: int = 0
-    tokens_out: int = 0
+    estimated_cost_usd: Optional[float] = 0.0
+    tokens_in: Optional[int] = 0
+    tokens_out: Optional[int] = 0
 
 
 class AuditReport(BaseModel):

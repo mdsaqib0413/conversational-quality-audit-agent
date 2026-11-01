@@ -137,7 +137,7 @@ class AuditPipeline:
         call_id = call_id or path.stem
         call, warnings, t_secs = self.transcribe_audio(audio_path, call_id, use_cache, progress, language=language)
         report = self.audit_call(call, use_cache=use_cache, progress=progress, extra_warnings=warnings,
-                                 source_set=source_set, policy_applicable=policy_applicable)
+                                 source_set=source_set, policy_applicable=policy_applicable, transcribe_seconds=t_secs)
         report.meta.transcribe_seconds = round(t_secs, 1)
         return report
 
@@ -147,7 +147,7 @@ class AuditPipeline:
 
     def audit_call(self, call: CallTranscript, use_cache: bool = True, progress: Progress = None,
                    extra_warnings: Optional[List[str]] = None, source_set: str = "synthetic",
-                   policy_applicable: bool = True) -> AuditReport:
+                   policy_applicable: bool = True, transcribe_seconds: float = 0.0) -> AuditReport:
         if not call.turns:
             raise ValueError("The transcript has no turns.")
         cache_path = self._audit_cache_path(call)
@@ -167,8 +167,22 @@ class AuditPipeline:
 
         # Initialize structured tracer
         run_id = f"run_{call.call_id}_{int(time.time()*1000)%1000000}"
-        tracer = AuditTracer(run_id=run_id)
+        tracer = AuditTracer(run_id=run_id, source=getattr(self, "trace_source", None))
+        if hasattr(self.gateway, "tracer"):
+            self.gateway.tracer = tracer
         completed_steps = ["input_ingestion"]
+        tracer.record_step(
+            "transcribe", "plain_code", status="ok",
+            inputs_summary=f"Call {call.call_id}, {len(call.turns)} turns",
+            outputs_summary=f"Transcribed {len(call.turns)} turns ({call.duration_seconds:.1f}s)",
+            start_t=t0, end_t=t0 + transcribe_seconds,
+        )
+        tracer.record_step(
+            "diarize", "plain_code", status="ok",
+            inputs_summary=f"Diarization method: {call.diarization_method}",
+            outputs_summary=f"{len(call.turns)} turns assigned to speakers",
+            start_t=t0 + transcribe_seconds, end_t=t0 + transcribe_seconds,
+        )
         tracer.record_step(
             "input_ingestion", "plain_code", status="ok",
             inputs_summary=f"Call {call.call_id}, {len(call.turns)} turns, {call.duration_seconds}s",
@@ -265,10 +279,17 @@ class AuditPipeline:
         completed_steps.append("call_state")
 
         _emit(progress, "topic", 0.55, "Detecting call topic and situation...")
+        t_top = time.time()
         metrics = compute_metrics(call)
         topic = detect_topic(call.turns)
         step_ids = candidate_step_ids(self.kb, topic.topic, topic.signals)
         completed_steps.append("topic_detection")
+        tracer.record_step(
+            "topic", "plain_code", status="ok",
+            inputs_summary=f"{len(call.turns)} turns",
+            outputs_summary=f"Topic: {topic.topic} (confidence={topic.confidence:.2f}), {len(step_ids)} candidate steps",
+            start_t=t_top, end_t=time.time(),
+        )
 
         _emit(progress, "sop", 0.65, f"Judging {len(step_ids)} SOP steps, empathy and emotions...")
         t_sop = time.time()
@@ -276,25 +297,31 @@ class AuditPipeline:
         try:
             analysis, sop_results, w1 = analyze_conversation(call, topic.topic, topic.signals, step_ids, self.kb, self.gateway, call_state=call_state)
             warnings += w1
+            usage_sop = getattr(self.gateway, "last_usage", None) or {}
+            t_in_sop = usage_sop.get("tokens_in")
+            t_out_sop = usage_sop.get("tokens_out")
             tracer.record_step(
-                "scorecard_judgment", "model", status="ok",
+                "sop_check", "model", status="ok",
                 inputs_summary=f"Topic: {topic.topic}, {len(step_ids)} candidate steps",
                 outputs_summary=f"Evaluated {len(sop_results)} steps, resolved={analysis.resolved}",
                 start_t=t_sop, end_t=time.time(),
-                model_name=self.gateway.describe() if self.gateway.targets else "fake",
-                tokens_in=len(call.turns) * 25,
-                tokens_out=len(analysis.summary.split()) * 4 + 200,
+                model_name=self.gateway.describe() if self.gateway.targets else "none",
+                tokens_in=t_in_sop,
+                tokens_out=t_out_sop,
+                prompt=usage_sop.get("prompt"),
+                response=usage_sop.get("response"),
+                has_usage=usage_sop.get("has_usage", (t_in_sop is not None and t_out_sop is not None)),
                 request_count=self.gateway.request_count - req_before_sop,
             )
             completed_steps.append("scorecard_judgment")
         except Exception as err:
             logger.error("SOP analysis failed: %s", err)
             tracer.record_step(
-                "scorecard_judgment", "model", status="failed",
+                "sop_check", "model", status="failed",
                 inputs_summary=f"Topic: {topic.topic}",
                 outputs_summary=f"Error: {err}",
                 start_t=t_sop, end_t=time.time(),
-                model_name=self.gateway.describe() if self.gateway.targets else "fake",
+                model_name=self.gateway.describe() if self.gateway.targets else "none",
                 request_count=self.gateway.request_count - req_before_sop,
                 error_text=str(err),
             )
@@ -322,16 +349,32 @@ class AuditPipeline:
         _emit(progress, "policy", 0.82, "Retrieving policies and checking what the agent promised...")
         t_pol = time.time()
         req_before_pol = self.gateway.request_count
+        t_pol_ret = time.time()
+        from .policy_check import get_policy_context_clauses
+        retrieved_clauses = get_policy_context_clauses(call, topic.topic, self.kb)
+        tracer.record_step(
+            "policy_retrieval", "plain_code", status="ok",
+            inputs_summary=f"Topic: {topic.topic}",
+            outputs_summary=f"{len(retrieved_clauses)} clauses retrieved",
+            start_t=t_pol_ret, end_t=time.time(),
+        )
         try:
             policy_results, w2, clauses = check_policies(call, topic.topic, self.kb, self.gateway)
             warnings += w2
+            usage_pol = getattr(self.gateway, "last_usage", None) or {}
+            t_in_pol = usage_pol.get("tokens_in")
+            t_out_pol = usage_pol.get("tokens_out")
             tracer.record_step(
                 "policy_check", "model", status="ok",
                 inputs_summary=f"Topic: {topic.topic}, {len(clauses)} clauses retrieved",
                 outputs_summary=f"Checked {len(policy_results)} claims/violations",
                 start_t=t_pol, end_t=time.time(),
-                model_name=self.gateway.describe() if self.gateway.targets else "fake",
-                tokens_in=1200, tokens_out=300,
+                model_name=self.gateway.describe() if self.gateway.targets else "none",
+                tokens_in=t_in_pol,
+                tokens_out=t_out_pol,
+                prompt=usage_pol.get("prompt"),
+                response=usage_pol.get("response"),
+                has_usage=usage_pol.get("has_usage", (t_in_pol is not None and t_out_pol is not None)),
                 request_count=self.gateway.request_count - req_before_pol,
             )
             completed_steps.append("policy_check")
@@ -342,7 +385,7 @@ class AuditPipeline:
                 inputs_summary=f"Topic: {topic.topic}",
                 outputs_summary=f"Error: {err}",
                 start_t=t_pol, end_t=time.time(),
-                model_name=self.gateway.describe() if self.gateway.targets else "fake",
+                model_name=self.gateway.describe() if self.gateway.targets else "none",
                 request_count=self.gateway.request_count - req_before_pol,
                 error_text=str(err),
             )
@@ -433,6 +476,13 @@ class AuditPipeline:
 
         # Apply human reviews if any
         report = apply_reviews_to_report(report)
+
+        tracer.record_step(
+            "report", "plain_code", status="ok",
+            inputs_summary=f"AuditReport for {call.call_id}",
+            outputs_summary=f"Grade: {scores.grade}, overall: {scores.overall:.1f}",
+            start_t=t_sc, end_t=time.time(),
+        )
 
         try:
             cache_path.parent.mkdir(parents=True, exist_ok=True)

@@ -20,7 +20,7 @@ TRACES_DIR = ROOT / "traces"
 EVAL_RESULTS_DIR = ROOT / "eval" / "results"
 
 
-def load_all_traces() -> List[Dict[str, Any]]:
+def load_all_traces(include_test: bool = False, include_eval: bool = False) -> List[Dict[str, Any]]:
     traces = []
     if not TRACES_DIR.exists():
         return traces
@@ -31,14 +31,26 @@ def load_all_traces() -> List[Dict[str, Any]]:
                 if line.strip():
                     steps.append(json.loads(line))
             if steps:
-                total_lat = sum(s.get("latency_sec", 0.0) for s in steps)
-                total_tokens_in = sum(s.get("tokens_in", 0) for s in steps)
-                total_tokens_out = sum(s.get("tokens_out", 0) for s in steps)
-                total_cost = sum(s.get("cost_usd", 0.0) for s in steps)
+                trace_source = steps[0].get("source", "prod")
+                if not include_test and trace_source == "test":
+                    continue
+                if not include_eval and trace_source == "eval":
+                    continue
+
+                total_lat = sum(s.get("latency_seconds", s.get("latency_sec", 0.0)) for s in steps)
+                valid_in = [s.get("tokens_in") for s in steps if s.get("tokens_in") is not None]
+                valid_out = [s.get("tokens_out") for s in steps if s.get("tokens_out") is not None]
+                valid_cost = [s.get("estimated_cost_usd", s.get("cost_usd")) for s in steps if s.get("estimated_cost_usd") is not None or s.get("cost_usd") is not None]
+
+                total_tokens_in = sum(valid_in) if valid_in else 0
+                total_tokens_out = sum(valid_out) if valid_out else 0
+                total_cost = sum(valid_cost) if valid_cost else 0.0
+
                 has_error = any(s.get("status") == "failed" for s in steps)
                 has_handoff = any(s.get("status") == "handoff" for s in steps)
                 traces.append({
                     "run_id": trace_file.stem,
+                    "source": trace_source,
                     "steps_count": len(steps),
                     "total_latency_sec": round(total_lat, 3),
                     "total_tokens_in": total_tokens_in,
@@ -162,16 +174,27 @@ def render_observability_dashboard():
             st.markdown(f"#### Trace Details: `{selected_run}`")
             for s in run_data["steps"]:
                 status_color = "green" if s.get("status") == "ok" else ("orange" if s.get("status") in ("degraded", "handoff") else "red")
-                with st.expander(f"Step: {s.get('step_name')} ({s.get('kind')}) — Status: :{status_color}[{s.get('status').upper()}] — {s.get('latency_sec', 0.0):.3f}s"):
+                lat = s.get("latency_seconds", s.get("latency_sec", 0.0))
+                cost = s.get("estimated_cost_usd", s.get("cost_usd", 0.0)) or 0.0
+                step_kind = s.get("decision_type", s.get("kind", "plain_code"))
+                with st.expander(f"Step: {s.get('step_name')} ({step_kind}) — Status: :{status_color}[{s.get('status').upper()}] — {lat:.3f}s"):
                     col_a, col_b = st.columns(2)
                     with col_a:
                         st.write("**Inputs Summary:**", s.get("inputs_summary", "n/a"))
                         st.write("**Model:**", s.get("model_name", "plain_code"))
+                        if s.get("rate_source"):
+                            st.caption(f"Rate source: `{s.get('rate_source')}`")
                     with col_b:
                         st.write("**Outputs Summary:**", s.get("outputs_summary", "n/a"))
-                        if s.get("error_text"):
-                            st.error(f"Error: {s.get('error_text')}")
-                        st.write(f"Tokens In: {s.get('tokens_in', 0)} | Tokens Out: {s.get('tokens_out', 0)} | Cost: ${s.get('cost_usd', 0.0):.6f}")
+                        if s.get("error_text") or s.get("error"):
+                            st.error(f"Error: {s.get('error_text') or s.get('error')}")
+                        tok_in = s.get('tokens_in') if s.get('tokens_in') is not None else 'null'
+                        tok_out = s.get('tokens_out') if s.get('tokens_out') is not None else 'null'
+                        st.write(f"Tokens In: {tok_in} | Tokens Out: {tok_out} | Cost: ${cost:.6f}")
+                    if s.get("prompt"):
+                        st.text_area("Prompt (PII Masked)", s["prompt"], height=100)
+                    if s.get("response"):
+                        st.text_area("Response", s["response"], height=100)
 
 
 if __name__ == "__main__":

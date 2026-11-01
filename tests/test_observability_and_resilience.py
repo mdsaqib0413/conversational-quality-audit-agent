@@ -51,7 +51,7 @@ def test_trace_file_written_per_audit(kb: KnowledgeBase, tmp_path: Path):
     assert "input_ingestion" in step_names
     assert "quality_gate" in step_names
     assert "call_state" in step_names
-    assert "scorecard_judgment" in step_names
+    assert "sop_check" in step_names or "scorecard_judgment" in step_names
     assert "policy_check" in step_names
     assert "evidence_verification" in step_names
     assert "scoring" in step_names

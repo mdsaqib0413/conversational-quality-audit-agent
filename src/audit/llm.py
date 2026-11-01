@@ -85,6 +85,10 @@ class NetworkError(LLMError):
 class Completion:
     text: str
     truncated: bool = False
+    tokens_in: Optional[int] = None
+    tokens_out: Optional[int] = None
+    model_name: Optional[str] = None
+    prompt: Optional[str] = None
 
 
 # --------------------------------------------------------------------------------------
@@ -303,7 +307,16 @@ class GeminiProvider(Provider):
                 pass
             if not text.strip():
                 raise EmptyResponseError(f"Empty response from {self.model} (finish_reason={finish or 'unknown'}).")
-            return Completion(text=text, truncated="MAX_TOKENS" in finish.upper())
+            usage_meta = getattr(resp, "usage_metadata", None)
+            tokens_in = getattr(usage_meta, "prompt_token_count", None) if usage_meta else None
+            tokens_out = getattr(usage_meta, "candidates_token_count", None) if usage_meta else None
+            return Completion(
+                text=text,
+                truncated="MAX_TOKENS" in finish.upper(),
+                tokens_in=tokens_in,
+                tokens_out=tokens_out,
+                model_name=self.model,
+            )
         raise BadRequestError("Model rejected the request even after disabling optional features.")
 
 
@@ -372,7 +385,16 @@ class OpenAICompatProvider(Provider):
             raise LLMError(f"Unexpected response shape: {str(data)[:300]}") from exc
         if not text.strip():
             raise EmptyResponseError("Empty response from endpoint.")
-        return Completion(text=text, truncated=truncated)
+        usage = data.get("usage") or {}
+        tokens_in = usage.get("prompt_tokens")
+        tokens_out = usage.get("completion_tokens")
+        return Completion(
+            text=text,
+            truncated=truncated,
+            tokens_in=tokens_in,
+            tokens_out=tokens_out,
+            model_name=self.model,
+        )
 
 
 # --------------------------------------------------------------------------------------
@@ -450,6 +472,9 @@ class LLMGateway:
         self._idx = 0
         self._sleep = sleep
         self.request_count = 0  # real API requests made by this process
+        self.tracer = None
+        self.last_usage: Optional[dict] = None
+        self.last_completion: Optional[Completion] = None
 
     # ---- target management -----------------------------------------------------------
     @property
@@ -493,6 +518,28 @@ class LLMGateway:
             try:
                 prov.ready_check()
                 comp = prov.complete(prompt, system, temperature, max_tokens, schema, thinking_budget)
+                comp.prompt = prompt
+                comp.model_name = prov.model
+                self.last_completion = comp
+                self.last_usage = {
+                    "tokens_in": comp.tokens_in,
+                    "tokens_out": comp.tokens_out,
+                    "model": prov.model,
+                    "prompt": prompt,
+                    "response": comp.text,
+                    "has_usage": comp.tokens_in is not None and comp.tokens_out is not None,
+                }
+                if self.tracer and hasattr(self.tracer, "record_llm_call"):
+                    try:
+                        self.tracer.record_llm_call(
+                            model=prov.model,
+                            tokens_in=comp.tokens_in,
+                            tokens_out=comp.tokens_out,
+                            prompt=prompt,
+                            response=comp.text,
+                        )
+                    except Exception as exc:  # noqa: BLE001
+                        logger.debug("Tracer callback failed: %s", exc)
                 _count_request(prov.model)
                 self.request_count += 1
                 return comp
