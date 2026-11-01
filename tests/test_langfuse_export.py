@@ -7,17 +7,22 @@ Tests:
 3. Errors are swallowed without interrupting audits.
 4. Metadata-only export when LANGFUSE_CAPTURE_CONTENT=0 (default).
 5. PII masking (emails and phone numbers) when LANGFUSE_CAPTURE_CONTENT=1.
-6. Trace score records overall score.
+6. Blank env vars (LANGFUSE_CAPTURE_CONTENT=, LANGFUSE_EXPORT_EVAL=) mean 0.
+7. Safe flush timeout guarantees slow/unreachable endpoints do not delay audits.
+8. Smoke test script behavior (no keys, success, key sanitization on error).
 """
 from __future__ import annotations
 
 import json
+import time
 from pathlib import Path
 from typing import Any, Dict, List, Optional
 
 import pytest
 
+from scripts.langfuse_smoke_test import run_smoke_test
 from src.audit.langfuse_export import (
+    _safe_flush,
     export_audit_to_langfuse,
     is_capture_content_enabled,
     is_export_eval_enabled,
@@ -28,7 +33,7 @@ from src.audit.tracer import AuditTracer, TraceStep
 
 
 class FakeTrace:
-    def __init__(self, id: str, name: str, input: Any = None, output: Any = None, metadata: Any = None, tags: Any = None):
+    def __init__(self, id: str = "smoke_id", name: str = "smoke_trace", input: Any = None, output: Any = None, metadata: Any = None, tags: Any = None):
         self.id = id
         self.name = name
         self.input = input
@@ -80,16 +85,16 @@ class FakeTrace:
 
 
 class FakeLangfuseClient:
-    def __init__(self):
+    def __init__(self, *args, **kwargs):
         self.traces: List[FakeTrace] = []
         self.flushed = False
 
-    def trace(self, id: str, name: str, input: Any = None, output: Any = None, metadata: Any = None, tags: Any = None) -> FakeTrace:
-        t = FakeTrace(id=id, name=name, input=input, output=output, metadata=metadata, tags=tags)
+    def trace(self, id: Optional[str] = None, name: str = "", input: Any = None, output: Any = None, metadata: Any = None, tags: Any = None) -> FakeTrace:
+        t = FakeTrace(id=id or "fake_trace_id", name=name, input=input, output=output, metadata=metadata, tags=tags)
         self.traces.append(t)
         return t
 
-    def flush(self) -> None:
+    def flush(self, *args, **kwargs) -> None:
         self.flushed = True
 
 
@@ -142,6 +147,28 @@ def test_is_langfuse_enabled_checks_all_three_keys(monkeypatch):
 
     monkeypatch.setenv("LANGFUSE_HOST", "https://cloud.langfuse.com")
     assert is_langfuse_enabled()
+
+
+def test_blank_env_vars_mean_zero(monkeypatch):
+    # Blank string as in .env.example 'LANGFUSE_CAPTURE_CONTENT='
+    monkeypatch.setenv("LANGFUSE_CAPTURE_CONTENT", "")
+    assert is_capture_content_enabled() is False
+
+    monkeypatch.setenv("LANGFUSE_CAPTURE_CONTENT", "   ")
+    assert is_capture_content_enabled() is False
+
+    monkeypatch.delenv("LANGFUSE_CAPTURE_CONTENT", raising=False)
+    assert is_capture_content_enabled() is False
+
+    # Same for LANGFUSE_EXPORT_EVAL
+    monkeypatch.setenv("LANGFUSE_EXPORT_EVAL", "")
+    assert is_export_eval_enabled() is False
+
+    monkeypatch.setenv("LANGFUSE_EXPORT_EVAL", "   ")
+    assert is_export_eval_enabled() is False
+
+    monkeypatch.delenv("LANGFUSE_EXPORT_EVAL", raising=False)
+    assert is_export_eval_enabled() is False
 
 
 def test_export_skipped_when_no_keys(monkeypatch):
@@ -217,14 +244,29 @@ def test_export_swallows_flush_exceptions(monkeypatch):
     monkeypatch.setenv("LANGFUSE_HOST", "https://cloud.langfuse.com")
 
     class FlushErrorClient(FakeLangfuseClient):
-        def flush(self):
+        def flush(self, *args, **kwargs):
             raise RuntimeError("Langfuse server timeout on flush")
 
     report = _make_dummy_report()
     tracer = AuditTracer(run_id="run_flush_err", source="prod")
 
+    # Should execute safely without raising
     result = export_audit_to_langfuse(report, tracer, client=FlushErrorClient())
-    assert result is False
+    assert result is True
+
+
+def test_flush_timeout_prevents_slow_endpoint_delays():
+    class HangingClient:
+        def flush(self):
+            time.sleep(2.0)
+
+    t0 = time.time()
+    # Call _safe_flush with a short 0.15s timeout
+    _safe_flush(HangingClient(), timeout=0.15)
+    elapsed = time.time() - t0
+
+    # Ensure it unblocked around ~0.15s and did NOT wait for 2.0s
+    assert elapsed < 0.8
 
 
 def test_export_metadata_only_when_capture_content_zero(monkeypatch, tmp_path):
@@ -349,3 +391,68 @@ def test_export_masks_personal_data_when_capture_content_one(monkeypatch, tmp_pa
 
     assert "9876543210" not in gen["output"]
     assert "[PHONE_MASKED]" in gen["output"]
+
+
+def test_smoke_test_no_keys_prints_not_configured(monkeypatch, capsys):
+    monkeypatch.delenv("LANGFUSE_PUBLIC_KEY", raising=False)
+    monkeypatch.delenv("LANGFUSE_SECRET_KEY", raising=False)
+    monkeypatch.delenv("LANGFUSE_HOST", raising=False)
+
+    code = run_smoke_test()
+    assert code == 0
+    captured = capsys.readouterr()
+    assert "Langfuse not configured" in captured.out
+
+
+def test_smoke_test_with_keys_succeeds_and_flushes(monkeypatch, capsys):
+    monkeypatch.setenv("LANGFUSE_PUBLIC_KEY", "pk-smoke-test")
+    monkeypatch.setenv("LANGFUSE_SECRET_KEY", "sk-smoke-test")
+    monkeypatch.setenv("LANGFUSE_HOST", "https://cloud.langfuse.com")
+
+    fake_client = FakeLangfuseClient()
+    # Mock langfuse import inside run_smoke_test
+    import sys
+    import types
+    fake_mod = types.ModuleType("langfuse")
+    fake_mod.Langfuse = lambda *a, **kw: fake_client
+    monkeypatch.setitem(sys.modules, "langfuse", fake_mod)
+
+    code = run_smoke_test()
+    assert code == 0
+    captured = capsys.readouterr()
+    assert captured.out.strip() == "sent"
+    assert len(fake_client.traces) == 1
+    tr = fake_client.traces[0]
+    assert tr.name == "smoke_test"
+    assert tr.metadata["call_id"] == "call_smoke_000"
+    assert len(tr.spans) == 1
+    assert tr.spans[0]["name"] == "smoke_span"
+    assert len(tr.scores) == 1
+    assert tr.scores[0]["value"] == 1.0
+    assert fake_client.flushed is True
+
+
+def test_smoke_test_error_sanitizes_keys(monkeypatch, capsys):
+    pk = "pk-super-secret-key-12345"
+    sk = "sk-super-secret-key-67890"
+    monkeypatch.setenv("LANGFUSE_PUBLIC_KEY", pk)
+    monkeypatch.setenv("LANGFUSE_SECRET_KEY", sk)
+    monkeypatch.setenv("LANGFUSE_HOST", "https://cloud.langfuse.com")
+
+    class ErrorClient:
+        def trace(self, *a, **kw):
+            raise RuntimeError(f"Connection refused while using {pk} and {sk}")
+
+    import sys
+    import types
+    fake_mod = types.ModuleType("langfuse")
+    fake_mod.Langfuse = lambda *a, **kw: ErrorClient()
+    monkeypatch.setitem(sys.modules, "langfuse", fake_mod)
+
+    code = run_smoke_test()
+    assert code == 1
+    captured = capsys.readouterr()
+    # Must never print key values
+    assert pk not in captured.out
+    assert sk not in captured.out
+    assert "[REDACTED]" in captured.out

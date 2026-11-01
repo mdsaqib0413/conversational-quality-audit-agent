@@ -4,21 +4,29 @@ Exports structured execution traces to Langfuse when explicitly configured via
 LANGFUSE_PUBLIC_KEY, LANGFUSE_SECRET_KEY, and LANGFUSE_HOST.
 The local disk tracer (traces/<run_id>.jsonl) remains the primary source of truth.
 
+SDK Version Target:
+- Targets Langfuse SDK v2 (langfuse>=2.0.0,<3.0.0) stateful tracing methods:
+  Langfuse(public_key, secret_key, host), client.trace(), trace.span(),
+  trace.generation(), trace.score(), and client.flush().
+
 Safety & Privacy:
 - Never interrupts audits: all exceptions are caught, logged, and swallowed.
-- LANGFUSE_CAPTURE_CONTENT=0 (default): exports only metadata (step names, durations,
-  token counts, costs, models, scores, and call id). Prompts, responses, and transcript
-  text are completely excluded.
+- LANGFUSE_CAPTURE_CONTENT=0 (default, blank string means 0): exports only metadata
+  (step names, durations, token counts, costs, models, scores, and call id). Prompts,
+  responses, and transcript text are completely excluded.
 - LANGFUSE_CAPTURE_CONTENT=1: exports prompt/response text with PII masking (email and phone).
   NOTE: Strictly intended for synthetic sample data only, as masking covers email and phone only.
 - Test/eval isolation: traces with source in ('test', 'eval') are skipped unless
-  LANGFUSE_EXPORT_EVAL=1 is explicitly set.
+  LANGFUSE_EXPORT_EVAL=1 is explicitly set (blank string means 0).
+- Flush timeout: client.flush() is wrapped in a bounded background thread with a short timeout
+  so slow or unreachable Langfuse endpoints never block audits for more than a few seconds.
 """
 from __future__ import annotations
 
 import logging
 import os
 import sys
+import threading
 from datetime import datetime
 from typing import Any, Dict, List, Optional
 
@@ -26,6 +34,8 @@ from src.audit.schemas import AuditReport
 from src.audit.tracer import TRACES_DIR, AuditTracer, mask_pii
 
 logger = logging.getLogger(__name__)
+
+DEFAULT_FLUSH_TIMEOUT_SECONDS = 3.0
 
 
 def is_langfuse_enabled() -> bool:
@@ -37,28 +47,43 @@ def is_langfuse_enabled() -> bool:
 
 
 def is_capture_content_enabled() -> bool:
-    """Return True if content capture (prompts/responses) is enabled (default 0 = False)."""
-    val = os.environ.get("LANGFUSE_CAPTURE_CONTENT", "0").strip().lower()
+    """Return True if content capture (prompts/responses) is enabled (default 0 = False).
+
+    A blank string (e.g. LANGFUSE_CAPTURE_CONTENT= in .env.example) or unset value means 0.
+    """
+    raw = os.environ.get("LANGFUSE_CAPTURE_CONTENT")
+    if raw is None or not raw.strip():
+        return False
+    val = raw.strip().lower()
     return val in ("1", "true", "yes", "on")
 
 
 def is_export_eval_enabled() -> bool:
-    """Return True if test/eval runs should be exported to Langfuse (default 0 = False)."""
-    val = os.environ.get("LANGFUSE_EXPORT_EVAL", "0").strip().lower()
+    """Return True if test/eval runs should be exported to Langfuse (default 0 = False).
+
+    A blank string (e.g. LANGFUSE_EXPORT_EVAL= in .env.example) or unset value means 0.
+    """
+    raw = os.environ.get("LANGFUSE_EXPORT_EVAL")
+    if raw is None or not raw.strip():
+        return False
+    val = raw.strip().lower()
     return val in ("1", "true", "yes", "on")
 
 
-def get_langfuse_client() -> Optional[Any]:
+def get_langfuse_client(timeout: float = DEFAULT_FLUSH_TIMEOUT_SECONDS) -> Optional[Any]:
     """Instantiate and return the Langfuse client if configured and available."""
     if not is_langfuse_enabled():
         return None
     try:
         from langfuse import Langfuse
-        return Langfuse(
-            public_key=os.environ.get("LANGFUSE_PUBLIC_KEY", "").strip(),
-            secret_key=os.environ.get("LANGFUSE_SECRET_KEY", "").strip(),
-            host=os.environ.get("LANGFUSE_HOST", "").strip(),
-        )
+
+        pk = os.environ.get("LANGFUSE_PUBLIC_KEY", "").strip()
+        sk = os.environ.get("LANGFUSE_SECRET_KEY", "").strip()
+        host = os.environ.get("LANGFUSE_HOST", "").strip()
+        try:
+            return Langfuse(public_key=pk, secret_key=sk, host=host, timeout=timeout)
+        except TypeError:
+            return Langfuse(public_key=pk, secret_key=sk, host=host)
     except Exception as exc:
         logger.warning("Could not initialize Langfuse client: %s", exc)
         return None
@@ -73,6 +98,47 @@ def _parse_time(t: Any) -> Optional[datetime]:
         except Exception:
             return None
     return None
+
+
+def _safe_flush(client: Any, timeout: float = DEFAULT_FLUSH_TIMEOUT_SECONDS) -> None:
+    """Flush the Langfuse client with a strict timeout.
+
+    Ensures a slow, hanging, or unreachable Langfuse endpoint never delays
+    an audit by more than a few seconds.
+    """
+    if not hasattr(client, "flush"):
+        return
+
+    exc_holder: List[Exception] = []
+
+    def _do_flush() -> None:
+        try:
+            import inspect
+
+            sig = inspect.signature(client.flush)
+            if "timeout" in sig.parameters:
+                client.flush(timeout=timeout)
+            else:
+                client.flush()
+        except TypeError:
+            try:
+                client.flush()
+            except Exception as e:
+                exc_holder.append(e)
+        except Exception as e:
+            exc_holder.append(e)
+
+    flush_thread = threading.Thread(target=_do_flush, daemon=True)
+    flush_thread.start()
+    flush_thread.join(timeout=timeout)
+
+    if flush_thread.is_alive():
+        logger.warning(
+            "Langfuse client.flush() timed out after %.1fs; continuing audit without waiting",
+            timeout,
+        )
+    elif exc_holder:
+        logger.warning("Langfuse client.flush() failed: %s", exc_holder[0])
 
 
 def _determine_source(report: AuditReport, tracer: Optional[AuditTracer]) -> str:
@@ -103,6 +169,7 @@ def _load_steps_from_disk(trace_id: str) -> List[Dict[str, Any]]:
     steps = []
     try:
         import json
+
         for line in path.read_text(encoding="utf-8").splitlines():
             line = line.strip()
             if line:
@@ -119,17 +186,19 @@ def export_audit_to_langfuse(
     report: AuditReport,
     tracer: Optional[AuditTracer] = None,
     client: Optional[Any] = None,
+    flush_timeout: float = DEFAULT_FLUSH_TIMEOUT_SECONDS,
 ) -> bool:
     """Export an AuditReport and its step traces to Langfuse.
 
     Returns True if export succeeded, False if skipped or failed.
     Never raises an exception; all errors are logged and swallowed.
+    A short flush timeout guarantees slow/unreachable endpoints do not delay audits.
     """
     try:
         if client is None:
             if not is_langfuse_enabled():
                 return False
-            client = get_langfuse_client()
+            client = get_langfuse_client(timeout=flush_timeout)
             if client is None:
                 return False
 
@@ -284,8 +353,7 @@ def export_audit_to_langfuse(
                     output=step_out,
                 )
 
-        if hasattr(client, "flush"):
-            client.flush()
+        _safe_flush(client, timeout=flush_timeout)
 
         logger.info("Successfully exported audit trace %s to Langfuse", trace_id)
         return True

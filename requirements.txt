@@ -30,4 +30,4 @@ pytest>=8.0.0
 qdrant-client>=1.9.0
 
 # Observability (optional: off unless keys are set)
-langfuse>=2.0.0
+langfuse>=2.0.0,<3.0.0
