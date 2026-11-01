@@ -502,6 +502,64 @@ def write_csv_report(runs: List[SingleRunResult], output_path: Path) -> None:
     logger.info("Saved CSV results to %s", output_path)
 
 
+def load_existing_runs_from_csv(csv_path: Path) -> List[SingleRunResult]:
+    """Load previously completed runs from CSV file."""
+    if not csv_path.exists():
+        return []
+    existing: List[SingleRunResult] = []
+    with open(csv_path, mode="r", encoding="utf-8") as f:
+        reader = csv.DictReader(f)
+        for row in reader:
+            extra_details_raw = row.get("extra_violations_details", "[]")
+            try:
+                extra_list = json.loads(extra_details_raw) if extra_details_raw else []
+            except Exception:
+                extra_list = []
+            extra_violations = [
+                PolicyResult(
+                    clause_id=e.get("clause_id", ""),
+                    policy_title=e.get("policy_title", ""),
+                    verdict="violation",
+                    turn=e.get("turn"),
+                    quote=e.get("quote", ""),
+                    severity=e.get("severity", "major"),
+                    explanation=e.get("explanation", ""),
+                )
+                for e in extra_list
+            ]
+            found_clauses_list = [c.strip() for c in row.get("found_clauses", "").split(";") if c.strip()]
+            found_violations = [
+                PolicyResult(clause_id=cid, policy_title="", verdict="violation")
+                for cid in found_clauses_list
+            ]
+            expected_clauses = [c.strip() for c in row.get("expected_clauses", "").split(";") if c.strip()]
+            matched_clauses = [c.strip() for c in row.get("matched_clauses", "").split(";") if c.strip()]
+            missed_clauses = [c.strip() for c in row.get("missed_clauses", "").split(";") if c.strip()]
+            existing.append(
+                SingleRunResult(
+                    run_idx=int(row.get("run_idx", 1)),
+                    split=row["split"],
+                    call_id=row["call_id"],
+                    variant=row["variant"],
+                    detected_topic=row.get("detected_topic", ""),
+                    clauses_sent_count=int(row.get("clauses_sent_count", 0)),
+                    clauses_sent_ids=[],
+                    expected_clauses=expected_clauses,
+                    found_violations=found_violations,
+                    found_clause_ids=found_clauses_list,
+                    matched_clauses=matched_clauses,
+                    missed_clauses=missed_clauses,
+                    all_expected_found=row.get("all_expected_found", "").strip().lower() == "true",
+                    extra_violations=extra_violations,
+                    input_tokens=int(row.get("input_tokens", 0)),
+                    output_tokens=int(row.get("output_tokens", 0)),
+                    total_tokens=int(row.get("total_tokens", 0)),
+                    latency_s=float(row.get("latency_s", 0.0)),
+                )
+            )
+    return existing
+
+
 def generate_markdown_report(
     runs: List[SingleRunResult],
     model_name: str,
@@ -700,6 +758,7 @@ def main() -> None:
     parser.add_argument("--delay", type=float, default=1.5, help="Polite delay between requests to stay below RPM limit")
     parser.add_argument("--model", type=str, default=None, help="Target Gemini model name (default: configured gemini_gateway)")
     parser.add_argument("--turn-window", type=int, default=2, help="Turn tolerance window (+- N turns) for clause matching (default: 2)")
+    parser.add_argument("--resume", action="store_true", help="Resume from existing CSV, skipping calls already present")
     parser.add_argument("--output-csv", type=str, default="eval/results/policy_e2e.csv", help="CSV output path")
     parser.add_argument("--output-md", type=str, default="eval/results/policy_e2e.md", help="Markdown output path")
     args = parser.parse_args()
@@ -747,6 +806,13 @@ def main() -> None:
     csv_out = ROOT / args.output_csv
     md_out = ROOT / args.output_md
 
+    existing_runs: List[SingleRunResult] = []
+    completed_keys: set = set()
+    if args.resume and csv_out.exists():
+        existing_runs = load_existing_runs_from_csv(csv_out)
+        completed_keys = {(r.run_idx, r.split, r.call_id, r.variant) for r in existing_runs}
+        print(f"Loaded {len(existing_runs)} existing results from {csv_out}. Will skip already completed calls.")
+
     stopped_early = False
     stop_reason = ""
 
@@ -758,6 +824,10 @@ def main() -> None:
             for idx, (split, call_id, call, expected_violations) in enumerate(all_calls, start=1):
                 print(f"\n[Run {run_i}/{num_runs}] [{idx}/{len(all_calls)}] Processing {split} call `{call_id}` (expected: {len(expected_violations)})...")
                 for v_key in variants:
+                    if args.resume and (run_i, split, call_id, v_key) in completed_keys:
+                        print(f"  [SKIPPED] {split} call `{call_id}` variant {v_key} (run {run_i}) already completed.")
+                        continue
+
                     res = execute_policy_step(
                         split=split,
                         call_id=call_id,
@@ -788,11 +858,13 @@ def main() -> None:
         print(f"[!] Completed {completed_requests} of {total_expected_requests} requests before stopping.")
         raise
     finally:
-        if runs:
-            write_csv_report(runs, csv_out)
-            generate_markdown_report(runs, gemini_gateway.describe(), md_out)
+        all_runs = existing_runs + runs
+        if all_runs:
+            write_csv_report(all_runs, csv_out)
+            generate_markdown_report(all_runs, active_gateway.describe(), md_out)
             print("\n" + "=" * 70)
-            print(f"Evaluation complete. Completed {completed_requests}/{total_expected_requests} requests.")
+            print(f"Evaluation finished. Completed {completed_requests} new requests in this session.")
+            print(f"Total results recorded in CSV: {len(all_runs)} runs.")
             print(f"Results saved to:\n  - {csv_out}\n  - {md_out}")
             print("=" * 70)
         else:

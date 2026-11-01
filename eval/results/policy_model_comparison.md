@@ -1,7 +1,7 @@
 # End-to-End Policy Evaluation Report (Turn-Level Matching)
 
-**Date:** 2026-11-01 19:21:42  
-**Model:** `gemini:gemini-3.5-flash-lite`  
+**Date:** 2026-11-01 19:33:40  
+**Model:** `gemini:gemini-3.5-flash`  
 **Execution Mode:** ONLY `check_policies` (temperature 0.0, no audit cache, no other pipeline steps)  
 **Scoring Paradigm:** Turn-Level Matching on `(call, turn)` with acceptable alternates (`REF-3.1` $\iff$ `BIL-2.2`)
 
