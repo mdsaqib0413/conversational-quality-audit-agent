@@ -90,6 +90,40 @@ The app sidebar shows the model in use and how many requests were made today.
 
 ---
 
+## Observability & Tracing (Langfuse)
+
+The system includes an optional Langfuse exporter (`src/audit/langfuse_export.py`) for centralized execution monitoring. The local file-based tracer (`traces/<run_id>.jsonl`) remains the primary source of truth regardless of whether Langfuse is enabled.
+
+### 1. How to turn it on
+Langfuse export is completely off until all three connection variables are set in `.env`:
+```ini
+LANGFUSE_PUBLIC_KEY=pk-lf-...
+LANGFUSE_SECRET_KEY=sk-lf-...
+LANGFUSE_HOST=https://cloud.langfuse.com   # Or your self-hosted Langfuse URL
+```
+When configured, each completed audit automatically records one Langfuse trace with a span per pipeline step, model names, real token consumption, estimated USD cost, and the overall score as a trace score. Langfuse export errors are caught, logged, and swallowed so they never interrupt or fail an audit.
+
+### 2. What is sent
+- **Metadata Only (Default, `LANGFUSE_CAPTURE_CONTENT=0`):**
+  - Call ID, status, and audit duration
+  - Step names, decision types (`model` vs `plain_code`), and step latencies
+  - Model name used per step
+  - Real token counts (`tokens_in`, `tokens_out`, `total`) from provider usage metadata
+  - Dollar costs computed from `eval/pricing.yaml`
+  - Scores: overall score, SOP score, policy score, and grade
+  - Zero prompts, LLM responses, or customer transcripts are transmitted.
+- **Content Capture (`LANGFUSE_CAPTURE_CONTENT=1`):**
+  - Exports prompt payloads and LLM responses with built-in PII masking (emails and phone numbers are redacted).
+  - ⚠️ **IMPORTANT**: `LANGFUSE_CAPTURE_CONTENT=1` is strictly intended for synthetic sample data only. Built-in PII masking covers email addresses and phone numbers only; it does not redact customer names, addresses, or order IDs. Never enable content capture in environments processing real customer calls.
+- **Test & Eval Isolation (`LANGFUSE_EXPORT_EVAL=0`):**
+  - Traces produced during `pytest` runs or evaluation scripts (`eval/`) are tagged with `source="test"` or `source="eval"` and are automatically skipped by the Langfuse exporter to prevent polluting production dashboards.
+  - Set `LANGFUSE_EXPORT_EVAL=1` if you specifically want to export benchmark evaluation runs.
+
+### 3. How to turn it off
+Leave `LANGFUSE_PUBLIC_KEY`, `LANGFUSE_SECRET_KEY`, or `LANGFUSE_HOST` blank or unset. If any of the three keys is missing, the Langfuse exporter is completely skipped with zero network requests and zero overhead.
+
+---
+
 ## Real call data
 
 Source: [axondata/call-center-speech-dataset](https://www.kaggle.com/datasets/axondata/call-center-speech-dataset) on Kaggle.

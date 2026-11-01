@@ -408,6 +408,11 @@ class AuditPipeline:
                     warnings=[f"Failed at policy_check: {err}"]
                 )
             )
+            try:
+                from src.audit.langfuse_export import export_audit_to_langfuse
+                export_audit_to_langfuse(report, tracer)
+            except Exception as exc:  # noqa: BLE001
+                logger.warning("Langfuse export error on failure: %s", exc)
             return apply_reviews_to_report(report)
 
         _emit(progress, "score", 0.95, "Scoring and building the report...")
@@ -483,6 +488,12 @@ class AuditPipeline:
             outputs_summary=f"Grade: {scores.grade}, overall: {scores.overall:.1f}",
             start_t=t_sc, end_t=time.time(),
         )
+
+        try:
+            from src.audit.langfuse_export import export_audit_to_langfuse
+            export_audit_to_langfuse(report, tracer)
+        except Exception as exc:  # noqa: BLE001
+            logger.warning("Langfuse export error: %s", exc)
 
         try:
             cache_path.parent.mkdir(parents=True, exist_ok=True)
