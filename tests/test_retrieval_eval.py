@@ -15,6 +15,7 @@ from eval.retrieval_eval import (
     write_csv,
 )
 from src.audit.rag import KnowledgeBase
+from src.audit.topic import detect_call_situations
 
 
 @pytest.fixture
@@ -34,10 +35,34 @@ def synthetic_retrieval_env(tmp_path: Path):
     (data_dir / "rubric.yaml").write_text("version: 1\nsop_steps: []\n", encoding="utf-8")
     (pol_dir / "refund.md").write_text(
         "---\ntype: policy\ncategory: general\n---\n"
-        "### [REF-1.1] Standard Refund Window\nRefunds within 7 days of delivery.\n\n"
-        "### [REF-2.1] Refund Mode\nRefund to original payment method.\n\n"
-        "### [PRV-1.1] Data Privacy\nNever disclose customer details.\n\n"
-        "### [ESC-1.1] Mandatory Escalation\nEscalate upon supervisor request.\n",
+        "### [REF-1.1] Standard Refund Window\n"
+        "- **Topics:** refund\n"
+        "- **Situations:** none\n"
+        "- **Numeric Limit:** 7 days\n"
+        "- **Default Severity:** major\n"
+        "- **Kind:** informational\n\n"
+        "Refunds within 7 days of delivery.\n\n"
+        "### [REF-2.1] Refund Mode\n"
+        "- **Topics:** refund\n"
+        "- **Situations:** none\n"
+        "- **Numeric Limit:** none\n"
+        "- **Default Severity:** minor\n"
+        "- **Kind:** informational\n\n"
+        "Refund to original payment method.\n\n"
+        "### [PRV-1.1] Data Privacy\n"
+        "- **Topics:** general, refund\n"
+        "- **Situations:** identity_verification, data_disclosure\n"
+        "- **Numeric Limit:** none\n"
+        "- **Default Severity:** critical\n"
+        "- **Kind:** must_not_do\n\n"
+        "Never disclose customer details.\n\n"
+        "### [ESC-1.1] Mandatory Escalation\n"
+        "- **Topics:** complaint, general\n"
+        "- **Situations:** supervisor_request\n"
+        "- **Numeric Limit:** none\n"
+        "- **Default Severity:** critical\n"
+        "- **Kind:** must_say\n\n"
+        "Escalate upon supervisor request.\n",
         encoding="utf-8",
     )
     (sop_dir / "sop.md").write_text(
@@ -104,10 +129,9 @@ def test_evaluate_retrieval_synthetic_metrics(synthetic_retrieval_env):
         kb=env["kb"],
     )
 
-    # 1. Calls with zero violations should be excluded (only 2 calls evaluated)
-    assert "A" in summaries
-    assert "B" in summaries
-    assert "C" in summaries
+    # All variants A, B, C, D must be present
+    for v_key in ("A", "B", "C", "D"):
+        assert v_key in summaries
 
     summary_a = summaries["A"]
     assert summary_a.total_calls == 2
@@ -129,11 +153,42 @@ def test_evaluate_retrieval_synthetic_metrics(synthetic_retrieval_env):
     assert res_1.hits == ["REF-1.1"]
     assert res_1.misses == []
 
+    # Variant D is populated
+    summary_d = summaries["D"]
+    assert summary_d.total_calls == 2
+    assert summary_d.total_expected_clauses == 2
+
+
+def test_situation_boosting_elevates_clause(synthetic_retrieval_env):
+    """Verify situation matching boosts clauses into higher retrieval rank."""
+    kb = synthetic_retrieval_env["kb"]
+
+    base = [c.id for c in kb.retrieve_policies("refund", topic="refund", k=4)]
+    boosted = [
+        c.id for c in kb.retrieve_policies(
+            "refund", topic="refund", k=4, situations=["identity_verification", "data_disclosure"]
+        )
+    ]
+
+    # PRV-1.1 rank improves when its situations are active
+    assert boosted.index("PRV-1.1") < base.index("PRV-1.1")
+
+
+def test_detect_call_situations_cues():
+    """Verify detect_call_situations extracts situation tags from speech cues."""
+    turns = [
+        {"speaker": "agent", "text": "Hello, how can I help you?"},
+        {"speaker": "customer", "text": "I want to speak with your manager or supervisor right now."},
+        {"speaker": "agent", "text": "Your order was shipped to Flat 4B, linking road, Mumbai."},
+    ]
+    sits = detect_call_situations(turns)
+    assert "supervisor_request" in sits
+    assert "identity_verification" in sits or "data_disclosure" in sits
+
 
 def test_topic_mismatch_tracking(synthetic_retrieval_env):
     """Verify that topic differences between detected and labelled topics are flagged."""
     env = synthetic_retrieval_env
-    # Mismatch topic: transcript talks about refund, but label is "shipping"
     expected_mismatch = {
         "call_synth_001": {
             "topic": {"label": "shipping", "also_ok": []},
@@ -153,7 +208,7 @@ def test_topic_mismatch_tracking(synthetic_retrieval_env):
     assert m.detected_topic == "refund"
     assert m.expected_topic == "shipping"
     assert m.expected_clauses == ["REF-1.1"]
-    assert m.retrieved_in_a is True  # retrieved via query or family
+    assert m.retrieved_in_a is True
 
 
 def test_format_markdown_and_write_csv(synthetic_retrieval_env, tmp_path: Path):
@@ -172,6 +227,7 @@ def test_format_markdown_and_write_csv(synthetic_retrieval_env, tmp_path: Path):
     assert "**A**" in md
     assert "**B**" in md
     assert "**C**" in md
+    assert "**D**" in md
     assert "call_synth_002" in md
 
     csv_path = tmp_path / "test_out.csv"
@@ -182,9 +238,9 @@ def test_format_markdown_and_write_csv(synthetic_retrieval_env, tmp_path: Path):
         reader = csv.DictReader(f)
         rows = list(reader)
 
-    assert len(rows) == 6  # 2 calls * 3 variants
+    assert len(rows) == 8  # 2 calls * 4 variants (A, B, C, D)
     variants_in_csv = {r["variant"] for r in rows}
-    assert variants_in_csv == {"A", "B", "C"}
+    assert variants_in_csv == {"A", "B", "C", "D"}
     assert "expected_clauses" in reader.fieldnames
     assert "retrieved_clauses" in reader.fieldnames
     assert "clause_recall" in reader.fieldnames
@@ -205,3 +261,4 @@ def test_run_retrieval_eval_end_to_end(synthetic_retrieval_env):
     assert summary_path.exists()
     assert "Policy Retrieval Evaluation Summary" in summary_path.read_text(encoding="utf-8")
     assert summaries["A"].total_calls == 2
+    assert summaries["D"].total_calls == 2

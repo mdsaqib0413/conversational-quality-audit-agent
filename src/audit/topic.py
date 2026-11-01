@@ -178,3 +178,52 @@ def get_live_context(turns: Sequence[TurnLike], window: int = 6, kb=None, k: int
         clause_ids=[c.id for c in clauses],
         clauses=[{"id": c.id, "title": c.title, "text": c.short(500)} for c in clauses],
     )
+
+
+
+def detect_call_situations(turns: Sequence[TurnLike]) -> List[str]:
+    """Detect policy situation tags from conversation signals and text cues.
+
+    Cues:
+    - signals from detect_signals(): angry_customer, supervisor_request, hold, transfer, callback
+    - customer asks for supervisor: supervisor_request
+    - agent gives account/order details or requests auth: identity_verification, data_disclosure
+    - OTP mentioned: otp_request
+    - refund amount mentioned (e.g. >= Rs 5,000 threshold or authority limit): high_value_refund
+    """
+    tt = _norm_turns(turns)
+    signals = set(detect_signals(turns))
+    full_text = " ".join(text for _, text in tt)
+    cust_text = " ".join(text for speaker, text in tt if speaker == "customer")
+    agent_text = " ".join(text for speaker, text in tt if speaker == "agent")
+
+    situations = set(signals)
+
+    # 1. Customer asks for supervisor
+    if re.search(r"\b(supervisor|manager|senior|escalat)", cust_text, re.I):
+        situations.add("supervisor_request")
+
+    # 2. Agent gives account details / asks for verification
+    if re.search(r"\b(delivered to|shipped to|flat \d|residency|card ending|order (?:is|was) for|bank account|paytm wallet)\b", agent_text, re.I) or \
+       re.search(r"\b(order id|last (?:four|4) digits|registered (?:phone|mobile|number)|verif(?:y|ication))\b", full_text, re.I):
+        situations.add("identity_verification")
+        situations.add("data_disclosure")
+
+    # 3. OTP mentioned
+    if re.search(r"\b(otp|one[- ]time password|verification code)\b", full_text, re.I):
+        situations.add("otp_request")
+
+    # 4. Refund amount mentioned / high value refund
+    amt_match = re.findall(r"(?:rs\.?|inr|rupees)\s*([0-9,]+)", full_text, re.I)
+    has_high = False
+    for a in amt_match:
+        try:
+            if float(a.replace(",", "")) >= 5000:
+                has_high = True
+                break
+        except ValueError:
+            pass
+    if has_high or re.search(r"\b(full authority|approval limit|supervisor is needed|exceeding)\b", agent_text, re.I):
+        situations.add("high_value_refund")
+
+    return sorted(situations)

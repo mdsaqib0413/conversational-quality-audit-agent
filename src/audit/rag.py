@@ -283,7 +283,17 @@ class KnowledgeBase:
 
             name = os.getenv("EMBED_MODEL", "BAAI/bge-small-en-v1.5")
             self._embedder = get_embedder(name)
-            mat = self._embedder.encode([c.text for c in self.policies], normalize_embeddings=True)
+
+            def _chunk_embedding_text(c: Chunk) -> str:
+                meta_parts = []
+                if c.numeric_limit:
+                    meta_parts.append(f"Limit: {c.numeric_limit}")
+                if c.situations:
+                    meta_parts.append(f"Situations: {', '.join(c.situations)}")
+                prefix = f" [{'; '.join(meta_parts)}]" if meta_parts else ""
+                return f"{c.id} {c.title}{prefix}\n{c.text}"
+
+            mat = self._embedder.encode([_chunk_embedding_text(c) for c in self.policies], normalize_embeddings=True)
             np.save(cache, mat)
             self._emb_matrix = mat
             self._attach_store()
@@ -321,6 +331,8 @@ class KnowledgeBase:
 
     def _vector_sims(self, query: str) -> List[float]:
         """Cosine similarity of `query` to every policy clause, in self.policies order."""
+        if not self.policies or not self._load_embeddings():
+            return [0.0] * len(self.policies)
         qv = self._embed_query(query)
         if self._store is not None:
             try:
@@ -359,8 +371,9 @@ class KnowledgeBase:
 
     # ---- retrieval -------------------------------------------------------------------
     def retrieve_policies(self, query: str, topic: Optional[str] = None, k: int = 12,
-                          always_include: Iterable[str] = (), use_embeddings: Optional[bool] = None) -> List[Chunk]:
-        """Top-k policy clauses for `query`, boosted by topic, always including `always_include` ids."""
+                          always_include: Iterable[str] = (), use_embeddings: Optional[bool] = None,
+                          situations: Optional[Iterable[str]] = None) -> List[Chunk]:
+        """Top-k policy clauses for `query`, boosted by topic and situations, always including `always_include` ids."""
         if not self.policies:
             return []
         lex = _normalize(self._bm25.scores(tokenize(query)))
@@ -375,10 +388,18 @@ class KnowledgeBase:
             except Exception as exc:  # noqa: BLE001
                 logger.warning("Embedding query failed (%s); using BM25 only.", exc)
         prefixes = TOPIC_POLICY_PREFIXES.get(topic or "general", [])
+        situation_set = set(situations or [])
         boosted = []
         for c, s in zip(self.policies, scores):
-            if c.family in prefixes:
-                s += 0.35 if c.family == prefixes[0] else 0.15
+            if (topic and topic in c.topics) or c.family in prefixes:
+                is_prim = (c.family == prefixes[0]) if prefixes else False
+                if not is_prim and c.topics:
+                    is_prim = (c.topics[0] == topic)
+                s += 0.35 if is_prim else 0.15
+            if situation_set and c.situations:
+                overlap = set(c.situations) & situation_set
+                if overlap:
+                    s += 0.30 * len(overlap)
             boosted.append((s, c))
         boosted.sort(key=lambda x: -x[0])
         picked: List[Chunk] = []

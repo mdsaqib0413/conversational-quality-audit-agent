@@ -4,6 +4,7 @@ Measures retrieval recall across labelled calls with expected policy violations:
 - Variant A: Full pipeline context (ALWAYS_INCLUDE + topic family + top-10 hybrid) -> production today
 - Variant B: Top-10 retrieval only (k=10, no ALWAYS_INCLUDE, no topic family)
 - Variant C: BM25 only (k=10, use_embeddings=False, no ALWAYS_INCLUDE, no topic family)
+- Variant D: Metadata-aware retrieval (k=10, BM25 + embeddings + topic boost + situation boost, no ALWAYS_INCLUDE, no topic family)
 
 Outputs:
 - eval/results/retrieval_<timestamp>.csv
@@ -29,9 +30,9 @@ ROOT = Path(__file__).resolve().parent.parent
 if str(ROOT) not in sys.path:
     sys.path.insert(0, str(ROOT))
 
-from src.audit.policy_check import ALWAYS_INCLUDE, agent_query
+from src.audit.policy_check import ALWAYS_INCLUDE, agent_query, call_retrieval_query
 from src.audit.rag import KnowledgeBase
-from src.audit.topic import detect_topic
+from src.audit.topic import detect_call_situations, detect_topic
 from src.audit.transcript_io import load_transcript_json
 
 logger = logging.getLogger("eval.retrieval")
@@ -78,9 +79,11 @@ class TopicMismatchResult:
     retrieved_in_a: bool
     retrieved_in_b: bool
     retrieved_in_c: bool
+    retrieved_in_d: bool
     hits_a: List[str]
     hits_b: List[str]
     hits_c: List[str]
+    hits_d: List[str]
 
 
 def evaluate_retrieval(
@@ -110,7 +113,7 @@ def evaluate_retrieval(
         logger.warning("No labelled calls with policy violations found.")
         return {}, []
 
-    results_by_variant: Dict[str, List[CallEvalResult]] = {"A": [], "B": [], "C": []}
+    results_by_variant: Dict[str, List[CallEvalResult]] = {"A": [], "B": [], "C": [], "D": []}
     mismatches: List[TopicMismatchResult] = []
 
     for call_id, expected_clauses, expected_topic, also_ok in target_calls:
@@ -189,6 +192,29 @@ def evaluate_retrieval(
             )
         )
 
+        # Variant D: Metadata-aware retrieval (customer+agent query, situation boost, no always_include, no family)
+        query_d = call_retrieval_query(call)
+        sits = detect_call_situations(call.turns)
+        clauses_d = kb.retrieve_policies(query_d, topic=detected_topic, k=10, always_include=[], situations=sits)
+        ids_d = [c.id for c in clauses_d]
+        hits_d = [c for c in expected_clauses if c in ids_d]
+        misses_d = [c for c in expected_clauses if c not in ids_d]
+        all_d = len(misses_d) == 0
+        results_by_variant["D"].append(
+            CallEvalResult(
+                call_id=call_id,
+                detected_topic=detected_topic,
+                expected_topic=expected_topic,
+                topic_match=topic_match,
+                expected_clauses=expected_clauses,
+                retrieved_clauses=ids_d,
+                clauses_sent_count=len(ids_d),
+                hits=hits_d,
+                misses=misses_d,
+                all_retrieved=all_d,
+            )
+        )
+
         # Topic mismatch tracking
         if detected_topic != expected_topic:
             mismatches.append(
@@ -201,9 +227,11 @@ def evaluate_retrieval(
                     retrieved_in_a=all_a,
                     retrieved_in_b=all_b,
                     retrieved_in_c=all_c,
+                    retrieved_in_d=all_d,
                     hits_a=hits_a,
                     hits_b=hits_b,
                     hits_c=hits_c,
+                    hits_d=hits_d,
                 )
             )
 
@@ -211,10 +239,11 @@ def evaluate_retrieval(
         "A": ("Full pipeline context", "always_include + whole family + top-10"),
         "B": ("Top-10 retrieval only", "hybrid BM25 + embeddings, no always_include, no family"),
         "C": ("BM25 only", "BM25 only (use_embeddings=False), no always_include, no family"),
+        "D": ("Metadata-aware retrieval", "BM25 + embeddings + topic boost + situation boost, no always_include, no family"),
     }
 
     variant_summaries: Dict[str, VariantResult] = {}
-    for v_key in ("A", "B", "C"):
+    for v_key in ("A", "B", "C", "D"):
         calls = results_by_variant[v_key]
         total_calls = len(calls)
         total_expected = sum(len(c.expected_clauses) for c in calls)
@@ -265,7 +294,7 @@ def format_summary_markdown(
     lines.append("")
     lines.append("| Variant | Configuration | Clause Recall | Calls with All Retrieved | Avg Clauses Sent |")
     lines.append("|---|---|---|---|---|")
-    for key in ("A", "B", "C"):
+    for key in ("A", "B", "C", "D"):
         v = summaries[key]
         lines.append(
             f"| **{v.key}** | {v.name} ({v.description}) | "
@@ -276,7 +305,7 @@ def format_summary_markdown(
     lines.append("")
     lines.append("## 2. Misses by Variant")
     lines.append("")
-    for key in ("A", "B", "C"):
+    for key in ("A", "B", "C", "D"):
         v = summaries[key]
         lines.append(f"### Variant {v.key}: {v.name}")
         if not v.misses_by_call:
@@ -291,15 +320,16 @@ def format_summary_markdown(
     if not mismatches:
         lines.append("Detected topic matched labelled topic across all evaluated calls.")
     else:
-        lines.append("| Call ID | Detected Topic | Labelled Topic | Expected Clauses | Retrieved in A? | Retrieved in B? | Retrieved in C? |")
-        lines.append("|---|---|---|---|---|---|---|")
+        lines.append("| Call ID | Detected Topic | Labelled Topic | Expected Clauses | Retrieved in A? | Retrieved in B? | Retrieved in C? | Retrieved in D? |")
+        lines.append("|---|---|---|---|---|---|---|---|")
         for m in mismatches:
             notes_a = "Yes" if m.retrieved_in_a else f"Partial ({', '.join(m.hits_a)})"
             notes_b = "Yes" if m.retrieved_in_b else (f"Partial ({', '.join(m.hits_b)})" if m.hits_b else "No")
             notes_c = "Yes" if m.retrieved_in_c else (f"Partial ({', '.join(m.hits_c)})" if m.hits_c else "No")
+            notes_d = "Yes" if m.retrieved_in_d else (f"Partial ({', '.join(m.hits_d)})" if m.hits_d else "No")
             lines.append(
                 f"| `{m.call_id}` | `{m.detected_topic}` | `{m.expected_topic}` | "
-                f"`{', '.join(m.expected_clauses)}` | {notes_a} | {notes_b} | {notes_c} |"
+                f"`{', '.join(m.expected_clauses)}` | {notes_a} | {notes_b} | {notes_c} | {notes_d} |"
             )
     lines.append("")
     lines.append("## 4. Per-Call Breakdown (Variant A - Production)")
@@ -313,6 +343,20 @@ def format_summary_markdown(
             f"| `{r.call_id}` | `{r.detected_topic}` | `{', '.join(r.expected_clauses)}` | "
             f"{r.clauses_sent_count} | `{', '.join(r.hits)}` | `{misses_str}` | {status} |"
         )
+    lines.append("")
+
+    lines.append("## 5. Per-Call Breakdown (Variant D - Metadata-Aware)")
+    lines.append("")
+    lines.append("| Call ID | Detected Topic | Expected Clauses | Retrieved Count | Hits | Misses | All Retrieved? |")
+    lines.append("|---|---|---|---|---|---|---|")
+    if "D" in summaries:
+        for r in summaries["D"].call_results:
+            status = "Yes" if r.all_retrieved else "No"
+            misses_str = ", ".join(r.misses) if r.misses else "-"
+            lines.append(
+                f"| `{r.call_id}` | `{r.detected_topic}` | `{', '.join(r.expected_clauses)}` | "
+                f"{r.clauses_sent_count} | `{', '.join(r.hits)}` | `{misses_str}` | {status} |"
+            )
     lines.append("")
     return "\n".join(lines)
 
@@ -340,7 +384,9 @@ def write_csv(summaries: Dict[str, VariantResult], csv_path: Path, timestamp: st
     with open(csv_path, mode="w", newline="", encoding="utf-8") as f:
         writer = csv.DictWriter(f, fieldnames=fieldnames)
         writer.writeheader()
-        for v_key in ("A", "B", "C"):
+        for v_key in ("A", "B", "C", "D"):
+            if v_key not in summaries:
+                continue
             v = summaries[v_key]
             for r in v.call_results:
                 writer.writerow({

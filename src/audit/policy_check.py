@@ -30,6 +30,17 @@ def agent_query(call: CallTranscript, limit_chars: int = 3500) -> str:
     return text[:limit_chars]
 
 
+def call_retrieval_query(call: CallTranscript, limit_chars: int = 4000) -> str:
+    """Build retrieval query combining customer request turns and agent turns, preserving the end of the call."""
+    turns_text = [t.text for t in call.turns]
+    full_text = " ".join(turns_text)
+    if len(full_text) <= limit_chars:
+        return full_text
+    head_len = 1500
+    tail_len = limit_chars - head_len - 5
+    return full_text[:head_len] + " ... " + full_text[-tail_len:]
+
+
 def build_prompt(call: CallTranscript, clauses) -> str:
     clause_text = "\n\n".join(f"[{c.id}] {c.title}\n{c.short(1100)}" for c in clauses)
     ids = ", ".join(c.id for c in clauses)
