@@ -13,6 +13,8 @@ from pathlib import Path
 
 import pytest
 
+pytestmark = pytest.mark.slow
+
 ROOT = Path(__file__).resolve().parent.parent
 REAL_CALLS_DIR = ROOT / "data" / "audio" / "real_calls"
 

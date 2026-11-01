@@ -90,6 +90,7 @@ def test_all_app_and_src_files_have_no_undefined_names(py_file: Path):
     assert not undefined, f"Undefined names found in {py_file.relative_to(ROOT)}: {undefined}"
 
 
+@pytest.mark.slow
 def test_apptest_report_click_accept(tmp_path: Path, monkeypatch: pytest.MonkeyPatch):
     """Run the Report page on call_101 via AppTest and click Accept on a finding without exception."""
     from streamlit.testing.v1 import AppTest
