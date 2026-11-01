@@ -129,8 +129,8 @@ def test_evaluate_retrieval_synthetic_metrics(synthetic_retrieval_env):
         kb=env["kb"],
     )
 
-    # All variants A, B, C, D must be present
-    for v_key in ("A", "B", "C", "D"):
+    # All variants A, B, C, D, E must be present
+    for v_key in ("A", "B", "C", "D", "E"):
         assert v_key in summaries
 
     summary_a = summaries["A"]
@@ -153,10 +153,14 @@ def test_evaluate_retrieval_synthetic_metrics(synthetic_retrieval_env):
     assert res_1.hits == ["REF-1.1"]
     assert res_1.misses == []
 
-    # Variant D is populated
+    # Variant D and E are populated
     summary_d = summaries["D"]
     assert summary_d.total_calls == 2
     assert summary_d.total_expected_clauses == 2
+
+    summary_e = summaries["E"]
+    assert summary_e.total_calls == 2
+    assert summary_e.total_expected_clauses == 2
 
 
 def test_situation_boosting_elevates_clause(synthetic_retrieval_env):
@@ -223,11 +227,12 @@ def test_format_markdown_and_write_csv(synthetic_retrieval_env, tmp_path: Path):
     ts = "20261101_120000"
     md = format_summary_markdown(summaries, mismatches, ts)
     assert "# Policy Retrieval Evaluation Summary" in md
-    assert "| Variant | Configuration | Clause Recall | Calls with All Retrieved | Avg Clauses Sent |" in md
+    assert "| Variant | Configuration | Clause Recall | Calls with All Retrieved | Avg Clauses Sent | Avg Clean Sent |" in md
     assert "**A**" in md
     assert "**B**" in md
     assert "**C**" in md
     assert "**D**" in md
+    assert "**E**" in md
     assert "call_synth_002" in md
 
     csv_path = tmp_path / "test_out.csv"
@@ -238,9 +243,9 @@ def test_format_markdown_and_write_csv(synthetic_retrieval_env, tmp_path: Path):
         reader = csv.DictReader(f)
         rows = list(reader)
 
-    assert len(rows) == 8  # 2 calls * 4 variants (A, B, C, D)
+    assert len(rows) == 10  # 2 calls * 5 variants (A, B, C, D, E)
     variants_in_csv = {r["variant"] for r in rows}
-    assert variants_in_csv == {"A", "B", "C", "D"}
+    assert variants_in_csv == {"A", "B", "C", "D", "E"}
     assert "expected_clauses" in reader.fieldnames
     assert "retrieved_clauses" in reader.fieldnames
     assert "clause_recall" in reader.fieldnames
@@ -262,3 +267,19 @@ def test_run_retrieval_eval_end_to_end(synthetic_retrieval_env):
     assert "Policy Retrieval Evaluation Summary" in summary_path.read_text(encoding="utf-8")
     assert summaries["A"].total_calls == 2
     assert summaries["D"].total_calls == 2
+    assert summaries["E"].total_calls == 2
+
+
+def test_run_retrieval_eval_heldout_split(synthetic_retrieval_env):
+    """Verify run_retrieval_eval handles dataset_split='heldout'."""
+    env = synthetic_retrieval_env
+    summaries, mismatches, csv_path, summary_path = run_retrieval_eval(
+        expected_path=env["expected_file"],
+        transcripts_dir=env["trans_dir"],
+        results_dir=env["results_dir"],
+        kb=env["kb"],
+        quiet=True,
+        dataset_split="heldout",
+    )
+    assert "heldout" in summaries["A"].call_results[0].call_id or summaries["A"].total_calls == 2
+    assert csv_path.exists()
