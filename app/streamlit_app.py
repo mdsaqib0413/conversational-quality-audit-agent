@@ -31,7 +31,7 @@ from src.audit.llm import FatalLLMError, LLMError, NetworkError, QuotaExhaustedE
 from src.audit.pipeline import AUDIO_EXT, AuditPipeline
 from src.audit.policy_check import get_involved_clause_ids
 from src.audit.rag import KnowledgeBase, get_embedder, get_kb
-from src.audit.review import apply_reviews_to_report
+from src.audit.review import apply_reviews_to_report, save_review_decision
 from src.audit.schemas import AuditReport
 from src.audit.topic import detect_topic, get_live_context
 from src.audit.transcript_io import find_transcripts, load_transcript_json
