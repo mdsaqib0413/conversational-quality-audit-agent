@@ -1,0 +1,175 @@
+{
+  "id": "call_208",
+  "topic": "billing",
+  "quality": "bad_deviation",
+  "split": "test",
+  "applicable_sops": [
+    "general_call_flow"
+  ],
+  "applicable_steps": [
+    "GEN-01",
+    "GEN-02",
+    "GEN-03",
+    "GEN-04",
+    "GEN-05",
+    "GEN-06",
+    "GEN-07",
+    "GEN-08"
+  ],
+  "hold_scenario": "none",
+  "customer_name": "Amit Sengupta",
+  "agent_name": "Manish Das",
+  "order_id": "ORD-79163",
+  "registered_phone_last4": "7354",
+  "customer_persona": "Amit Sengupta is calling for the 4th time about an urgent corporate GST invoice.",
+  "verified": true,
+  "verification_notes": "Passed authentication check.",
+  "turns": [
+    {
+      "i": 1,
+      "speaker": "agent",
+      "text": "Thank you for reaching ShopEase customer service. My name is Manish Das. This call is recorded for quality monitoring purposes. How can I help you today?",
+      "pause_before_sec": 0.5,
+      "interrupts_previous": false
+    },
+    {
+      "i": 2,
+      "speaker": "customer",
+      "text": "Hi Manish, my name is Amit Sengupta. I bought a 4K monitor under order ORD-79163 for my consulting firm, but your team printed the incorrect corporate GSTIN on the tax invoice.",
+      "pause_before_sec": 0.5,
+      "interrupts_previous": false
+    },
+    {
+      "i": 3,
+      "speaker": "agent",
+      "text": "I would be happy to check that for you, Mr. Sengupta. May I please have your Order ID and the last four digits of your registered contact number?",
+      "pause_before_sec": 0.5,
+      "interrupts_previous": false
+    },
+    {
+      "i": 4,
+      "speaker": "customer",
+      "text": "The order number is ORD-79163 and my phone number ends with 7354.",
+      "pause_before_sec": 0.5,
+      "interrupts_previous": false
+    },
+    {
+      "i": 5,
+      "speaker": "agent",
+      "text": "Thank you, Mr. Sengupta, your account details are verified. Let me inspect the invoice details.",
+      "pause_before_sec": 0.5,
+      "interrupts_previous": false
+    },
+    {
+      "i": 6,
+      "speaker": "customer",
+      "text": "I need the corrected invoice immediately for tax filing. How soon can you regenerate it?",
+      "pause_before_sec": 0.5,
+      "interrupts_previous": false
+    },
+    {
+      "i": 7,
+      "speaker": "agent",
+      "text": "Regenerating a commercial invoice with updated tax identifiers requires manual audit by accounting, which takes seven business days to issue.",
+      "pause_before_sec": 0.5,
+      "interrupts_previous": false
+    },
+    {
+      "i": 8,
+      "speaker": "customer",
+      "text": "Seven business days? That is unacceptable! Today is the 18th and our monthly GST filing deadline is tomorrow!",
+      "pause_before_sec": 0.5,
+      "interrupts_previous": false
+    },
+    {
+      "i": 9,
+      "speaker": "agent",
+      "text": "Our billing system updates corporate tax credits on a weekly consolidation schedule, so seven days is standard.",
+      "pause_before_sec": 0.5,
+      "interrupts_previous": false
+    },
+    {
+      "i": 10,
+      "speaker": "customer",
+      "text": "This is my fourth time calling regarding this invoice; your previous agents promised it would be done, but nothing happened. Can you please escalate this to your priority resolution desk?",
+      "pause_before_sec": 0.5,
+      "interrupts_previous": false
+    },
+    {
+      "i": 11,
+      "speaker": "agent",
+      "text": "I understand you have called four times, but our team handles every call in standard first-in first-out sequence. We cannot provide priority routing or queue jumps just because you have contacted us multiple times.",
+      "pause_before_sec": 0.5,
+      "interrupts_previous": false
+    },
+    {
+      "i": 12,
+      "speaker": "customer",
+      "text": "Are you telling me that a customer who has called four times on an unfulfilled ticket gets zero escalation priority?",
+      "pause_before_sec": 0.5,
+      "interrupts_previous": false
+    },
+    {
+      "i": 13,
+      "speaker": "agent",
+      "text": "That is correct, all open requests are processed strictly by the general queue.",
+      "pause_before_sec": 0.5,
+      "interrupts_previous": false
+    },
+    {
+      "i": 14,
+      "speaker": "customer",
+      "text": "I will be escalating this to our account manager and the corporate sales director.",
+      "pause_before_sec": 0.5,
+      "interrupts_previous": false
+    },
+    {
+      "i": 15,
+      "speaker": "agent",
+      "text": "I will add your notes to the billing record. Is there anything else I can assist with?",
+      "pause_before_sec": 0.5,
+      "interrupts_previous": false
+    },
+    {
+      "i": 16,
+      "speaker": "customer",
+      "text": "No, nothing else.",
+      "pause_before_sec": 0.5,
+      "interrupts_previous": false
+    }
+  ],
+  "ground_truth": {
+    "sop_steps": {
+      "GEN-01": "followed",
+      "GEN-02": "followed",
+      "GEN-03": "followed",
+      "GEN-04": "followed",
+      "GEN-05": "followed",
+      "GEN-06": "missed",
+      "GEN-07": "followed",
+      "GEN-08": "followed"
+    },
+    "policy_violations": [
+      {
+        "turn": 7,
+        "said": "Regenerating a commercial invoice with updated tax identifiers requires manual audit by accounting, which takes seven business days to issue.",
+        "clause_id": "BIL-2.1",
+        "severity": "minor",
+        "correct_fact": "Corrected tax invoices and billing amendments must be regenerated and provided within 24 hours."
+      },
+      {
+        "turn": 11,
+        "said": "I understand you have called four times, but our team handles every call in standard first-in first-out sequence. We cannot provide priority routing or queue jumps just because you have contacted us multiple times.",
+        "clause_id": "ESC-1.2",
+        "severity": "major",
+        "correct_fact": "Repeated customer contacts with 3 or more interactions on the same unaddressed issue mandate priority escalation routing."
+      }
+    ],
+    "customer_emotion_arc": [
+      "frustrated",
+      "angry",
+      "furious"
+    ],
+    "gaps": []
+  }
+}

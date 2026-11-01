@@ -1,0 +1,175 @@
+{
+  "id": "call_204",
+  "topic": "billing",
+  "quality": "bad_deviation",
+  "split": "test",
+  "applicable_sops": [
+    "general_call_flow"
+  ],
+  "applicable_steps": [
+    "GEN-01",
+    "GEN-02",
+    "GEN-03",
+    "GEN-04",
+    "GEN-05",
+    "GEN-06",
+    "GEN-07",
+    "GEN-08"
+  ],
+  "hold_scenario": "none",
+  "customer_name": "Farhan Akhtar",
+  "agent_name": "Sunita Joshi",
+  "order_id": "ORD-91047",
+  "registered_phone_last4": "6483",
+  "customer_persona": "Farhan Akhtar was charged twice for headphones and asks about a price drop.",
+  "verified": true,
+  "verification_notes": "Passed authentication check.",
+  "turns": [
+    {
+      "i": 1,
+      "speaker": "agent",
+      "text": "Thank you for reaching out to ShopEase customer care. My name is Sunita Joshi. Please note that this interaction is recorded for training and quality verification. How can I help you?",
+      "pause_before_sec": 0.5,
+      "interrupts_previous": false
+    },
+    {
+      "i": 2,
+      "speaker": "customer",
+      "text": "Hello Sunita, I am Farhan Akhtar. I bought wireless headphones yesterday under order ORD-91047, but my bank app shows two separate debit deductions of Rs 4,999 for the same purchase.",
+      "pause_before_sec": 0.5,
+      "interrupts_previous": false
+    },
+    {
+      "i": 3,
+      "speaker": "agent",
+      "text": "I would be glad to check your billing ledger, Mr. Akhtar. May I have your Order ID and the last four digits of your registered mobile number for account confirmation?",
+      "pause_before_sec": 0.5,
+      "interrupts_previous": false
+    },
+    {
+      "i": 4,
+      "speaker": "customer",
+      "text": "Yes, the order is ORD-91047 and my phone number ends in 6483.",
+      "pause_before_sec": 0.5,
+      "interrupts_previous": false
+    },
+    {
+      "i": 5,
+      "speaker": "agent",
+      "text": "Thank you, Mr. Akhtar, your profile is confirmed. Let me check the payment gateway receipts.",
+      "pause_before_sec": 0.5,
+      "interrupts_previous": false
+    },
+    {
+      "i": 6,
+      "speaker": "customer",
+      "text": "Also, while you check, I saw on your homepage that these exact headphones are now listed for Rs 4,499 in today's lightning deal.",
+      "pause_before_sec": 0.5,
+      "interrupts_previous": false
+    },
+    {
+      "i": 7,
+      "speaker": "agent",
+      "text": "Duplicate charges on banking gateways happen occasionally. Our finance clearing cycle for reconciling duplicate charges takes fifteen business days before we can initiate the credit.",
+      "pause_before_sec": 0.5,
+      "interrupts_previous": false
+    },
+    {
+      "i": 8,
+      "speaker": "customer",
+      "text": "Fifteen business days? That is three full weeks to return my own money when your system charged me twice!",
+      "pause_before_sec": 0.5,
+      "interrupts_previous": false
+    },
+    {
+      "i": 9,
+      "speaker": "agent",
+      "text": "Bank settlement batch files run on a scheduled semi-monthly cadence, so that is the standard duration for reconciling double debits.",
+      "pause_before_sec": 0.5,
+      "interrupts_previous": false
+    },
+    {
+      "i": 10,
+      "speaker": "customer",
+      "text": "That is an awful long time. What about the five hundred rupee difference for today's price reduction?",
+      "pause_before_sec": 0.5,
+      "interrupts_previous": false
+    },
+    {
+      "i": 11,
+      "speaker": "agent",
+      "text": "Yes, absolutely! Since the price dropped within 24 hours of your purchase, I will go ahead and apply a retroactive price match of Rs 500 to your account.",
+      "pause_before_sec": 0.5,
+      "interrupts_previous": false
+    },
+    {
+      "i": 12,
+      "speaker": "customer",
+      "text": "Well, at least that is helpful. Will the Rs 500 come to my card?",
+      "pause_before_sec": 0.5,
+      "interrupts_previous": false
+    },
+    {
+      "i": 13,
+      "speaker": "agent",
+      "text": "Yes, that adjustment will reflect alongside the duplicate transaction reversal.",
+      "pause_before_sec": 0.5,
+      "interrupts_previous": false
+    },
+    {
+      "i": 14,
+      "speaker": "customer",
+      "text": "Alright. Please make sure the duplicate charge reversal is expedited if possible.",
+      "pause_before_sec": 0.5,
+      "interrupts_previous": false
+    },
+    {
+      "i": 15,
+      "speaker": "agent",
+      "text": "I have logged the note in your transaction file. Is there anything else I may assist you with today?",
+      "pause_before_sec": 0.5,
+      "interrupts_previous": false
+    },
+    {
+      "i": 16,
+      "speaker": "customer",
+      "text": "No, that is all. Thank you.",
+      "pause_before_sec": 0.5,
+      "interrupts_previous": false
+    }
+  ],
+  "ground_truth": {
+    "sop_steps": {
+      "GEN-01": "followed",
+      "GEN-02": "followed",
+      "GEN-03": "followed",
+      "GEN-04": "followed",
+      "GEN-05": "followed",
+      "GEN-06": "missed",
+      "GEN-07": "followed",
+      "GEN-08": "followed"
+    },
+    "policy_violations": [
+      {
+        "turn": 7,
+        "said": "Duplicate charges on banking gateways happen occasionally. Our finance clearing cycle for reconciling duplicate charges takes fifteen business days before we can initiate the credit.",
+        "clause_id": "BIL-1.2",
+        "severity": "major",
+        "correct_fact": "Duplicate charges must be verified and initiated for refund within 24 to 48 hours."
+      },
+      {
+        "turn": 11,
+        "said": "Yes, absolutely! Since the price dropped within 24 hours of your purchase, I will go ahead and apply a retroactive price match of Rs 500 to your account.",
+        "clause_id": "BIL-2.2",
+        "severity": "minor",
+        "correct_fact": "ShopEase does not offer retroactive price matching or post-purchase price drop adjustments."
+      }
+    ],
+    "customer_emotion_arc": [
+      "neutral",
+      "frustrated",
+      "neutral"
+    ],
+    "gaps": []
+  }
+}

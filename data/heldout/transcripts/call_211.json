@@ -1,0 +1,160 @@
+{
+  "id": "call_211",
+  "topic": "refund",
+  "quality": "good",
+  "split": "test",
+  "applicable_sops": [
+    "general_call_flow"
+  ],
+  "applicable_steps": [
+    "GEN-01",
+    "GEN-02",
+    "GEN-03",
+    "GEN-04",
+    "GEN-05",
+    "GEN-06",
+    "GEN-07",
+    "GEN-08"
+  ],
+  "hold_scenario": "none",
+  "customer_name": "Divya Nair",
+  "agent_name": "Tarun Khanna",
+  "order_id": "ORD-64072",
+  "registered_phone_last4": "9382",
+  "customer_persona": "Divya Nair is returning a trench coat within the 14-day apparel return window.",
+  "verified": true,
+  "verification_notes": "Passed verification check.",
+  "turns": [
+    {
+      "i": 1,
+      "speaker": "agent",
+      "text": "Thank you for calling ShopEase. My name is Tarun Khanna. Please note that this conversation is recorded for quality assurance and training purposes. How may I help you today?",
+      "pause_before_sec": 0.5,
+      "interrupts_previous": false
+    },
+    {
+      "i": 2,
+      "speaker": "customer",
+      "text": "Hello Tarun, I am Divya Nair. I purchased a woollen trench coat under order ORD-64072 ten days ago, but the fit across the shoulders is too tight, so I would like to return it.",
+      "pause_before_sec": 0.5,
+      "interrupts_previous": false
+    },
+    {
+      "i": 3,
+      "speaker": "agent",
+      "text": "I would be very happy to assist you with processing that return, Ms. Nair. To verify your identity, could you please share your Order ID and the last four digits of your registered mobile number?",
+      "pause_before_sec": 0.5,
+      "interrupts_previous": false
+    },
+    {
+      "i": 4,
+      "speaker": "customer",
+      "text": "Yes, the order is ORD-64072 and my phone number ends in 9382.",
+      "pause_before_sec": 0.5,
+      "interrupts_previous": false
+    },
+    {
+      "i": 5,
+      "speaker": "agent",
+      "text": "Thank you, that matches our system records. Just to confirm, you are returning the woollen trench coat due to sizing, and you are seeking a refund. Is that correct?",
+      "pause_before_sec": 0.5,
+      "interrupts_previous": false
+    },
+    {
+      "i": 6,
+      "speaker": "customer",
+      "text": "Yes, that is correct. I have not worn it outside, the price tags and packaging are intact.",
+      "pause_before_sec": 0.5,
+      "interrupts_previous": false
+    },
+    {
+      "i": 7,
+      "speaker": "agent",
+      "text": "Excellent. Since the trench coat is apparel, it falls under our non-electronics policy which provides a return window of 14 calendar days from delivery. Since you are on day ten, your return is well within the eligible window.",
+      "pause_before_sec": 0.5,
+      "interrupts_previous": false
+    },
+    {
+      "i": 8,
+      "speaker": "customer",
+      "text": "That is great to hear. The order total was Rs 3,200. Can that be approved?",
+      "pause_before_sec": 0.5,
+      "interrupts_previous": false
+    },
+    {
+      "i": 9,
+      "speaker": "agent",
+      "text": "Yes, the purchase amount of Rs 3,200 is within my authorization threshold of Rs 5,000, so I have approved the return request immediately. Your return authorization ID is RTN-88204.",
+      "pause_before_sec": 0.5,
+      "interrupts_previous": false
+    },
+    {
+      "i": 10,
+      "speaker": "customer",
+      "text": "Thank you. When will the courier come to collect the coat?",
+      "pause_before_sec": 0.5,
+      "interrupts_previous": false
+    },
+    {
+      "i": 11,
+      "speaker": "agent",
+      "text": "Our pickup partner will visit your address within 48 to 72 hours. Please keep the coat with its original tags and plastic cover ready for handover.",
+      "pause_before_sec": 0.5,
+      "interrupts_previous": false
+    },
+    {
+      "i": 12,
+      "speaker": "customer",
+      "text": "And how will the refund be issued? I paid using my ICICI debit card.",
+      "pause_before_sec": 0.5,
+      "interrupts_previous": false
+    },
+    {
+      "i": 13,
+      "speaker": "agent",
+      "text": "The refund of Rs 3,200 will be credited directly back to your original ICICI debit card within 5 to 7 business days following the warehouse quality inspection.",
+      "pause_before_sec": 0.5,
+      "interrupts_previous": false
+    },
+    {
+      "i": 14,
+      "speaker": "customer",
+      "text": "Perfect. That is very straightforward.",
+      "pause_before_sec": 0.5,
+      "interrupts_previous": false
+    },
+    {
+      "i": 15,
+      "speaker": "agent",
+      "text": "To summarize, return RTN-88204 for your trench coat is authorized with pickup within 48 to 72 hours, and a full refund of Rs 3,200 to your debit card within 5 to 7 business days post verification. Is there anything else I can help you with today?",
+      "pause_before_sec": 0.5,
+      "interrupts_previous": false
+    },
+    {
+      "i": 16,
+      "speaker": "customer",
+      "text": "No, that is everything. Thank you so much for your efficient help, Tarun!",
+      "pause_before_sec": 0.5,
+      "interrupts_previous": false
+    }
+  ],
+  "ground_truth": {
+    "sop_steps": {
+      "GEN-01": "followed",
+      "GEN-02": "followed",
+      "GEN-03": "followed",
+      "GEN-04": "followed",
+      "GEN-05": "followed",
+      "GEN-06": "followed",
+      "GEN-07": "followed",
+      "GEN-08": "followed"
+    },
+    "policy_violations": [],
+    "customer_emotion_arc": [
+      "neutral",
+      "satisfied",
+      "satisfied"
+    ],
+    "gaps": []
+  }
+}

@@ -1,0 +1,327 @@
+{
+  "call_201": {
+    "topic": {
+      "label": "shipping",
+      "also_ok": []
+    },
+    "violations": [
+      {
+        "clause": "SHP-2.1",
+        "severity": "major",
+        "turn": 6
+      }
+    ],
+    "quality": "bad_deviation",
+    "steps": {
+      "GEN-01": "followed",
+      "GEN-02": "followed",
+      "GEN-03": "followed",
+      "GEN-04": "followed",
+      "GEN-05": "followed",
+      "GEN-06": "missed",
+      "GEN-07": "followed",
+      "GEN-08": "followed"
+    }
+  },
+  "call_202": {
+    "topic": {
+      "label": "refund",
+      "also_ok": []
+    },
+    "violations": [
+      {
+        "clause": "PRV-1.1",
+        "severity": "critical",
+        "turn": 3
+      },
+      {
+        "clause": "REF-1.1",
+        "severity": "major",
+        "turn": 7
+      },
+      {
+        "clause": "REF-2.2",
+        "severity": "major",
+        "turn": 11
+      }
+    ],
+    "quality": "bad_deviation",
+    "steps": {
+      "GEN-01": "followed",
+      "GEN-02": "missed",
+      "GEN-03": "followed",
+      "GEN-04": "followed",
+      "GEN-05": "followed",
+      "GEN-06": "missed",
+      "GEN-07": "followed",
+      "GEN-08": "followed"
+    }
+  },
+  "call_203": {
+    "topic": {
+      "label": "warranty",
+      "also_ok": []
+    },
+    "violations": [
+      {
+        "clause": "REF-1.1",
+        "severity": "major",
+        "turn": 7
+      },
+      {
+        "clause": "WAR-1.1",
+        "severity": "minor",
+        "turn": 11
+      }
+    ],
+    "quality": "bad_deviation",
+    "steps": {
+      "GEN-01": "followed",
+      "GEN-02": "followed",
+      "GEN-03": "followed",
+      "GEN-04": "followed",
+      "GEN-05": "followed",
+      "GEN-06": "missed",
+      "GEN-07": "followed",
+      "GEN-08": "followed"
+    }
+  },
+  "call_204": {
+    "topic": {
+      "label": "billing",
+      "also_ok": []
+    },
+    "violations": [
+      {
+        "clause": "BIL-1.2",
+        "severity": "major",
+        "turn": 7
+      },
+      {
+        "clause": "BIL-2.2",
+        "severity": "minor",
+        "turn": 11
+      }
+    ],
+    "quality": "bad_deviation",
+    "steps": {
+      "GEN-01": "followed",
+      "GEN-02": "followed",
+      "GEN-03": "followed",
+      "GEN-04": "followed",
+      "GEN-05": "followed",
+      "GEN-06": "missed",
+      "GEN-07": "followed",
+      "GEN-08": "followed"
+    }
+  },
+  "call_205": {
+    "topic": {
+      "label": "complaint",
+      "also_ok": []
+    },
+    "violations": [
+      {
+        "clause": "ESC-1.1",
+        "severity": "critical",
+        "turn": 7
+      },
+      {
+        "clause": "ESC-2.1",
+        "severity": "critical",
+        "turn": 11
+      },
+      {
+        "clause": "ESC-3.1",
+        "severity": "major",
+        "turn": 15
+      }
+    ],
+    "quality": "bad_deviation",
+    "steps": {
+      "GEN-01": "followed",
+      "GEN-02": "followed",
+      "GEN-03": "followed",
+      "GEN-04": "followed",
+      "GEN-05": "followed",
+      "GEN-06": "missed",
+      "GEN-07": "followed",
+      "GEN-08": "followed"
+    }
+  },
+  "call_206": {
+    "topic": {
+      "label": "shipping",
+      "also_ok": []
+    },
+    "violations": [
+      {
+        "clause": "PRV-1.1",
+        "severity": "critical",
+        "turn": 3
+      },
+      {
+        "clause": "SHP-3.1",
+        "severity": "major",
+        "turn": 7
+      }
+    ],
+    "quality": "bad_deviation",
+    "steps": {
+      "GEN-01": "followed",
+      "GEN-02": "missed",
+      "GEN-03": "followed",
+      "GEN-04": "followed",
+      "GEN-05": "followed",
+      "GEN-06": "missed",
+      "GEN-07": "followed",
+      "GEN-08": "followed"
+    }
+  },
+  "call_207": {
+    "topic": {
+      "label": "warranty",
+      "also_ok": []
+    },
+    "violations": [
+      {
+        "clause": "WAR-2.1",
+        "severity": "major",
+        "turn": 7
+      },
+      {
+        "clause": "PRV-1.2",
+        "severity": "critical",
+        "turn": 11
+      }
+    ],
+    "quality": "bad_deviation",
+    "steps": {
+      "GEN-01": "followed",
+      "GEN-02": "followed",
+      "GEN-03": "followed",
+      "GEN-04": "followed",
+      "GEN-05": "followed",
+      "GEN-06": "missed",
+      "GEN-07": "followed",
+      "GEN-08": "followed"
+    }
+  },
+  "call_208": {
+    "topic": {
+      "label": "billing",
+      "also_ok": []
+    },
+    "violations": [
+      {
+        "clause": "BIL-2.1",
+        "severity": "minor",
+        "turn": 7
+      },
+      {
+        "clause": "ESC-1.2",
+        "severity": "major",
+        "turn": 11
+      }
+    ],
+    "quality": "bad_deviation",
+    "steps": {
+      "GEN-01": "followed",
+      "GEN-02": "followed",
+      "GEN-03": "followed",
+      "GEN-04": "followed",
+      "GEN-05": "followed",
+      "GEN-06": "missed",
+      "GEN-07": "followed",
+      "GEN-08": "followed"
+    }
+  },
+  "call_209": {
+    "topic": {
+      "label": "complaint",
+      "also_ok": []
+    },
+    "violations": [
+      {
+        "clause": "ESC-2.2",
+        "severity": "major",
+        "turn": 7
+      },
+      {
+        "clause": "WAR-2.1",
+        "severity": "major",
+        "turn": 11
+      },
+      {
+        "clause": "REF-3.1",
+        "severity": "critical",
+        "turn": 15
+      }
+    ],
+    "quality": "bad_deviation",
+    "steps": {
+      "GEN-01": "followed",
+      "GEN-02": "followed",
+      "GEN-03": "followed",
+      "GEN-04": "followed",
+      "GEN-05": "followed",
+      "GEN-06": "missed",
+      "GEN-07": "followed",
+      "GEN-08": "followed"
+    }
+  },
+  "call_210": {
+    "topic": {
+      "label": "shipping",
+      "also_ok": []
+    },
+    "violations": [],
+    "quality": "good",
+    "steps": {
+      "GEN-01": "followed",
+      "GEN-02": "followed",
+      "GEN-03": "followed",
+      "GEN-04": "followed",
+      "GEN-05": "followed",
+      "GEN-06": "followed",
+      "GEN-07": "followed",
+      "GEN-08": "followed"
+    }
+  },
+  "call_211": {
+    "topic": {
+      "label": "refund",
+      "also_ok": []
+    },
+    "violations": [],
+    "quality": "good",
+    "steps": {
+      "GEN-01": "followed",
+      "GEN-02": "followed",
+      "GEN-03": "followed",
+      "GEN-04": "followed",
+      "GEN-05": "followed",
+      "GEN-06": "followed",
+      "GEN-07": "followed",
+      "GEN-08": "followed"
+    }
+  },
+  "call_212": {
+    "topic": {
+      "label": "warranty",
+      "also_ok": []
+    },
+    "violations": [],
+    "quality": "good",
+    "steps": {
+      "GEN-01": "followed",
+      "GEN-02": "followed",
+      "GEN-03": "followed",
+      "GEN-04": "followed",
+      "GEN-05": "followed",
+      "GEN-06": "followed",
+      "GEN-07": "followed",
+      "GEN-08": "followed"
+    }
+  }
+}

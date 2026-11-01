@@ -1,0 +1,154 @@
+{
+  "id": "call_201",
+  "topic": "shipping",
+  "quality": "bad_deviation",
+  "split": "test",
+  "applicable_sops": [
+    "general_call_flow"
+  ],
+  "applicable_steps": [
+    "GEN-01",
+    "GEN-02",
+    "GEN-03",
+    "GEN-04",
+    "GEN-05",
+    "GEN-06",
+    "GEN-07",
+    "GEN-08"
+  ],
+  "hold_scenario": "none",
+  "customer_name": "Ananya Sharma",
+  "agent_name": "Rahul Verma",
+  "order_id": "ORD-61294",
+  "registered_phone_last4": "3829",
+  "customer_persona": "Ananya Sharma is frustrated that her package was marked for immediate return after a single missed buzzer.",
+  "verified": true,
+  "verification_notes": "Passed verification of order ID and last 4 phone digits.",
+  "turns": [
+    {
+      "i": 1,
+      "speaker": "agent",
+      "text": "Thank you for contacting ShopEase customer support. My name is Rahul Verma. Please note that this conversation is recorded for quality monitoring and training purposes. How can I assist you today?",
+      "pause_before_sec": 0.5,
+      "interrupts_previous": false
+    },
+    {
+      "i": 2,
+      "speaker": "customer",
+      "text": "Hello Rahul, this is Ananya Sharma. I ordered leather boots last Friday under order ORD-61294, and your tracking app states a delivery attempt failed this morning, but nobody rang my doorbell.",
+      "pause_before_sec": 0.5,
+      "interrupts_previous": false
+    },
+    {
+      "i": 3,
+      "speaker": "agent",
+      "text": "I am very sorry to hear about that, Ms. Sharma. I would be glad to check the logistics log for you. Before we proceed, could you please confirm your Order ID and the last four digits of your registered phone number?",
+      "pause_before_sec": 0.5,
+      "interrupts_previous": false
+    },
+    {
+      "i": 4,
+      "speaker": "customer",
+      "text": "Sure, the order number is ORD-61294 and the last four digits of my mobile are 3829.",
+      "pause_before_sec": 0.5,
+      "interrupts_previous": false
+    },
+    {
+      "i": 5,
+      "speaker": "agent",
+      "text": "Thank you, Ms. Sharma, your account details are verified. Let me examine the dispatch notes for your package.",
+      "pause_before_sec": 0.5,
+      "interrupts_previous": false
+    },
+    {
+      "i": 6,
+      "speaker": "agent",
+      "text": "The courier partner reached your apartment entrance once earlier today. Under our courier agreement terms, drivers make only one single delivery attempt, and because you were unavailable, the shipment is immediately sent back to our central warehouse for return to origin.",
+      "pause_before_sec": 0.5,
+      "interrupts_previous": false
+    },
+    {
+      "i": 7,
+      "speaker": "customer",
+      "text": "Wait, are you serious? Just one attempt? I was in a meeting for twenty minutes. Can the delivery executive not come back tomorrow?",
+      "pause_before_sec": 0.5,
+      "interrupts_previous": false
+    },
+    {
+      "i": 8,
+      "speaker": "agent",
+      "text": "No, our policy does not allow re-dispatch once an attempt has been logged; the shipment will be returned to the merchant and you will need to place a fresh order online.",
+      "pause_before_sec": 0.5,
+      "interrupts_previous": false
+    },
+    {
+      "i": 9,
+      "speaker": "customer",
+      "text": "That is terribly inconvenient. I needed those boots for an event this weekend.",
+      "pause_before_sec": 0.5,
+      "interrupts_previous": false
+    },
+    {
+      "i": 10,
+      "speaker": "agent",
+      "text": "I understand your disappointment, Ms. Sharma. However, the package is already marked for return transit in the carrier portal, so I cannot alter the route.",
+      "pause_before_sec": 0.5,
+      "interrupts_previous": false
+    },
+    {
+      "i": 11,
+      "speaker": "customer",
+      "text": "Is there really no other option to stop the return?",
+      "pause_before_sec": 0.5,
+      "interrupts_previous": false
+    },
+    {
+      "i": 12,
+      "speaker": "agent",
+      "text": "Unfortunately not. Once marked for return, the shipment cannot be held at the local facility.",
+      "pause_before_sec": 0.5,
+      "interrupts_previous": false
+    },
+    {
+      "i": 13,
+      "speaker": "customer",
+      "text": "Fine, I will see what other store has them in stock.",
+      "pause_before_sec": 0.5,
+      "interrupts_previous": false
+    },
+    {
+      "i": 14,
+      "speaker": "agent",
+      "text": "I apologize again for the frustration caused. Thank you for calling ShopEase, and have a good day.",
+      "pause_before_sec": 0.5,
+      "interrupts_previous": false
+    }
+  ],
+  "ground_truth": {
+    "sop_steps": {
+      "GEN-01": "followed",
+      "GEN-02": "followed",
+      "GEN-03": "followed",
+      "GEN-04": "followed",
+      "GEN-05": "followed",
+      "GEN-06": "missed",
+      "GEN-07": "followed",
+      "GEN-08": "followed"
+    },
+    "policy_violations": [
+      {
+        "turn": 6,
+        "said": "The courier partner reached your apartment entrance once earlier today. Under our courier agreement terms, drivers make only one single delivery attempt, and because you were unavailable, the shipment is immediately sent back to our central warehouse for return to origin.",
+        "clause_id": "SHP-2.1",
+        "severity": "major",
+        "correct_fact": "Couriers must make up to three distinct delivery attempts on consecutive business days before returning a shipment to origin."
+      }
+    ],
+    "customer_emotion_arc": [
+      "neutral",
+      "frustrated",
+      "disappointed"
+    ],
+    "gaps": []
+  }
+}

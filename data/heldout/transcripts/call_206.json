@@ -1,0 +1,175 @@
+{
+  "id": "call_206",
+  "topic": "shipping",
+  "quality": "bad_deviation",
+  "split": "test",
+  "applicable_sops": [
+    "general_call_flow"
+  ],
+  "applicable_steps": [
+    "GEN-01",
+    "GEN-02",
+    "GEN-03",
+    "GEN-04",
+    "GEN-05",
+    "GEN-06",
+    "GEN-07",
+    "GEN-08"
+  ],
+  "hold_scenario": "none",
+  "customer_name": "Siddharth Mehta",
+  "agent_name": "Manoj Gupta",
+  "order_id": "ORD-57209",
+  "registered_phone_last4": "4730",
+  "customer_persona": "Siddharth Mehta inquires about delivery handover for a high-value phone.",
+  "verified": true,
+  "verification_notes": "Passed verification checklist.",
+  "turns": [
+    {
+      "i": 1,
+      "speaker": "agent",
+      "text": "Welcome to ShopEase support. My name is Manoj Gupta. Please note that this phone call is recorded for quality and evaluation purposes. How may I help you?",
+      "pause_before_sec": 0.5,
+      "interrupts_previous": false
+    },
+    {
+      "i": 2,
+      "speaker": "customer",
+      "text": "Hi Manoj, I am Siddharth Mehta. I placed an order for a new smartphone, but I will be out of town tomorrow when it is supposed to arrive.",
+      "pause_before_sec": 0.5,
+      "interrupts_previous": false
+    },
+    {
+      "i": 3,
+      "speaker": "agent",
+      "text": "Good morning, I have pulled up your pending shipment for the flagship smartphone heading to your residency at Green Glen Layout.",
+      "pause_before_sec": 0.5,
+      "interrupts_previous": false
+    },
+    {
+      "i": 4,
+      "speaker": "customer",
+      "text": "Yes, that is the one. Can the delivery boy leave the parcel with my apartment security guard at the gate?",
+      "pause_before_sec": 0.5,
+      "interrupts_previous": false
+    },
+    {
+      "i": 5,
+      "speaker": "agent",
+      "text": "Let me check the handling specifications for this shipment.",
+      "pause_before_sec": 0.5,
+      "interrupts_previous": false
+    },
+    {
+      "i": 6,
+      "speaker": "customer",
+      "text": "It is order ORD-57209 and cost around forty thousand rupees, so I want to make sure it is safe.",
+      "pause_before_sec": 0.5,
+      "interrupts_previous": false
+    },
+    {
+      "i": 7,
+      "speaker": "agent",
+      "text": "Yes, that is completely fine. For high-value smartphones, the delivery partner does not need any delivery OTP or signature; they will simply drop the box with your building guard at the main gate.",
+      "pause_before_sec": 0.5,
+      "interrupts_previous": false
+    },
+    {
+      "i": 8,
+      "speaker": "customer",
+      "text": "Wait, they don't need an OTP? Isn't an expensive phone vulnerable to getting misplaced by guards?",
+      "pause_before_sec": 0.5,
+      "interrupts_previous": false
+    },
+    {
+      "i": 9,
+      "speaker": "agent",
+      "text": "Our couriers routinely leave electronics packages with reception desks or security checkpoints without requesting one-time passcodes.",
+      "pause_before_sec": 0.5,
+      "interrupts_previous": false
+    },
+    {
+      "i": 10,
+      "speaker": "customer",
+      "text": "Are you sure? I thought costly electronics always required the customer to share a secret code at handover.",
+      "pause_before_sec": 0.5,
+      "interrupts_previous": false
+    },
+    {
+      "i": 11,
+      "speaker": "agent",
+      "text": "No, the courier app allows the delivery agent to mark it delivered upon physical handover to any building staff.",
+      "pause_before_sec": 0.5,
+      "interrupts_previous": false
+    },
+    {
+      "i": 12,
+      "speaker": "customer",
+      "text": "That sounds risky to me. Can I request a delivery reschedule instead so they deliver when I am back on Monday?",
+      "pause_before_sec": 0.5,
+      "interrupts_previous": false
+    },
+    {
+      "i": 13,
+      "speaker": "agent",
+      "text": "I have updated the courier dispatch remarks to hold the parcel for Monday delivery.",
+      "pause_before_sec": 0.5,
+      "interrupts_previous": false
+    },
+    {
+      "i": 14,
+      "speaker": "customer",
+      "text": "Okay, please make sure they ask for my OTP when they hand it to me on Monday.",
+      "pause_before_sec": 0.5,
+      "interrupts_previous": false
+    },
+    {
+      "i": 15,
+      "speaker": "agent",
+      "text": "Certainly. Your shipment will be held until Monday. Thank you for choosing ShopEase, have a great day.",
+      "pause_before_sec": 0.5,
+      "interrupts_previous": false
+    },
+    {
+      "i": 16,
+      "speaker": "customer",
+      "text": "Thank you, goodbye.",
+      "pause_before_sec": 0.5,
+      "interrupts_previous": false
+    }
+  ],
+  "ground_truth": {
+    "sop_steps": {
+      "GEN-01": "followed",
+      "GEN-02": "missed",
+      "GEN-03": "followed",
+      "GEN-04": "followed",
+      "GEN-05": "followed",
+      "GEN-06": "missed",
+      "GEN-07": "followed",
+      "GEN-08": "followed"
+    },
+    "policy_violations": [
+      {
+        "turn": 3,
+        "said": "Good morning, I have pulled up your pending shipment for the flagship smartphone heading to your residency at Green Glen Layout.",
+        "clause_id": "PRV-1.1",
+        "severity": "critical",
+        "correct_fact": "Account and address information cannot be revealed before verifying Order ID and the last four phone digits."
+      },
+      {
+        "turn": 7,
+        "said": "Yes, that is completely fine. For high-value smartphones, the delivery partner does not need any delivery OTP or signature; they will simply drop the box with your building guard at the main gate.",
+        "clause_id": "SHP-3.1",
+        "severity": "major",
+        "correct_fact": "High-value electronics strictly mandate secure delivery OTP verification; couriers cannot deliver without OTP."
+      }
+    ],
+    "customer_emotion_arc": [
+      "neutral",
+      "confused",
+      "neutral"
+    ],
+    "gaps": []
+  }
+}

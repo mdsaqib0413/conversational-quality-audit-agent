@@ -86,8 +86,11 @@ def load_all_policy_clauses() -> set:
     return clauses
 
 
-def validate_all_transcripts():
-    transcripts_dir = REPO_ROOT / "data" / "transcripts"
+def validate_all_transcripts(transcripts_dir: Optional[Path] = None):
+    if transcripts_dir is None:
+        transcripts_dir = REPO_ROOT / "data" / "transcripts"
+    else:
+        transcripts_dir = Path(transcripts_dir)
     transcript_files = sorted(list(transcripts_dir.glob("call_*.json")))
 
     if not transcript_files:
@@ -251,5 +254,10 @@ def validate_all_transcripts():
 
 
 if __name__ == "__main__":
-    exit_code = validate_all_transcripts()
+    import argparse
+    parser = argparse.ArgumentParser(description="Validate call transcripts against rubric and policies.")
+    parser.add_argument("--dir", type=str, default=None, help="Directory containing transcripts to validate")
+    args = parser.parse_args()
+    target_dir = Path(args.dir) if args.dir else None
+    exit_code = validate_all_transcripts(target_dir)
     sys.exit(exit_code)

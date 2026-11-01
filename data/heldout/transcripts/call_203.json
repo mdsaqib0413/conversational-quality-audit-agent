@@ -1,0 +1,175 @@
+{
+  "id": "call_203",
+  "topic": "warranty",
+  "quality": "bad_deviation",
+  "split": "test",
+  "applicable_sops": [
+    "general_call_flow"
+  ],
+  "applicable_steps": [
+    "GEN-01",
+    "GEN-02",
+    "GEN-03",
+    "GEN-04",
+    "GEN-05",
+    "GEN-06",
+    "GEN-07",
+    "GEN-08"
+  ],
+  "hold_scenario": "none",
+  "customer_name": "Deepa Sundaram",
+  "agent_name": "Vikram Malhotra",
+  "order_id": "ORD-33910",
+  "registered_phone_last4": "5271",
+  "customer_persona": "Deepa Sundaram received a defective laptop 5 days ago and is denied return or 1-year warranty coverage.",
+  "verified": true,
+  "verification_notes": "Passed verification of credentials and identity.",
+  "turns": [
+    {
+      "i": 1,
+      "speaker": "agent",
+      "text": "Welcome to ShopEase support. My name is Vikram Malhotra. This call is recorded for quality monitoring and compliance. How can I assist you?",
+      "pause_before_sec": 0.5,
+      "interrupts_previous": false
+    },
+    {
+      "i": 2,
+      "speaker": "customer",
+      "text": "Hi Vikram, I am Deepa Sundaram. I ordered an office laptop under order ORD-33910 five days ago, and it suddenly shuts down every twenty minutes. I want to return it or get an immediate replacement.",
+      "pause_before_sec": 0.5,
+      "interrupts_previous": false
+    },
+    {
+      "i": 3,
+      "speaker": "agent",
+      "text": "I am sorry to hear your laptop is shutting down, Ms. Sundaram. To pull up your file securely, could you give me your Order ID and the last four digits of your registered mobile number?",
+      "pause_before_sec": 0.5,
+      "interrupts_previous": false
+    },
+    {
+      "i": 4,
+      "speaker": "customer",
+      "text": "Yes, the order is ORD-33910 and my phone ends in 5271.",
+      "pause_before_sec": 0.5,
+      "interrupts_previous": false
+    },
+    {
+      "i": 5,
+      "speaker": "agent",
+      "text": "Thank you, that validates your profile. Let me check the order history and delivery record.",
+      "pause_before_sec": 0.5,
+      "interrupts_previous": false
+    },
+    {
+      "i": 6,
+      "speaker": "customer",
+      "text": "It was delivered five days ago on Thursday afternoon.",
+      "pause_before_sec": 0.5,
+      "interrupts_previous": false
+    },
+    {
+      "i": 7,
+      "speaker": "agent",
+      "text": "Because the laptop was delivered 5 days ago, our return window is completely closed. Electronics can only be returned within 48 hours of transit damage, so ShopEase cannot accept a return or issue a refund; you must take it to an authorized brand service center yourself.",
+      "pause_before_sec": 0.5,
+      "interrupts_previous": false
+    },
+    {
+      "i": 8,
+      "speaker": "customer",
+      "text": "Wait, five days is less than a week! Why can't I return a dead brand-new laptop to the platform where I bought it?",
+      "pause_before_sec": 0.5,
+      "interrupts_previous": false
+    },
+    {
+      "i": 9,
+      "speaker": "agent",
+      "text": "Our portal only handles damage claims reported within two days of arrival. Beyond that window, ShopEase takes no responsibility for defective merchandise.",
+      "pause_before_sec": 0.5,
+      "interrupts_previous": false
+    },
+    {
+      "i": 10,
+      "speaker": "customer",
+      "text": "That is outrageous. What warranty coverage does this computer even have then?",
+      "pause_before_sec": 0.5,
+      "interrupts_previous": false
+    },
+    {
+      "i": 11,
+      "speaker": "agent",
+      "text": "Standard laptop warranties through our portal cover manufacturing defects for only six months from the purchase date.",
+      "pause_before_sec": 0.5,
+      "interrupts_previous": false
+    },
+    {
+      "i": 12,
+      "speaker": "customer",
+      "text": "Six months? Every computer in India comes with at least a full year of warranty!",
+      "pause_before_sec": 0.5,
+      "interrupts_previous": false
+    },
+    {
+      "i": 13,
+      "speaker": "agent",
+      "text": "Our platform partner agreements provide six months coverage unless an extended warranty pack was separately purchased.",
+      "pause_before_sec": 0.5,
+      "interrupts_previous": false
+    },
+    {
+      "i": 14,
+      "speaker": "customer",
+      "text": "I will be contacting consumer affairs regarding this policy. Goodbye.",
+      "pause_before_sec": 0.5,
+      "interrupts_previous": false
+    },
+    {
+      "i": 15,
+      "speaker": "agent",
+      "text": "You are free to do so, ma'am. Thank you for contacting ShopEase.",
+      "pause_before_sec": 0.5,
+      "interrupts_previous": false
+    },
+    {
+      "i": 16,
+      "speaker": "customer",
+      "text": "Good day.",
+      "pause_before_sec": 0.5,
+      "interrupts_previous": false
+    }
+  ],
+  "ground_truth": {
+    "sop_steps": {
+      "GEN-01": "followed",
+      "GEN-02": "followed",
+      "GEN-03": "followed",
+      "GEN-04": "followed",
+      "GEN-05": "followed",
+      "GEN-06": "missed",
+      "GEN-07": "followed",
+      "GEN-08": "followed"
+    },
+    "policy_violations": [
+      {
+        "turn": 7,
+        "said": "Because the laptop was delivered 5 days ago, our return window is completely closed. Electronics can only be returned within 48 hours of transit damage, so ShopEase cannot accept a return or issue a refund; you must take it to an authorized brand service center yourself.",
+        "clause_id": "REF-1.1",
+        "severity": "major",
+        "correct_fact": "Electronics are eligible for return or replacement within 7 calendar days of delivery date."
+      },
+      {
+        "turn": 11,
+        "said": "Standard laptop warranties through our portal cover manufacturing defects for only six months from the purchase date.",
+        "clause_id": "WAR-1.1",
+        "severity": "minor",
+        "correct_fact": "All electronic products carry a minimum manufacturer warranty period of 12 months."
+      }
+    ],
+    "customer_emotion_arc": [
+      "neutral",
+      "frustrated",
+      "angry"
+    ],
+    "gaps": []
+  }
+}

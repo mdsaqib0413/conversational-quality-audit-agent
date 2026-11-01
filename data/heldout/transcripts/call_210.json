@@ -1,0 +1,146 @@
+{
+  "id": "call_210",
+  "topic": "shipping",
+  "quality": "good",
+  "split": "test",
+  "applicable_sops": [
+    "general_call_flow"
+  ],
+  "applicable_steps": [
+    "GEN-01",
+    "GEN-02",
+    "GEN-03",
+    "GEN-04",
+    "GEN-05",
+    "GEN-06",
+    "GEN-07",
+    "GEN-08"
+  ],
+  "hold_scenario": "none",
+  "customer_name": "Karthik Raman",
+  "agent_name": "Swati Deshmukh",
+  "order_id": "ORD-38149",
+  "registered_phone_last4": "6145",
+  "customer_persona": "Karthik Raman is checking delivery arrival time for an appliance.",
+  "verified": true,
+  "verification_notes": "Passed verification of credentials and identity.",
+  "turns": [
+    {
+      "i": 1,
+      "speaker": "agent",
+      "text": "Thank you for calling ShopEase. My name is Swati Deshmukh. Please be advised that this call is recorded for quality monitoring and customer training purposes. How may I assist you today?",
+      "pause_before_sec": 0.5,
+      "interrupts_previous": false
+    },
+    {
+      "i": 2,
+      "speaker": "customer",
+      "text": "Hi Swati, my name is Karthik Raman. I ordered a cold press juicer three days ago under order ORD-38149, and I wanted to check when it is scheduled to arrive at my address.",
+      "pause_before_sec": 0.5,
+      "interrupts_previous": false
+    },
+    {
+      "i": 3,
+      "speaker": "agent",
+      "text": "I would be happy to check your tracking status, Mr. Raman. For security verification, could you please confirm your Order ID and the last four digits of your registered mobile number?",
+      "pause_before_sec": 0.5,
+      "interrupts_previous": false
+    },
+    {
+      "i": 4,
+      "speaker": "customer",
+      "text": "Sure, the order number is ORD-38149 and the last four digits of my mobile are 6145.",
+      "pause_before_sec": 0.5,
+      "interrupts_previous": false
+    },
+    {
+      "i": 5,
+      "speaker": "agent",
+      "text": "Thank you, Mr. Raman. That matches our records. Just to confirm, you are inquiring about the delivery timeline for your cold press juicer. Is that correct?",
+      "pause_before_sec": 0.5,
+      "interrupts_previous": false
+    },
+    {
+      "i": 6,
+      "speaker": "customer",
+      "text": "Yes, exactly. I want to make sure someone is at home to receive it.",
+      "pause_before_sec": 0.5,
+      "interrupts_previous": false
+    },
+    {
+      "i": 7,
+      "speaker": "agent",
+      "text": "Thank you. I have checked the live logistics scan, and your parcel is currently out for delivery with our local courier partner. The expected delivery slot is between 2:00 PM and 5:00 PM today.",
+      "pause_before_sec": 0.5,
+      "interrupts_previous": false
+    },
+    {
+      "i": 8,
+      "speaker": "customer",
+      "text": "Oh, wonderful! Do I need to provide any verification when the courier arrives?",
+      "pause_before_sec": 0.5,
+      "interrupts_previous": false
+    },
+    {
+      "i": 9,
+      "speaker": "agent",
+      "text": "Yes, because this appliance falls under our standard electronics security protocol, a 4-digit delivery OTP will be sent via SMS to your registered mobile number when the delivery agent is near your premises.",
+      "pause_before_sec": 0.5,
+      "interrupts_previous": false
+    },
+    {
+      "i": 10,
+      "speaker": "customer",
+      "text": "Understood. What happens if I am momentarily stepped out when they arrive?",
+      "pause_before_sec": 0.5,
+      "interrupts_previous": false
+    },
+    {
+      "i": 11,
+      "speaker": "agent",
+      "text": "In the rare event that you miss the delivery, our courier policy requires up to three delivery attempts on consecutive business days before any shipment is returned, so you will not lose your order.",
+      "pause_before_sec": 0.5,
+      "interrupts_previous": false
+    },
+    {
+      "i": 12,
+      "speaker": "customer",
+      "text": "That is reassuring. Thank you so much for the clear explanation, Swati.",
+      "pause_before_sec": 0.5,
+      "interrupts_previous": false
+    },
+    {
+      "i": 13,
+      "speaker": "agent",
+      "text": "You are very welcome, Mr. Raman. To recap, your cold press juicer under order ORD-38149 is out for delivery today between 2 and 5 PM, requiring a 4-digit SMS OTP. Is there anything else I can assist you with?",
+      "pause_before_sec": 0.5,
+      "interrupts_previous": false
+    },
+    {
+      "i": 14,
+      "speaker": "customer",
+      "text": "No, that answers everything. Thank you and have a wonderful day!",
+      "pause_before_sec": 0.5,
+      "interrupts_previous": false
+    }
+  ],
+  "ground_truth": {
+    "sop_steps": {
+      "GEN-01": "followed",
+      "GEN-02": "followed",
+      "GEN-03": "followed",
+      "GEN-04": "followed",
+      "GEN-05": "followed",
+      "GEN-06": "followed",
+      "GEN-07": "followed",
+      "GEN-08": "followed"
+    },
+    "policy_violations": [],
+    "customer_emotion_arc": [
+      "neutral",
+      "satisfied",
+      "satisfied"
+    ],
+    "gaps": []
+  }
+}

@@ -1,0 +1,183 @@
+{
+  "id": "call_202",
+  "topic": "refund",
+  "quality": "bad_deviation",
+  "split": "test",
+  "applicable_sops": [
+    "general_call_flow"
+  ],
+  "applicable_steps": [
+    "GEN-01",
+    "GEN-02",
+    "GEN-03",
+    "GEN-04",
+    "GEN-05",
+    "GEN-06",
+    "GEN-07",
+    "GEN-08"
+  ],
+  "hold_scenario": "none",
+  "customer_name": "Rajesh Kulkarni",
+  "agent_name": "Priya Sen",
+  "order_id": "ORD-84521",
+  "registered_phone_last4": "9104",
+  "customer_persona": "Rajesh Kulkarni bought a defective tablet and is shocked when told refunds are wallet-only and address was revealed unverified.",
+  "verified": true,
+  "verification_notes": "Passed transcript audit check.",
+  "turns": [
+    {
+      "i": 1,
+      "speaker": "agent",
+      "text": "Good afternoon, thank you for dialing ShopEase. My name is Priya Sen. This call is being recorded for quality monitoring purposes. How may I assist you?",
+      "pause_before_sec": 0.5,
+      "interrupts_previous": false
+    },
+    {
+      "i": 2,
+      "speaker": "customer",
+      "text": "Hi Priya, my name is Rajesh Kulkarni. I purchased an Android tablet that arrived yesterday and the touchscreen is continuously flickering.",
+      "pause_before_sec": 0.5,
+      "interrupts_previous": false
+    },
+    {
+      "i": 3,
+      "speaker": "agent",
+      "text": "Hello Mr. Kulkarni, I see your order for the tablet was delivered to flat 402, Palm Heights in Pune yesterday. What seems to be the trouble?",
+      "pause_before_sec": 0.5,
+      "interrupts_previous": false
+    },
+    {
+      "i": 4,
+      "speaker": "customer",
+      "text": "Yes, that is my flat. When I turn on the display, random green lines flicker across the screen, so I want to send it back and receive my money back.",
+      "pause_before_sec": 0.5,
+      "interrupts_previous": false
+    },
+    {
+      "i": 5,
+      "speaker": "agent",
+      "text": "I see. Let me look into our return guidelines for this tablet model.",
+      "pause_before_sec": 0.5,
+      "interrupts_previous": false
+    },
+    {
+      "i": 6,
+      "speaker": "customer",
+      "text": "Thank you, please tell me how quickly you can collect it.",
+      "pause_before_sec": 0.5,
+      "interrupts_previous": false
+    },
+    {
+      "i": 7,
+      "speaker": "agent",
+      "text": "For portable electronics and tablets, our return window is strictly limited to 3 days from delivery date, so after today you would not have been eligible.",
+      "pause_before_sec": 0.5,
+      "interrupts_previous": false
+    },
+    {
+      "i": 8,
+      "speaker": "customer",
+      "text": "Well, good thing I called right away then. The courier can pick it up tomorrow, right?",
+      "pause_before_sec": 0.5,
+      "interrupts_previous": false
+    },
+    {
+      "i": 9,
+      "speaker": "agent",
+      "text": "Yes, I can arrange a return pickup within 48 hours. The courier will inspect the unit and collect the box.",
+      "pause_before_sec": 0.5,
+      "interrupts_previous": false
+    },
+    {
+      "i": 10,
+      "speaker": "customer",
+      "text": "Great. I paid Rs 14,999 on my Visa credit card, so please credit it back to that card.",
+      "pause_before_sec": 0.5,
+      "interrupts_previous": false
+    },
+    {
+      "i": 11,
+      "speaker": "agent",
+      "text": "Since you purchased this during the weekend clearance sale, refunds cannot be returned to your Visa card; the amount of Rs 14,999 will only be credited as ShopEase wallet credits for future purchases.",
+      "pause_before_sec": 0.5,
+      "interrupts_previous": false
+    },
+    {
+      "i": 12,
+      "speaker": "customer",
+      "text": "What? Why would I want wallet credits? I paid with real money from my card and the device is defective!",
+      "pause_before_sec": 0.5,
+      "interrupts_previous": false
+    },
+    {
+      "i": 13,
+      "speaker": "agent",
+      "text": "Clearance items are strictly non-refundable to card accounts under our system policies; only store credits can be offered.",
+      "pause_before_sec": 0.5,
+      "interrupts_previous": false
+    },
+    {
+      "i": 14,
+      "speaker": "customer",
+      "text": "This is very disappointing. Let me speak to someone who can process a proper bank refund.",
+      "pause_before_sec": 0.5,
+      "interrupts_previous": false
+    },
+    {
+      "i": 15,
+      "speaker": "agent",
+      "text": "Our payment backend restricts promotional orders to wallet refunds only, so another representative would tell you the exact same thing.",
+      "pause_before_sec": 0.5,
+      "interrupts_previous": false
+    },
+    {
+      "i": 16,
+      "speaker": "customer",
+      "text": "I will take this up separately then. Good day.",
+      "pause_before_sec": 0.5,
+      "interrupts_previous": false
+    }
+  ],
+  "ground_truth": {
+    "sop_steps": {
+      "GEN-01": "followed",
+      "GEN-02": "missed",
+      "GEN-03": "followed",
+      "GEN-04": "followed",
+      "GEN-05": "followed",
+      "GEN-06": "missed",
+      "GEN-07": "followed",
+      "GEN-08": "followed"
+    },
+    "policy_violations": [
+      {
+        "turn": 3,
+        "said": "Hello Mr. Kulkarni, I see your order for the tablet was delivered to flat 402, Palm Heights in Pune yesterday. What seems to be the trouble?",
+        "clause_id": "PRV-1.1",
+        "severity": "critical",
+        "correct_fact": "Customer identity must be verified using Order ID and last 4 mobile digits before disclosing delivery address or order particulars."
+      },
+      {
+        "turn": 7,
+        "said": "For portable electronics and tablets, our return window is strictly limited to 3 days from delivery date, so after today you would not have been eligible.",
+        "clause_id": "REF-1.1",
+        "severity": "major",
+        "correct_fact": "Electronic items carry a return window of 7 calendar days from delivery, not 3 days."
+      },
+      {
+        "turn": 11,
+        "said": "Since you purchased this during the weekend clearance sale, refunds cannot be returned to your Visa card; the amount of Rs 14,999 will only be credited as ShopEase wallet credits for future purchases.",
+        "clause_id": "REF-2.2",
+        "severity": "major",
+        "correct_fact": "Refunds must always be credited back to the original payment source used during purchase."
+      }
+    ],
+    "customer_emotion_arc": [
+      "neutral",
+      "neutral",
+      "frustrated",
+      "angry"
+    ],
+    "gaps": []
+  }
+}

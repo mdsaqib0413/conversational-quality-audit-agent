@@ -1,0 +1,175 @@
+{
+  "id": "call_207",
+  "topic": "warranty",
+  "quality": "bad_deviation",
+  "split": "test",
+  "applicable_sops": [
+    "general_call_flow"
+  ],
+  "applicable_steps": [
+    "GEN-01",
+    "GEN-02",
+    "GEN-03",
+    "GEN-04",
+    "GEN-05",
+    "GEN-06",
+    "GEN-07",
+    "GEN-08"
+  ],
+  "hold_scenario": "none",
+  "customer_name": "Sunita Rao",
+  "agent_name": "Arpita Bose",
+  "order_id": "ORD-42318",
+  "registered_phone_last4": "8261",
+  "customer_persona": "Sunita Rao wants warranty service for her robotic vacuum and is quoted 45 days and asked for CVV.",
+  "verified": true,
+  "verification_notes": "Passed authentication check.",
+  "turns": [
+    {
+      "i": 1,
+      "speaker": "agent",
+      "text": "Thank you for contacting ShopEase service desk. My name is Arpita Bose. This call is monitored and recorded for quality assurance. How can I help you today?",
+      "pause_before_sec": 0.5,
+      "interrupts_previous": false
+    },
+    {
+      "i": 2,
+      "speaker": "customer",
+      "text": "Hi Arpita, this is Sunita Rao. I purchased a robotic vacuum cleaner three months ago under order ORD-42318, and the charging dock has stopped recognizing the robot.",
+      "pause_before_sec": 0.5,
+      "interrupts_previous": false
+    },
+    {
+      "i": 3,
+      "speaker": "agent",
+      "text": "I am sorry about the charging fault, Ms. Rao. Before we arrange service, could you please verify your Order ID and the last four digits of your mobile number?",
+      "pause_before_sec": 0.5,
+      "interrupts_previous": false
+    },
+    {
+      "i": 4,
+      "speaker": "customer",
+      "text": "The order number is ORD-42318 and the last four digits of my phone are 8261.",
+      "pause_before_sec": 0.5,
+      "interrupts_previous": false
+    },
+    {
+      "i": 5,
+      "speaker": "agent",
+      "text": "Thank you, Ms. Rao, your warranty details are retrieved. Let me check the service turnaround parameters.",
+      "pause_before_sec": 0.5,
+      "interrupts_previous": false
+    },
+    {
+      "i": 6,
+      "speaker": "customer",
+      "text": "How long will the authorized repair workshop take to fix the dock? I rely on it every day.",
+      "pause_before_sec": 0.5,
+      "interrupts_previous": false
+    },
+    {
+      "i": 7,
+      "speaker": "agent",
+      "text": "Our service center is currently facing a heavy backlog, so standard repair turnaround time is forty-five days, and we cannot offer any replacement unit or refund while it is under evaluation.",
+      "pause_before_sec": 0.5,
+      "interrupts_previous": false
+    },
+    {
+      "i": 8,
+      "speaker": "customer",
+      "text": "Forty-five days? That is a month and a half! Is there no way to get it repaired faster or get a temporary loaner?",
+      "pause_before_sec": 0.5,
+      "interrupts_previous": false
+    },
+    {
+      "i": 9,
+      "speaker": "agent",
+      "text": "We do not supply loaner machines during repairs.",
+      "pause_before_sec": 0.5,
+      "interrupts_previous": false
+    },
+    {
+      "i": 10,
+      "speaker": "customer",
+      "text": "Can I pay an express fee to fast-track the technician inspection?",
+      "pause_before_sec": 0.5,
+      "interrupts_previous": false
+    },
+    {
+      "i": 11,
+      "speaker": "agent",
+      "text": "If you want priority VIP service dispatch, you can pay an expedited handling fee of Rs 350 right now; please read out your card number, expiry, and the three-digit CVV on the back over the phone.",
+      "pause_before_sec": 0.5,
+      "interrupts_previous": false
+    },
+    {
+      "i": 12,
+      "speaker": "customer",
+      "text": "Wait, read my CVV to you? Aren't phone agents forbidden from collecting credit card security numbers?",
+      "pause_before_sec": 0.5,
+      "interrupts_previous": false
+    },
+    {
+      "i": 13,
+      "speaker": "agent",
+      "text": "Our phone booking terminal needs manual authorization, which requires entering the CVV code directly into our system.",
+      "pause_before_sec": 0.5,
+      "interrupts_previous": false
+    },
+    {
+      "i": 14,
+      "speaker": "customer",
+      "text": "I am definitely not giving my CVV over an unencrypted phone line. That sounds completely unsafe.",
+      "pause_before_sec": 0.5,
+      "interrupts_previous": false
+    },
+    {
+      "i": 15,
+      "speaker": "agent",
+      "text": "Understood. Then we will proceed with the regular 45-day queue. Your service request ticket is WRN-90214.",
+      "pause_before_sec": 0.5,
+      "interrupts_previous": false
+    },
+    {
+      "i": 16,
+      "speaker": "customer",
+      "text": "I will complain about this. Goodbye.",
+      "pause_before_sec": 0.5,
+      "interrupts_previous": false
+    }
+  ],
+  "ground_truth": {
+    "sop_steps": {
+      "GEN-01": "followed",
+      "GEN-02": "followed",
+      "GEN-03": "followed",
+      "GEN-04": "followed",
+      "GEN-05": "followed",
+      "GEN-06": "missed",
+      "GEN-07": "followed",
+      "GEN-08": "followed"
+    },
+    "policy_violations": [
+      {
+        "turn": 7,
+        "said": "Our service center is currently facing a heavy backlog, so standard repair turnaround time is forty-five days, and we cannot offer any replacement unit or refund while it is under evaluation.",
+        "clause_id": "WAR-2.1",
+        "severity": "major",
+        "correct_fact": "Authorized service center turnaround SLA is 14 days maximum; if exceeded, a brand replacement or refund is mandatory."
+      },
+      {
+        "turn": 11,
+        "said": "If you want priority VIP service dispatch, you can pay an expedited handling fee of Rs 350 right now; please read out your card number, expiry, and the three-digit CVV on the back over the phone.",
+        "clause_id": "PRV-1.2",
+        "severity": "critical",
+        "correct_fact": "Representatives must never solicit or record CVV codes, bank passwords, or debit card PINs under any circumstances."
+      }
+    ],
+    "customer_emotion_arc": [
+      "neutral",
+      "shocked",
+      "distrustful"
+    ],
+    "gaps": []
+  }
+}
