@@ -11,10 +11,12 @@ import pytest
 from eval.retrieval_eval import (
     evaluate_retrieval,
     format_summary_markdown,
+    retrieve_per_turn,
     run_retrieval_eval,
     write_csv,
 )
 from src.audit.rag import KnowledgeBase
+from src.audit.schemas import CallTranscript, DialogueTurn
 from src.audit.topic import detect_call_situations
 
 
@@ -129,8 +131,8 @@ def test_evaluate_retrieval_synthetic_metrics(synthetic_retrieval_env):
         kb=env["kb"],
     )
 
-    # All variants A, B, C, D, E must be present
-    for v_key in ("A", "B", "C", "D", "E"):
+    # All variants A through H must be present
+    for v_key in ("A", "B", "C", "D", "E", "F", "G", "H"):
         assert v_key in summaries
 
     summary_a = summaries["A"]
@@ -152,15 +154,69 @@ def test_evaluate_retrieval_synthetic_metrics(synthetic_retrieval_env):
     assert res_1.all_retrieved is True
     assert res_1.hits == ["REF-1.1"]
     assert res_1.misses == []
+    assert res_1.chars_sent_count > 0
 
-    # Variant D and E are populated
-    summary_d = summaries["D"]
-    assert summary_d.total_calls == 2
-    assert summary_d.total_expected_clauses == 2
+    # Variants F, G, H are populated and compute character lengths
+    summary_f = summaries["F"]
+    assert summary_f.total_calls == 2
+    assert summary_f.avg_clauses_sent == 4.0  # exactly 4 synthetic policy clauses
+    assert summary_f.avg_chars_sent > 0
 
-    summary_e = summaries["E"]
-    assert summary_e.total_calls == 2
-    assert summary_e.total_expected_clauses == 2
+    summary_g = summaries["G"]
+    assert summary_g.total_calls == 2
+    assert summary_g.avg_chars_sent > 0
+
+    summary_h = summaries["H"]
+    assert summary_h.total_calls == 2
+    assert summary_h.avg_chars_sent > 0
+
+
+def test_variant_f_ceiling_includes_all_clauses(synthetic_retrieval_env):
+    """Verify Variant F includes all policy clauses unconditionally."""
+    env = synthetic_retrieval_env
+    summaries, _ = evaluate_retrieval(
+        expected_data=env["expected_data"],
+        transcripts_dir=env["trans_dir"],
+        kb=env["kb"],
+        variants=["F"],
+    )
+    assert "F" in summaries
+    v = summaries["F"]
+    all_clause_ids = {c.id for c in env["kb"].policies}
+    for r in v.call_results:
+        assert set(r.retrieved_clauses) == all_clause_ids
+
+
+def test_variant_g_includes_full_safety_families(synthetic_retrieval_env):
+    """Verify Variant G always includes the entire PRV and ESC families."""
+    env = synthetic_retrieval_env
+    summaries, _ = evaluate_retrieval(
+        expected_data=env["expected_data"],
+        transcripts_dir=env["trans_dir"],
+        kb=env["kb"],
+        variants=["G"],
+    )
+    assert "G" in summaries
+    v = summaries["G"]
+    for r in v.call_results:
+        assert "PRV-1.1" in r.retrieved_clauses
+        assert "ESC-1.1" in r.retrieved_clauses
+
+
+def test_variant_h_per_turn_filters_short_turns_and_caps(synthetic_retrieval_env):
+    """Verify Variant H skips turns < 5 words and caps retrieval."""
+    kb = synthetic_retrieval_env["kb"]
+    # Turn 1 has 3 words (skipped); Turn 2 has 8 words (retrieved)
+    call = CallTranscript(
+        call_id="call_test_h",
+        turns=[
+            DialogueTurn(turn_id=1, speaker="customer", text="I need help."),
+            DialogueTurn(turn_id=2, speaker="agent", text="I can help you process your refund right away."),
+        ],
+    )
+    clauses = retrieve_per_turn(call, kb, top_per_turn=3, min_words=5, cap_clauses=14)
+    assert len(clauses) <= 3
+    assert any("REF" in c.id for c in clauses)
 
 
 def test_situation_boosting_elevates_clause(synthetic_retrieval_env):
@@ -213,6 +269,8 @@ def test_topic_mismatch_tracking(synthetic_retrieval_env):
     assert m.expected_topic == "shipping"
     assert m.expected_clauses == ["REF-1.1"]
     assert m.retrieved_in_a is True
+    assert m.retrieved_in_f is True
+    assert m.retrieved_in_g is True
 
 
 def test_format_markdown_and_write_csv(synthetic_retrieval_env, tmp_path: Path):
@@ -227,12 +285,15 @@ def test_format_markdown_and_write_csv(synthetic_retrieval_env, tmp_path: Path):
     ts = "20261101_120000"
     md = format_summary_markdown(summaries, mismatches, ts)
     assert "# Policy Retrieval Evaluation Summary" in md
-    assert "| Variant | Configuration | Clause Recall | Calls with All Retrieved | Avg Clauses Sent | Avg Clean Sent |" in md
+    assert "| Variant | Configuration | Clause Recall | Calls with All Retrieved | Avg Clauses Sent | Avg Characters Sent | Avg Clean Sent | Time (s) |" in md
     assert "**A**" in md
     assert "**B**" in md
     assert "**C**" in md
     assert "**D**" in md
     assert "**E**" in md
+    assert "**F**" in md
+    assert "**G**" in md
+    assert "**H**" in md
     assert "call_synth_002" in md
 
     csv_path = tmp_path / "test_out.csv"
@@ -243,12 +304,13 @@ def test_format_markdown_and_write_csv(synthetic_retrieval_env, tmp_path: Path):
         reader = csv.DictReader(f)
         rows = list(reader)
 
-    assert len(rows) == 10  # 2 calls * 5 variants (A, B, C, D, E)
+    assert len(rows) == 16  # 2 calls * 8 variants (A through H)
     variants_in_csv = {r["variant"] for r in rows}
-    assert variants_in_csv == {"A", "B", "C", "D", "E"}
+    assert variants_in_csv == {"A", "B", "C", "D", "E", "F", "G", "H"}
     assert "expected_clauses" in reader.fieldnames
     assert "retrieved_clauses" in reader.fieldnames
     assert "clause_recall" in reader.fieldnames
+    assert "chars_sent_count" in reader.fieldnames
 
 
 def test_run_retrieval_eval_end_to_end(synthetic_retrieval_env):
@@ -268,6 +330,9 @@ def test_run_retrieval_eval_end_to_end(synthetic_retrieval_env):
     assert summaries["A"].total_calls == 2
     assert summaries["D"].total_calls == 2
     assert summaries["E"].total_calls == 2
+    assert summaries["F"].total_calls == 2
+    assert summaries["G"].total_calls == 2
+    assert summaries["H"].total_calls == 2
 
 
 def test_run_retrieval_eval_heldout_split(synthetic_retrieval_env):
