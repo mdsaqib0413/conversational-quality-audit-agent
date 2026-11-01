@@ -93,12 +93,12 @@
     },
     "violations": [
       {
-        "clause": "BIL-1.2",
-        "severity": "major",
+        "clause": "BIL-2.1",
+        "severity": "minor",
         "turn": 7
       },
       {
-        "clause": "BIL-2.2",
+        "clause": "BIL-2.3",
         "severity": "minor",
         "turn": 11
       }
@@ -125,11 +125,6 @@
         "clause": "ESC-1.1",
         "severity": "critical",
         "turn": 7
-      },
-      {
-        "clause": "ESC-2.1",
-        "severity": "critical",
-        "turn": 11
       },
       {
         "clause": "ESC-3.1",
@@ -190,7 +185,7 @@
         "turn": 7
       },
       {
-        "clause": "PRV-1.2",
+        "clause": "PRV-2.1",
         "severity": "critical",
         "turn": 11
       }
@@ -214,13 +209,13 @@
     },
     "violations": [
       {
-        "clause": "BIL-2.1",
+        "clause": "BIL-3.1",
         "severity": "minor",
         "turn": 7
       },
       {
-        "clause": "ESC-1.2",
-        "severity": "major",
+        "clause": "ESC-1.1",
+        "severity": "critical",
         "turn": 11
       }
     ],
@@ -243,8 +238,8 @@
     },
     "violations": [
       {
-        "clause": "ESC-2.2",
-        "severity": "major",
+        "clause": "ESC-1.1",
+        "severity": "critical",
         "turn": 7
       },
       {

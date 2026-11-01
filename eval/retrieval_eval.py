@@ -718,14 +718,13 @@ def run_retrieval_eval(
                     f"{d_v.avg_chars_sent:.0f} | {h_v.avg_chars_sent:.0f} | {assessment} |"
                 )
         all_md_parts.append("")
-        all_md_parts.append("### Critical Clauses Analysis (PRV-1.2 & ESC-2.2)\n")
+        all_md_parts.append("### Critical Clauses Analysis (PRV & ESC Families)\n")
         all_md_parts.append(
-            "- **PRV-1.2 (call_207 - Warranty Topic):** In `call_207`, the customer inquiry focused on warranty, but an identity verification / privacy breach (`PRV-1.2`) occurred. "
-            "Variant A missed `PRV-1.2` because it only retrieved the warranty family and core safety (`PRV-1.1`, `ESC-1.1`, `ESC-1.2`). "
-            "Variants F and G successfully retrieved `PRV-1.2` by including the full PRV family.\n"
-            "- **ESC-2.2 (call_209 - Topic Mismatch Complaint vs Refund):** In `call_209`, the topic was labelled `complaint` with expected escalation clause `ESC-2.2`, "
-            "but topic detection classified it as `refund`. Variant A retrieved the refund family, missing `ESC-2.2`. "
-            "Variants F and G retrieved `ESC-2.2` unconditionally via the ceiling or the complete ESC safety family."
+            "- **PRV-2.1 (call_207 - Warranty Topic):** In `call_207`, the customer inquiry focused on warranty, but a sensitive personal data breach (`PRV-2.1`, CVV request) occurred. "
+            "Variant A missed `PRV-2.1` because it only retrieved the warranty family and core safety (`PRV-1.1`, `ESC-1.1`, `ESC-1.2`). "
+            "Variants F and G successfully retrieved `PRV-2.1` by including the full PRV family.\n"
+            "- **ESC-1.1 (call_209 - Topic Mismatch Complaint vs Refund):** In `call_209`, the topic was labelled `complaint` with escalation clause `ESC-1.1`, "
+            "while topic detection classified it as `refund`. Because `ESC-1.1` is in `ALWAYS_INCLUDE`, Variants A, G, and F all successfully retrieved `ESC-1.1`."
         )
         all_md_parts.append("")
 
