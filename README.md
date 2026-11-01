@@ -63,6 +63,7 @@ streamlit run app/streamlit_app.py
 **CLI & Benchmark Verification:**
 - Audit via CLI: `python scripts/audit_cli.py data/audio/call_001_stereo.mp3 --pdf`
 - Free checks (0 API requests): `python eval/run_eval.py --no-llm` and `python scripts/audio_smoke_test.py data/audio/call_001_stereo.mp3`
+- Policy retrieval recall baseline (0 API requests): `python eval/retrieval_eval.py`
 - Benchmark evaluation harness: `python eval/run_eval.py --tag v0.2-eval-obs`
 
 ---
