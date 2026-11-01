@@ -7,6 +7,7 @@ passes through `esc()`, class names are prefixed `aq-`.
 
 from __future__ import annotations
 
+import re
 from typing import Iterable, List, Optional, Sequence
 
 from . import explain as X
@@ -298,6 +299,20 @@ def script_table(rep: AuditReport) -> str:
     return _one(f'<div class="aq-card flush"><table class="aq-table"><tr><th>Step</th><th>What was expected</th><th>Result</th><th>Points</th><th>Turn</th><th>Evidence</th></tr>{"".join(rows)}</table></div>')
 
 
+def _clean_display_policy_text(text: str) -> str:
+    """Strip metadata lines if present in user-facing policy text."""
+    if not text:
+        return ""
+    lines = text.split("\n")
+    cleaned = [
+        line for line in lines
+        if not re.match(r"^\s*-\s*(?:\*\*)?(?:Topics|Situations|Numeric Limit|Default Severity|Kind):", line)
+    ]
+    t = " ".join(cleaned)
+    t = re.sub(r"-\s*(?:Topics|Situations|Numeric Limit|Default Severity|Kind):[^\d\n]+(?=\d+\.|\Z)", "", t)
+    return re.sub(r"\s+", " ", t).strip()
+
+
 # ---------------------------------------------------------------------------------- policy
 def policy_section(rep: AuditReport) -> str:
     viol = [p for p in rep.policy_results if p.verdict == "violation"]
@@ -308,7 +323,8 @@ def policy_section(rep: AuditReport) -> str:
     for p in viol:
         tone = "bad" if p.severity == "critical" else "warn"
         rep_note = f' <span class="aq-tiny">· repeated at turn {", ".join(str(t) for t in p.repeat_turns)} (counted once)</span>' if p.repeat_turns else ""
-        pol = f'<div class="rule"><b>What the policy says</b> ({esc(p.clause_id)}): {esc(p.policy_text)}</div>' if p.policy_text else ""
+        pol_txt = _clean_display_policy_text(p.policy_text)
+        pol = f'<div class="rule"><b>What the policy says</b> ({esc(p.clause_id)}): {esc(pol_txt)}</div>' if pol_txt else ""
         out.append(f'<div class="aq-pol {tone}"><div class="head"><span class="aq-chip">{esc(p.clause_id)}</span>{_pill(X.SEVERITY_LABEL[p.severity], "bad" if p.severity == "critical" else "warn")}'
                    f'<span class="aq-pill">−{p.penalty:g} points</span><span class="aq-tiny">{esc(p.policy_title.split(":")[0])} · turn {esc(p.turn) if p.turn else "-"}{rep_note}</span></div>'
                    f'<div class="say"><b>The agent said:</b> <i>“{esc(p.quote)}”</i></div><div style="font-size:14px">{esc(p.explanation)}</div>{pol}'
@@ -356,7 +372,7 @@ def policies_and_sops_involved_section(rep: AuditReport, kb=None) -> str:
         family_code = cid.split("-")[0]
         family_name = POLICY_PREFIX_NAMES.get(family_code, family_code)
         title = chunk.title if chunk else (p.policy_title if p else "")
-        body_text = chunk.body(400) if chunk else (p.policy_text if p else "")
+        body_text = chunk.body(400) if chunk else (_clean_display_policy_text(p.policy_text) if p else "")
         clause_items.append({
             "id": cid,
             "family": family_name,

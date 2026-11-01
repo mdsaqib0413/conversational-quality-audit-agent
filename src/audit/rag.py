@@ -91,10 +91,14 @@ class Chunk:
         return self.clause_kind
 
     def body(self, limit: int = 600) -> str:
-        """The clause text without its leading 'ID Title' line and without markdown noise."""
-        lines = self.text.split("\n", 1)
-        t = lines[1] if len(lines) > 1 else self.text
-        t = re.sub(r"\s+", " ", t.replace("**", "")).strip()
+        """The clause text without its leading 'ID Title' line, metadata block, and markdown noise."""
+        lines = self.text.split("\n")
+        body_lines = lines[1:] if len(lines) > 1 else lines
+        content_lines = [
+            line for line in body_lines
+            if not re.match(r"^\s*-\s*\*\*(?:Topics|Situations|Numeric Limit|Default Severity|Kind):\*\*", line)
+        ]
+        t = re.sub(r"\s+", " ", " ".join(content_lines).replace("**", "")).strip()
         return t if len(t) <= limit else t[: limit - 3] + "..."
 
     def short(self, limit: int = 600) -> str:

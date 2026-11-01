@@ -5,6 +5,7 @@ from __future__ import annotations
 import base64
 import io
 import logging
+import re
 from typing import Optional
 
 from jinja2 import Environment, select_autoescape
@@ -210,6 +211,20 @@ def emotion_chart_base64(report: AuditReport) -> Optional[str]:
     return base64.b64encode(buf.getvalue()).decode("ascii")
 
 
+def _clean_display_policy_text(text: str) -> str:
+    """Strip metadata lines if present in user-facing policy text."""
+    if not text:
+        return ""
+    lines = text.split("\n")
+    cleaned = [
+        line for line in lines
+        if not re.match(r"^\s*-\s*(?:\*\*)?(?:Topics|Situations|Numeric Limit|Default Severity|Kind):", line)
+    ]
+    t = " ".join(cleaned)
+    t = re.sub(r"-\s*(?:Topics|Situations|Numeric Limit|Default Severity|Kind):[^\d\n]+(?=\d+\.|\Z)", "", t)
+    return re.sub(r"\s+", " ", t).strip()
+
+
 def render_pdf_html(report: AuditReport) -> str:
     env = Environment(autoescape=select_autoescape(default=True, default_for_string=True))
     sc = report.scores
@@ -251,7 +266,10 @@ def render_pdf_html(report: AuditReport) -> str:
     return env.from_string(TEMPLATE).render(
         r=report, bars=bars, sop=sop, status_color=STATUS_COLOR, status_label=STATUS_LABEL, sev_color=SEV_COLOR,
         grade_color=GRADE_COLOR.get(sc.grade, "#111827"), chart=emotion_chart_base64(report),
-        violations=[p for p in report.policy_results if p.verdict == "violation"],
+        violations=[
+            p.model_copy(update={"policy_text": _clean_display_policy_text(p.policy_text)})
+            for p in report.policy_results if p.verdict == "violation"
+        ],
         compliant=[p for p in report.policy_results if p.verdict == "compliant"],
         involved_policies=involved,
     )

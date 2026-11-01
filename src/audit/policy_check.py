@@ -10,6 +10,7 @@ from __future__ import annotations
 
 import logging
 import os
+import re
 from typing import List, Optional, Sequence, Tuple
 
 from .evidence import locate_quote
@@ -42,8 +43,22 @@ def call_retrieval_query(call: CallTranscript, limit_chars: int = 4000) -> str:
     return full_text[:head_len] + " ... " + full_text[-tail_len:]
 
 
+def _format_clause_for_prompt(c: Chunk) -> str:
+    """Format clause text for policy prompt, respecting POLICY_PROMPT_METADATA (default: 1)."""
+    send_metadata = os.environ.get("POLICY_PROMPT_METADATA", "1").strip().lower() not in ("0", "false", "no", "off")
+    if send_metadata:
+        return c.short(1100)
+    lines = c.text.split("\n")
+    content_lines = [
+        line for line in lines
+        if not re.match(r"^\s*-\s*\*\*(?:Topics|Situations|Numeric Limit|Default Severity|Kind):\*\*", line)
+    ]
+    t = re.sub(r"\s+", " ", " ".join(content_lines).replace("**", "")).strip()
+    return t if len(t) <= 1100 else t[:1097] + "..."
+
+
 def build_prompt(call: CallTranscript, clauses) -> str:
-    clause_text = "\n\n".join(f"[{c.id}] {c.title}\n{c.short(1100)}" for c in clauses)
+    clause_text = "\n\n".join(f"[{c.id}] {c.title}\n{_format_clause_for_prompt(c)}" for c in clauses)
     ids = ", ".join(c.id for c in clauses)
     return f"""CALL TRANSCRIPT
 {format_transcript(call.turns)}
