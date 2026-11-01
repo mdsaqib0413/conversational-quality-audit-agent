@@ -2,9 +2,11 @@
 
   python scripts/audio_smoke_test.py data/audio/call_001_stereo.mp3     # perfect separation expected
   python scripts/audio_smoke_test.py data/audio/call_001.mp3            # mono: heuristic labels (no LLM here)
+  python scripts/audio_smoke_test.py data/audio/call_001_stereo.mp3 --language en
 Prints how long transcription took and the first turns, so you can judge speech-to-text quality. If a transcript
 JSON with the same id exists, it also prints the word error rate (lower is better).
 """
+import argparse
 import json
 import re
 import sys
@@ -29,15 +31,28 @@ def wer(ref: str, hyp: str) -> float:
     return d[len(h)] / max(1, len(r))
 
 
-def main() -> int:
-    if len(sys.argv) < 2:
-        print(__doc__)
+def parse_args(argv=None):
+    parser = argparse.ArgumentParser(description="Check audio speech recognition and speaker separation.")
+    parser.add_argument("audio_path", help="Path to audio file (.mp3 / .wav)")
+    parser.add_argument("--language", default="auto", choices=["auto", "en", "te", "hi"],
+                        help="Transcription language (default: auto)")
+    return parser.parse_args(argv)
+
+
+def main(argv=None) -> int:
+    args = parse_args(argv)
+    path = Path(args.audio_path)
+    if not path.exists():
+        print(f"Error: audio file not found: {path}")
         return 1
-    path = Path(sys.argv[1])
     t0 = time.time()
-    call, warnings = build_call_from_audio(str(path), path.stem, get_transcriber(), gateway=None,
-                                           progress=lambda s, f, m: print(f"  {m}"))
-    print(f"\nTranscribed {call.duration_seconds:.0f}s of audio in {time.time() - t0:.0f}s | method: {call.diarization_method} | turns: {len(call.turns)}")
+    call, warnings = build_call_from_audio(
+        str(path), path.stem, get_transcriber(), gateway=None,
+        progress=lambda s, f, m: print(f"  {m}"),
+        language=args.language,
+    )
+    print(f"\nLanguage used: {call.language}")
+    print(f"Transcribed {call.duration_seconds:.0f}s of audio in {time.time() - t0:.0f}s | method: {call.diarization_method} | turns: {len(call.turns)}")
     for w in warnings:
         print("  warning:", w)
     for t in call.turns[:8]:

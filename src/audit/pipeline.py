@@ -86,17 +86,25 @@ class AuditPipeline:
     def transcribe_audio(self, audio_path: str, call_id: Optional[str] = None, use_cache: bool = True,
                          progress: Progress = None, language: Optional[str] = None):
         from .diarize import build_call_from_audio
+        from .transcribe import resolve_language
 
         path = Path(audio_path)
         call_id = call_id or path.stem
-        if not language:
-            language = "en" if (call_id.startswith("en_") or "en_real" in path.name) else "te"
+        target_lang = resolve_language(language)
+        if target_lang == "auto" and hasattr(self.transcriber, "detect_language"):
+            try:
+                det_lang, _ = self.transcriber.detect_language(str(path))
+                if det_lang != "auto":
+                    target_lang = det_lang
+            except Exception as exc:  # noqa: BLE001
+                logger.warning("Language detection failed in pipeline (%s)", exc)
+        cache_lang = target_lang
         file_hash = hashlib.sha256(path.read_bytes()).hexdigest()[:16]
-        tcache = self.cache_dir / "transcripts" / f"{call_id}_{file_hash}_{language}_v7.json"
+        tcache = self.cache_dir / "transcripts" / f"{call_id}_{file_hash}_{cache_lang}_v7.json"
         if not tcache.exists():
             for alt in [
                 self.cache_dir / "transcripts" / f"{call_id}_{file_hash}_v6.json",
-                CACHE_ROOT / "transcripts" / f"{call_id}_{file_hash}_{language}_v7.json",
+                CACHE_ROOT / "transcripts" / f"{call_id}_{file_hash}_{cache_lang}_v7.json",
                 CACHE_ROOT / "transcripts" / f"{call_id}_{file_hash}_v6.json",
             ]:
                 if alt.exists():
@@ -110,11 +118,13 @@ class AuditPipeline:
                 return cached_call, data.get("warnings", []), 0.0
         t0 = time.time()
         _emit(progress, "transcribe", 0.05, "Loading speech model...")
-        call, warnings = build_call_from_audio(str(path), call_id, self.transcriber, self.gateway, progress, language=language)
+        call, warnings = build_call_from_audio(str(path), call_id, self.transcriber, self.gateway, progress, language=target_lang)
         elapsed = time.time() - t0
         if not call.diarization_method.startswith("heuristic"):
-            tcache.parent.mkdir(parents=True, exist_ok=True)
-            tcache.write_text(json.dumps({"call": call.model_dump(), "warnings": warnings}), encoding="utf-8")
+            final_lang = getattr(call, "language", cache_lang) or cache_lang
+            final_cache = self.cache_dir / "transcripts" / f"{call_id}_{file_hash}_{final_lang}_v7.json"
+            final_cache.parent.mkdir(parents=True, exist_ok=True)
+            final_cache.write_text(json.dumps({"call": call.model_dump(), "warnings": warnings}), encoding="utf-8")
         return call, warnings, elapsed
 
     # ------------------------------------------------------------------ main entry points
@@ -123,8 +133,6 @@ class AuditPipeline:
                     policy_applicable: bool = True, language: Optional[str] = None) -> AuditReport:
         path = Path(audio_path)
         call_id = call_id or path.stem
-        if not language:
-            language = "en" if (call_id.startswith("en_") or "en_real" in path.name) else "te"
         call, warnings, t_secs = self.transcribe_audio(audio_path, call_id, use_cache, progress, language=language)
         report = self.audit_call(call, use_cache=use_cache, progress=progress, extra_warnings=warnings,
                                  source_set=source_set, policy_applicable=policy_applicable)
@@ -167,7 +175,8 @@ class AuditPipeline:
 
         # Step 1 Quality Gating
         t_q = time.time()
-        quality, q_reason, unreadable = evaluate_transcript_quality(call, target_language=getattr(call, "language", "te"))
+        chosen_lang = getattr(call, "language", None) or "en"
+        quality, q_reason, unreadable = evaluate_transcript_quality(call, target_language=chosen_lang)
         call.transcript_quality = quality
         call.quality_reason = q_reason
         call.unreadable_parts = unreadable

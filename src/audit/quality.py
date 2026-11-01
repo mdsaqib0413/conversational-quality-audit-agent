@@ -49,13 +49,14 @@ def load_quality_config(path: Path | None = None) -> Dict:
 
 def evaluate_transcript_quality(
     call: CallTranscript,
-    target_language: str = "te",
+    target_language: Optional[str] = None,
     config_path: Path | None = None,
 ) -> Tuple[str, str, List[str]]:
     """Return (quality, reason, unreadable_parts).
 
     quality in ("good", "degraded", "unusable")
     """
+    target_language = target_language or getattr(call, "language", None) or "en"
     if not call.turns:
         return "unusable", "The transcript contains zero turns.", ["all: empty audio"]
 

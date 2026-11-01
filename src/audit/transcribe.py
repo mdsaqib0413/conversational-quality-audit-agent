@@ -13,6 +13,40 @@ from .telugu_utils import is_telugu, telugu_to_roman
 
 logger = logging.getLogger(__name__)
 
+SUPPORTED_LANGUAGES = ("en", "te", "hi", "auto")
+
+LANGUAGE_NAMES = {
+    "auto": "auto",
+    "english": "en",
+    "en": "en",
+    "telugu": "te",
+    "te": "te",
+    "hindi": "hi",
+    "hi": "hi",
+}
+
+
+def resolve_language(explicit: Optional[str] = None) -> str:
+    """Resolve transcription language: explicit argument > WHISPER_LANGUAGE env var > 'auto'.
+
+    Accepted values: 'en', 'te', 'hi', 'auto'.
+    """
+    if explicit is not None and str(explicit).strip():
+        val = str(explicit).strip().lower()
+        normalized = LANGUAGE_NAMES.get(val, val)
+        if normalized in SUPPORTED_LANGUAGES:
+            return normalized
+        raise ValueError(f"Unsupported transcription language: {explicit!r}. Accepted: {SUPPORTED_LANGUAGES}")
+
+    env_val = os.getenv("WHISPER_LANGUAGE", "").strip().lower()
+    if env_val:
+        normalized = LANGUAGE_NAMES.get(env_val, env_val)
+        if normalized in SUPPORTED_LANGUAGES:
+            return normalized
+
+    return "auto"
+
+
 INITIAL_PROMPT_EN = (
     "Customer support call for ShopEase. Order ID, refund, replacement, warranty, supervisor, "
     "callback, delivery, courier, OTP, UPI, NEFT, Rs."
@@ -46,7 +80,7 @@ class Segment:
 
 
 class Transcriber:
-    def __init__(self, model_size: Optional[str] = None, device: str = "cpu", compute_type: str = "int8", default_language: str = "te"):
+    def __init__(self, model_size: Optional[str] = None, device: str = "cpu", compute_type: str = "int8", default_language: Optional[str] = None):
         self.model_size = model_size or os.getenv("WHISPER_MODEL", "small")
         self.device = device
         self.compute_type = compute_type
@@ -62,13 +96,39 @@ class Transcriber:
             self._model = WhisperModel(self.model_size, device=self.device, compute_type=self.compute_type)
         return self._model
 
+    def detect_language(self, audio_path: str) -> Tuple[str, float]:
+        """Detect language using faster-whisper with NO initial prompt."""
+        if hasattr(self.model, "detect_language"):
+            try:
+                from faster_whisper.audio import decode_audio
+
+                audio_arr = decode_audio(audio_path, sampling_rate=16000)
+                lang, prob, _ = self.model.detect_language(audio_arr)
+                norm_lang = LANGUAGE_NAMES.get(lang.lower(), lang.lower())
+                logger.info("Detected language '%s' with probability %.2f", norm_lang, float(prob))
+                return norm_lang, float(prob)
+            except Exception as exc:  # noqa: BLE001
+                logger.warning("Language detection failed (%s); falling back to 'auto'.", exc)
+        return "auto", 0.0
+
     def transcribe(self, audio_path: str, language: Optional[str] = None) -> Tuple[List[Segment], float]:
-        lang = language if language is not None else self.default_language
-        initial_prompt = INITIAL_PROMPT_TE if lang == "te" else INITIAL_PROMPT_EN
+        chosen_lang = resolve_language(language if language is not None else self.default_language)
+        if chosen_lang == "auto":
+            detected, prob = self.detect_language(audio_path)
+            if detected != "auto":
+                chosen_lang = detected
+
+        initial_prompt = None
+        if chosen_lang == "te":
+            initial_prompt = INITIAL_PROMPT_TE
+        elif chosen_lang == "en":
+            initial_prompt = INITIAL_PROMPT_EN
+
+        whisper_lang = None if chosen_lang == "auto" else chosen_lang
 
         segments, info = self.model.transcribe(
             audio_path,
-            language=lang,
+            language=whisper_lang,
             beam_size=int(os.getenv("WHISPER_BEAM", "1")),
             vad_filter=True,
             vad_parameters={"min_silence_duration_ms": 300},
@@ -76,6 +136,8 @@ class Transcriber:
             initial_prompt=initial_prompt,
             word_timestamps=True,   # real speech boundaries, so silences / dead air are measured correctly
         )
+        if getattr(info, "language", None):
+            logger.info("Transcribed with language '%s' (prob %.2f)", info.language, getattr(info, "language_probability", 1.0))
         out = []
         for s in segments:
             text = normalize_asr(s.text or "")
@@ -102,7 +164,7 @@ class Transcriber:
 _default: Optional[Transcriber] = None
 
 
-def get_transcriber(default_language: str = "te") -> Transcriber:
+def get_transcriber(default_language: Optional[str] = None) -> Transcriber:
     global _default
     if _default is None:
         _default = Transcriber(default_language=default_language)

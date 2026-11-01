@@ -312,7 +312,7 @@ def page_dashboard() -> None:
     html(U.insights_card(scored))
 
 
-def _run_audit(kind: str, path: str, name: str) -> None:
+def _run_audit(kind: str, path: str, name: str, language: Optional[str] = None) -> None:
     pipe = get_pipeline()
     holder = st.empty()
     skip_audio = kind != "audio"
@@ -325,7 +325,7 @@ def _run_audit(kind: str, path: str, name: str) -> None:
 
     try:
         if kind == "audio":
-            rep = pipe.audit_audio(path, call_id=name, use_cache=use_cache, progress=progress)
+            rep = pipe.audit_audio(path, call_id=name, use_cache=use_cache, progress=progress, language=language)
         else:
             rep = pipe.audit_transcript_file(path, use_cache=use_cache, progress=progress)
     except NetworkError as e:
@@ -363,7 +363,7 @@ def _run_audit(kind: str, path: str, name: str) -> None:
 
 
 @st.fragment
-def _audit_sample_selector_fragment(options: dict) -> None:
+def _audit_sample_selector_fragment(options: dict, language: Optional[str] = None) -> None:
     pick = st.selectbox("Sample call", list(options))
     kind, p = options[pick]
     if kind == "audio":
@@ -378,12 +378,19 @@ def _audit_sample_selector_fragment(options: dict) -> None:
         html(U.empty_state(f"Expected: {gt['quality'].replace('_', ' ')}",
                            f"Missed or partial steps: {', '.join(dev) or 'none'} · Rule violations: {', '.join(viol) or 'none'} · Gaps: {gaps}"))
     if st.button("Run audit on this sample", type="primary"):
-        _run_audit(kind, str(p), stem)
+        _run_audit(kind, str(p), stem, language=language)
 
 
 def page_audit() -> None:
     html(U.page_header("Audit a call", "Upload a recording or pick a sample. You get a scored report in about a minute."))
-    mode = st.radio("Source", ["Upload a recording", "Pick a sample call"], horizontal=True, label_visibility="collapsed")
+    col_mode, col_lang = st.columns([3, 2])
+    with col_mode:
+        mode = st.radio("Source", ["Upload a recording", "Pick a sample call"], horizontal=True, label_visibility="collapsed")
+    with col_lang:
+        lang_choice = st.selectbox("Language", ["Auto", "English", "Telugu", "Hindi"], index=0, key="audit_lang_select")
+        lang_map = {"Auto": "auto", "English": "en", "Telugu": "te", "Hindi": "hi"}
+        chosen_lang = lang_map.get(lang_choice, "auto")
+
     if mode == "Upload a recording":
         up = st.file_uploader("Drop a call recording (MP3, WAV, M4A) or a transcript (.json)", type=[e.strip(".") for e in AUDIO_EXT] + ["json"])
         if up:
@@ -393,7 +400,7 @@ def page_audit() -> None:
                 suffix = Path(up.name).suffix.lower()
                 with tempfile.NamedTemporaryFile(delete=False, suffix=suffix) as f:
                     f.write(up.getbuffer())
-                _run_audit("transcript" if suffix == ".json" else "audio", f.name, Path(up.name).stem)
+                _run_audit("transcript" if suffix == ".json" else "audio", f.name, Path(up.name).stem, language=chosen_lang)
         return
     mono, stereo, transcripts = sample_sources()
     options: dict = {}
@@ -406,7 +413,7 @@ def page_audit() -> None:
     if not options:
         html(U.empty_state("No samples yet", "Generate them with  python scripts/make_audio.py --all"))
         return
-    _audit_sample_selector_fragment(options)
+    _audit_sample_selector_fragment(options, language=chosen_lang)
 
 
 @st.fragment

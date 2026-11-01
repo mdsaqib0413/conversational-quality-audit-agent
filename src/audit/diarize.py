@@ -187,11 +187,21 @@ def post_process_mono_labels(labelled: List[Tuple[str, Segment]]) -> List[Tuple[
 # main entry
 # ---------------------------------------------------------------------------------
 def build_call_from_audio(audio_path: str, call_id: str, transcriber, gateway=None,
-                          progress=None, language: str = "te") -> Tuple[CallTranscript, List[str]]:
+                          progress=None, language: Optional[str] = None) -> Tuple[CallTranscript, List[str]]:
     """Returns (CallTranscript, warnings)."""
     from pydub import AudioSegment
+    from .transcribe import resolve_language
 
     warnings: List[str] = []
+    chosen_lang = resolve_language(language)
+    if chosen_lang == "auto" and hasattr(transcriber, "detect_language"):
+        try:
+            det_lang, prob = transcriber.detect_language(audio_path)
+            if det_lang != "auto":
+                chosen_lang = det_lang
+        except Exception as exc:  # noqa: BLE001
+            logger.warning("Language detection failed in diarize (%s)", exc)
+
     audio = AudioSegment.from_file(audio_path)
     duration = len(audio) / 1000.0
     method = ""
@@ -208,10 +218,10 @@ def build_call_from_audio(audio_path: str, call_id: str, transcriber, gateway=No
                 paths[name] = p
             if progress:
                 progress("transcribe", 0.15, "Transcribing left channel...")
-            l_segs, _ = transcriber.transcribe(paths["left"], language=language)
+            l_segs, _ = transcriber.transcribe(paths["left"], language=chosen_lang)
             if progress:
                 progress("transcribe", 0.45, "Transcribing right channel...")
-            r_segs, _ = transcriber.transcribe(paths["right"], language=language)
+            r_segs, _ = transcriber.transcribe(paths["right"], language=chosen_lang)
         agent_side = _pick_agent_channel(l_segs, r_segs)
         for s in l_segs:
             labelled.append(("agent" if agent_side == "left" else "customer", s))
@@ -221,7 +231,7 @@ def build_call_from_audio(audio_path: str, call_id: str, transcriber, gateway=No
     else:
         if progress:
             progress("transcribe", 0.2, "Transcribing audio...")
-        segs, _ = transcriber.transcribe(audio_path, language=language)
+        segs, _ = transcriber.transcribe(audio_path, language=chosen_lang)
         if not segs:
             raise ValueError("No speech was detected in the audio file.")
         if progress:
@@ -240,6 +250,6 @@ def build_call_from_audio(audio_path: str, call_id: str, transcriber, gateway=No
         labelled = post_process_mono_labels(labelled)
 
     turns = segments_to_turns(labelled)
-    call = CallTranscript(call_id=call_id, source="audio", audio_path=audio_path, language=language,
+    call = CallTranscript(call_id=call_id, source="audio", audio_path=audio_path, language=chosen_lang,
                           duration_seconds=round(duration, 1), diarization_method=method, turns=turns)
     return call, warnings

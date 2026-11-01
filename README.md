@@ -42,6 +42,7 @@ Edit `.env` and configure:
 GEMINI_API_KEY=your_actual_gemini_api_key_here
 GEMINI_MODEL=gemini-2.5-flash
 WHISPER_MODEL=small
+WHISPER_LANGUAGE=auto
 ```
 > **Note:** Set `GEMINI_MODEL` to a model printed by `python scripts/list_models.py` (e.g. `gemini-2.5-flash`).
 
