@@ -14,6 +14,7 @@ from __future__ import annotations
 import hashlib
 import json
 import logging
+import os
 import re
 import time
 from datetime import datetime
@@ -76,7 +77,8 @@ class AuditPipeline:
         h.update(call.text_for_hash().encode("utf-8"))
         h.update(self.gateway.model_name.encode("utf-8") if self.gateway.targets else b"")
         h.update(self.kb.version.encode("utf-8"))
-        h.update(b"audit-v7")
+        h.update(os.environ.get("POLICY_CONTEXT", "G").strip().upper().encode("utf-8"))
+        h.update(b"audit-v8")
         return h.hexdigest()[:16]
 
     def _audit_cache_path(self, call: CallTranscript) -> Path:

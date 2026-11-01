@@ -9,11 +9,12 @@ Hard rules:
 from __future__ import annotations
 
 import logging
-from typing import List, Sequence, Tuple
+import os
+from typing import List, Optional, Sequence, Tuple
 
 from .evidence import locate_quote
 from .prompts import _load_agent, format_transcript
-from .rag import KnowledgeBase
+from .rag import Chunk, KnowledgeBase
 from .schemas import CallTranscript, PolicyAnalysis, PolicyResult
 
 logger = logging.getLogger(__name__)
@@ -67,11 +68,42 @@ Be conservative: if you are not sure a statement contradicts the policy, mark it
 """
 
 
-def check_policies(call: CallTranscript, topic: str, kb: KnowledgeBase, gateway, k: int = 10) -> Tuple[List[PolicyResult], List[str], List]:
-    # Every clause of the topic's main policy family is always in context (a violated clause must never be missing
-    # from the evidence), and retrieval adds the best matches from the other families.
+def get_policy_context_mode() -> str:
+    """Return the active policy context mode: 'A' or 'G' (default: 'G').
+    
+    Controlled via the POLICY_CONTEXT environment variable:
+      - 'A': baseline behavior (ALWAYS_INCLUDE + topic family + top-k hybrid).
+      - 'G': default behavior (baseline A + every PRV and ESC clause always included).
+    """
+    mode = os.environ.get("POLICY_CONTEXT", "G").strip().upper()
+    return "A" if mode == "A" else "G"
+
+
+def get_policy_context_clauses(
+    call: CallTranscript,
+    topic: str,
+    kb: KnowledgeBase,
+    k: int = 10,
+    mode: Optional[str] = None,
+) -> List[Chunk]:
+    """Retrieve policy clauses for a call according to the active POLICY_CONTEXT mode ('A' or 'G')."""
+    if mode is None:
+        mode = get_policy_context_mode()
+    else:
+        mode = "A" if mode.strip().upper() == "A" else "G"
+
     family = [c.id for c in kb.policies_for_topic(topic)]
-    clauses = kb.retrieve_policies(agent_query(call), topic=topic, k=k, always_include=ALWAYS_INCLUDE + family)
+    if mode == "G":
+        safety_families = [c.id for c in kb.policies if c.family in ("PRV", "ESC") or c.id.startswith(("PRV-", "ESC-"))]
+        always = list(dict.fromkeys(ALWAYS_INCLUDE + family + safety_families))
+    else:
+        always = list(dict.fromkeys(ALWAYS_INCLUDE + family))
+    return kb.retrieve_policies(agent_query(call), topic=topic, k=k, always_include=always)
+
+
+def check_policies(call: CallTranscript, topic: str, kb: KnowledgeBase, gateway, k: int = 10) -> Tuple[List[PolicyResult], List[str], List[Chunk]]:
+    # Retrieve clauses according to POLICY_CONTEXT mode (default: 'G' includes all PRV and ESC clauses)
+    clauses = get_policy_context_clauses(call, topic, kb, k=k)
     prompt = build_prompt(call, clauses)
     analysis = gateway.generate_structured(
         prompt, PolicyAnalysis, system_instruction=SYSTEM, temperature=0.0, max_output_tokens=6144,
