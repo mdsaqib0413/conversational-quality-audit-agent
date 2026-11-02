@@ -9,6 +9,7 @@
 > **Evaluation Notes:**
 > 1. **Held-Out Label Corrections Applied:** Held-out expected violations were updated to resolve synonymy/granularity discrepancies (e.g. `BIL-2.1`/`BIL-2.3` in `call_204`, removing repeated `ESC-2.1` in `call_205`, `PRV-2.1` in `call_207`, `BIL-3.1`/`ESC-1.1` in `call_208`, `ESC-1.1` in `call_209`).
 > 2. **Turn-Level Scoring:** Both clause ID (or acceptable alternate) AND transcript turn must match to qualify as an expected hit.
+> 3. **Cost Rate Notice:** The cost columns in historical evaluation runs used the old default rates ($0.075 / $0.300 per 1M tokens) and understate cost by roughly 5x compared to actual per-model rates.
 
 ## 3. Executive Summary Tables (Overall Averages)
 

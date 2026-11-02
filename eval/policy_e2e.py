@@ -60,6 +60,7 @@ from src.audit.policy_check import (
 from src.audit.rag import Chunk, KnowledgeBase
 from src.audit.schemas import CallTranscript, PolicyAnalysis, PolicyResult
 from src.audit.topic import detect_topic
+from src.audit.tracer import estimate_cost, get_model_rates, get_rate_source
 from src.audit.transcript_io import load_transcript_json
 
 logging.basicConfig(level=logging.INFO, format="%(asctime)s [%(levelname)s] %(name)s: %(message)s")
@@ -164,6 +165,7 @@ class UsageRecord:
     prompt_tokens: int = 0
     output_tokens: int = 0
     total_tokens: int = 0
+    cached_tokens: int = 0
     latency_s: float = 0.0
 
 
@@ -194,6 +196,7 @@ class GatewayUsageTracker:
                                 self.last_record.prompt_tokens = getattr(um, "prompt_token_count", 0) or 0
                                 self.last_record.output_tokens = getattr(um, "candidates_token_count", 0) or 0
                                 self.last_record.total_tokens = getattr(um, "total_token_count", 0) or 0
+                                self.last_record.cached_tokens = getattr(um, "cached_content_token_count", 0) or 0
                             return resp
                         return hooked_generate
 
@@ -227,6 +230,7 @@ class SingleRunResult:
     total_tokens: int
     latency_s: float
     run_idx: int = 1
+    cost_usd: Optional[float] = None
 
 
 @dataclass
@@ -247,6 +251,7 @@ class VariantAggregates:
     avg_total_tokens: float
     avg_latency_s: float
     avg_clauses_sent: float
+    avg_cost_usd: float = 0.0
 
 
 # --------------------------------------------------------------------------------------
@@ -325,10 +330,19 @@ def execute_policy_step(
     input_tokens = rec.prompt_tokens or (len(prompt) // 4)
     output_tokens = rec.output_tokens or 0
     total_tokens = rec.total_tokens or (input_tokens + output_tokens)
+    model_name = getattr(gateway, "model_name", None) or gateway.describe()
+    cost_usd = estimate_cost(
+        model_name,
+        input_tokens,
+        output_tokens,
+        tokens_cached=getattr(rec, "cached_tokens", 0) or 0,
+    )
 
+    cost_str = f"Cost: ${cost_usd:.6f} | " if cost_usd is not None else ""
     print(
         f"[Run {run_idx} | {split.upper()}] {call_id} | Variant {variant}: "
         f"{input_tokens:,} input tokens, {output_tokens:,} output tokens, {total_tokens:,} total | "
+        f"{cost_str}"
         f"Latency: {latency_s:.2f}s | Clauses sent: {len(clauses)}"
     )
 
@@ -372,6 +386,7 @@ def execute_policy_step(
         total_tokens=total_tokens,
         latency_s=latency_s,
         run_idx=run_idx,
+        cost_usd=cost_usd,
     )
 
 
@@ -407,6 +422,7 @@ def compute_aggregates(runs: List[SingleRunResult], variant: str, split: str) ->
     avg_total = sum(r.total_tokens for r in subset) / total_calls
     avg_lat = sum(r.latency_s for r in subset) / total_calls
     avg_clauses = sum(r.clauses_sent_count for r in subset) / total_calls
+    avg_cost = sum(r.cost_usd or 0.0 for r in subset) / total_calls
 
     return VariantAggregates(
         variant=variant,
@@ -425,6 +441,7 @@ def compute_aggregates(runs: List[SingleRunResult], variant: str, split: str) ->
         avg_total_tokens=round(avg_total, 1),
         avg_latency_s=round(avg_lat, 2),
         avg_clauses_sent=round(avg_clauses, 1),
+        avg_cost_usd=round(avg_cost, 6),
     )
 
 

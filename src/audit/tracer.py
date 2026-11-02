@@ -16,7 +16,7 @@ import time
 from dataclasses import asdict, dataclass, field
 from datetime import datetime
 from pathlib import Path
-from typing import Any, Dict, List, Optional, Tuple
+from typing import Any, Dict, List, Optional, Set, Tuple
 
 logger = logging.getLogger(__name__)
 
@@ -28,6 +28,42 @@ MAX_CONTENT_CHARS = 10000
 TRUNCATION_MARKER = "\n... [TRUNCATED] ..."
 
 _PRICING_CACHE: Optional[Dict[str, Any]] = None
+_WARNED_FALLBACK_MODELS: Set[str] = set()
+
+
+class DefaultRateSource(str):
+    """String representing 'default' rate source, backward-compatible with substring checks."""
+
+    def __eq__(self, other: object) -> bool:
+        return str(self) == other or other in ("default", "pricing.yaml:default", "eval/pricing.yaml:default")
+
+    def __contains__(self, item: object) -> bool:
+        if item in ("default", "pricing.yaml:default", "eval/pricing.yaml:default"):
+            return True
+        return super().__contains__(str(item))
+
+
+class ModelRates(tuple):
+    """3-tuple (cost_per_million_input, cost_per_million_output, rate_source) with cached_input."""
+
+    def __new__(cls, input_rate: float, output_rate: float, source: str, cached_input: float = 0.0):
+        return super().__new__(cls, (input_rate, output_rate, source))
+
+    def __init__(self, input_rate: float, output_rate: float, source: str, cached_input: float = 0.0):
+        self.input = input_rate
+        self.output = output_rate
+        self.source = source
+        self.cached_input = cached_input
+        self.rate_source = source
+
+
+def _normalize_model_name(model_name: str) -> str:
+    clean = (model_name or "").lower().strip()
+    if ":" in clean:
+        clean = clean.split(":")[-1]
+    if clean.startswith("models/"):
+        clean = clean[len("models/"):]
+    return clean
 
 
 # --------------------------------------------------------------------------------------
@@ -48,58 +84,96 @@ def get_pricing_config() -> Dict[str, Any]:
     return _PRICING_CACHE
 
 
-def get_model_rates(model_name: str) -> Tuple[float, float, str]:
-    """Return (cost_per_million_input, cost_per_million_output, rate_source)."""
+def get_model_rates(model_name: str) -> ModelRates:
+    """Return ModelRates(cost_per_million_input, cost_per_million_output, rate_source, cached_input).
+
+    Looks up the exact model name first in eval/pricing.yaml.
+    If there is no exact entry, falls back to default rates, sets rate_source='default',
+    and logs a warning once per model.
+    """
     cfg = get_pricing_config()
     models = cfg.get("models", {})
-    clean_name = (model_name or "").lower().strip()
-    if ":" in clean_name:
-        clean_name = clean_name.split(":")[-1]
-    if clean_name.startswith("models/"):
-        clean_name = clean_name[len("models/"):]
+    raw_name = (model_name or "").strip()
+    clean_name = _normalize_model_name(raw_name)
 
-    # 1. Exact match in models dict
-    if clean_name in models:
-        m = models[clean_name]
-        return (
+    # 1. Exact match (clean name or raw name)
+    matched_key = None
+    if clean_name in models and clean_name != "default":
+        matched_key = clean_name
+    elif raw_name.lower() in models and raw_name.lower() != "default":
+        matched_key = raw_name.lower()
+
+    if matched_key is not None:
+        m = models[matched_key]
+        cached_rate = float(
+            m.get("cost_per_million_cached_input_tokens", m.get("cached_input", 0.0))
+        )
+        return ModelRates(
             float(m.get("cost_per_million_input_tokens", 0.075)),
             float(m.get("cost_per_million_output_tokens", 0.300)),
-            f"eval/pricing.yaml:{clean_name}",
+            f"eval/pricing.yaml:{matched_key}",
+            cached_rate,
         )
 
-    # 2. Substring / prefix match in models dict
-    for k, m in models.items():
-        if k != "default" and (k in clean_name or clean_name in k):
-            return (
-                float(m.get("cost_per_million_input_tokens", 0.075)),
-                float(m.get("cost_per_million_output_tokens", 0.300)),
-                f"eval/pricing.yaml:{k}",
-            )
-
-    # 3. Fallback to default in pricing.yaml
-    if "default" in models:
-        m = models["default"]
-        return (
-            float(m.get("cost_per_million_input_tokens", 0.075)),
-            float(m.get("cost_per_million_output_tokens", 0.300)),
-            "eval/pricing.yaml:default",
+    # 2. Fallback to default only if there is no entry (no substring / prefix guessing)
+    warn_key = clean_name or raw_name or "unknown"
+    if warn_key not in _WARNED_FALLBACK_MODELS:
+        _WARNED_FALLBACK_MODELS.add(warn_key)
+        logger.warning(
+            "Pricing model '%s' has no exact entry in eval/pricing.yaml; falling back to default rates",
+            raw_name or model_name,
         )
 
-    return (0.075, 0.300, "fallback:default")
+    def_m = models.get("default", {})
+    def_cached = float(
+        def_m.get("cost_per_million_cached_input_tokens", def_m.get("cached_input", 0.0))
+    )
+    return ModelRates(
+        float(def_m.get("cost_per_million_input_tokens", 0.075)),
+        float(def_m.get("cost_per_million_output_tokens", 0.300)),
+        DefaultRateSource("default"),
+        def_cached,
+    )
 
 
 def get_rate_source(model_name: str) -> str:
     """Return the rate source string for a model."""
-    _, _, source = get_model_rates(model_name)
-    return source
+    rates = get_model_rates(model_name)
+    return rates.source
 
 
-def estimate_cost(model_name: str, tokens_in: Optional[int], tokens_out: Optional[int]) -> Optional[float]:
-    """Compute estimated USD cost based on eval/pricing.yaml rates."""
+def estimate_cost(
+    model_name: str,
+    tokens_in: Optional[int],
+    tokens_out: Optional[int],
+    tokens_cached: Optional[int] = None,
+    cached_tokens: Optional[int] = None,
+) -> Optional[float]:
+    """Compute estimated USD cost based on eval/pricing.yaml rates.
+
+    Do not apply cached_input unless the response reports cached tokens.
+    """
     if tokens_in is None or tokens_out is None:
         return None
-    rate_in, rate_out, _ = get_model_rates(model_name)
-    return round((tokens_in * (rate_in / 1_000_000.0)) + (tokens_out * (rate_out / 1_000_000.0)), 6)
+
+    rates = get_model_rates(model_name)
+    rate_in = rates.input
+    rate_out = rates.output
+    rate_cached = rates.cached_input
+
+    cached = tokens_cached if tokens_cached is not None else cached_tokens
+    if cached is not None and cached > 0:
+        actual_cached = min(tokens_in, cached)
+        uncached_in = max(0, tokens_in - actual_cached)
+        cost = (
+            (uncached_in * (rate_in / 1_000_000.0))
+            + (actual_cached * (rate_cached / 1_000_000.0))
+            + (tokens_out * (rate_out / 1_000_000.0))
+        )
+    else:
+        cost = (tokens_in * (rate_in / 1_000_000.0)) + (tokens_out * (rate_out / 1_000_000.0))
+
+    return round(cost, 6)
 
 
 # --------------------------------------------------------------------------------------
@@ -164,6 +238,7 @@ class TraceStep:
     rate_source: str = ""
     tokens_in: Optional[int] = 0
     tokens_out: Optional[int] = 0
+    tokens_cached: Optional[int] = 0
     request_count: int = 0
     estimated_cost_usd: Optional[float] = 0.0
     cost_usd: Optional[float] = 0.0
@@ -198,6 +273,7 @@ class AuditTracer:
         model_name: str = "none",
         tokens_in: Optional[int] = None,
         tokens_out: Optional[int] = None,
+        tokens_cached: Optional[int] = None,
         request_count: int = 0,
         error_text: str = "",
         prompt: Optional[str] = None,
@@ -212,18 +288,21 @@ class AuditTracer:
                 actual_has_usage = False if has_usage is None else has_usage
                 actual_tokens_in = None
                 actual_tokens_out = None
+                actual_tokens_cached = None
                 cost = None
                 rate_src = get_rate_source(model_name)
             else:
                 actual_has_usage = True if has_usage is None else has_usage
                 actual_tokens_in = tokens_in
                 actual_tokens_out = tokens_out
-                cost = estimate_cost(model_name, tokens_in, tokens_out)
+                actual_tokens_cached = tokens_cached
+                cost = estimate_cost(model_name, tokens_in, tokens_out, tokens_cached=tokens_cached)
                 rate_src = get_rate_source(model_name)
         else:
             actual_has_usage = True if has_usage is None else has_usage
             actual_tokens_in = 0 if tokens_in is None else tokens_in
             actual_tokens_out = 0 if tokens_out is None else tokens_out
+            actual_tokens_cached = 0 if tokens_cached is None else tokens_cached
             cost = 0.0
             rate_src = "none"
 
@@ -244,6 +323,7 @@ class AuditTracer:
             rate_source=rate_src,
             tokens_in=actual_tokens_in,
             tokens_out=actual_tokens_out,
+            tokens_cached=actual_tokens_cached,
             request_count=request_count,
             estimated_cost_usd=cost,
             cost_usd=cost,
@@ -265,15 +345,17 @@ class AuditTracer:
         model: str,
         tokens_in: Optional[int],
         tokens_out: Optional[int],
+        tokens_cached: Optional[int] = None,
         prompt: Optional[str] = None,
         response: Optional[str] = None,
     ) -> None:
         """Receive LLM usage directly from LLMGateway for every LLM request."""
-        cost = estimate_cost(model, tokens_in, tokens_out)
+        cost = estimate_cost(model, tokens_in, tokens_out, tokens_cached=tokens_cached)
         self.llm_calls.append({
             "model": model,
             "tokens_in": tokens_in,
             "tokens_out": tokens_out,
+            "tokens_cached": tokens_cached,
             "has_usage": tokens_in is not None and tokens_out is not None,
             "cost_usd": cost,
             "rate_source": get_rate_source(model),

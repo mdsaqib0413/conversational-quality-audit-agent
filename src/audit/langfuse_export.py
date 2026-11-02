@@ -37,7 +37,7 @@ from datetime import datetime
 from typing import Any, Dict, List, Optional
 
 from src.audit.schemas import AuditReport
-from src.audit.tracer import TRACES_DIR, AuditTracer, mask_pii
+from src.audit.tracer import TRACES_DIR, AuditTracer, estimate_cost, get_model_rates, get_rate_source, mask_pii
 
 logger = logging.getLogger(__name__)
 
@@ -282,6 +282,9 @@ def _export_to_cloud_otel(
         s_cost = getattr(s, "estimated_cost_usd", None) if not isinstance(s, dict) else s.get("estimated_cost_usd")
         s_tokens_in = getattr(s, "tokens_in", None) if not isinstance(s, dict) else s.get("tokens_in")
         s_tokens_out = getattr(s, "tokens_out", None) if not isinstance(s, dict) else s.get("tokens_out")
+        s_tokens_cached = getattr(s, "tokens_cached", None) if not isinstance(s, dict) else s.get("tokens_cached")
+        if s_cost is None and s_tokens_in is not None and s_tokens_out is not None and s_model and s_model != "none":
+            s_cost = estimate_cost(s_model, s_tokens_in, s_tokens_out, tokens_cached=s_tokens_cached)
         s_start = getattr(s, "start_time", None) or (s.get("start_time") if isinstance(s, dict) else None)
         s_end = getattr(s, "end_time", None) or (s.get("end_time") if isinstance(s, dict) else None)
         s_prompt = getattr(s, "prompt", None) or (s.get("prompt") if isinstance(s, dict) else None)
@@ -304,6 +307,8 @@ def _export_to_cloud_otel(
             child_attrs.append({"key": "tokens_in", "value": {"intValue": str(s_tokens_in)}})
         if s_tokens_out is not None:
             child_attrs.append({"key": "tokens_out", "value": {"intValue": str(s_tokens_out)}})
+        if s_tokens_cached is not None:
+            child_attrs.append({"key": "tokens_cached", "value": {"intValue": str(s_tokens_cached)}})
         if s_name == "policy_retrieval":
             child_attrs.append({"key": "observation_type", "value": {"stringValue": "retriever"}})
 
@@ -544,7 +549,12 @@ def export_audit_to_langfuse(
             s_rate_src = getattr(s, "rate_source", None) or (s.get("rate_source", "") if isinstance(s, dict) else "")
             s_tokens_in = getattr(s, "tokens_in", None) if not isinstance(s, dict) else s.get("tokens_in")
             s_tokens_out = getattr(s, "tokens_out", None) if not isinstance(s, dict) else s.get("tokens_out")
+            s_tokens_cached = getattr(s, "tokens_cached", None) if not isinstance(s, dict) else s.get("tokens_cached")
             s_cost = getattr(s, "estimated_cost_usd", None) if not isinstance(s, dict) else s.get("estimated_cost_usd")
+            if s_cost is None and s_tokens_in is not None and s_tokens_out is not None and s_model and s_model != "none":
+                s_cost = estimate_cost(s_model, s_tokens_in, s_tokens_out, tokens_cached=s_tokens_cached)
+            if not s_rate_src and s_model and s_model != "none":
+                s_rate_src = get_rate_source(s_model)
             s_lat = getattr(s, "latency_seconds", None) if not isinstance(s, dict) else s.get("latency_seconds", 0.0)
             s_start = getattr(s, "start_time", None) or (s.get("start_time", "") if isinstance(s, dict) else "")
             s_end = getattr(s, "end_time", None) or (s.get("end_time", "") if isinstance(s, dict) else "")
@@ -562,6 +572,8 @@ def export_audit_to_langfuse(
                 step_meta["cost_usd"] = s_cost
             if s_rate_src:
                 step_meta["rate_source"] = s_rate_src
+            if s_tokens_cached is not None:
+                step_meta["tokens_cached"] = s_tokens_cached
 
             if s_name == "policy_retrieval":
                 step_meta["observation_type"] = "retriever"
