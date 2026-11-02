@@ -448,7 +448,7 @@ def compute_aggregates(runs: List[SingleRunResult], variant: str, split: str) ->
 # --------------------------------------------------------------------------------------
 # Export Results (CSV & Markdown)
 # --------------------------------------------------------------------------------------
-def write_csv_report(runs: List[SingleRunResult], output_path: Path) -> None:
+def write_csv_report(runs: List[SingleRunResult], output_path: Path, append: bool = False) -> None:
     output_path.parent.mkdir(parents=True, exist_ok=True)
     fieldnames = [
         "run_idx",
@@ -474,9 +474,12 @@ def write_csv_report(runs: List[SingleRunResult], output_path: Path) -> None:
         "total_tokens",
         "latency_s",
     ]
-    with open(output_path, mode="w", newline="", encoding="utf-8") as f:
+    write_header = not (append and output_path.exists())
+    mode = "a" if (append and output_path.exists()) else "w"
+    with open(output_path, mode=mode, newline="", encoding="utf-8") as f:
         writer = csv.DictWriter(f, fieldnames=fieldnames)
-        writer.writeheader()
+        if write_header:
+            writer.writeheader()
         for r in runs:
             extra_details = [
                 {
@@ -519,7 +522,7 @@ def write_csv_report(runs: List[SingleRunResult], output_path: Path) -> None:
     logger.info("Saved CSV results to %s", output_path)
 
 
-def load_existing_runs_from_csv(csv_path: Path) -> List[SingleRunResult]:
+def load_existing_runs_from_csv(csv_path: Path, model_name: Optional[str] = None) -> List[SingleRunResult]:
     """Load previously completed runs from CSV file."""
     if not csv_path.exists():
         return []
@@ -552,6 +555,12 @@ def load_existing_runs_from_csv(csv_path: Path) -> List[SingleRunResult]:
             expected_clauses = [c.strip() for c in row.get("expected_clauses", "").split(";") if c.strip()]
             matched_clauses = [c.strip() for c in row.get("matched_clauses", "").split(";") if c.strip()]
             missed_clauses = [c.strip() for c in row.get("missed_clauses", "").split(";") if c.strip()]
+            in_tok = int(row.get("input_tokens", 0))
+            out_tok = int(row.get("output_tokens", 0))
+            raw_cost = row.get("cost_usd")
+            cost_val = float(raw_cost) if (raw_cost is not None and raw_cost != "") else (
+                estimate_cost(model_name, in_tok, out_tok) if model_name else None
+            )
             existing.append(
                 SingleRunResult(
                     run_idx=int(row.get("run_idx", 1)),
@@ -568,10 +577,11 @@ def load_existing_runs_from_csv(csv_path: Path) -> List[SingleRunResult]:
                     missed_clauses=missed_clauses,
                     all_expected_found=row.get("all_expected_found", "").strip().lower() == "true",
                     extra_violations=extra_violations,
-                    input_tokens=int(row.get("input_tokens", 0)),
-                    output_tokens=int(row.get("output_tokens", 0)),
+                    input_tokens=in_tok,
+                    output_tokens=out_tok,
                     total_tokens=int(row.get("total_tokens", 0)),
                     latency_s=float(row.get("latency_s", 0.0)),
+                    cost_usd=cost_val,
                 )
             )
     return existing
@@ -679,14 +689,15 @@ def generate_markdown_report(
 
     def render_table(aggs: List[VariantAggregates], title: str) -> None:
         lines.append(f"### {title}\n")
-        lines.append("| Variant | Expected Violations Found | Full Call Coverage | Extra Findings (False Positives) | Avg Clauses Sent | Avg Input Tokens | Avg Latency |")
-        lines.append("|:---|:---:|:---:|:---:|:---:|:---:|:---:|")
+        lines.append("| Variant | Expected Violations Found | Full Call Coverage | Extra Findings (False Positives) | Avg Clauses Sent | Avg Input Tokens | Avg Latency | Avg Cost / Call |")
+        lines.append("|:---|:---:|:---:|:---:|:---:|:---:|:---:|:---:|")
         for a in aggs:
             v_desc = f"Variant {a.variant}"
             recall_str = f"{a.total_matched_violations}/{a.total_expected_violations} ({a.recall:.1%})"
             cov_str = f"{a.fully_covered_calls}/{a.total_calls - a.clean_calls_total} ({a.fully_covered_pct:.1f}%)" if (a.total_calls - a.clean_calls_total) > 0 else "N/A"
+            cost_str = f"${a.avg_cost_usd:.6f}" if a.avg_cost_usd else "$0.000000"
             lines.append(
-                f"| **{v_desc}** | {recall_str} | {cov_str} | {a.total_extra_findings} | {a.avg_clauses_sent:.1f} | {a.avg_input_tokens:,.0f} | {a.avg_latency_s:.2f}s |"
+                f"| **{v_desc}** | {recall_str} | {cov_str} | {a.total_extra_findings} | {a.avg_clauses_sent:.1f} | {a.avg_input_tokens:,.0f} | {a.avg_latency_s:.2f}s | {cost_str} |"
             )
         lines.append("")
 
@@ -826,7 +837,7 @@ def main() -> None:
     existing_runs: List[SingleRunResult] = []
     completed_keys: set = set()
     if args.resume and csv_out.exists():
-        existing_runs = load_existing_runs_from_csv(csv_out)
+        existing_runs = load_existing_runs_from_csv(csv_out, model_name=active_gateway.describe())
         completed_keys = {(r.run_idx, r.split, r.call_id, r.variant) for r in existing_runs}
         print(f"Loaded {len(existing_runs)} existing results from {csv_out}. Will skip already completed calls.")
 
@@ -873,11 +884,18 @@ def main() -> None:
         stop_reason = str(exc)
         print(f"\n[!] STOPPED on unexpected exception: {stop_reason}")
         print(f"[!] Completed {completed_requests} of {total_expected_requests} requests before stopping.")
-        raise
+        if "429" in stop_reason or "quota" in stop_reason.lower() or "resourceexhausted" in stop_reason.lower() or "rate" in stop_reason.lower():
+            logger.warning("Caught rate limit/quota exception: %s", stop_reason)
+        else:
+            raise
     finally:
         all_runs = existing_runs + runs
         if all_runs:
-            write_csv_report(all_runs, csv_out)
+            if args.resume and existing_runs:
+                if runs:
+                    write_csv_report(runs, csv_out, append=True)
+            else:
+                write_csv_report(all_runs, csv_out)
             generate_markdown_report(all_runs, active_gateway.describe(), md_out)
             print("\n" + "=" * 70)
             print(f"Evaluation finished. Completed {completed_requests} new requests in this session.")
