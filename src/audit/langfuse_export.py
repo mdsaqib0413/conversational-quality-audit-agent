@@ -36,7 +36,7 @@ import time
 from datetime import datetime
 from typing import Any, Dict, List, Optional
 
-from src.audit.schemas import AuditReport
+from src.audit.schemas import AuditReport, extract_failure_reason
 from src.audit.tracer import TRACES_DIR, AuditTracer, estimate_cost, get_model_rates, get_rate_source, mask_pii
 
 logger = logging.getLogger(__name__)
@@ -256,22 +256,33 @@ def _export_to_cloud_otel(
     grade = str(getattr(report.scores, "grade", "")) if hasattr(report, "scores") else ""
     topic = str(getattr(report, "topic", ""))
     status = str(getattr(report, "status", "ok"))
+    is_failed = (status != "ok")
+    failure_reason = extract_failure_reason(report) if is_failed else ""
 
     # Root trace attributes
     root_attrs: List[Dict[str, Any]] = [
         {"key": "call_id", "value": {"stringValue": report.call_id}},
         {"key": "topic", "value": {"stringValue": topic}},
-        {"key": "grade", "value": {"stringValue": grade}},
-        {"key": "overall_score", "value": {"doubleValue": overall_score}},
+        {"key": "grade", "value": {"stringValue": grade if not is_failed else ""}},
         {"key": "status", "value": {"stringValue": status}},
         {"key": "source", "value": {"stringValue": source}},
     ]
+    if not is_failed:
+        root_attrs.append({"key": "overall_score", "value": {"doubleValue": overall_score}})
+    else:
+        root_attrs.append({"key": "error_reason", "value": {"stringValue": failure_reason}})
+        root_attrs.append({"key": "status_message", "value": {"stringValue": f"Audit failed: {failure_reason}"}})
+
     if capture_content:
         if getattr(report, "customer_issue", None):
             root_attrs.append({"key": "input", "value": {"stringValue": mask_pii(report.customer_issue) or ""}})
         if getattr(report, "summary", None):
             root_attrs.append({"key": "output", "value": {"stringValue": mask_pii(report.summary) or ""}})
 
+    root_span_status = (
+        {"code": 2, "message": f"Audit failed: {failure_reason}", "description": f"Audit failed: {failure_reason}"}
+        if is_failed else {"code": 1}
+    )
     spans_list = [
         {
             "traceId": hex_trace_id,
@@ -281,7 +292,7 @@ def _export_to_cloud_otel(
             "startTimeUnixNano": str(now_ns - 1000000000),
             "endTimeUnixNano": str(now_ns),
             "attributes": root_attrs,
-            "status": {"code": 1},
+            "status": root_span_status,
         }
     ]
 
@@ -386,20 +397,21 @@ def _export_to_cloud_otel(
         except Exception as e:
             logger.debug("Failed posting score %s: %s", score_name, e)
 
-    _post_score("overall_score", overall_score, comment=f"Grade: {grade}" if grade else None)
-    if hasattr(report, "scores"):
-        sop_val = getattr(report.scores, "sop_score", None)
-        if sop_val is not None:
-            _post_score("sop_score", _pct_score(sop_val, SOP_MAX_SCORE))
-        pol_val = getattr(report.scores, "policy_score", None)
-        if pol_val is not None:
-            _post_score("policy_score", _pct_score(pol_val, POLICY_MAX_SCORE))
-        emp_val = getattr(report.scores, "empathy_score", None)
-        if emp_val is not None:
-            _post_score("empathy_score", _pct_score(emp_val, EMPATHY_MAX_SCORE))
-        comm_val = getattr(report.scores, "communication_score", None)
-        if comm_val is not None:
-            _post_score("communication_score", _pct_score(comm_val, COMMUNICATION_MAX_SCORE))
+    if not is_failed:
+        _post_score("overall_score", overall_score, comment=f"Grade: {grade}" if grade else None)
+        if hasattr(report, "scores"):
+            sop_val = getattr(report.scores, "sop_score", None)
+            if sop_val is not None:
+                _post_score("sop_score", _pct_score(sop_val, SOP_MAX_SCORE))
+            pol_val = getattr(report.scores, "policy_score", None)
+            if pol_val is not None:
+                _post_score("policy_score", _pct_score(pol_val, POLICY_MAX_SCORE))
+            emp_val = getattr(report.scores, "empathy_score", None)
+            if emp_val is not None:
+                _post_score("empathy_score", _pct_score(emp_val, EMPATHY_MAX_SCORE))
+            comm_val = getattr(report.scores, "communication_score", None)
+            if comm_val is not None:
+                _post_score("communication_score", _pct_score(comm_val, COMMUNICATION_MAX_SCORE))
 
     logger.info("Successfully exported audit trace %s to Langfuse Cloud via OTLP", trace_id_str)
     return True
@@ -466,18 +478,25 @@ def export_audit_to_langfuse(
         grade = str(getattr(report.scores, "grade", "")) if hasattr(report, "scores") else ""
         topic = str(getattr(report, "topic", ""))
         status = str(getattr(report, "status", "ok"))
+        is_failed = (status != "ok")
+        failure_reason = extract_failure_reason(report) if is_failed else ""
 
         meta_dict: Dict[str, Any] = {
             "call_id": report.call_id,
             "topic": topic,
-            "grade": grade,
-            "overall_score": overall_score,
-            "sop_score": _pct_score(getattr(report.scores, "sop_score", 0.0), SOP_MAX_SCORE) if hasattr(report, "scores") else 0.0,
-            "policy_score": _pct_score(getattr(report.scores, "policy_score", 0.0), POLICY_MAX_SCORE) if hasattr(report, "scores") else 0.0,
             "status": status,
             "source": source,
             "content_captured": capture_content,
         }
+        if not is_failed:
+            meta_dict["grade"] = grade
+            meta_dict["overall_score"] = overall_score
+            meta_dict["sop_score"] = _pct_score(getattr(report.scores, "sop_score", 0.0), SOP_MAX_SCORE) if hasattr(report, "scores") else 0.0
+            meta_dict["policy_score"] = _pct_score(getattr(report.scores, "policy_score", 0.0), POLICY_MAX_SCORE) if hasattr(report, "scores") else 0.0
+        else:
+            meta_dict["error_reason"] = failure_reason
+            meta_dict["status_message"] = f"Audit failed: {failure_reason}"
+
         if hasattr(report, "meta"):
             if getattr(report.meta, "model", None):
                 meta_dict["model"] = report.meta.model
@@ -492,7 +511,9 @@ def export_audit_to_langfuse(
 
         trace_input = None
         trace_output = None
-        if capture_content:
+        if is_failed:
+            trace_output = f"Audit failed: {failure_reason}"
+        elif capture_content:
             raw_input = getattr(report, "customer_issue", "") or f"Audit of call {report.call_id}"
             raw_output = getattr(report, "summary", "") or f"Grade: {grade}, Overall: {overall_score:.1f}"
             trace_input = mask_pii(raw_input)
@@ -500,11 +521,15 @@ def export_audit_to_langfuse(
 
         session_id = str(report.call_id)
         user_id = getattr(report.transcript, "agent_id", None) or f"agent_{report.call_id}"
-        tags = [source, f"grade_{grade}" if grade else "grade_none", f"topic_{topic}" if topic else "topic_general"]
-        if getattr(report, "resolved", None) is not None:
-            tags.append("resolved" if report.resolved else "unresolved")
-        if hasattr(report, "scores") and getattr(report.scores, "critical_failure", False):
-            tags.append("critical_cap")
+        tags = [source, f"topic_{topic}" if topic else "topic_general"]
+        if not is_failed:
+            tags.append(f"grade_{grade}" if grade else "grade_none")
+            if getattr(report, "resolved", None) is not None:
+                tags.append("resolved" if report.resolved else "unresolved")
+            if hasattr(report, "scores") and getattr(report.scores, "critical_failure", False):
+                tags.append("critical_cap")
+        else:
+            tags.extend(["status_failed", "error"])
 
         trace_kwargs: Dict[str, Any] = {
             "id": trace_id,
@@ -550,20 +575,21 @@ def export_audit_to_langfuse(
             except Exception as e:
                 logger.debug("Failed recording score %s: %s", score_name, e)
 
-        _record_score("overall_score", overall_score, comment=f"Grade: {grade}" if grade else None)
-        if hasattr(report, "scores"):
-            sop_val = getattr(report.scores, "sop_score", None)
-            if sop_val is not None:
-                _record_score("sop_score", _pct_score(sop_val, SOP_MAX_SCORE))
-            pol_val = getattr(report.scores, "policy_score", None)
-            if pol_val is not None:
-                _record_score("policy_score", _pct_score(pol_val, POLICY_MAX_SCORE))
-            emp_val = getattr(report.scores, "empathy_score", None)
-            if emp_val is not None:
-                _record_score("empathy_score", _pct_score(emp_val, EMPATHY_MAX_SCORE))
-            comm_val = getattr(report.scores, "communication_score", None)
-            if comm_val is not None:
-                _record_score("communication_score", _pct_score(comm_val, COMMUNICATION_MAX_SCORE))
+        if not is_failed:
+            _record_score("overall_score", overall_score, comment=f"Grade: {grade}" if grade else None)
+            if hasattr(report, "scores"):
+                sop_val = getattr(report.scores, "sop_score", None)
+                if sop_val is not None:
+                    _record_score("sop_score", _pct_score(sop_val, SOP_MAX_SCORE))
+                pol_val = getattr(report.scores, "policy_score", None)
+                if pol_val is not None:
+                    _record_score("policy_score", _pct_score(pol_val, POLICY_MAX_SCORE))
+                emp_val = getattr(report.scores, "empathy_score", None)
+                if emp_val is not None:
+                    _record_score("empathy_score", _pct_score(emp_val, EMPATHY_MAX_SCORE))
+                comm_val = getattr(report.scores, "communication_score", None)
+                if comm_val is not None:
+                    _record_score("communication_score", _pct_score(comm_val, COMMUNICATION_MAX_SCORE))
 
         for s in raw_steps:
             s_name = getattr(s, "step_name", None) or (s.get("step_name") if isinstance(s, dict) else "unknown_step")

@@ -327,6 +327,80 @@ class AuditReport(BaseModel):
             if f.kind == "inferred" or f.certainty in ("low", "medium")
         ]
 
+    @property
+    def failure_reason(self) -> str:
+        return extract_failure_reason(self)
+
+
+def extract_failure_reason(report: Any) -> str:
+    """Extract a concise failure reason from a failed AuditReport or report dict."""
+    if not report:
+        return "Pipeline execution failure"
+    if isinstance(report, dict):
+        cannot_judge = report.get("cannot_judge_reason")
+        if cannot_judge and str(cannot_judge).strip():
+            return str(cannot_judge).strip()
+        cap_reasons = report.get("scores", {}).get("cap_reasons", [])
+        for cr in cap_reasons:
+            if "failed:" in str(cr).lower():
+                parts = str(cr).split("failed:", 1)
+                if len(parts) == 2 and parts[1].strip():
+                    return parts[1].strip()
+                return str(cr)
+        if cap_reasons:
+            return str(cap_reasons[0])
+        warnings = report.get("meta", {}).get("warnings", [])
+        for w in warnings:
+            if "failed" in str(w).lower():
+                parts = str(w).split("failed:", 1) if "failed:" in str(w) else str(w).split("failed at", 1)
+                if len(parts) == 2 and parts[1].strip():
+                    return parts[1].strip()
+                return str(w)
+        summary = report.get("summary", "")
+        if summary and "failed" in str(summary).lower():
+            parts = str(summary).split("failed at", 1) if "failed at" in str(summary) else str(summary).split("failed:", 1)
+            if len(parts) == 2 and parts[1].strip():
+                sub = parts[1].strip()
+                if ":" in sub:
+                    sub = sub.split(":", 1)[1].strip()
+                return sub
+            return str(summary)
+        failed_step = report.get("failed_step")
+        if failed_step:
+            return f"Step '{failed_step}' failed"
+        return "Pipeline execution failure"
+
+    if getattr(report, "cannot_judge_reason", None) and str(report.cannot_judge_reason).strip():
+        return str(report.cannot_judge_reason).strip()
+    if hasattr(report, "scores") and getattr(report.scores, "cap_reasons", None):
+        for cr in report.scores.cap_reasons:
+            if "failed:" in str(cr).lower():
+                parts = str(cr).split("failed:", 1)
+                if len(parts) == 2 and parts[1].strip():
+                    return parts[1].strip()
+                return str(cr)
+        if report.scores.cap_reasons:
+            return str(report.scores.cap_reasons[0])
+    if hasattr(report, "meta") and getattr(report.meta, "warnings", None):
+        for w in report.meta.warnings:
+            if "failed" in str(w).lower():
+                parts = str(w).split("failed:", 1) if "failed:" in str(w) else str(w).split("failed at", 1)
+                if len(parts) == 2 and parts[1].strip():
+                    return parts[1].strip()
+                return str(w)
+    if getattr(report, "summary", None) and "failed" in str(report.summary).lower():
+        parts = str(report.summary).split("failed at", 1) if "failed at" in str(report.summary) else str(report.summary).split("failed:", 1)
+        if len(parts) == 2 and parts[1].strip():
+            sub = parts[1].strip()
+            if ":" in sub:
+                sub = sub.split(":", 1)[1].strip()
+            return sub
+        return str(report.summary)
+    failed_step = getattr(report, "failed_step", None)
+    if failed_step:
+        return f"Step '{failed_step}' failed"
+    return "Pipeline execution failure"
+
 
 class LiveWindowContext(BaseModel):
     """Phase 2: what the agent's screen should show for the last few turns."""

@@ -11,7 +11,7 @@ import re
 from typing import Iterable, List, Optional, Sequence
 
 from . import explain as X
-from .schemas import AuditReport, PolicyResult, SOPResult
+from .schemas import AuditReport, PolicyResult, SOPResult, extract_failure_reason
 from .viz import (BAD, EMOTION_COLOR, GOOD, GRADE_COLOR, INK, MUTED, TONE_COLOR, WARN, emotion_timeline_svg, esc, gauge_svg, mmss,
                   build_timeline_events)
 
@@ -173,11 +173,23 @@ def report_header(rep: AuditReport, subtitle: str = "Call audit") -> str:
         flags_text = esc(", ".join(rep.risk_flags))
         risk_banner = (f'<div class="aq-banner-risk">'
                        f'Possible scam / social-engineering pattern: {flags_text}. Agent coaching may not apply.</div>')
-    return _one(f'<div class="aq-hdr"><div><div class="aq-tiny" style="letter-spacing:.1em;font-weight:700">{esc(subtitle.upper())}</div><h1>{esc(rep.call_id)}</h1><div style="display:flex;gap:8px;flex-wrap:wrap">{"".join(pills)}</div>{risk_banner}{real_note}</div>'
+    failed_banner = ""
+    if getattr(rep, "status", "ok") != "ok":
+        reason = extract_failure_reason(rep)
+        failed_banner = (f'<div class="aq-banner-risk">'
+                         f'Audit failed: {esc(reason)}; no score</div>')
+    return _one(f'<div class="aq-hdr"><div><div class="aq-tiny" style="letter-spacing:.1em;font-weight:700">{esc(subtitle.upper())}</div><h1>{esc(rep.call_id)}</h1><div style="display:flex;gap:8px;flex-wrap:wrap">{"".join(pills)}</div>{failed_banner}{risk_banner}{real_note}</div>'
                 f'<div class="aq-tiny" style="text-align:right">Generated {esc(rep.generated_at.replace("T", " "))}<br>{esc(rep.meta.model)} · {rep.meta.llm_requests} AI request(s){" · saved result" if rep.meta.cache_hit else ""}</div></div>')
 
 
 def verdict_banner(rep: AuditReport) -> str:
+    if getattr(rep, "status", "ok") != "ok":
+        reason = extract_failure_reason(rep)
+        return _one(
+            f'<div class="aq-card" style="border-left:5px solid #D64545"><div class="aq-verdict" style="grid-template-columns:1fr">'
+            f'<div><div class="aq-vhead" style="color:var(--aq-risk-text, #991b1b)">Audit failed: {esc(reason)}; no score</div>'
+            f'<div class="aq-vsub">Pipeline execution failed during audit. Numeric scores were not computed or assigned.</div>'
+            f'<div class="aq-next"><b>REASON</b>{esc(reason)}</div></div></div></div>')
     if getattr(rep, "risk_flags", None):
         return _one(
             f'<div class="aq-card"><div class="aq-verdict" style="grid-template-columns:1fr">'
@@ -200,6 +212,10 @@ def verdict_banner(rep: AuditReport) -> str:
 
 
 def score_cards(rep: AuditReport) -> str:
+    if getattr(rep, "status", "ok") != "ok":
+        reason = extract_failure_reason(rep)
+        return _one(f'<div class="aq-banner-risk" style="font-size:14.5px;padding:12px 16px;border-radius:12px;margin:0 0 16px 0">'
+                    f'Audit failed: {esc(reason)}; no score</div>')
     sc = rep.scores
     vals = {"sop_score": sc.sop_score, "policy_score": sc.policy_score, "empathy_score": sc.empathy_score, "communication_score": sc.communication_score}
     walk = {w["title"]: w for w in X.score_walkthrough(rep)}
@@ -508,6 +524,9 @@ def transcript_section(rep: AuditReport) -> str:
 
 # ---------------------------------------------------------------------------------- how the score works / details
 def walkthrough_section(rep: AuditReport) -> str:
+    if getattr(rep, "status", "ok") != "ok":
+        reason = extract_failure_reason(rep)
+        return _one(f'<div class="aq-card"><div class="aq-h">How the score was worked out</div><div class="aq-sub">No score was computed because this audit failed: {esc(reason)}.</div><div class="aq-banner-risk" style="margin:10px 0 0 0">Audit failed: {esc(reason)}; no score</div></div>')
     rows = []
     for w in X.score_walkthrough(rep):
         rows.append(f'<div class="aq-walk"><div class="t">{esc(w["title"])}</div><div class="pt">{w["points"]:g} / {w["max"]}</div><div class="f">{esc(w["formula"])}</div><div class="pl">{esc(w["plain"])}</div></div>')

@@ -10,7 +10,7 @@ from typing import Optional
 
 from jinja2 import Environment, select_autoescape
 
-from .schemas import AuditReport
+from .schemas import AuditReport, extract_failure_reason
 from .viz import esc
 
 logger = logging.getLogger(__name__)
@@ -46,7 +46,10 @@ TEMPLATE = """<!doctype html>
   <div class="muted">Topic: <b>{{ r.topic }}</b> ({{ (r.topic_confidence*100)|round|int }}% confidence){% if r.signals %} &middot; signals: {{ r.signals|join(', ') }}{% endif %} &middot; generated {{ r.generated_at }}</div>
  </td>
  <td style="border:none; text-align:center">
-  {% if r.risk_flags %}
+  {% if r.status == "failed" or r.status != "ok" %}
+  <div class="grade" style="color:#c0262d;font-size:16pt">Audit failed</div>
+  <div class="muted">No score</div>
+  {% elif r.risk_flags %}
   <div class="grade" style="color:#c0262d;font-size:15pt">Not scored</div>
   <div class="muted">Possible scam / social-engineering pattern</div>
   {% else %}
@@ -56,6 +59,11 @@ TEMPLATE = """<!doctype html>
   {% endif %}
  </td></tr></table>
 
+{% if r.status == "failed" or r.status != "ok" %}
+<div class="warn" style="background-color:#fee2e2; border:1px solid #ef4444; color:#991b1b; padding:10px 14px; margin-top:8px; font-weight:600; border-radius:6px; font-size:11pt">
+Audit failed: {{ failed_reason }}; no score
+</div>
+{% endif %}
 
 {% if r.risk_flags %}
 <div class="warn" style="background-color:#fee2e2; border:1px solid #ef4444; color:#991b1b; padding:8px 12px; margin-top:8px; font-weight:600; border-radius:6px">
@@ -80,6 +88,11 @@ Possible scam / social-engineering pattern: {{ r.risk_flags|join(', ') }}. Agent
  Customer emotion: {{ r.emotion.start }} to {{ r.emotion.end }} ({{ r.emotion.trend }})</p>
 
 <h2>Scores</h2>
+{% if r.status == "failed" or r.status != "ok" %}
+<div class="warn" style="background-color:#fee2e2; border:1px solid #ef4444; color:#991b1b; padding:10px 14px; font-weight:600; border-radius:6px">
+Audit failed: {{ failed_reason }}; no score
+</div>
+{% else %}
 <table>
  <tr><th>Category</th><th style="width:12%">Score</th><th style="width:48%">&nbsp;</th></tr>
  {% for name, val, mx in bars %}
@@ -90,6 +103,7 @@ Possible scam / social-engineering pattern: {{ r.risk_flags|join(', ') }}. Agent
  {% endfor %}
 </table>
 <div class="muted">SOP points {{ r.scores.sop_points_earned }} / {{ r.scores.sop_points_possible }} &middot; {% if not r.scores.policy_applicable %}policy category excluded{% if r.scores.policy_penalty_total %}; general-clause penalties applied: -{{ r.scores.policy_penalty_total|round|int }}{% endif %}{% else %}policy penalties {{ r.scores.policy_penalty_total }}{% endif %}{% if r.scores.timing_notes %} &middot; communication adjusted: {{ r.scores.timing_notes|join('; ') }}{% endif %}</div>
+{% endif %}
 
 <h2>What to work on (coaching)</h2>
 {% if r.coaching %}
@@ -263,9 +277,11 @@ def render_pdf_html(report: AuditReport) -> str:
         })
     involved.sort(key=lambda x: (x["rank"], x["id"]))
 
+    failed_reason = extract_failure_reason(report) if getattr(report, "status", "ok") != "ok" else ""
     return env.from_string(TEMPLATE).render(
         r=report, bars=bars, sop=sop, status_color=STATUS_COLOR, status_label=STATUS_LABEL, sev_color=SEV_COLOR,
         grade_color=GRADE_COLOR.get(sc.grade, "#111827"), chart=emotion_chart_base64(report),
+        failed_reason=failed_reason,
         violations=[
             p.model_copy(update={"policy_text": _clean_display_policy_text(p.policy_text)})
             for p in report.policy_results if p.verdict == "violation"

@@ -32,7 +32,7 @@ from src.audit.pipeline import AUDIO_EXT, AuditPipeline
 from src.audit.policy_check import get_involved_clause_ids
 from src.audit.rag import KnowledgeBase, get_embedder, get_kb
 from src.audit.review import apply_reviews_to_report, save_review_decision
-from src.audit.schemas import AuditReport
+from src.audit.schemas import AuditReport, extract_failure_reason
 from src.audit.topic import detect_topic, get_live_context
 from src.audit.transcript_io import find_transcripts, load_transcript_json
 from src.live.engine import LiveSession
@@ -164,6 +164,7 @@ def get_audit_index(dir_mtime: int) -> List[dict]:
                     "source_set": m.get("meta", {}).get("source_set", "synthetic"),
                     "risk_flags": m.get("risk_flags", []),
                     "topic": m.get("topic", "general"),
+                    "status": m.get("status", "ok"),
                 }
         except Exception:
             continue
@@ -453,13 +454,20 @@ def page_report() -> None:
             filtered_idx = [x for x in idx if x["source_set"] == "real"]
 
         def _pick_label(x: dict) -> str:
+            if x.get("status") == "failed" or x.get("status", "ok") != "ok":
+                return f"{x['call_id']}  ·  Audit failed (no score)"
             if x.get("risk_flags"):
                 return f"{x['call_id']}  ·  Not scored"
             return f"{x['call_id']}  ·  {x['overall']:.0f}/100  {x['grade']}"
 
         id_map = {x["call_id"]: _pick_label(x) for x in filtered_idx}
         if rep.call_id not in id_map:
-            id_map[rep.call_id] = f"{rep.call_id}  ·  {'Not scored' if getattr(rep, 'risk_flags', None) else f'{rep.scores.overall:.0f}/100 {rep.scores.grade}'}"
+            if getattr(rep, "status", "ok") != "ok":
+                id_map[rep.call_id] = f"{rep.call_id}  ·  Audit failed (no score)"
+            elif getattr(rep, 'risk_flags', None):
+                id_map[rep.call_id] = f"{rep.call_id}  ·  Not scored"
+            else:
+                id_map[rep.call_id] = f"{rep.call_id}  ·  {rep.scores.overall:.0f}/100 {rep.scores.grade}"
         sorted_ids = sorted(id_map)
         pick_labels = [id_map[i] for i in sorted_ids]
         default_idx = sorted_ids.index(rep.call_id) if rep.call_id in sorted_ids else 0
@@ -503,6 +511,10 @@ def page_report() -> None:
 
     if rep.meta.diarization_method.startswith("heuristic"):
         st.error("Speaker separation used a low-confidence guess. Check the transcript tab before trusting these findings.")
+
+    if getattr(rep, "status", "ok") != "ok":
+        reason = extract_failure_reason(rep)
+        st.error(f"Audit failed: {reason}; no score")
 
     # Always show verdict banner (including scam warning)
     html(U.verdict_banner(rep))

@@ -363,6 +363,11 @@ class AuditPipeline:
                     warnings=[f"Failed at scorecard_judgment: {err}"]
                 )
             )
+            try:
+                from src.audit.langfuse_export import export_audit_to_langfuse
+                export_audit_to_langfuse(report, tracer)
+            except Exception as exc:  # noqa: BLE001
+                logger.warning("Langfuse export error on failure: %s", exc)
             return apply_reviews_to_report(report)
 
         _emit(progress, "policy", 0.82, "Retrieving policies and checking what the agent promised...")

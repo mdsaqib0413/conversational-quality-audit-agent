@@ -562,3 +562,72 @@ def test_export_skips_null_scores(monkeypatch):
     assert "sop_score" not in recorded_names
     assert "policy_score" not in recorded_names
     assert "overall_score" in recorded_names
+
+
+def test_failed_audit_export_skips_scores_and_sets_error_status_sdk(monkeypatch):
+    monkeypatch.setenv("LANGFUSE_PUBLIC_KEY", "pk-test")
+    monkeypatch.setenv("LANGFUSE_SECRET_KEY", "sk-test")
+    monkeypatch.setenv("LANGFUSE_HOST", "https://custom.langfuse.com")
+    monkeypatch.setenv("LANGFUSE_EXPORT_EVAL", "1")
+
+    fake_client = FakeLangfuseClient()
+    report = _make_dummy_report()
+    report.status = "failed"
+    report.failed_step = "policy_check"
+    report.cannot_judge_reason = "503 Service Unavailable"
+    report.summary = "Audit failed at policy_check: 503 Service Unavailable"
+
+    result = export_audit_to_langfuse(report, client=fake_client)
+    assert result is True
+    tr = fake_client.traces[0]
+
+    # Quality scores MUST NOT be posted
+    assert len(tr.scores) == 0
+
+    # Error status and reason must be set
+    assert tr.metadata["status"] == "failed"
+    assert tr.metadata["error_reason"] == "503 Service Unavailable"
+    assert "status_failed" in tr.tags
+    assert "error" in tr.tags
+
+
+def test_failed_audit_export_cloud_otel_skips_scores_and_sets_code_2(monkeypatch):
+    from src.audit.langfuse_export import _export_to_cloud_otel
+
+    posted_requests = []
+
+    class DummyResponse:
+        status_code = 200
+        text = "ok"
+
+    import requests
+    monkeypatch.setattr(requests, "post", lambda url, **kwargs: (posted_requests.append((url, kwargs)), DummyResponse())[1])
+
+    report = _make_dummy_report()
+    report.status = "failed"
+    report.failed_step = "scorecard_judgment"
+    report.cannot_judge_reason = "JSONDecodeError in scorecard"
+    report.summary = "Audit failed at scorecard_judgment: JSONDecodeError in scorecard"
+
+    res = _export_to_cloud_otel(
+        report=report,
+        raw_steps=[],
+        pk="pk-test",
+        sk="sk-test",
+        host="https://cloud.langfuse.com",
+        source="eval",
+        capture_content=False,
+    )
+    assert res is True
+
+    # Check that trace was posted
+    otel_posts = [p for p in posted_requests if "/api/public/otel/v1/traces" in p[0]]
+    assert len(otel_posts) == 1
+    payload = otel_posts[0][1]["json"]
+    root_span = payload["resourceSpans"][0]["scopeSpans"][0]["spans"][0]
+    assert root_span["status"]["code"] == 2
+    assert "JSONDecodeError in scorecard" in root_span["status"]["description"]
+
+    # Quality scores MUST NOT be posted to /api/public/scores
+    score_posts = [p for p in posted_requests if "/api/public/scores" in p[0]]
+    assert len(score_posts) == 0
