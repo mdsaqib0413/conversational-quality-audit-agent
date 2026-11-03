@@ -9,10 +9,13 @@ from typing import List
 import pytest
 
 from eval.policy_e2e import (
+    ExpectedViolation,
     SingleRunResult,
     compute_aggregates,
     generate_markdown_report,
+    get_allowed_clauses,
     get_variant_clauses,
+    match_violations_turn_level,
     write_csv_report,
 )
 from src.audit.rag import KnowledgeBase
@@ -109,3 +112,39 @@ def test_compute_aggregates_and_reports(tmp_path):
     assert md_file.exists()
     assert "Executive Summary Tables" in report_text
     assert "Variant A" in report_text
+
+
+def test_matcher_war_alternate_pair():
+    # call_207 turn 7 allows WAR-2.1 <-> WAR-2.3
+    assert "WAR-2.3" in get_allowed_clauses("WAR-2.1", call_id="call_207", turn=7)
+    assert "WAR-2.1" in get_allowed_clauses("WAR-2.3", call_id="call_207", turn=7)
+
+    # call_209 turn 11 allows WAR-2.1 <-> WAR-2.3
+    assert "WAR-2.3" in get_allowed_clauses("WAR-2.1", call_id="call_209", turn=11)
+    assert "WAR-2.1" in get_allowed_clauses("WAR-2.3", call_id="call_209", turn=11)
+
+    # Restricted by call_id or turn
+    assert "WAR-2.3" not in get_allowed_clauses("WAR-2.1", call_id="call_207", turn=8)
+    assert "WAR-2.3" not in get_allowed_clauses("WAR-2.1", call_id="call_208", turn=7)
+    assert "WAR-2.3" not in get_allowed_clauses("WAR-2.1", call_id="call_209", turn=10)
+
+    # Turn-level matching test
+    expected = [ExpectedViolation(clause="WAR-2.1", turn=7)]
+    found = [
+        PolicyResult(
+            clause_id="WAR-2.3",
+            policy_title="Warranty",
+            verdict="violation",
+            severity="minor",
+            turn=7,
+            quote="turn 7 quote",
+            claim="Claim",
+            explanation="Explanation",
+        )
+    ]
+    matched, missed, extra = match_violations_turn_level(expected, found, turn_window=2, call_id="call_207")
+    assert len(matched) == 1
+    assert len(missed) == 0
+    assert len(extra) == 0
+    assert "matched as WAR-2.3" in matched[0]
+
