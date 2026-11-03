@@ -600,6 +600,12 @@
         "clause": "REF-2.1",
         "severity": "major",
         "turn": 9
+      },
+      {
+        "clause": "PRV-1.2",
+        "severity": "critical",
+        "turn": 1,
+        "quote": "Hello, ShopEase customer service. How can I help you?"
       }
     ]
   },
@@ -760,6 +766,18 @@
         "clause": "BIL-2.1",
         "severity": "minor",
         "turn": 7
+      },
+      {
+        "clause": "PRV-1.2",
+        "severity": "critical",
+        "turn": 1,
+        "quote": "Hello, ShopEase support, tell me."
+      },
+      {
+        "clause": "PRV-2.2",
+        "severity": "major",
+        "turn": 5,
+        "quote": "No problem, I found it. The order is for a Prestige induction cooktop, Rs 4,750, paid with a debit card ending 4412, and it is shipped to Flat 8B, Lotus Residency, Linking Road, Bandra, Mumbai 400050."
       }
     ]
   },
@@ -964,6 +982,12 @@
         "clause": "SHP-2.3",
         "severity": "major",
         "turn": 9
+      },
+      {
+        "clause": "ESC-2.1",
+        "severity": "major",
+        "turn": 14,
+        "quote": "Hello sir, yes, nobody is available. Anything else?"
       }
     ]
   },
