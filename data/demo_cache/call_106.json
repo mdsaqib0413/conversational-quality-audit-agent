@@ -1,0 +1,1355 @@
+{
+ "call_id": "call_106",
+ "generated_at": "2026-11-04T00:16:22",
+ "topic": "shipping",
+ "topic_confidence": 0.583,
+ "signals": [
+  "angry_customer",
+  "supervisor_request",
+  "hold",
+  "transfer"
+ ],
+ "summary": "The customer called regarding a delayed Samsung monitor order and demanded a supervisor and refund. The agent blamed the customer for a potential incorrect address, refused the supervisor escalation, placed the customer on hold for over two minutes, and ultimately failed to resolve the issue. The call ended abruptly with an unresolved dispute.",
+ "customer_issue": "delayed Samsung monitor order",
+ "resolved": false,
+ "scores": {
+  "sop_score": 10.8,
+  "policy_score": 4.0,
+  "empathy_score": 0.0,
+  "communication_score": 1.2,
+  "overall_before_cap": 16.1,
+  "overall": 16.1,
+  "grade": "D",
+  "grade_label": "Failing / Critical Infraction",
+  "critical_failure": true,
+  "cap_reasons": [
+   "Critical step ANG-05 (Supervisor Escalation Execution) was missed",
+   "Critical step GEN-03 (Caller Identification & Two-Factor Verification) was missed",
+   "Critical step HLD-02 (Adhere to Maximum 2-Minute Hold Ceiling) was missed",
+   "Critical step HLD-04 (Execute Warm Transfer with Full Context) was missed"
+  ],
+  "sop_points_earned": 16.0,
+  "sop_points_possible": 59.0,
+  "policy_penalty_total": 26.0,
+  "policy_applicable": true,
+  "timing_penalty": 1.0,
+  "timing_notes": [
+   "1 agent interruption(s): -1"
+  ],
+  "empathy_rating": 0,
+  "clarity_rating": 2,
+  "professionalism_rating": 1,
+  "ownership_rating": 0,
+  "closure_rating": 0
+ },
+ "sop_results": [
+  {
+   "step_id": "ANG-01",
+   "title": "Emotional Composure & Non-Defensive Tone",
+   "sop": "angry_customer_sop",
+   "weight": 4,
+   "critical": false,
+   "mandatory": true,
+   "status": "missed",
+   "points_earned": 0.0,
+   "points_possible": 4.0,
+   "turn": null,
+   "quote": "",
+   "reason": "The agent was defensive, argued with the customer, and interrupted them.",
+   "missing": "calm, neutral, and respectful tone of voice",
+   "evidence_verified": true,
+   "what_good_looks_like": "The agent speaks in a measured cadence, lowers pitch slightly, avoids sighing, and never argues back or interrupts.",
+   "example_phrase": "I hear your frustration loud and clear, and I am right here to help you get this resolved."
+  },
+  {
+   "step_id": "ANG-02",
+   "title": "Sincere Empathy & Acknowledgment",
+   "sop": "angry_customer_sop",
+   "weight": 4,
+   "critical": false,
+   "mandatory": true,
+   "status": "missed",
+   "points_earned": 0.0,
+   "points_possible": 4.0,
+   "turn": null,
+   "quote": "",
+   "reason": "The agent failed to acknowledge the emotional impact or validate the customer's frustration.",
+   "missing": "acknowledge the emotional impact and validate the caller's frustration",
+   "evidence_verified": true,
+   "what_good_looks_like": "Demonstrates genuine empathy that acknowledges the inconvenience caused without blaming company departments or courier partners.",
+   "example_phrase": "If I were in your shoes, I would feel exactly the same way. I am truly sorry for this experience."
+  },
+  {
+   "step_id": "ANG-03",
+   "title": "Fact-Finding Without Cross-Examination",
+   "sop": "angry_customer_sop",
+   "weight": 3,
+   "critical": false,
+   "mandatory": true,
+   "status": "missed",
+   "points_earned": 0.0,
+   "points_possible": 3.0,
+   "turn": null,
+   "quote": "",
+   "reason": "The agent cross-examined the customer by accusing them of providing a wrong address or phone number.",
+   "missing": "ask concise, clarifying questions without making the customer feel interrogated or blamed",
+   "evidence_verified": true,
+   "what_good_looks_like": "Uses open-ended inquiries that let the caller share essential facts while validating their perspective.",
+   "example_phrase": "To ensure I address everything, could you walk me through what happened when the parcel arrived?"
+  },
+  {
+   "step_id": "ANG-04",
+   "title": "Direct Action Plan & Concrete Timelines",
+   "sop": "angry_customer_sop",
+   "weight": 3,
+   "critical": false,
+   "mandatory": true,
+   "status": "missed",
+   "points_earned": 0.0,
+   "points_possible": 3.0,
+   "turn": null,
+   "quote": "",
+   "reason": "The agent offered no tangible action plan or concrete timelines.",
+   "missing": "propose a tangible, immediate plan of action with clear milestones",
+   "evidence_verified": true,
+   "what_good_looks_like": "The agent outlines specific steps and realistic SLAs (e.g. 5-7 business days for refund, 24-48 hours for courier dispatch).",
+   "example_phrase": "Here is what I will do right now: I am issuing an expedited return request and scheduling courier pickup for tomorrow morning."
+  },
+  {
+   "step_id": "ANG-05",
+   "title": "Supervisor Escalation Execution",
+   "sop": "angry_customer_sop",
+   "weight": 5,
+   "critical": true,
+   "mandatory": true,
+   "status": "missed",
+   "points_earned": 0.0,
+   "points_possible": 5.0,
+   "turn": null,
+   "quote": "",
+   "reason": "The agent directly refused the customer's supervisor request multiple times.",
+   "missing": "escalate immediately to a supervisor if the customer requests a manager twice",
+   "evidence_verified": true,
+   "what_good_looks_like": "Seamless transition offering supervisor transfer without arguing or attempting to block the escalation.",
+   "example_phrase": "I respect your request to speak with a supervisor. Please allow me to place you on a brief 1-minute hold while I connect you to my manager."
+  },
+  {
+   "step_id": "ANG-06",
+   "title": "Respectful Boundary Setting for Abusive Language",
+   "sop": "angry_customer_sop",
+   "weight": 3,
+   "critical": false,
+   "mandatory": true,
+   "status": "not_applicable",
+   "points_earned": 0.0,
+   "points_possible": 0.0,
+   "turn": null,
+   "quote": "",
+   "reason": "The customer did not use vulgarity, personal slurs, or threats of violence requiring boundary setting.",
+   "missing": "",
+   "evidence_verified": true,
+   "what_good_looks_like": "Calm warning delivered without hostility, focusing on mutual respect.",
+   "example_phrase": "Sir/Madam, I am genuinely here to help you resolve this, but I must kindly request that we maintain respectful language."
+  },
+  {
+   "step_id": "GEN-01",
+   "title": "Professional Greeting & Identity Introduction",
+   "sop": "general_call_flow",
+   "weight": 2,
+   "critical": false,
+   "mandatory": true,
+   "status": "followed",
+   "points_earned": 2.0,
+   "points_possible": 2.0,
+   "turn": 1,
+   "quote": "ShopEase customer care, Sunil speaking. Please note this call is recorded for quality assurance and training purposes. How may I help?",
+   "reason": "The agent greeted the customer, stated the company name, introduced himself by name, and asked how to help.",
+   "missing": "",
+   "evidence_verified": true,
+   "what_good_looks_like": "The agent opens within 2 seconds of call connection with a polite, welcoming tone, introducing both the brand and representative name.",
+   "example_phrase": "Thank you for calling ShopEase. My name is Rahul. How may I assist you today?"
+  },
+  {
+   "step_id": "GEN-02",
+   "title": "Mandatory Call Recording Disclosure",
+   "sop": "general_call_flow",
+   "weight": 5,
+   "critical": true,
+   "mandatory": true,
+   "status": "followed",
+   "points_earned": 5.0,
+   "points_possible": 5.0,
+   "turn": 1,
+   "quote": "Please note this call is recorded for quality assurance and training purposes.",
+   "reason": "Call recording disclosure was clearly provided in the first turn.",
+   "missing": "",
+   "evidence_verified": true,
+   "what_good_looks_like": "The disclosure is clearly articulated within the first two conversation turns without mumbling or skipping.",
+   "example_phrase": "Please note that this call is being recorded for quality monitoring and training purposes."
+  },
+  {
+   "step_id": "GEN-03",
+   "title": "Caller Identification & Two-Factor Verification",
+   "sop": "general_call_flow",
+   "weight": 5,
+   "critical": true,
+   "mandatory": true,
+   "status": "missed",
+   "points_earned": 0.0,
+   "points_possible": 5.0,
+   "turn": null,
+   "quote": "",
+   "reason": "The agent never requested or verified the last 4 digits of the registered phone number.",
+   "missing": "requesting Order ID and the last 4 digits of the registered mobile phone number",
+   "evidence_verified": true,
+   "what_good_looks_like": "The agent systematically validates both verification data points before disclosing addresses, order contents, or monetary info.",
+   "example_phrase": "To ensure your account security, may I please have your Order ID and the last four digits of your registered mobile number?"
+  },
+  {
+   "step_id": "GEN-04",
+   "title": "Active Listening & Issue Clarification",
+   "sop": "general_call_flow",
+   "weight": 3,
+   "critical": false,
+   "mandatory": true,
+   "status": "missed",
+   "points_earned": 0.0,
+   "points_possible": 3.0,
+   "turn": null,
+   "quote": "",
+   "reason": "The agent interrupted the customer and did not paraphrase the core issue.",
+   "missing": "allow customer to describe concern without interrupting and paraphrase the core issue",
+   "evidence_verified": true,
+   "what_good_looks_like": "The agent maintains silence while the customer speaks, takes notes, and summarizes the specific problem back to the customer.",
+   "example_phrase": "I understand that your package has not arrived and you would like to track the courier status. Is that correct?"
+  },
+  {
+   "step_id": "GEN-05",
+   "title": "Empathy & Ownership Statement",
+   "sop": "general_call_flow",
+   "weight": 3,
+   "critical": false,
+   "mandatory": true,
+   "status": "missed",
+   "points_earned": 0.0,
+   "points_possible": 3.0,
+   "turn": null,
+   "quote": "",
+   "reason": "The agent expressed no empathy and took no ownership of the solution.",
+   "missing": "express sincere empathy and offer personal reassurance of ownership",
+   "evidence_verified": true,
+   "what_good_looks_like": "Empathetic acknowledgment that avoids robotic stock phrases, validating the customer's frustration.",
+   "example_phrase": "I completely understand how frustrating it is to wait for an order, and I am personally going to sort this out for you."
+  },
+  {
+   "step_id": "GEN-06",
+   "title": "Accurate Policy Explanation & Solution Execution",
+   "sop": "general_call_flow",
+   "weight": 5,
+   "critical": true,
+   "mandatory": true,
+   "status": "followed",
+   "points_earned": 5.0,
+   "points_possible": 5.0,
+   "turn": 9,
+   "quote": "Compensation or refund is not possible until thirty days are over, that is our rule.",
+   "reason": "The agent correctly stated the thirty-day company policy rule.",
+   "missing": "",
+   "evidence_verified": true,
+   "what_good_looks_like": "Explaining exact delivery or refund windows (e.g., 5-7 business days for refund, 7 days for electronics) without making out-of-policy promises.",
+   "example_phrase": "Per our policy, since your wireless earbuds are within the 7-day electronics return window, I have scheduled a reverse pickup for tomorrow."
+  },
+  {
+   "step_id": "GEN-07",
+   "title": "Additional Assistance & Next Steps Summary",
+   "sop": "general_call_flow",
+   "weight": 2,
+   "critical": false,
+   "mandatory": true,
+   "status": "missed",
+   "points_earned": 0.0,
+   "points_possible": 2.0,
+   "turn": null,
+   "quote": "",
+   "reason": "The agent provided no summary, ticket reference, or proactive closing assistance.",
+   "missing": "summarize exact resolution agreed upon, reference ticket numbers, and ask for other questions",
+   "evidence_verified": true,
+   "what_good_looks_like": "Clear recap of actions taken, tracking reference shared, and an open invitation for secondary questions.",
+   "example_phrase": "To recap, I have initiated return ticket #SR-8921. You will receive an SMS confirmation. Is there anything else I can help you with today?"
+  },
+  {
+   "step_id": "GEN-08",
+   "title": "Professional Branded Sign-Off",
+   "sop": "general_call_flow",
+   "weight": 2,
+   "critical": false,
+   "mandatory": true,
+   "status": "partial",
+   "points_earned": 1.0,
+   "points_possible": 2.0,
+   "turn": 16,
+   "quote": "Okay sir. Bye.",
+   "reason": "The agent said goodbye but omitted a warm, professional closing mentioning ShopEase.",
+   "missing": "warm, professional closing mentioning ShopEase",
+   "evidence_verified": true,
+   "what_good_looks_like": "Courteous parting statement thanking the customer, waiting for the customer to disconnect first.",
+   "example_phrase": "Thank you for contacting ShopEase. We appreciate your business and hope you have a great day ahead!"
+  },
+  {
+   "step_id": "HLD-01",
+   "title": "Request Permission and State Reason for Hold",
+   "sop": "hold_and_transfer_sop",
+   "weight": 3,
+   "critical": false,
+   "mandatory": true,
+   "status": "followed",
+   "points_earned": 3.0,
+   "points_possible": 3.0,
+   "turn": 13,
+   "quote": "Okay sir, wait, I am putting you on hold, I will check with someone.",
+   "reason": "The agent asked for permission/informed the customer and stated the reason for the hold.",
+   "missing": "",
+   "evidence_verified": true,
+   "what_good_looks_like": "The agent states the specific reason for the hold and pauses for the customer's affirmative acknowledgment.",
+   "example_phrase": "May I place your call on a brief hold for one minute while I check your shipment status with our dispatch team?"
+  },
+  {
+   "step_id": "HLD-02",
+   "title": "Adhere to Maximum 2-Minute Hold Ceiling",
+   "sop": "hold_and_transfer_sop",
+   "weight": 4,
+   "critical": true,
+   "mandatory": true,
+   "status": "missed",
+   "points_earned": 0.0,
+   "points_possible": 4.0,
+   "turn": null,
+   "quote": "",
+   "reason": "The agent kept the customer on hold for 135 seconds, exceeding the 2-minute ceiling without an interim update.",
+   "missing": "come back on the line to provide a status update within 2 minutes",
+   "evidence_verified": true,
+   "what_good_looks_like": "The agent monitors an on-screen timer and checks back in with the customer before the 120-second mark.",
+   "example_phrase": "Thank you for your patience. I am still reviewing the carrier logs. May I place you on hold for one more minute?"
+  },
+  {
+   "step_id": "HLD-03",
+   "title": "Return From Hold with Gratitude",
+   "sop": "hold_and_transfer_sop",
+   "weight": 2,
+   "critical": false,
+   "mandatory": true,
+   "status": "missed",
+   "points_earned": 0.0,
+   "points_possible": 2.0,
+   "turn": null,
+   "quote": "Hello sir, yes, nobody is available. Anything else?",
+   "reason": "The agent returned from hold without thanking the customer for their patience.",
+   "missing": "thank the customer sincerely for their patience immediately upon returning",
+   "evidence_verified": true,
+   "what_good_looks_like": "Greets the caller by name and thanks them warmly before delivering the gathered information.",
+   "example_phrase": "Thank you so much for holding, Mr. Sharma. I have retrieved your courier manifest details."
+  },
+  {
+   "step_id": "HLD-04",
+   "title": "Execute Warm Transfer with Full Context",
+   "sop": "hold_and_transfer_sop",
+   "weight": 4,
+   "critical": true,
+   "mandatory": true,
+   "status": "missed",
+   "points_earned": 0.0,
+   "points_possible": 4.0,
+   "turn": null,
+   "quote": "",
+   "reason": "The agent did not perform a transfer, but rather checked for availability and returned empty-handed.",
+   "missing": "brief the receiving representative thoroughly before bridging the customer",
+   "evidence_verified": true,
+   "what_good_looks_like": "The agent provides the caller's name, verified Order ID, issue summary, and policy clauses already reviewed so the customer never has to repeat themselves.",
+   "example_phrase": "Hi Neha (Supervisor), I have Rohan on the line regarding Order ORD-9921 for an Rs 8,000 refund approval. His identity is verified."
+  }
+ ],
+ "policy_results": [
+  {
+   "clause_id": "ESC-1.1",
+   "policy_title": "Escalation Policy: Mandatory Supervisor Escalation Triggers",
+   "verdict": "violation",
+   "severity": "critical",
+   "penalty": 15.0,
+   "turn": 7,
+   "quote": "Sir, I told you I cannot transfer you.",
+   "claim": "Agent refused to transfer the customer to a supervisor after the customer asked a second time.",
+   "explanation": "ESC-1.1 mandates an immediate escalation transfer when a customer explicitly requests to speak to a supervisor twice. The customer asked in turn 4 and turn 6, but the agent refused.",
+   "policy_text": "1. Frontline customer service representatives are required to initiate an immediate transfer or warm escalation to a supervisor under the following circumstances: - Customer Explicit Request: The customer explicitly asks to speak to a supervisor, manager, or senior lead two (2) times within the conversation. - Unresolved Inquiries: The customer's issue remains unresolved after two (2) distinct frontline attempts to clarify or execute a solution. - Legal or Regulatory Mention: The customer men...",
+   "evidence_verified": true,
+   "repeat_turns": []
+  },
+  {
+   "clause_id": "SHP-2.3",
+   "policy_title": "Shipping and Delivery Policy: Delayed Shipments and Compensation Protocol",
+   "verdict": "violation",
+   "severity": "major",
+   "penalty": 8.0,
+   "turn": 9,
+   "quote": "Compensation or refund is not possible until thirty days are over, that is our rule.",
+   "claim": "Agent claimed compensation or refund is not possible until 30 days are over.",
+   "explanation": "SHP-2.3 states that if transit exceeds 14 calendar days without status updates, the package is declared lost and an immediate full refund/reshipment is granted, plus Rs 100 goodwill credit after 48h past SLA. The agent incorrectly claimed a 30-day requirement.",
+   "policy_text": "1. A shipment is officially categorized as \"Delayed in Transit\" when transit time exceeds the published SLA (7 business days for standard delivery, 2 business days for express delivery). 2. If a shipment is delayed beyond 48 hours past the SLA: - The agent must initiate a logistics tracking ticket with courier partner dispatch. - The customer is eligible for a goodwill promotional wallet credit of Rs 100 for verified operational delays. 3. If transit exceeds 14 calendar days without status up...",
+   "evidence_verified": true,
+   "repeat_turns": []
+  },
+  {
+   "clause_id": "ESC-2.1",
+   "policy_title": "Escalation Policy: Warm Transfer Protocol and Hold Regulations",
+   "verdict": "violation",
+   "severity": "minor",
+   "penalty": 3.0,
+   "turn": 14,
+   "quote": "Hello sir, yes, nobody is available. Anything else?",
+   "claim": "Agent kept customer on hold for over 2 minutes and failed to offer a callback SLA when no supervisor was available.",
+   "explanation": "ESC-2.1 prohibits keeping a customer on hold for more than 2 minutes without checking in (hold was 135 seconds) and requires offering a confirmed Supervisor Callback SLA within 2 to 4 business hours if no supervisor is available.",
+   "policy_text": "1. Before initiating an escalation transfer to a supervisor, the agent must inform the customer and place them on a courtesy hold. 2. Under no circumstance may an agent keep a customer on hold for more than 2 minutes without performing an active check-in (`[HLD-03]`). 3. If no supervisor is immediately available within 2 minutes: - The agent must retrieve the call from hold. - Apologize for the extended wait. - Offer a confirmed Supervisor Callback SLA within 2 to 4 business hours.",
+   "evidence_verified": true,
+   "repeat_turns": []
+  },
+  {
+   "clause_id": "PRV-1.2",
+   "policy_title": "Privacy and Identity Verification Policy: Mandatory Call Recording Disclosure",
+   "verdict": "compliant",
+   "severity": "none",
+   "penalty": 0.0,
+   "turn": 1,
+   "quote": "Please note this call is recorded for quality assurance and training purposes.",
+   "claim": "Agent provided the required call recording disclosure statement.",
+   "explanation": "The agent recited the approved call recording disclosure verbatim in the first turn as required by PRV-1.2.",
+   "policy_text": "1. Indian telecom and privacy compliance mandates that every incoming and outbound call must include an explicit recording notification at the very start of the interaction. 2. Representatives must recite the approved disclosure statement during their initial call greeting: - *\"Please note this call is recorded for quality assurance and training purposes.\"* 3. Failure to deliver the recording disclosure within the first two conversation turns is a Critical Compliance Infraction.",
+   "evidence_verified": true,
+   "repeat_turns": []
+  }
+ ],
+ "gaps": [
+  {
+   "gap_type": "interruption",
+   "turn": 11,
+   "quote": "Sir please listen, sir, listen to me, you are not allowing me to speak.",
+   "detail": "The agent started speaking while the other person was still talking (turn 11).",
+   "source": "timing"
+  },
+  {
+   "gap_type": "hold_too_long",
+   "turn": 14,
+   "quote": "",
+   "detail": "The customer waited about 135s on hold before turn 14 (limit 120s).",
+   "source": "timing"
+  },
+  {
+   "gap_type": "no_empathy",
+   "turn": 3,
+   "quote": "Sir, you must have given the wrong address or a wrong phone number, these delays happen because of customer mistakes.",
+   "detail": "The agent blamed the customer for the delivery delay instead of showing empathy.",
+   "source": "llm"
+  },
+  {
+   "gap_type": "unresolved_issue",
+   "turn": 15,
+   "quote": "Nobody? Then what is the use of this call. Forget it.",
+   "detail": "The issue was left completely unresolved and the customer hung up dissatisfied.",
+   "source": "llm"
+  },
+  {
+   "gap_type": "customer_repeating",
+   "turn": 6,
+   "quote": "It is ORD-90417. And I am asking for a manager again, this is the second time.",
+   "detail": "The customer had to repeat their manager request because the agent refused to escalate.",
+   "source": "llm"
+  },
+  {
+   "gap_type": "no_summary",
+   "turn": 16,
+   "quote": "Okay sir. Bye.",
+   "detail": "The agent closed the call without summarizing the outcome or providing next steps.",
+   "source": "llm"
+  },
+  {
+   "gap_type": "no_closing",
+   "turn": 16,
+   "quote": "Okay sir. Bye.",
+   "detail": "The agent failed to use a professional branded closing.",
+   "source": "llm"
+  }
+ ],
+ "findings": [
+  {
+   "finding_id": "sop_ANG-01_1",
+   "criterion_id": "ANG-01",
+   "name": "Emotional Composure & Non-Defensive Tone",
+   "kind": "inferred",
+   "verdict": "missed",
+   "severity": "major",
+   "evidence": [],
+   "certainty": "medium",
+   "certainty_reason": "Degraded transcript: Substantial dead air/silence (57.1%)",
+   "reviewer_status": "pending",
+   "reviewer_note": "",
+   "explanation": "The agent was defensive, argued with the customer, and interrupted them."
+  },
+  {
+   "finding_id": "sop_ANG-02_2",
+   "criterion_id": "ANG-02",
+   "name": "Sincere Empathy & Acknowledgment",
+   "kind": "inferred",
+   "verdict": "missed",
+   "severity": "major",
+   "evidence": [],
+   "certainty": "medium",
+   "certainty_reason": "Degraded transcript: Substantial dead air/silence (57.1%)",
+   "reviewer_status": "pending",
+   "reviewer_note": "",
+   "explanation": "The agent failed to acknowledge the emotional impact or validate the customer's frustration."
+  },
+  {
+   "finding_id": "sop_ANG-03_3",
+   "criterion_id": "ANG-03",
+   "name": "Fact-Finding Without Cross-Examination",
+   "kind": "observed",
+   "verdict": "missed",
+   "severity": "major",
+   "evidence": [],
+   "certainty": "medium",
+   "certainty_reason": "Degraded transcript: Substantial dead air/silence (57.1%)",
+   "reviewer_status": "pending",
+   "reviewer_note": "",
+   "explanation": "The agent cross-examined the customer by accusing them of providing a wrong address or phone number."
+  },
+  {
+   "finding_id": "sop_ANG-04_4",
+   "criterion_id": "ANG-04",
+   "name": "Direct Action Plan & Concrete Timelines",
+   "kind": "observed",
+   "verdict": "missed",
+   "severity": "major",
+   "evidence": [],
+   "certainty": "medium",
+   "certainty_reason": "Degraded transcript: Substantial dead air/silence (57.1%)",
+   "reviewer_status": "pending",
+   "reviewer_note": "",
+   "explanation": "The agent offered no tangible action plan or concrete timelines."
+  },
+  {
+   "finding_id": "sop_ANG-05_5",
+   "criterion_id": "ANG-05",
+   "name": "Supervisor Escalation Execution",
+   "kind": "observed",
+   "verdict": "missed",
+   "severity": "critical",
+   "evidence": [],
+   "certainty": "medium",
+   "certainty_reason": "Degraded transcript: Substantial dead air/silence (57.1%)",
+   "reviewer_status": "pending",
+   "reviewer_note": "",
+   "explanation": "The agent directly refused the customer's supervisor request multiple times."
+  },
+  {
+   "finding_id": "sop_ANG-06_6",
+   "criterion_id": "ANG-06",
+   "name": "Respectful Boundary Setting for Abusive Language",
+   "kind": "observed",
+   "verdict": "not_applicable",
+   "severity": "major",
+   "evidence": [],
+   "certainty": "medium",
+   "certainty_reason": "Degraded transcript: Substantial dead air/silence (57.1%)",
+   "reviewer_status": "pending",
+   "reviewer_note": "",
+   "explanation": "The customer did not use vulgarity, personal slurs, or threats of violence requiring boundary setting."
+  },
+  {
+   "finding_id": "sop_GEN-01_7",
+   "criterion_id": "GEN-01",
+   "name": "Professional Greeting & Identity Introduction",
+   "kind": "observed",
+   "verdict": "followed",
+   "severity": "major",
+   "evidence": [
+    {
+     "turn_id": 1,
+     "speaker": "agent",
+     "start_s": 0.0,
+     "end_s": 8.08,
+     "quote": "ShopEase customer care, Sunil speaking. Please note this call is recorded for quality assurance and training purposes. How may I help?"
+    }
+   ],
+   "certainty": "medium",
+   "certainty_reason": "Degraded transcript: Substantial dead air/silence (57.1%)",
+   "reviewer_status": "pending",
+   "reviewer_note": "",
+   "explanation": "The agent greeted the customer, stated the company name, introduced himself by name, and asked how to help."
+  },
+  {
+   "finding_id": "sop_GEN-02_8",
+   "criterion_id": "GEN-02",
+   "name": "Mandatory Call Recording Disclosure",
+   "kind": "observed",
+   "verdict": "followed",
+   "severity": "critical",
+   "evidence": [
+    {
+     "turn_id": 1,
+     "speaker": "agent",
+     "start_s": 0.0,
+     "end_s": 8.08,
+     "quote": "Please note this call is recorded for quality assurance and training purposes."
+    }
+   ],
+   "certainty": "medium",
+   "certainty_reason": "Degraded transcript: Substantial dead air/silence (57.1%)",
+   "reviewer_status": "pending",
+   "reviewer_note": "",
+   "explanation": "Call recording disclosure was clearly provided in the first turn."
+  },
+  {
+   "finding_id": "sop_GEN-03_9",
+   "criterion_id": "GEN-03",
+   "name": "Caller Identification & Two-Factor Verification",
+   "kind": "observed",
+   "verdict": "missed",
+   "severity": "critical",
+   "evidence": [],
+   "certainty": "medium",
+   "certainty_reason": "Degraded transcript: Substantial dead air/silence (57.1%)",
+   "reviewer_status": "pending",
+   "reviewer_note": "",
+   "explanation": "The agent never requested or verified the last 4 digits of the registered phone number."
+  },
+  {
+   "finding_id": "sop_GEN-04_10",
+   "criterion_id": "GEN-04",
+   "name": "Active Listening & Issue Clarification",
+   "kind": "observed",
+   "verdict": "missed",
+   "severity": "major",
+   "evidence": [],
+   "certainty": "medium",
+   "certainty_reason": "Degraded transcript: Substantial dead air/silence (57.1%)",
+   "reviewer_status": "pending",
+   "reviewer_note": "",
+   "explanation": "The agent interrupted the customer and did not paraphrase the core issue."
+  },
+  {
+   "finding_id": "sop_GEN-05_11",
+   "criterion_id": "GEN-05",
+   "name": "Empathy & Ownership Statement",
+   "kind": "inferred",
+   "verdict": "missed",
+   "severity": "major",
+   "evidence": [],
+   "certainty": "medium",
+   "certainty_reason": "Degraded transcript: Substantial dead air/silence (57.1%)",
+   "reviewer_status": "pending",
+   "reviewer_note": "",
+   "explanation": "The agent expressed no empathy and took no ownership of the solution."
+  },
+  {
+   "finding_id": "sop_GEN-06_12",
+   "criterion_id": "GEN-06",
+   "name": "Accurate Policy Explanation & Solution Execution",
+   "kind": "observed",
+   "verdict": "followed",
+   "severity": "critical",
+   "evidence": [
+    {
+     "turn_id": 9,
+     "speaker": "agent",
+     "start_s": 75.53,
+     "end_s": 86.3,
+     "quote": "Compensation or refund is not possible until thirty days are over, that is our rule."
+    }
+   ],
+   "certainty": "medium",
+   "certainty_reason": "Degraded transcript: Substantial dead air/silence (57.1%)",
+   "reviewer_status": "pending",
+   "reviewer_note": "",
+   "explanation": "The agent correctly stated the thirty-day company policy rule."
+  },
+  {
+   "finding_id": "sop_GEN-07_13",
+   "criterion_id": "GEN-07",
+   "name": "Additional Assistance & Next Steps Summary",
+   "kind": "observed",
+   "verdict": "missed",
+   "severity": "major",
+   "evidence": [],
+   "certainty": "medium",
+   "certainty_reason": "Degraded transcript: Substantial dead air/silence (57.1%)",
+   "reviewer_status": "pending",
+   "reviewer_note": "",
+   "explanation": "The agent provided no summary, ticket reference, or proactive closing assistance."
+  },
+  {
+   "finding_id": "sop_GEN-08_14",
+   "criterion_id": "GEN-08",
+   "name": "Professional Branded Sign-Off",
+   "kind": "observed",
+   "verdict": "partial",
+   "severity": "major",
+   "evidence": [
+    {
+     "turn_id": 16,
+     "speaker": "agent",
+     "start_s": 252.58,
+     "end_s": 253.73,
+     "quote": "Okay sir. Bye."
+    }
+   ],
+   "certainty": "medium",
+   "certainty_reason": "Degraded transcript: Substantial dead air/silence (57.1%)",
+   "reviewer_status": "pending",
+   "reviewer_note": "",
+   "explanation": "The agent said goodbye but omitted a warm, professional closing mentioning ShopEase."
+  },
+  {
+   "finding_id": "sop_HLD-01_15",
+   "criterion_id": "HLD-01",
+   "name": "Request Permission and State Reason for Hold",
+   "kind": "observed",
+   "verdict": "followed",
+   "severity": "major",
+   "evidence": [
+    {
+     "turn_id": 13,
+     "speaker": "agent",
+     "start_s": 103.48,
+     "end_s": 108.87,
+     "quote": "Okay sir, wait, I am putting you on hold, I will check with someone."
+    }
+   ],
+   "certainty": "medium",
+   "certainty_reason": "Degraded transcript: Substantial dead air/silence (57.1%)",
+   "reviewer_status": "pending",
+   "reviewer_note": "",
+   "explanation": "The agent asked for permission/informed the customer and stated the reason for the hold."
+  },
+  {
+   "finding_id": "sop_HLD-02_16",
+   "criterion_id": "HLD-02",
+   "name": "Adhere to Maximum 2-Minute Hold Ceiling",
+   "kind": "observed",
+   "verdict": "missed",
+   "severity": "critical",
+   "evidence": [],
+   "certainty": "medium",
+   "certainty_reason": "Degraded transcript: Substantial dead air/silence (57.1%)",
+   "reviewer_status": "pending",
+   "reviewer_note": "",
+   "explanation": "The agent kept the customer on hold for 135 seconds, exceeding the 2-minute ceiling without an interim update."
+  },
+  {
+   "finding_id": "sop_HLD-03_17",
+   "criterion_id": "HLD-03",
+   "name": "Return From Hold with Gratitude",
+   "kind": "observed",
+   "verdict": "missed",
+   "severity": "major",
+   "evidence": [
+    {
+     "turn_id": 0,
+     "speaker": "agent",
+     "start_s": 0.0,
+     "end_s": 0.0,
+     "quote": "Hello sir, yes, nobody is available. Anything else?"
+    }
+   ],
+   "certainty": "medium",
+   "certainty_reason": "Degraded transcript: Substantial dead air/silence (57.1%)",
+   "reviewer_status": "pending",
+   "reviewer_note": "",
+   "explanation": "The agent returned from hold without thanking the customer for their patience."
+  },
+  {
+   "finding_id": "sop_HLD-04_18",
+   "criterion_id": "HLD-04",
+   "name": "Execute Warm Transfer with Full Context",
+   "kind": "observed",
+   "verdict": "missed",
+   "severity": "critical",
+   "evidence": [],
+   "certainty": "medium",
+   "certainty_reason": "Degraded transcript: Substantial dead air/silence (57.1%)",
+   "reviewer_status": "pending",
+   "reviewer_note": "",
+   "explanation": "The agent did not perform a transfer, but rather checked for availability and returned empty-handed."
+  },
+  {
+   "finding_id": "policy_ESC-1.1_1",
+   "criterion_id": "ESC-1.1",
+   "name": "Escalation Policy: Mandatory Supervisor Escalation Triggers",
+   "kind": "observed",
+   "verdict": "violation",
+   "severity": "critical",
+   "evidence": [
+    {
+     "turn_id": 7,
+     "speaker": "agent",
+     "start_s": 0.0,
+     "end_s": 0.0,
+     "quote": "Sir, I told you I cannot transfer you."
+    }
+   ],
+   "certainty": "high",
+   "certainty_reason": "",
+   "reviewer_status": "pending",
+   "reviewer_note": "",
+   "explanation": "ESC-1.1 mandates an immediate escalation transfer when a customer explicitly requests to speak to a supervisor twice. The customer asked in turn 4 and turn 6, but the agent refused."
+  },
+  {
+   "finding_id": "policy_SHP-2.3_2",
+   "criterion_id": "SHP-2.3",
+   "name": "Shipping and Delivery Policy: Delayed Shipments and Compensation Protocol",
+   "kind": "observed",
+   "verdict": "violation",
+   "severity": "major",
+   "evidence": [
+    {
+     "turn_id": 9,
+     "speaker": "agent",
+     "start_s": 0.0,
+     "end_s": 0.0,
+     "quote": "Compensation or refund is not possible until thirty days are over, that is our rule."
+    }
+   ],
+   "certainty": "high",
+   "certainty_reason": "",
+   "reviewer_status": "pending",
+   "reviewer_note": "",
+   "explanation": "SHP-2.3 states that if transit exceeds 14 calendar days without status updates, the package is declared lost and an immediate full refund/reshipment is granted, plus Rs 100 goodwill credit after 48h past SLA. The agent incorrectly claimed a 30-day requirement."
+  },
+  {
+   "finding_id": "policy_ESC-2.1_3",
+   "criterion_id": "ESC-2.1",
+   "name": "Escalation Policy: Warm Transfer Protocol and Hold Regulations",
+   "kind": "observed",
+   "verdict": "violation",
+   "severity": "minor",
+   "evidence": [
+    {
+     "turn_id": 14,
+     "speaker": "agent",
+     "start_s": 0.0,
+     "end_s": 0.0,
+     "quote": "Hello sir, yes, nobody is available. Anything else?"
+    }
+   ],
+   "certainty": "high",
+   "certainty_reason": "",
+   "reviewer_status": "pending",
+   "reviewer_note": "",
+   "explanation": "ESC-2.1 prohibits keeping a customer on hold for more than 2 minutes without checking in (hold was 135 seconds) and requires offering a confirmed Supervisor Callback SLA within 2 to 4 business hours if no supervisor is available."
+  },
+  {
+   "finding_id": "empathy_rating",
+   "criterion_id": "empathy_and_communication",
+   "name": "Empathy & Tone Assessment",
+   "kind": "inferred",
+   "verdict": "missed",
+   "severity": "minor",
+   "evidence": [
+    {
+     "turn_id": 0,
+     "speaker": "agent",
+     "start_s": 0.0,
+     "end_s": 0.0,
+     "quote": "Sir, you must have given the wrong address or a wrong phone number, these delays happen because of customer mistakes."
+    }
+   ],
+   "certainty": "medium",
+   "certainty_reason": "Subjective appraisal of agent warmth and emotional validation",
+   "reviewer_status": "pending",
+   "reviewer_note": "",
+   "explanation": "Empathy score: 0/5"
+  }
+ ],
+ "cannot_judge": false,
+ "cannot_judge_reason": "",
+ "unreadable_parts": [],
+ "status": "degraded",
+ "failed_step": null,
+ "completed_steps": [
+  "input_ingestion",
+  "quality_gate",
+  "call_state",
+  "topic_detection",
+  "scorecard_judgment",
+  "policy_check",
+  "evidence_verification",
+  "scoring"
+ ],
+ "emotion": {
+  "points": [
+   {
+    "turn": 2,
+    "emotion": "frustrated",
+    "valence": -1.5
+   },
+   {
+    "turn": 4,
+    "emotion": "frustrated",
+    "valence": -1.5
+   },
+   {
+    "turn": 6,
+    "emotion": "frustrated",
+    "valence": -1.5
+   },
+   {
+    "turn": 8,
+    "emotion": "angry",
+    "valence": -2.0
+   },
+   {
+    "turn": 10,
+    "emotion": "angry",
+    "valence": -2.0
+   },
+   {
+    "turn": 12,
+    "emotion": "angry",
+    "valence": -2.0
+   },
+   {
+    "turn": 15,
+    "emotion": "frustrated",
+    "valence": -1.5
+   }
+  ],
+  "start": "frustrated",
+  "middle": "angry",
+  "end": "frustrated",
+  "trend": "flat"
+ },
+ "agent_tone": {
+  "points": [
+   {
+    "turn": 1,
+    "emotion": "neutral",
+    "valence": 0.0
+   },
+   {
+    "turn": 3,
+    "emotion": "defensive",
+    "valence": -1.5
+   },
+   {
+    "turn": 5,
+    "emotion": "dismissive",
+    "valence": -1.5
+   },
+   {
+    "turn": 7,
+    "emotion": "dismissive",
+    "valence": -1.5
+   },
+   {
+    "turn": 9,
+    "emotion": "neutral",
+    "valence": 0.0
+   },
+   {
+    "turn": 11,
+    "emotion": "defensive",
+    "valence": -1.5
+   },
+   {
+    "turn": 13,
+    "emotion": "neutral",
+    "valence": 0.0
+   },
+   {
+    "turn": 14,
+    "emotion": "neutral",
+    "valence": 0.0
+   },
+   {
+    "turn": 16,
+    "emotion": "dismissive",
+    "valence": -1.5
+   }
+  ],
+  "start": "neutral",
+  "middle": "neutral",
+  "end": "dismissive",
+  "trend": "flat"
+ },
+ "metrics": {
+  "duration_sec": 253.7,
+  "agent_turns": 9,
+  "customer_turns": 7,
+  "agent_talk_ratio": 0.567,
+  "longest_silence_sec": 1.2,
+  "dead_air_events": [],
+  "interruption_events": [
+   {
+    "gap_type": "interruption",
+    "turn": 11,
+    "quote": "Sir please listen, sir, listen to me, you are not allowing me to speak.",
+    "detail": "The agent started speaking while the other person was still talking (turn 11).",
+    "source": "timing"
+   }
+  ],
+  "hold_events": [
+   {
+    "gap_type": "hold_too_long",
+    "turn": 14,
+    "quote": "",
+    "detail": "The customer waited about 135s on hold before turn 14 (limit 120s).",
+    "source": "timing"
+   }
+  ],
+  "holds": [
+   {
+    "start_turn": 13,
+    "end_turn": 14,
+    "start_time": 108.87,
+    "end_time": 243.87,
+    "seconds": 135.0,
+    "exceeded": true
+   }
+  ],
+  "longest_hold_sec": 135.0,
+  "agent_words_per_minute": 156.0,
+  "agent_interruptions": 1
+ },
+ "strengths": [
+  "Completed standard greeting and call recording disclosure in turn 1.",
+  "Correctly cited the 30-day policy rule regarding refunds.",
+  "Asked for permission before placing the customer on hold."
+ ],
+ "coaching": [
+  {
+   "title": "ANG-05: Supervisor Escalation Execution (critical)",
+   "advice": "Seamless transition offering supervisor transfer without arguing or attempting to block the escalation. Example: \"I respect your request to speak with a supervisor. Please allow me to place you on a brief 1-minute hold while I connect you to my manager.\"",
+   "source": "sop",
+   "evidence": "Missing: escalate immediately to a supervisor if the customer requests a manager twice. The agent directly refused the customer's supervisor request multiple times."
+  },
+  {
+   "title": "GEN-03: Caller Identification & Two-Factor Verification (critical)",
+   "advice": "The agent systematically validates both verification data points before disclosing addresses, order contents, or monetary info. Example: \"To ensure your account security, may I please have your Order ID and the last four digits of your registered mobile number?\"",
+   "source": "sop",
+   "evidence": "Missing: requesting Order ID and the last 4 digits of the registered mobile phone number. The agent never requested or verified the last 4 digits of the registered phone number."
+  },
+  {
+   "title": "HLD-02: Adhere to Maximum 2-Minute Hold Ceiling (critical)",
+   "advice": "The agent monitors an on-screen timer and checks back in with the customer before the 120-second mark. Example: \"Thank you for your patience. I am still reviewing the carrier logs. May I place you on hold for one more minute?\"",
+   "source": "sop",
+   "evidence": "Missing: come back on the line to provide a status update within 2 minutes. The agent kept the customer on hold for 135 seconds, exceeding the 2-minute ceiling without an interim update."
+  },
+  {
+   "title": "HLD-04: Execute Warm Transfer with Full Context (critical)",
+   "advice": "The agent provides the caller's name, verified Order ID, issue summary, and policy clauses already reviewed so the customer never has to repeat themselves. Example: \"Hi Neha (Supervisor), I have Rohan on the line regarding Order ORD-9921 for an Rs 8,000 refund approval. His identity is verified.\"",
+   "source": "sop",
+   "evidence": "Missing: brief the receiving representative thoroughly before bridging the customer. The agent did not perform a transfer, but rather checked for availability and returned empty-handed."
+  },
+  {
+   "title": "Policy ESC-1.1: say it correctly",
+   "advice": "ESC-1.1 mandates an immediate escalation transfer when a customer explicitly requests to speak to a supervisor twice. The customer asked in turn 4 and turn 6, but the agent refused.",
+   "source": "policy",
+   "evidence": "Sir, I told you I cannot transfer you."
+  },
+  {
+   "title": "Policy SHP-2.3: say it correctly",
+   "advice": "SHP-2.3 states that if transit exceeds 14 calendar days without status updates, the package is declared lost and an immediate full refund/reshipment is granted, plus Rs 100 goodwill credit after 48h past SLA. The agent incorrectly claimed a 30-day requirement.",
+   "source": "policy",
+   "evidence": "Compensation or refund is not possible until thirty days are over, that is our rule."
+  },
+  {
+   "title": "Policy ESC-2.1: say it correctly",
+   "advice": "ESC-2.1 prohibits keeping a customer on hold for more than 2 minutes without checking in (hold was 135 seconds) and requires offering a confirmed Supervisor Callback SLA within 2 to 4 business hours if no supervisor is available.",
+   "source": "policy",
+   "evidence": "Hello sir, yes, nobody is available. Anything else?"
+  },
+  {
+   "title": "Suggestion",
+   "advice": "Next time, avoid blaming the customer for delivery delays and instead validate their frustration.",
+   "source": "llm",
+   "evidence": ""
+  },
+  {
+   "title": "Suggestion",
+   "advice": "Next time, comply with supervisor escalation requests immediately after a second request.",
+   "source": "llm",
+   "evidence": ""
+  }
+ ],
+ "risk_flags": [],
+ "retrieved_clause_ids": [
+  "SHP-2.3",
+  "SHP-2.2",
+  "SHP-2.1",
+  "SHP-1.1",
+  "ESC-2.1",
+  "PRV-1.3",
+  "REF-4.1",
+  "SHP-4.1",
+  "SHP-3.2",
+  "WAR-1.2",
+  "PRV-1.1",
+  "ESC-1.1",
+  "ESC-1.2",
+  "SHP-1.2",
+  "SHP-3.1",
+  "ESC-2.2",
+  "ESC-3.1",
+  "ESC-3.2",
+  "PRV-1.2",
+  "PRV-2.1",
+  "PRV-2.2",
+  "PRV-3.1"
+ ],
+ "transcript": {
+  "call_id": "call_106",
+  "source": "transcript",
+  "language": "te",
+  "audio_path": null,
+  "duration_seconds": 253.7,
+  "diarization_method": "given",
+  "transcript_quality": "degraded",
+  "quality_reason": "Substantial dead air/silence (57.1%)",
+  "unreadable_parts": [
+   "high silence ratio: 57.1%"
+  ],
+  "turns": [
+   {
+    "turn_id": 1,
+    "speaker": "agent",
+    "start_time": 0.0,
+    "end_time": 8.08,
+    "text": "ShopEase customer care, Sunil speaking. Please note this call is recorded for quality assurance and training purposes. How may I help?",
+    "text_te": null,
+    "text_roman": null,
+    "asr_confidence": 1.0,
+    "silence_before": 0.0,
+    "overlaps_previous": false,
+    "emotion": "neutral"
+   },
+   {
+    "turn_id": 2,
+    "speaker": "customer",
+    "start_time": 8.58,
+    "end_time": 22.42,
+    "text": "I am calling about my order, a Samsung monitor that was dispatched fifteen days ago, and the tracking has not moved for the last ten days. This is ridiculous! Nobody has helped me in three calls.",
+    "text_te": null,
+    "text_roman": null,
+    "asr_confidence": 1.0,
+    "silence_before": 0.5,
+    "overlaps_previous": false,
+    "emotion": "frustrated"
+   },
+   {
+    "turn_id": 3,
+    "speaker": "agent",
+    "start_time": 23.52,
+    "end_time": 36.98,
+    "text": "Sir, you must have given the wrong address or a wrong phone number, these delays happen because of customer mistakes. Did you check your address before ordering? Are you sure the phone number was right?",
+    "text_te": null,
+    "text_roman": null,
+    "asr_confidence": 1.0,
+    "silence_before": 1.1,
+    "overlaps_previous": false,
+    "emotion": "defensive"
+   },
+   {
+    "turn_id": 4,
+    "speaker": "customer",
+    "start_time": 37.68,
+    "end_time": 44.61,
+    "text": "I gave the right address, I have ordered many times before. I want to speak to a manager.",
+    "text_te": null,
+    "text_roman": null,
+    "asr_confidence": 1.0,
+    "silence_before": 0.7,
+    "overlaps_previous": false,
+    "emotion": "frustrated"
+   },
+   {
+    "turn_id": 5,
+    "speaker": "agent",
+    "start_time": 45.01,
+    "end_time": 51.93,
+    "text": "Sir, managers do not handle delivery issues, I can check it for you. What is your order number?",
+    "text_te": null,
+    "text_roman": null,
+    "asr_confidence": 1.0,
+    "silence_before": 0.4,
+    "overlaps_previous": false,
+    "emotion": "dismissive"
+   },
+   {
+    "turn_id": 6,
+    "speaker": "customer",
+    "start_time": 52.93,
+    "end_time": 59.08,
+    "text": "It is ORD-90417. And I am asking for a manager again, this is the second time.",
+    "text_te": null,
+    "text_roman": null,
+    "asr_confidence": 1.0,
+    "silence_before": 1.0,
+    "overlaps_previous": false,
+    "emotion": "frustrated"
+   },
+   {
+    "turn_id": 7,
+    "speaker": "agent",
+    "start_time": 59.88,
+    "end_time": 67.58,
+    "text": "Sir, I told you I cannot transfer you. It is showing in transit, the courier will deliver when it delivers.",
+    "text_te": null,
+    "text_roman": null,
+    "asr_confidence": 1.0,
+    "silence_before": 0.8,
+    "overlaps_previous": false,
+    "emotion": "dismissive"
+   },
+   {
+    "turn_id": 8,
+    "speaker": "customer",
+    "start_time": 68.18,
+    "end_time": 74.33,
+    "text": "In transit for fifteen days? This is unacceptable, I want my money back or a replacement.",
+    "text_te": null,
+    "text_roman": null,
+    "asr_confidence": 1.0,
+    "silence_before": 0.6,
+    "overlaps_previous": false,
+    "emotion": "angry"
+   },
+   {
+    "turn_id": 9,
+    "speaker": "agent",
+    "start_time": 75.53,
+    "end_time": 86.3,
+    "text": "Compensation or refund is not possible until thirty days are over, that is our rule. And there is no point creating a ticket, the courier will not respond.",
+    "text_te": null,
+    "text_roman": null,
+    "asr_confidence": 1.0,
+    "silence_before": 1.2,
+    "overlaps_previous": false,
+    "emotion": "neutral"
+   },
+   {
+    "turn_id": 10,
+    "speaker": "customer",
+    "start_time": 86.9,
+    "end_time": 92.28,
+    "text": "That is the worst service I have ever seen, you people are cheating customers!",
+    "text_te": null,
+    "text_roman": null,
+    "asr_confidence": 1.0,
+    "silence_before": 0.6,
+    "overlaps_previous": false,
+    "emotion": "angry"
+   },
+   {
+    "turn_id": 11,
+    "speaker": "agent",
+    "start_time": 91.88,
+    "end_time": 97.27,
+    "text": "Sir please listen, sir, listen to me, you are not allowing me to speak.",
+    "text_te": null,
+    "text_roman": null,
+    "asr_confidence": 1.0,
+    "silence_before": 0.0,
+    "overlaps_previous": true,
+    "emotion": "defensive"
+   },
+   {
+    "turn_id": 12,
+    "speaker": "customer",
+    "start_time": 97.77,
+    "end_time": 102.38,
+    "text": "I am done listening. I am filing a complaint in consumer court.",
+    "text_te": null,
+    "text_roman": null,
+    "asr_confidence": 1.0,
+    "silence_before": 0.5,
+    "overlaps_previous": false,
+    "emotion": "angry"
+   },
+   {
+    "turn_id": 13,
+    "speaker": "agent",
+    "start_time": 103.48,
+    "end_time": 108.87,
+    "text": "Okay sir, wait, I am putting you on hold, I will check with someone.",
+    "text_te": null,
+    "text_roman": null,
+    "asr_confidence": 1.0,
+    "silence_before": 1.1,
+    "overlaps_previous": false,
+    "emotion": "neutral"
+   },
+   {
+    "turn_id": 14,
+    "speaker": "agent",
+    "start_time": 243.87,
+    "end_time": 246.95,
+    "text": "Hello sir, yes, nobody is available. Anything else?",
+    "text_te": null,
+    "text_roman": null,
+    "asr_confidence": 1.0,
+    "silence_before": 135.0,
+    "overlaps_previous": false,
+    "emotion": "neutral"
+   },
+   {
+    "turn_id": 15,
+    "speaker": "customer",
+    "start_time": 247.35,
+    "end_time": 251.58,
+    "text": "Nobody? Then what is the use of this call. Forget it.",
+    "text_te": null,
+    "text_roman": null,
+    "asr_confidence": 1.0,
+    "silence_before": 0.4,
+    "overlaps_previous": false,
+    "emotion": "frustrated"
+   },
+   {
+    "turn_id": 16,
+    "speaker": "agent",
+    "start_time": 252.58,
+    "end_time": 253.73,
+    "text": "Okay sir. Bye.",
+    "text_te": null,
+    "text_roman": null,
+    "asr_confidence": 1.0,
+    "silence_before": 1.0,
+    "overlaps_previous": false,
+    "emotion": "dismissive"
+   }
+  ]
+ },
+ "meta": {
+  "model": "gemini:gemini-3.5-flash-lite",
+  "llm_requests": 1,
+  "diarization_method": "given",
+  "transcribe_seconds": 0.0,
+  "audit_seconds": 29.1,
+  "cache_hit": false,
+  "warnings": [],
+  "source_set": "synthetic",
+  "trace_id": "run_call_106_553659",
+  "status": "degraded",
+  "failed_step": null,
+  "completed_steps": [
+   "input_ingestion",
+   "quality_gate",
+   "call_state",
+   "topic_detection",
+   "scorecard_judgment",
+   "policy_check",
+   "evidence_verification",
+   "scoring"
+  ],
+  "estimated_cost_usd": 0.021751,
+  "tokens_in": 9005,
+  "tokens_out": 3291
+ }
+}

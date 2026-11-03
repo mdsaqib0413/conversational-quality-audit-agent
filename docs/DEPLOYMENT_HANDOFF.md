@@ -98,14 +98,17 @@ Ensure the following directories and files are excluded from the Docker build co
 .cadra
 tests
 data/cache/audits_old
-eval
 eval_data
+eval/results
 traces/*.jsonl
 scratch
 __pycache__
 *.py[cod]
 .pytest_cache
 ```
+
+> **CRITICAL NOTE ON `eval/pricing.yaml`:**  
+> Do **NOT** exclude `eval/pricing.yaml` from the Docker image. `src/audit/tracer.py` reads `eval/pricing.yaml` directly at runtime to calculate token usage and estimated cost for traces and Langfuse exports. Keep `eval/pricing.yaml` inside the build context while excluding evaluation results (`eval/results/`) and evaluation datasets (`eval_data/`).
 
 ---
 
@@ -118,9 +121,17 @@ When deployed to a public Hugging Face Space, the application must be protected 
      - The audio file uploader on the "Audit a call" page is hidden or disabled.
      - Live model evaluations against the external Gemini API are blocked unless `DEMO_LIVE=1` is explicitly set and `GEMINI_API_KEY` is present.
      - The audit report picker loads pre-audited calls from a shipped `data/demo_cache/` directory by `call_id` regardless of cache key hash, clearly displaying the model used and generation timestamp.
-2. **`APP_PASSWORD` Authentication Gate:**
-   - Implement a simple password gate in Streamlit session state (`st.session_state["authenticated"]`).
-   - If `APP_PASSWORD` is configured, visitors can explore cached reports freely, but must enter the passcode to access "Audit a call" or trigger live processing.
+2. **`APP_PASSWORD` Authentication Gate (Live Audits Only):**
+   - Implement a password gate in Streamlit session state (`st.session_state["authenticated"]`).
+   - **Password Gate Scope Decision:** `APP_PASSWORD` protects **live audits only** (the "Audit a call" page, audio uploads, and any button/action that invokes an external LLM).
+   - **Open Public Access:** The rest of the application must remain freely viewable and interactive without entering a password:
+     - Home page and architecture overview
+     - Saved audit reports (viewing any cached audit, exploring coaching/SOP/policy tabs, downloading PDF/HTML/JSON)
+     - Dashboard and benchmark analytics across cached audits
+     - Dataset Explorer
+     - Live Call Assistant demo player (replaying pre-recorded calls)
+     - Observability page (viewing traces already logged to disk)
+   - **Do not password-gate the entire application**, so visitors and evaluators can explore pre-computed audits and dashboards freely without credentials.
 3. **Per-Session Rate Limiting:**
    - In `st.session_state`, maintain a counter of live audits executed (e.g. limit to 2 live audits per browser session) to prevent single-user quota draining.
 4. **Offline Container Health Check:**
@@ -147,7 +158,27 @@ When deployed to a public Hugging Face Space, the application must be protected 
 
 ---
 
-## 6. Free-Tier Quota Notes & Strategy
+## 6. Demo Cache Specification (`data/demo_cache/`)
+
+To support zero-API deployments on Hugging Face Spaces free tier, the repository provides a pre-computed demo cache:
+
+- **Builder Script:** `python scripts/build_demo_cache.py`
+  - Validates that `data/cache/audits/` contains exactly one current-key audit file per canonical dev call (`call_001` through `call_108`). If any file is missing or has multiple conflicting hashes, the script refuses to run.
+  - Copies the 13 canonical dev audits from `data/cache/audits/` into `data/demo_cache/<call_id>.json` (unhashed filenames, e.g. `call_001.json` through `call_108.json`).
+  - Generates `data/demo_cache/MANIFEST.json` containing:
+    - `audit_key_salt`: Active salt (`"audit-v9"`).
+    - `policy_model`: Active policy model (`"gemini-3.5-flash"`).
+    - `generation_date`: ISO 8601 build timestamp.
+    - `calls`: Array of 13 calls detailing `call_id`, `overall`, `grade`, and `status`.
+- **Git-Ignore Status & Shipping Decision:**
+  - While `data/cache/` is git-ignored, `data/demo_cache/` is **explicitly NOT git-ignored** and **MUST be committed to git**.
+  - Committing `data/demo_cache/` ensures the container image built on Hugging Face Spaces receives all 13 canonical audits without needing access to `.env` or external Gemini API quotas at container startup.
+- **Demo Mode Loading Logic:**
+  - In `DEMO_MODE=1`, `streamlit_app.py` loads audits directly from `data/demo_cache/<call_id>.json` matching on `call_id` rather than dynamic hash keys, displaying the model and generation timestamp recorded in each report's metadata.
+
+---
+
+## 7. Free-Tier Quota Notes & Strategy
 
 - **Gemini Free-Tier Constraints:**
   - `gemini-3.5-flash` has strict Requests-Per-Minute (RPM) and Daily Requests (RPD) limits on free-tier keys.
@@ -158,7 +189,7 @@ When deployed to a public Hugging Face Space, the application must be protected 
 
 ---
 
-## 7. Implementation Checklist for the Deployment Teammate
+## 8. Implementation Checklist for the Deployment Teammate
 
 ### Required Tests to Add
 - [ ] `test_demo_mode_blocks_upload_and_live_eval`: Verifies file uploader and API triggers are disabled when `DEMO_MODE=1` without `DEMO_LIVE=1`.

@@ -1,0 +1,1045 @@
+{
+ "call_id": "call_041",
+ "generated_at": "2026-11-03T18:12:03",
+ "topic": "warranty",
+ "topic_confidence": 0.541,
+ "signals": [],
+ "summary": "The customer called to check the delivery status of their OnePlus phone order and inquire about refurbished electronics warranty. The agent accurately verified the customer, provided the requested tracking, warranty, and return details, and successfully summarized the interaction.",
+ "customer_issue": "Delivery status inquiry and electronics warranty question",
+ "resolved": true,
+ "scores": {
+  "sop_score": 35.6,
+  "policy_score": 27.0,
+  "empathy_score": 6.0,
+  "communication_score": 13.2,
+  "overall_before_cap": 81.8,
+  "overall": 81.8,
+  "grade": "B",
+  "grade_label": "Proficient Compliance",
+  "critical_failure": false,
+  "cap_reasons": [],
+  "sop_points_earned": 24.0,
+  "sop_points_possible": 27.0,
+  "policy_penalty_total": 3.0,
+  "policy_applicable": true,
+  "timing_penalty": 1.0,
+  "timing_notes": [
+   "1 agent interruption(s): -1"
+  ],
+  "empathy_rating": 2,
+  "clarity_rating": 5,
+  "professionalism_rating": 5,
+  "ownership_rating": 4,
+  "closure_rating": 5
+ },
+ "sop_results": [
+  {
+   "step_id": "GEN-01",
+   "title": "Professional Greeting & Identity Introduction",
+   "sop": "general_call_flow",
+   "weight": 2,
+   "critical": false,
+   "mandatory": true,
+   "status": "followed",
+   "points_earned": 2.0,
+   "points_possible": 2.0,
+   "turn": 1,
+   "quote": "Thank you for calling ShopEase. My name is Amit Patel. How may I assist you today?",
+   "reason": "The agent greeted the customer warmly, stated the company name, introduced himself, and asked how to help.",
+   "missing": "",
+   "evidence_verified": true,
+   "what_good_looks_like": "The agent opens within 2 seconds of call connection with a polite, welcoming tone, introducing both the brand and representative name.",
+   "example_phrase": "Thank you for calling ShopEase. My name is Rahul. How may I assist you today?"
+  },
+  {
+   "step_id": "GEN-02",
+   "title": "Mandatory Call Recording Disclosure",
+   "sop": "general_call_flow",
+   "weight": 5,
+   "critical": true,
+   "mandatory": true,
+   "status": "followed",
+   "points_earned": 5.0,
+   "points_possible": 5.0,
+   "turn": 1,
+   "quote": "Please note that this call is recorded for quality assurance and training purposes.",
+   "reason": "The mandatory call recording disclosure was clearly stated in the opening turn.",
+   "missing": "",
+   "evidence_verified": true,
+   "what_good_looks_like": "The disclosure is clearly articulated within the first two conversation turns without mumbling or skipping.",
+   "example_phrase": "Please note that this call is being recorded for quality monitoring and training purposes."
+  },
+  {
+   "step_id": "GEN-03",
+   "title": "Caller Identification & Two-Factor Verification",
+   "sop": "general_call_flow",
+   "weight": 5,
+   "critical": true,
+   "mandatory": true,
+   "status": "followed",
+   "points_earned": 5.0,
+   "points_possible": 5.0,
+   "turn": 3,
+   "quote": "For verification purposes, could you please confirm your ShopEase Order ID along with the last four digits",
+   "reason": "The agent correctly requested both the Order ID and the last four digits of the registered mobile number before providing any account details.",
+   "missing": "",
+   "evidence_verified": true,
+   "what_good_looks_like": "The agent systematically validates both verification data points before disclosing addresses, order contents, or monetary info.",
+   "example_phrase": "To ensure your account security, may I please have your Order ID and the last four digits of your registered mobile number?"
+  },
+  {
+   "step_id": "GEN-04",
+   "title": "Active Listening & Issue Clarification",
+   "sop": "general_call_flow",
+   "weight": 3,
+   "critical": false,
+   "mandatory": true,
+   "status": "followed",
+   "points_earned": 3.0,
+   "points_possible": 3.0,
+   "turn": 5,
+   "quote": "Just to ensure I have understood correctly, you would like an update on the delivery schedule",
+   "reason": "The agent allowed the customer to speak fully and then accurately paraphrased the core issues.",
+   "missing": "",
+   "evidence_verified": true,
+   "what_good_looks_like": "The agent maintains silence while the customer speaks, takes notes, and summarizes the specific problem back to the customer.",
+   "example_phrase": "I understand that your package has not arrived and you would like to track the courier status. Is that correct?"
+  },
+  {
+   "step_id": "GEN-05",
+   "title": "Empathy & Ownership Statement",
+   "sop": "general_call_flow",
+   "weight": 3,
+   "critical": false,
+   "mandatory": true,
+   "status": "missed",
+   "points_earned": 0.0,
+   "points_possible": 3.0,
+   "turn": null,
+   "quote": "",
+   "reason": "The agent answered policy and status questions directly without expressing explicit empathy or acknowledging customer inconvenience.",
+   "missing": "empathy statement, ownership reassurance",
+   "evidence_verified": true,
+   "what_good_looks_like": "Empathetic acknowledgment that avoids robotic stock phrases, validating the customer's frustration.",
+   "example_phrase": "I completely understand how frustrating it is to wait for an order, and I am personally going to sort this out for you."
+  },
+  {
+   "step_id": "GEN-06",
+   "title": "Accurate Policy Explanation & Solution Execution",
+   "sop": "general_call_flow",
+   "weight": 5,
+   "critical": true,
+   "mandatory": true,
+   "status": "followed",
+   "points_earned": 5.0,
+   "points_possible": 5.0,
+   "turn": 7,
+   "quote": "Under our shipping policy, standard delivery takes 3 to 7 business days from the dispatch date.",
+   "reason": "The agent correctly cited official ShopEase policies regarding delivery windows, warranties, and returns.",
+   "missing": "",
+   "evidence_verified": true,
+   "what_good_looks_like": "Explaining exact delivery or refund windows (e.g., 5-7 business days for refund, 7 days for electronics) without making out-of-policy promises.",
+   "example_phrase": "Per our policy, since your wireless earbuds are within the 7-day electronics return window, I have scheduled a reverse pickup for tomorrow."
+  },
+  {
+   "step_id": "GEN-07",
+   "title": "Additional Assistance & Next Steps Summary",
+   "sop": "general_call_flow",
+   "weight": 2,
+   "critical": false,
+   "mandatory": true,
+   "status": "followed",
+   "points_earned": 2.0,
+   "points_possible": 2.0,
+   "turn": 19,
+   "quote": "To recap our discussion, your OnePlus Nord CE 3 Lite 5G under order ORD-73904 is progressing normally",
+   "reason": "The agent provided a thorough recap, mentioned the service request reference, and asked if anything else was needed.",
+   "missing": "",
+   "evidence_verified": true,
+   "what_good_looks_like": "Clear recap of actions taken, tracking reference shared, and an open invitation for secondary questions.",
+   "example_phrase": "To recap, I have initiated return ticket #SR-8921. You will receive an SMS confirmation. Is there anything else I can help you with today?"
+  },
+  {
+   "step_id": "GEN-08",
+   "title": "Professional Branded Sign-Off",
+   "sop": "general_call_flow",
+   "weight": 2,
+   "critical": false,
+   "mandatory": true,
+   "status": "followed",
+   "points_earned": 2.0,
+   "points_possible": 2.0,
+   "turn": 21,
+   "quote": "Thank you for contacting ShopEase. We appreciate your business and hope you have a great day ahead!",
+   "reason": "The agent concluded the call with a warm, professional branded sign-off.",
+   "missing": "",
+   "evidence_verified": true,
+   "what_good_looks_like": "Courteous parting statement thanking the customer, waiting for the customer to disconnect first.",
+   "example_phrase": "Thank you for contacting ShopEase. We appreciate your business and hope you have a great day ahead!"
+  }
+ ],
+ "policy_results": [
+  {
+   "clause_id": "WAR-3.2",
+   "policy_title": "Warranty and Replacement Policy: Refurbished and Open-Box Warranty Rules",
+   "verdict": "violation",
+   "severity": "minor",
+   "penalty": 3.0,
+   "turn": 9,
+   "quote": "refurbished products have zero warranty coverage of any kind from ShopEase. They are sold entirely as-is without any warranty period.",
+   "claim": "Agent stated that certified refurbished items have no warranty coverage from ShopEase.",
+   "explanation": "Agent claimed refurbished products carry zero warranty, whereas clause WAR-3.2 states certified refurbished electronic devices carry a 6-month ShopEase warranty.",
+   "policy_text": "1. Certified refurbished and open-box electronic devices carry a 6-month ShopEase warranty instead of the standard 12 months. 2. Certified refurbished devices remain subject to the standard 7-day return window and 48-hour transit damage notification rule.",
+   "evidence_verified": true,
+   "repeat_turns": []
+  },
+  {
+   "clause_id": "PRV-1.2",
+   "policy_title": "Privacy and Identity Verification Policy: Mandatory Call Recording Disclosure",
+   "verdict": "compliant",
+   "severity": "none",
+   "penalty": 0.0,
+   "turn": 1,
+   "quote": "Please note that this call is recorded for quality assurance and training purposes.",
+   "claim": "Agent stated that the call is being recorded for quality assurance and training purposes.",
+   "explanation": "The agent provided the mandatory call recording disclosure verbatim in turn 1 as required by PRV-1.2.",
+   "policy_text": "1. Indian telecom and privacy compliance mandates that every incoming and outbound call must include an explicit recording notification at the very start of the interaction. 2. Representatives must recite the approved disclosure statement during their initial call greeting: - *\"Please note this call is recorded for quality assurance and training purposes.\"* 3. Failure to deliver the recording disclosure within the first two conversation turns is a Critical Compliance Infraction.",
+   "evidence_verified": true,
+   "repeat_turns": []
+  },
+  {
+   "clause_id": "SHP-1.1",
+   "policy_title": "Shipping and Delivery Policy: Service Tiers and Standard Transit SLAs",
+   "verdict": "compliant",
+   "severity": "none",
+   "penalty": 0.0,
+   "turn": 7,
+   "quote": "Under our shipping policy, standard delivery takes 3 to 7 business days from the dispatch date.",
+   "claim": "Agent stated standard delivery takes 3 to 7 business days from dispatch.",
+   "explanation": "SHP-1.1 specifies standard delivery takes 3 to 7 business days from order dispatch date.",
+   "policy_text": "1. ShopEase provides two official shipping tiers across serviced Indian postal codes: - Standard Delivery: Delivery within 3 to 7 business days from order dispatch date. - Express Delivery: Expedited delivery within 1 to 2 business days for eligible metro and tier-1 city pin codes. 2. Orders placed on Sundays and national holidays are packed and handed over to logistics partners on the following working business day.",
+   "evidence_verified": true,
+   "repeat_turns": []
+  },
+  {
+   "clause_id": "REF-1.1",
+   "policy_title": "Refund and Returns Policy: Return Eligibility Windows",
+   "verdict": "compliant",
+   "severity": "none",
+   "penalty": 0.0,
+   "turn": 13,
+   "quote": "mobile phones fall under the electronics category, which has a return eligibility window of exactly 7 calendar days from the date of delivery.",
+   "claim": "Agent stated mobile phones have a 7 calendar day return window from delivery.",
+   "explanation": "REF-1.1 specifies that the electronics category has a return eligibility window of exactly 7 calendar days from delivery.",
+   "policy_text": "1. Customers are entitled to initiate a return within the specified category window starting from the recorded delivery timestamp: - Electronics Category: Exactly 7 calendar days from the date of delivery. This includes smartphones, laptops, audio accessories, wearables, smart home appliances, and electronic components. - Non-Electronics Category: Exactly 14 calendar days from the date of delivery. This covers apparel, footwear, home furnishings, fitness accessories, books, and general lifest...",
+   "evidence_verified": true,
+   "repeat_turns": []
+  },
+  {
+   "clause_id": "REF-2.1",
+   "policy_title": "Refund and Returns Policy: Refund Processing Timelines",
+   "verdict": "compliant",
+   "severity": "none",
+   "penalty": 0.0,
+   "turn": 15,
+   "quote": "Approved refunds are processed within 5 to 7 business days following pickup and warehouse verification, returned strictly to your original payment method.",
+   "claim": "Agent stated approved refunds are processed within 5 to 7 business days following pickup and warehouse verification to original payment method.",
+   "explanation": "REF-2.1 mandates that approved refunds are processed within 5 to 7 business days following successful return pickup and warehouse verification.",
+   "policy_text": "1. All approved refunds are processed within 5 to 7 business days following successful return pickup and warehouse verification. 2. Public holidays, second/fourth Saturdays, and Sundays are excluded from business day calculations. 3. Once initiated by ShopEase finance, bank clearance times depend on the recipient financial institution: - UPI and IMPS transfers typically credit within 24 to 48 hours. - Credit card and debit card accounts reflect within 5 to 7 business days.",
+   "evidence_verified": true,
+   "repeat_turns": []
+  }
+ ],
+ "gaps": [
+  {
+   "gap_type": "interruption",
+   "turn": 17,
+   "quote": "Pardon the interruption, Mr. Patel, but please note that because this is a smart",
+   "detail": "The agent started speaking while the other person was still talking (turn 17).",
+   "source": "timing"
+  },
+  {
+   "gap_type": "no_empathy",
+   "turn": 5,
+   "quote": "Thank you for confirming that. Just to ensure I have understood correctly",
+   "detail": "The agent skipped expressing empathy or validating the customer's initial concerns before moving straight to paraphrasing.",
+   "source": "llm"
+  }
+ ],
+ "findings": [
+  {
+   "finding_id": "id_verif_verified",
+   "criterion_id": "identity_verification",
+   "name": "Identity Verification Protocol",
+   "kind": "observed",
+   "verdict": "followed",
+   "severity": "critical",
+   "evidence": [
+    {
+     "turn_id": 3,
+     "speaker": "agent",
+     "start_s": 23.81,
+     "end_s": 33.42,
+     "quote": "Certainly, Mr. Patel. For verification purposes, could you please confirm"
+    }
+   ],
+   "certainty": "high",
+   "certainty_reason": "",
+   "reviewer_status": "pending",
+   "reviewer_note": "",
+   "explanation": "Identity verification successfully completed before disclosing account details."
+  },
+  {
+   "finding_id": "sop_GEN-01_1",
+   "criterion_id": "GEN-01",
+   "name": "Professional Greeting & Identity Introduction",
+   "kind": "observed",
+   "verdict": "followed",
+   "severity": "major",
+   "evidence": [
+    {
+     "turn_id": 1,
+     "speaker": "agent",
+     "start_s": 0.0,
+     "end_s": 11.15,
+     "quote": "Thank you for calling ShopEase. My name is"
+    }
+   ],
+   "certainty": "high",
+   "certainty_reason": "",
+   "reviewer_status": "pending",
+   "reviewer_note": "",
+   "explanation": "The agent greeted the customer warmly, stated the company name, introduced himself, and asked how to help."
+  },
+  {
+   "finding_id": "sop_GEN-02_2",
+   "criterion_id": "GEN-02",
+   "name": "Mandatory Call Recording Disclosure",
+   "kind": "observed",
+   "verdict": "followed",
+   "severity": "critical",
+   "evidence": [
+    {
+     "turn_id": 1,
+     "speaker": "agent",
+     "start_s": 0.0,
+     "end_s": 11.15,
+     "quote": "Please note that this call is recorded for quality assurance and training purposes."
+    }
+   ],
+   "certainty": "high",
+   "certainty_reason": "",
+   "reviewer_status": "pending",
+   "reviewer_note": "",
+   "explanation": "The mandatory call recording disclosure was clearly stated in the opening turn."
+  },
+  {
+   "finding_id": "sop_GEN-03_3",
+   "criterion_id": "GEN-03",
+   "name": "Caller Identification & Two-Factor Verification",
+   "kind": "observed",
+   "verdict": "followed",
+   "severity": "critical",
+   "evidence": [
+    {
+     "turn_id": 3,
+     "speaker": "agent",
+     "start_s": 23.81,
+     "end_s": 33.42,
+     "quote": "For verification purposes, could you please confirm your ShopEase Order ID along with the last four digits"
+    }
+   ],
+   "certainty": "high",
+   "certainty_reason": "",
+   "reviewer_status": "pending",
+   "reviewer_note": "",
+   "explanation": "The agent correctly requested both the Order ID and the last four digits of the registered mobile number before providing any account details."
+  },
+  {
+   "finding_id": "sop_GEN-04_4",
+   "criterion_id": "GEN-04",
+   "name": "Active Listening & Issue Clarification",
+   "kind": "observed",
+   "verdict": "followed",
+   "severity": "major",
+   "evidence": [
+    {
+     "turn_id": 5,
+     "speaker": "agent",
+     "start_s": 41.76,
+     "end_s": 57.92,
+     "quote": "Just to ensure I have understood correctly, you would like an update on the delivery schedule"
+    }
+   ],
+   "certainty": "high",
+   "certainty_reason": "",
+   "reviewer_status": "pending",
+   "reviewer_note": "",
+   "explanation": "The agent allowed the customer to speak fully and then accurately paraphrased the core issues."
+  },
+  {
+   "finding_id": "sop_GEN-05_5",
+   "criterion_id": "GEN-05",
+   "name": "Empathy & Ownership Statement",
+   "kind": "inferred",
+   "verdict": "missed",
+   "severity": "major",
+   "evidence": [],
+   "certainty": "high",
+   "certainty_reason": "",
+   "reviewer_status": "pending",
+   "reviewer_note": "",
+   "explanation": "The agent answered policy and status questions directly without expressing explicit empathy or acknowledging customer inconvenience."
+  },
+  {
+   "finding_id": "sop_GEN-06_6",
+   "criterion_id": "GEN-06",
+   "name": "Accurate Policy Explanation & Solution Execution",
+   "kind": "observed",
+   "verdict": "followed",
+   "severity": "critical",
+   "evidence": [
+    {
+     "turn_id": 7,
+     "speaker": "agent",
+     "start_s": 73.85,
+     "end_s": 90.38,
+     "quote": "Under our shipping policy, standard delivery takes 3 to 7 business days from the dispatch date."
+    }
+   ],
+   "certainty": "high",
+   "certainty_reason": "",
+   "reviewer_status": "pending",
+   "reviewer_note": "",
+   "explanation": "The agent correctly cited official ShopEase policies regarding delivery windows, warranties, and returns."
+  },
+  {
+   "finding_id": "sop_GEN-07_7",
+   "criterion_id": "GEN-07",
+   "name": "Additional Assistance & Next Steps Summary",
+   "kind": "observed",
+   "verdict": "followed",
+   "severity": "major",
+   "evidence": [
+    {
+     "turn_id": 19,
+     "speaker": "agent",
+     "start_s": 190.38,
+     "end_s": 211.92,
+     "quote": "To recap our discussion, your OnePlus Nord CE 3 Lite 5G under order ORD-73904 is progressing normally"
+    }
+   ],
+   "certainty": "high",
+   "certainty_reason": "",
+   "reviewer_status": "pending",
+   "reviewer_note": "",
+   "explanation": "The agent provided a thorough recap, mentioned the service request reference, and asked if anything else was needed."
+  },
+  {
+   "finding_id": "sop_GEN-08_8",
+   "criterion_id": "GEN-08",
+   "name": "Professional Branded Sign-Off",
+   "kind": "observed",
+   "verdict": "followed",
+   "severity": "major",
+   "evidence": [
+    {
+     "turn_id": 21,
+     "speaker": "agent",
+     "start_s": 218.4,
+     "end_s": 224.94,
+     "quote": "Thank you for contacting ShopEase. We appreciate your business and hope you have a great day ahead!"
+    }
+   ],
+   "certainty": "high",
+   "certainty_reason": "",
+   "reviewer_status": "pending",
+   "reviewer_note": "",
+   "explanation": "The agent concluded the call with a warm, professional branded sign-off."
+  },
+  {
+   "finding_id": "policy_WAR-3.2_1",
+   "criterion_id": "WAR-3.2",
+   "name": "Warranty and Replacement Policy: Refurbished and Open-Box Warranty Rules",
+   "kind": "observed",
+   "verdict": "violation",
+   "severity": "minor",
+   "evidence": [
+    {
+     "turn_id": 9,
+     "speaker": "agent",
+     "start_s": 0.0,
+     "end_s": 0.0,
+     "quote": "refurbished products have zero warranty coverage of any kind from ShopEase. They are sold entirely as-is without any warranty period."
+    }
+   ],
+   "certainty": "high",
+   "certainty_reason": "",
+   "reviewer_status": "pending",
+   "reviewer_note": "",
+   "explanation": "Agent claimed refurbished products carry zero warranty, whereas clause WAR-3.2 states certified refurbished electronic devices carry a 6-month ShopEase warranty."
+  },
+  {
+   "finding_id": "empathy_rating",
+   "criterion_id": "empathy_and_communication",
+   "name": "Empathy & Tone Assessment",
+   "kind": "inferred",
+   "verdict": "partial",
+   "severity": "minor",
+   "evidence": [
+    {
+     "turn_id": 0,
+     "speaker": "agent",
+     "start_s": 0.0,
+     "end_s": 0.0,
+     "quote": "Thank you for confirming that. Just to ensure I have understood correctly, you would like an update"
+    }
+   ],
+   "certainty": "medium",
+   "certainty_reason": "Subjective appraisal of agent warmth and emotional validation",
+   "reviewer_status": "pending",
+   "reviewer_note": "",
+   "explanation": "Empathy score: 2/5"
+  }
+ ],
+ "cannot_judge": false,
+ "cannot_judge_reason": "",
+ "unreadable_parts": [],
+ "status": "ok",
+ "failed_step": null,
+ "completed_steps": [
+  "input_ingestion",
+  "quality_gate",
+  "call_state",
+  "topic_detection",
+  "scorecard_judgment",
+  "policy_check",
+  "evidence_verification",
+  "scoring"
+ ],
+ "emotion": {
+  "points": [
+   {
+    "turn": 2,
+    "emotion": "neutral",
+    "valence": 0.0
+   },
+   {
+    "turn": 4,
+    "emotion": "neutral",
+    "valence": 0.0
+   },
+   {
+    "turn": 6,
+    "emotion": "neutral",
+    "valence": 0.0
+   },
+   {
+    "turn": 8,
+    "emotion": "neutral",
+    "valence": 0.0
+   },
+   {
+    "turn": 10,
+    "emotion": "confused",
+    "valence": -0.5
+   },
+   {
+    "turn": 12,
+    "emotion": "neutral",
+    "valence": 0.0
+   },
+   {
+    "turn": 14,
+    "emotion": "neutral",
+    "valence": 0.0
+   },
+   {
+    "turn": 16,
+    "emotion": "neutral",
+    "valence": 0.0
+   },
+   {
+    "turn": 18,
+    "emotion": "satisfied",
+    "valence": 1.0
+   },
+   {
+    "turn": 20,
+    "emotion": "satisfied",
+    "valence": 1.0
+   },
+   {
+    "turn": 22,
+    "emotion": "satisfied",
+    "valence": 1.0
+   }
+  ],
+  "start": "neutral",
+  "middle": "neutral",
+  "end": "satisfied",
+  "trend": "improved"
+ },
+ "agent_tone": {
+  "points": [
+   {
+    "turn": 1,
+    "emotion": "warm",
+    "valence": 1.0
+   },
+   {
+    "turn": 3,
+    "emotion": "calm",
+    "valence": 0.5
+   },
+   {
+    "turn": 5,
+    "emotion": "calm",
+    "valence": 0.5
+   },
+   {
+    "turn": 7,
+    "emotion": "neutral",
+    "valence": 0.0
+   },
+   {
+    "turn": 9,
+    "emotion": "neutral",
+    "valence": 0.0
+   },
+   {
+    "turn": 11,
+    "emotion": "neutral",
+    "valence": 0.0
+   },
+   {
+    "turn": 13,
+    "emotion": "neutral",
+    "valence": 0.0
+   },
+   {
+    "turn": 15,
+    "emotion": "neutral",
+    "valence": 0.0
+   },
+   {
+    "turn": 17,
+    "emotion": "calm",
+    "valence": 0.5
+   },
+   {
+    "turn": 19,
+    "emotion": "warm",
+    "valence": 1.0
+   },
+   {
+    "turn": 21,
+    "emotion": "warm",
+    "valence": 1.0
+   }
+  ],
+  "start": "warm",
+  "middle": "neutral",
+  "end": "warm",
+  "trend": "flat"
+ },
+ "metrics": {
+  "duration_sec": 228.0,
+  "agent_turns": 11,
+  "customer_turns": 11,
+  "agent_talk_ratio": 0.634,
+  "longest_silence_sec": 1.1,
+  "dead_air_events": [],
+  "interruption_events": [
+   {
+    "gap_type": "interruption",
+    "turn": 17,
+    "quote": "Pardon the interruption, Mr. Patel, but please note that because this is a smart",
+    "detail": "The agent started speaking while the other person was still talking (turn 17).",
+    "source": "timing"
+   }
+  ],
+  "hold_events": [],
+  "holds": [],
+  "longest_hold_sec": 0.0,
+  "agent_words_per_minute": 156.0,
+  "agent_interruptions": 1
+ },
+ "strengths": [
+  "Performed flawless two-factor authentication before discussing order details.",
+  "Provided highly accurate and detailed policy timelines for delivery, returns, and refunds.",
+  "Delivered a comprehensive recap including the ticket reference number at the end of the call.",
+  "Completed all 3 critical SOP steps that applied to this call."
+ ],
+ "coaching": [
+  {
+   "title": "GEN-05: Empathy & Ownership Statement",
+   "advice": "Empathetic acknowledgment that avoids robotic stock phrases, validating the customer's frustration. Example: \"I completely understand how frustrating it is to wait for an order, and I am personally going to sort this out for you.\"",
+   "source": "sop",
+   "evidence": "Missing: empathy statement, ownership reassurance. The agent answered policy and status questions directly without expressing explicit empathy or acknowledging customer inconvenience."
+  },
+  {
+   "title": "Policy WAR-3.2: say it correctly",
+   "advice": "Agent claimed refurbished products carry zero warranty, whereas clause WAR-3.2 states certified refurbished electronic devices carry a 6-month ShopEase warranty.",
+   "source": "policy",
+   "evidence": "refurbished products have zero warranty coverage of any kind from ShopEase. They are sold entirely as-is without any warranty period."
+  },
+  {
+   "title": "Suggestion",
+   "advice": "Next time, remember to include a brief empathetic acknowledgment or reassurance when the customer shares their initial requests.",
+   "source": "llm",
+   "evidence": ""
+  }
+ ],
+ "risk_flags": [],
+ "retrieved_clause_ids": [
+  "WAR-3.2",
+  "WAR-2.3",
+  "WAR-1.1",
+  "REF-1.1",
+  "WAR-2.2",
+  "WAR-2.1",
+  "WAR-1.2",
+  "REF-4.1",
+  "REF-2.1",
+  "SHP-1.1",
+  "PRV-1.1",
+  "ESC-1.1",
+  "ESC-1.2",
+  "WAR-3.1",
+  "ESC-2.1",
+  "ESC-2.2",
+  "ESC-3.1",
+  "ESC-3.2",
+  "PRV-1.2",
+  "PRV-1.3",
+  "PRV-2.1",
+  "PRV-2.2",
+  "PRV-3.1"
+ ],
+ "transcript": {
+  "call_id": "call_041",
+  "source": "transcript",
+  "language": "te",
+  "audio_path": null,
+  "duration_seconds": 228.0,
+  "diarization_method": "given",
+  "transcript_quality": "good",
+  "quality_reason": "Transcript quality is reliable for compliance and rubric scoring.",
+  "unreadable_parts": [],
+  "turns": [
+   {
+    "turn_id": 1,
+    "speaker": "agent",
+    "start_time": 0.0,
+    "end_time": 11.15,
+    "text": "Thank you for calling ShopEase. My name is Amit Patel. Please note that this call is recorded for quality assurance and training purposes. How may I assist you today?",
+    "text_te": null,
+    "text_roman": null,
+    "asr_confidence": 1.0,
+    "silence_before": 0.0,
+    "overlaps_previous": false,
+    "emotion": "warm"
+   },
+   {
+    "turn_id": 2,
+    "speaker": "customer",
+    "start_time": 12.05,
+    "end_time": 23.21,
+    "text": "Hello Amit, my name is Karan Patel. I wanted to check the delivery status of an order I placed, and also ask a general question about your electronics warranty.",
+    "text_te": null,
+    "text_roman": null,
+    "asr_confidence": 1.0,
+    "silence_before": 0.9,
+    "overlaps_previous": false,
+    "emotion": "neutral"
+   },
+   {
+    "turn_id": 3,
+    "speaker": "agent",
+    "start_time": 23.81,
+    "end_time": 33.42,
+    "text": "Certainly, Mr. Patel. For verification purposes, could you please confirm your ShopEase Order ID along with the last four digits of your registered mobile number?",
+    "text_te": null,
+    "text_roman": null,
+    "asr_confidence": 1.0,
+    "silence_before": 0.6,
+    "overlaps_previous": false,
+    "emotion": "calm"
+   },
+   {
+    "turn_id": 4,
+    "speaker": "customer",
+    "start_time": 34.52,
+    "end_time": 41.06,
+    "text": "Yes, the Order ID is ORD-73904, and the last four digits of my phone number are 4475.",
+    "text_te": null,
+    "text_roman": null,
+    "asr_confidence": 1.0,
+    "silence_before": 1.1,
+    "overlaps_previous": false,
+    "emotion": "neutral"
+   },
+   {
+    "turn_id": 5,
+    "speaker": "agent",
+    "start_time": 41.76,
+    "end_time": 57.92,
+    "text": "Thank you for confirming that. Just to ensure I have understood correctly, you would like an update on the delivery schedule for your OnePlus Nord CE 3 Lite 5G, and you also have a policy inquiry regarding electronics warranty. Is that correct?",
+    "text_te": null,
+    "text_roman": null,
+    "asr_confidence": 1.0,
+    "silence_before": 0.7,
+    "overlaps_previous": false,
+    "emotion": "calm"
+   },
+   {
+    "turn_id": 6,
+    "speaker": "customer",
+    "start_time": 58.72,
+    "end_time": 72.95,
+    "text": "Yes, exactly. I want to make sure I know when the handset will arrive, and my cousin was also looking at certified refurbished electronics on your site, so I wanted to check how warranty works on those.",
+    "text_te": null,
+    "text_roman": null,
+    "asr_confidence": 1.0,
+    "silence_before": 0.8,
+    "overlaps_previous": false,
+    "emotion": "neutral"
+   },
+   {
+    "turn_id": 7,
+    "speaker": "agent",
+    "start_time": 73.85,
+    "end_time": 90.38,
+    "text": "Under our shipping policy, standard delivery takes 3 to 7 business days from the dispatch date. Your order ORD-73904, valued at Rs 19,999, was dispatched yesterday and is currently in transit. It is on track to arrive by this Thursday within that window.",
+    "text_te": null,
+    "text_roman": null,
+    "asr_confidence": 1.0,
+    "silence_before": 0.9,
+    "overlaps_previous": false,
+    "emotion": "neutral"
+   },
+   {
+    "turn_id": 8,
+    "speaker": "customer",
+    "start_time": 91.08,
+    "end_time": 98.39,
+    "text": "Alright, that is good. And what about certified refurbished electronics? What kind of warranty do they have on ShopEase?",
+    "text_te": null,
+    "text_roman": null,
+    "asr_confidence": 1.0,
+    "silence_before": 0.7,
+    "overlaps_previous": false,
+    "emotion": "neutral"
+   },
+   {
+    "turn_id": 9,
+    "speaker": "agent",
+    "start_time": 99.19,
+    "end_time": 109.96,
+    "text": "Regarding certified refurbished items, our policy is that refurbished products have zero warranty coverage of any kind from ShopEase. They are sold entirely as-is without any warranty period.",
+    "text_te": null,
+    "text_roman": null,
+    "asr_confidence": 1.0,
+    "silence_before": 0.8,
+    "overlaps_previous": false,
+    "emotion": "neutral"
+   },
+   {
+    "turn_id": 10,
+    "speaker": "customer",
+    "start_time": 110.56,
+    "end_time": 115.18,
+    "text": "Oh, so there is no warranty provided on refurbished gadgets at all?",
+    "text_te": null,
+    "text_roman": null,
+    "asr_confidence": 1.0,
+    "silence_before": 0.6,
+    "overlaps_previous": false,
+    "emotion": "confused"
+   },
+   {
+    "turn_id": 11,
+    "speaker": "agent",
+    "start_time": 115.88,
+    "end_time": 125.88,
+    "text": "That is correct, refurbished items carry no warranty coverage whatsoever, whereas brand new units like your OnePlus come with full brand warranty and our return window.",
+    "text_te": null,
+    "text_roman": null,
+    "asr_confidence": 1.0,
+    "silence_before": 0.7,
+    "overlaps_previous": false,
+    "emotion": "neutral"
+   },
+   {
+    "turn_id": 12,
+    "speaker": "customer",
+    "start_time": 126.68,
+    "end_time": 135.14,
+    "text": "Okay, understood. And for my new OnePlus phone, what is the return window if there happens to be an issue upon delivery?",
+    "text_te": null,
+    "text_roman": null,
+    "asr_confidence": 1.0,
+    "silence_before": 0.8,
+    "overlaps_previous": false,
+    "emotion": "neutral"
+   },
+   {
+    "turn_id": 13,
+    "speaker": "agent",
+    "start_time": 135.84,
+    "end_time": 146.61,
+    "text": "As per our returns policy, mobile phones fall under the electronics category, which has a return eligibility window of exactly 7 calendar days from the date of delivery.",
+    "text_te": null,
+    "text_roman": null,
+    "asr_confidence": 1.0,
+    "silence_before": 0.7,
+    "overlaps_previous": false,
+    "emotion": "neutral"
+   },
+   {
+    "turn_id": 14,
+    "speaker": "customer",
+    "start_time": 147.21,
+    "end_time": 153.36,
+    "text": "Fair enough. And in case a return is ever initiated, how long does the refund take?",
+    "text_te": null,
+    "text_roman": null,
+    "asr_confidence": 1.0,
+    "silence_before": 0.6,
+    "overlaps_previous": false,
+    "emotion": "neutral"
+   },
+   {
+    "turn_id": 15,
+    "speaker": "agent",
+    "start_time": 154.16,
+    "end_time": 162.62,
+    "text": "Approved refunds are processed within 5 to 7 business days following pickup and warehouse verification, returned strictly to your original payment method.",
+    "text_te": null,
+    "text_roman": null,
+    "asr_confidence": 1.0,
+    "silence_before": 0.8,
+    "overlaps_previous": false,
+    "emotion": "neutral"
+   },
+   {
+    "turn_id": 16,
+    "speaker": "customer",
+    "start_time": 163.12,
+    "end_time": 168.51,
+    "text": "That is clear. Now regarding the delivery day itself, will the delivery agent require—",
+    "text_te": null,
+    "text_roman": null,
+    "asr_confidence": 1.0,
+    "silence_before": 0.5,
+    "overlaps_previous": false,
+    "emotion": "neutral"
+   },
+   {
+    "turn_id": 17,
+    "speaker": "agent",
+    "start_time": 168.11,
+    "end_time": 182.34,
+    "text": "Pardon the interruption, Mr. Patel, but please note that because this is a smartphone order over Rs 2,500, our courier will require a 4-digit Delivery Verification OTP sent to your registered mobile at the time of handover.",
+    "text_te": null,
+    "text_roman": null,
+    "asr_confidence": 1.0,
+    "silence_before": 0.0,
+    "overlaps_previous": true,
+    "emotion": "calm"
+   },
+   {
+    "turn_id": 18,
+    "speaker": "customer",
+    "start_time": 183.14,
+    "end_time": 189.68,
+    "text": "Yes, that was actually what I was about to ask. Thanks for letting me know in advance.",
+    "text_te": null,
+    "text_roman": null,
+    "asr_confidence": 1.0,
+    "silence_before": 0.8,
+    "overlaps_previous": false,
+    "emotion": "satisfied"
+   },
+   {
+    "turn_id": 19,
+    "speaker": "agent",
+    "start_time": 190.38,
+    "end_time": 211.92,
+    "text": "To recap our discussion, your OnePlus Nord CE 3 Lite 5G under order ORD-73904 is progressing normally within our standard 3 to 7 business day delivery timeline, expected by Thursday with OTP verification. I have logged this interaction under service request reference SR-44821. Aside from this, is there anything else I can help you with today?",
+    "text_te": null,
+    "text_roman": null,
+    "asr_confidence": 1.0,
+    "silence_before": 0.7,
+    "overlaps_previous": false,
+    "emotion": "warm"
+   },
+   {
+    "turn_id": 20,
+    "speaker": "customer",
+    "start_time": 212.52,
+    "end_time": 217.9,
+    "text": "No, Amit, you have answered all my questions clearly. That is all I needed.",
+    "text_te": null,
+    "text_roman": null,
+    "asr_confidence": 1.0,
+    "silence_before": 0.6,
+    "overlaps_previous": false,
+    "emotion": "satisfied"
+   },
+   {
+    "turn_id": 21,
+    "speaker": "agent",
+    "start_time": 218.4,
+    "end_time": 224.94,
+    "text": "Thank you for contacting ShopEase. We appreciate your business and hope you have a great day ahead!",
+    "text_te": null,
+    "text_roman": null,
+    "asr_confidence": 1.0,
+    "silence_before": 0.5,
+    "overlaps_previous": false,
+    "emotion": "warm"
+   },
+   {
+    "turn_id": 22,
+    "speaker": "customer",
+    "start_time": 225.34,
+    "end_time": 228.03,
+    "text": "Thank you, have a good day. Bye.",
+    "text_te": null,
+    "text_roman": null,
+    "asr_confidence": 1.0,
+    "silence_before": 0.4,
+    "overlaps_previous": false,
+    "emotion": "satisfied"
+   }
+  ]
+ },
+ "meta": {
+  "model": "gemini:gemini-3.5-flash-lite",
+  "llm_requests": 1,
+  "diarization_method": "given",
+  "transcribe_seconds": 0.0,
+  "audit_seconds": 11.3,
+  "cache_hit": false,
+  "warnings": [],
+  "source_set": "synthetic",
+  "trace_id": "run_call_041_711804",
+  "status": "ok",
+  "failed_step": null,
+  "completed_steps": [
+   "input_ingestion",
+   "quality_gate",
+   "call_state",
+   "topic_detection",
+   "scorecard_judgment",
+   "policy_check",
+   "evidence_verification",
+   "scoring"
+  ],
+  "estimated_cost_usd": 0.019554,
+  "tokens_in": 9269,
+  "tokens_out": 2252
+ }
+}

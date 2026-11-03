@@ -1,0 +1,85 @@
+{
+  "audit_key_salt": "audit-v9",
+  "policy_model": "gemini-3.5-flash",
+  "generation_date": "2026-11-04T01:35:05",
+  "calls": [
+    {
+      "call_id": "call_001",
+      "overall": 100.0,
+      "grade": "A",
+      "status": "ok"
+    },
+    {
+      "call_id": "call_009",
+      "overall": 99.0,
+      "grade": "A",
+      "status": "ok"
+    },
+    {
+      "call_id": "call_017",
+      "overall": 94.8,
+      "grade": "A",
+      "status": "ok"
+    },
+    {
+      "call_id": "call_025",
+      "overall": 85.0,
+      "grade": "B",
+      "status": "ok"
+    },
+    {
+      "call_id": "call_041",
+      "overall": 81.8,
+      "grade": "B",
+      "status": "ok"
+    },
+    {
+      "call_id": "call_101",
+      "overall": 100.0,
+      "grade": "A",
+      "status": "ok"
+    },
+    {
+      "call_id": "call_102",
+      "overall": 10.1,
+      "grade": "D",
+      "status": "ok"
+    },
+    {
+      "call_id": "call_103",
+      "overall": 100.0,
+      "grade": "A",
+      "status": "ok"
+    },
+    {
+      "call_id": "call_104",
+      "overall": 14.9,
+      "grade": "D",
+      "status": "ok"
+    },
+    {
+      "call_id": "call_105",
+      "overall": 70.0,
+      "grade": "C",
+      "status": "ok"
+    },
+    {
+      "call_id": "call_106",
+      "overall": 16.1,
+      "grade": "D",
+      "status": "degraded"
+    },
+    {
+      "call_id": "call_107",
+      "overall": 57.8,
+      "grade": "D",
+      "status": "ok"
+    },
+    {
+      "call_id": "call_108",
+      "overall": 100.0,
+      "grade": "A",
+      "status": "ok"
+    }
+  ]
+}

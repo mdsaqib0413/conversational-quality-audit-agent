@@ -1,0 +1,1412 @@
+{
+ "call_id": "call_105",
+ "generated_at": "2026-11-03T18:46:50",
+ "topic": "shipping",
+ "topic_confidence": 0.844,
+ "signals": [
+  "angry_customer",
+  "supervisor_request",
+  "hold",
+  "callback"
+ ],
+ "summary": "Deepa Krishnan called expressing severe frustration over a delayed mixer grinder order after two previous calls. Agent Aman Gupta verified her details, raised a logistics ticket, offered a Rs 100 goodwill credit, and arranged a scheduled supervisor callback after a hold attempt. The customer agreed to the callback and the call ended with a full recap.",
+ "customer_issue": "Delayed mixer grinder delivery after two previous unresolved calls",
+ "resolved": true,
+ "scores": {
+  "sop_score": 37.2,
+  "policy_score": 30.0,
+  "empathy_score": 15.0,
+  "communication_score": 15.0,
+  "overall_before_cap": 97.2,
+  "overall": 70.0,
+  "grade": "C",
+  "grade_label": "Needs Improvement",
+  "critical_failure": true,
+  "cap_reasons": [
+   "Critical step HLD-02 (Adhere to Maximum 2-Minute Hold Ceiling) was missed"
+  ],
+  "sop_points_earned": 54.0,
+  "sop_points_possible": 58.0,
+  "policy_penalty_total": 0.0,
+  "policy_applicable": true,
+  "timing_penalty": 0.0,
+  "timing_notes": [],
+  "empathy_rating": 5,
+  "clarity_rating": 5,
+  "professionalism_rating": 5,
+  "ownership_rating": 5,
+  "closure_rating": 5
+ },
+ "sop_results": [
+  {
+   "step_id": "ANG-01",
+   "title": "Emotional Composure & Non-Defensive Tone",
+   "sop": "angry_customer_sop",
+   "weight": 4,
+   "critical": false,
+   "mandatory": true,
+   "status": "followed",
+   "points_earned": 4.0,
+   "points_possible": 4.0,
+   "turn": 3,
+   "quote": "I am truly sorry, Ms. Krishnan. I can hear how frustrating this has been",
+   "reason": "The agent maintained a calm and respectful tone despite the customer's hostility.",
+   "missing": "",
+   "evidence_verified": true,
+   "what_good_looks_like": "The agent speaks in a measured cadence, lowers pitch slightly, avoids sighing, and never argues back or interrupts.",
+   "example_phrase": "I hear your frustration loud and clear, and I am right here to help you get this resolved."
+  },
+  {
+   "step_id": "ANG-02",
+   "title": "Sincere Empathy & Acknowledgment",
+   "sop": "angry_customer_sop",
+   "weight": 4,
+   "critical": false,
+   "mandatory": true,
+   "status": "followed",
+   "points_earned": 4.0,
+   "points_possible": 4.0,
+   "turn": 3,
+   "quote": "I can hear how frustrating this has been, especially after calling three times",
+   "reason": "The agent acknowledged the emotional impact of the delay and prior calls.",
+   "missing": "",
+   "evidence_verified": true,
+   "what_good_looks_like": "Demonstrates genuine empathy that acknowledges the inconvenience caused without blaming company departments or courier partners.",
+   "example_phrase": "If I were in your shoes, I would feel exactly the same way. I am truly sorry for this experience."
+  },
+  {
+   "step_id": "ANG-03",
+   "title": "Fact-Finding Without Cross-Examination",
+   "sop": "angry_customer_sop",
+   "weight": 3,
+   "critical": false,
+   "mandatory": true,
+   "status": "followed",
+   "points_earned": 3.0,
+   "points_possible": 3.0,
+   "turn": 7,
+   "quote": "Could I ask one quick question so I can pinpoint the problem: did you receive any out-for-delivery message",
+   "reason": "The agent asked a concise clarifying question without interrogation.",
+   "missing": "",
+   "evidence_verified": true,
+   "what_good_looks_like": "Uses open-ended inquiries that let the caller share essential facts while validating their perspective.",
+   "example_phrase": "To ensure I address everything, could you walk me through what happened when the parcel arrived?"
+  },
+  {
+   "step_id": "ANG-04",
+   "title": "Direct Action Plan & Concrete Timelines",
+   "sop": "angry_customer_sop",
+   "weight": 3,
+   "critical": false,
+   "mandatory": true,
+   "status": "followed",
+   "points_earned": 3.0,
+   "points_possible": 3.0,
+   "turn": 9,
+   "quote": "Here is what I am doing right now: I am raising a logistics tracking ticket with the courier partner",
+   "reason": "The agent proposed a concrete plan of action with specific timelines.",
+   "missing": "",
+   "evidence_verified": true,
+   "what_good_looks_like": "The agent outlines specific steps and realistic SLAs (e.g. 5-7 business days for refund, 24-48 hours for courier dispatch).",
+   "example_phrase": "Here is what I will do right now: I am issuing an expedited return request and scheduling courier pickup for tomorrow morning."
+  },
+  {
+   "step_id": "ANG-05",
+   "title": "Supervisor Escalation Execution",
+   "sop": "angry_customer_sop",
+   "weight": 5,
+   "critical": true,
+   "mandatory": true,
+   "status": "followed",
+   "points_earned": 5.0,
+   "points_possible": 5.0,
+   "turn": 13,
+   "quote": "You are absolutely right to ask, and I am escalating this to a supervisor right now.",
+   "reason": "The agent immediately initiated supervisor escalation upon repeated request.",
+   "missing": "",
+   "evidence_verified": true,
+   "what_good_looks_like": "Seamless transition offering supervisor transfer without arguing or attempting to block the escalation.",
+   "example_phrase": "I respect your request to speak with a supervisor. Please allow me to place you on a brief 1-minute hold while I connect you to my manager."
+  },
+  {
+   "step_id": "ANG-06",
+   "title": "Respectful Boundary Setting for Abusive Language",
+   "sop": "angry_customer_sop",
+   "weight": 3,
+   "critical": false,
+   "mandatory": true,
+   "status": "not_applicable",
+   "points_earned": 0.0,
+   "points_possible": 0.0,
+   "turn": null,
+   "quote": "",
+   "reason": "The customer was angry and frustrated but did not use vulgarity, personal slurs, or threats of violence.",
+   "missing": "",
+   "evidence_verified": true,
+   "what_good_looks_like": "Calm warning delivered without hostility, focusing on mutual respect.",
+   "example_phrase": "Sir/Madam, I am genuinely here to help you resolve this, but I must kindly request that we maintain respectful language."
+  },
+  {
+   "step_id": "GEN-01",
+   "title": "Professional Greeting & Identity Introduction",
+   "sop": "general_call_flow",
+   "weight": 2,
+   "critical": false,
+   "mandatory": true,
+   "status": "followed",
+   "points_earned": 2.0,
+   "points_possible": 2.0,
+   "turn": 1,
+   "quote": "Thank you for calling ShopEase. My name is Aman Gupta. How may I assist you today?",
+   "reason": "The agent greeted the customer, stated the company name, introduced himself, and asked how to help.",
+   "missing": "",
+   "evidence_verified": true,
+   "what_good_looks_like": "The agent opens within 2 seconds of call connection with a polite, welcoming tone, introducing both the brand and representative name.",
+   "example_phrase": "Thank you for calling ShopEase. My name is Rahul. How may I assist you today?"
+  },
+  {
+   "step_id": "GEN-02",
+   "title": "Mandatory Call Recording Disclosure",
+   "sop": "general_call_flow",
+   "weight": 5,
+   "critical": true,
+   "mandatory": true,
+   "status": "followed",
+   "points_earned": 5.0,
+   "points_possible": 5.0,
+   "turn": 1,
+   "quote": "Please note that this call is recorded for quality assurance and training purposes.",
+   "reason": "The call recording statutory notification was clearly provided in the first turn.",
+   "missing": "",
+   "evidence_verified": true,
+   "what_good_looks_like": "The disclosure is clearly articulated within the first two conversation turns without mumbling or skipping.",
+   "example_phrase": "Please note that this call is being recorded for quality monitoring and training purposes."
+  },
+  {
+   "step_id": "GEN-03",
+   "title": "Caller Identification & Two-Factor Verification",
+   "sop": "general_call_flow",
+   "weight": 5,
+   "critical": true,
+   "mandatory": true,
+   "status": "followed",
+   "points_earned": 5.0,
+   "points_possible": 5.0,
+   "turn": 3,
+   "quote": "May I please have your Order ID and the last four digits of your registered mobile number?",
+   "reason": "The agent systematically requested both required verification items before revealing account details.",
+   "missing": "",
+   "evidence_verified": true,
+   "what_good_looks_like": "The agent systematically validates both verification data points before disclosing addresses, order contents, or monetary info.",
+   "example_phrase": "To ensure your account security, may I please have your Order ID and the last four digits of your registered mobile number?"
+  },
+  {
+   "step_id": "GEN-04",
+   "title": "Active Listening & Issue Clarification",
+   "sop": "general_call_flow",
+   "weight": 3,
+   "critical": false,
+   "mandatory": true,
+   "status": "followed",
+   "points_earned": 3.0,
+   "points_possible": 3.0,
+   "turn": 5,
+   "quote": "Let me make sure I have this right: your mixer grinder was dispatched fourteen days ago",
+   "reason": "The agent allowed the customer to speak and accurately paraphrased the core issue.",
+   "missing": "",
+   "evidence_verified": true,
+   "what_good_looks_like": "The agent maintains silence while the customer speaks, takes notes, and summarizes the specific problem back to the customer.",
+   "example_phrase": "I understand that your package has not arrived and you would like to track the courier status. Is that correct?"
+  },
+  {
+   "step_id": "GEN-05",
+   "title": "Empathy & Ownership Statement",
+   "sop": "general_call_flow",
+   "weight": 3,
+   "critical": false,
+   "mandatory": true,
+   "status": "followed",
+   "points_earned": 3.0,
+   "points_possible": 3.0,
+   "turn": 3,
+   "quote": "I will personally take ownership of this until it is resolved.",
+   "reason": "The agent expressed sincere empathy and offered personal reassurance of ownership.",
+   "missing": "",
+   "evidence_verified": true,
+   "what_good_looks_like": "Empathetic acknowledgment that avoids robotic stock phrases, validating the customer's frustration.",
+   "example_phrase": "I completely understand how frustrating it is to wait for an order, and I am personally going to sort this out for you."
+  },
+  {
+   "step_id": "GEN-06",
+   "title": "Accurate Policy Explanation & Solution Execution",
+   "sop": "general_call_flow",
+   "weight": 5,
+   "critical": true,
+   "mandatory": true,
+   "status": "followed",
+   "points_earned": 5.0,
+   "points_possible": 5.0,
+   "turn": 9,
+   "quote": "Our standard delivery commitment is 3 to 7 business days, so your parcel is well beyond that commitment.",
+   "reason": "The agent accurately explained company delivery policy terms.",
+   "missing": "",
+   "evidence_verified": true,
+   "what_good_looks_like": "Explaining exact delivery or refund windows (e.g., 5-7 business days for refund, 7 days for electronics) without making out-of-policy promises.",
+   "example_phrase": "Per our policy, since your wireless earbuds are within the 7-day electronics return window, I have scheduled a reverse pickup for tomorrow."
+  },
+  {
+   "step_id": "GEN-07",
+   "title": "Additional Assistance & Next Steps Summary",
+   "sop": "general_call_flow",
+   "weight": 2,
+   "critical": false,
+   "mandatory": true,
+   "status": "followed",
+   "points_earned": 2.0,
+   "points_possible": 2.0,
+   "turn": 19,
+   "quote": "To recap: ticket LOG-88213 is raised with the courier... Is there anything else I can help you with?",
+   "reason": "The agent summarized the agreed resolution, referenced ticket numbers, and asked for secondary questions.",
+   "missing": "",
+   "evidence_verified": true,
+   "what_good_looks_like": "Clear recap of actions taken, tracking reference shared, and an open invitation for secondary questions.",
+   "example_phrase": "To recap, I have initiated return ticket #SR-8921. You will receive an SMS confirmation. Is there anything else I can help you with today?"
+  },
+  {
+   "step_id": "GEN-08",
+   "title": "Professional Branded Sign-Off",
+   "sop": "general_call_flow",
+   "weight": 2,
+   "critical": false,
+   "mandatory": true,
+   "status": "followed",
+   "points_earned": 2.0,
+   "points_possible": 2.0,
+   "turn": 21,
+   "quote": "Thank you for contacting ShopEase, Ms. Krishnan. Have a good day, and again, I am sorry for the trouble.",
+   "reason": "The agent concluded professionally, mentioning ShopEase and expressing parting courtesies.",
+   "missing": "",
+   "evidence_verified": true,
+   "what_good_looks_like": "Courteous parting statement thanking the customer, waiting for the customer to disconnect first.",
+   "example_phrase": "Thank you for contacting ShopEase. We appreciate your business and hope you have a great day ahead!"
+  },
+  {
+   "step_id": "HLD-01",
+   "title": "Request Permission and State Reason for Hold",
+   "sop": "hold_and_transfer_sop",
+   "weight": 3,
+   "critical": false,
+   "mandatory": true,
+   "status": "followed",
+   "points_earned": 3.0,
+   "points_possible": 3.0,
+   "turn": 13,
+   "quote": "May I place you on a brief hold for up to two minutes while I connect with them?",
+   "reason": "The agent explicitly asked for hold permission and stated the reason.",
+   "missing": "",
+   "evidence_verified": true,
+   "what_good_looks_like": "The agent states the specific reason for the hold and pauses for the customer's affirmative acknowledgment.",
+   "example_phrase": "May I place your call on a brief hold for one minute while I check your shipment status with our dispatch team?"
+  },
+  {
+   "step_id": "HLD-02",
+   "title": "Adhere to Maximum 2-Minute Hold Ceiling",
+   "sop": "hold_and_transfer_sop",
+   "weight": 4,
+   "critical": true,
+   "mandatory": true,
+   "status": "missed",
+   "points_earned": 0.0,
+   "points_possible": 4.0,
+   "turn": null,
+   "quote": "",
+   "reason": "The agent placed the customer on hold for 75 seconds without checking in before the 120-second mark, but the total hold time exceeded 2 minutes in total duration according to audio timing (75s from transcript check, but wait time was over 2 minutes total from turn 13 to 15 elapsed time).",
+   "missing": "The agent did not check back in before the hold ceiling or exceeded the limit.",
+   "evidence_verified": true,
+   "what_good_looks_like": "The agent monitors an on-screen timer and checks back in with the customer before the 120-second mark.",
+   "example_phrase": "Thank you for your patience. I am still reviewing the carrier logs. May I place you on hold for one more minute?"
+  },
+  {
+   "step_id": "HLD-03",
+   "title": "Return From Hold with Gratitude",
+   "sop": "hold_and_transfer_sop",
+   "weight": 2,
+   "critical": false,
+   "mandatory": true,
+   "status": "followed",
+   "points_earned": 2.0,
+   "points_possible": 2.0,
+   "turn": 15,
+   "quote": "Thank you for holding, Ms. Krishnan, and I apologise for the wait.",
+   "reason": "The agent thanked the customer sincerely for their patience upon returning from hold.",
+   "missing": "",
+   "evidence_verified": true,
+   "what_good_looks_like": "Greets the caller by name and thanks them warmly before delivering the gathered information.",
+   "example_phrase": "Thank you so much for holding, Mr. Sharma. I have retrieved your courier manifest details."
+  },
+  {
+   "step_id": "HLD-05",
+   "title": "Supervisor Callback Offer When Transfer Unavailable",
+   "sop": "hold_and_transfer_sop",
+   "weight": 3,
+   "critical": false,
+   "mandatory": true,
+   "status": "followed",
+   "points_earned": 3.0,
+   "points_possible": 3.0,
+   "turn": 15,
+   "quote": "Rather than keep you waiting, I can schedule a confirmed supervisor callback for you within the next 2 to 4 hours.",
+   "reason": "The agent offered a confirmed supervisor callback within 2 to 4 hours when immediate transfer was unavailable.",
+   "missing": "",
+   "evidence_verified": true,
+   "what_good_looks_like": "Apologizes for the delay, logs a callback ticket, confirms the preferred contact number, and commits to the 2-4 hour SLA.",
+   "example_phrase": "Our senior supervisors are currently assisting other customers. Rather than keeping you on hold, I can schedule a confirmed supervisor callback within the next 2 to 4 hours. Would that work for you?"
+  }
+ ],
+ "policy_results": [
+  {
+   "clause_id": "PRV-1.2",
+   "policy_title": "Privacy and Identity Verification Policy: Mandatory Call Recording Disclosure",
+   "verdict": "compliant",
+   "severity": "none",
+   "penalty": 0.0,
+   "turn": 1,
+   "quote": "Please note that this call is recorded for quality assurance and training purposes.",
+   "claim": "Agent stated that the call is being recorded for quality assurance and training purposes.",
+   "explanation": "Agent properly delivered the mandatory call recording disclosure in the initial turn as required by PRV-1.2.",
+   "policy_text": "1. Indian telecom and privacy compliance mandates that every incoming and outbound call must include an explicit recording notification at the very start of the interaction. 2. Representatives must recite the approved disclosure statement during their initial call greeting: - *\"Please note this call is recorded for quality assurance and training purposes.\"* 3. Failure to deliver the recording disclosure within the first two conversation turns is a Critical Compliance Infraction.",
+   "evidence_verified": true,
+   "repeat_turns": []
+  },
+  {
+   "clause_id": "PRV-1.1",
+   "policy_title": "Privacy and Identity Verification Policy: Mandatory Two-Factor Customer Identity Verification",
+   "verdict": "compliant",
+   "severity": "none",
+   "penalty": 0.0,
+   "turn": 5,
+   "quote": "Thank you, you are verified.",
+   "claim": "Agent verified the customer after receiving the Order ID and last four digits of mobile number.",
+   "explanation": "Agent performed identity verification using the required two-factor pair (Order ID and last 4 digits of mobile number) under PRV-1.1 before proceeding.",
+   "policy_text": "1. To safeguard customer accounts and prevent unauthorized data leaks, frontline representatives must perform two-factor verification before disclosing any account details, order histories, delivery addresses, payment instruments, or processing refund instructions. 2. Mandatory Verification Pair: - Order ID (e.g., `ORD-XXXXX`) or registered Account Email Address. - Last four (4) digits of the registered mobile phone number. 3. Strict Prohibition: Revealing full addresses, item descriptions, f...",
+   "evidence_verified": true,
+   "repeat_turns": []
+  },
+  {
+   "clause_id": "SHP-1.1",
+   "policy_title": "Shipping and Delivery Policy: Service Tiers and Standard Transit SLAs",
+   "verdict": "compliant",
+   "severity": "none",
+   "penalty": 0.0,
+   "turn": 9,
+   "quote": "Our standard delivery commitment is 3 to 7 business days",
+   "claim": "Agent stated standard delivery commitment is 3 to 7 business days.",
+   "explanation": "SHP-1.1 specifies standard delivery transit time as 3 to 7 business days from dispatch.",
+   "policy_text": "1. ShopEase provides two official shipping tiers across serviced Indian postal codes: - Standard Delivery: Delivery within 3 to 7 business days from order dispatch date. - Express Delivery: Expedited delivery within 1 to 2 business days for eligible metro and tier-1 city pin codes. 2. Orders placed on Sundays and national holidays are packed and handed over to logistics partners on the following working business day.",
+   "evidence_verified": true,
+   "repeat_turns": []
+  },
+  {
+   "clause_id": "SHP-2.3",
+   "policy_title": "Shipping and Delivery Policy: Delayed Shipments and Compensation Protocol",
+   "verdict": "compliant",
+   "severity": "none",
+   "penalty": 0.0,
+   "turn": 9,
+   "quote": "I am adding a goodwill wallet credit of Rs 100 to your account for this delay.",
+   "claim": "Agent offered a goodwill wallet credit of Rs 100 for a delivery delay beyond 48 hours past SLA.",
+   "explanation": "SHP-2.3 permits a goodwill promotional wallet credit of Rs 100 for verified operational delays past 48 hours beyond SLA.",
+   "policy_text": "1. A shipment is officially categorized as \"Delayed in Transit\" when transit time exceeds the published SLA (7 business days for standard delivery, 2 business days for express delivery). 2. If a shipment is delayed beyond 48 hours past the SLA: - The agent must initiate a logistics tracking ticket with courier partner dispatch. - The customer is eligible for a goodwill promotional wallet credit of Rs 100 for verified operational delays. 3. If transit exceeds 14 calendar days without status up...",
+   "evidence_verified": true,
+   "repeat_turns": []
+  },
+  {
+   "clause_id": "ESC-3.1",
+   "policy_title": "Escalation Policy: Priority Support Level SLA Commitments",
+   "verdict": "compliant",
+   "severity": "none",
+   "penalty": 0.0,
+   "turn": 11,
+   "quote": "The ticket number is LOG-88213 and the courier partner must respond within 48 hours.",
+   "claim": "Agent stated logistics ticket requires a courier response within 48 hours.",
+   "explanation": "ESC-3.1 mandates that logistics escalation tracking tickets receive courier partner resolution within 48 hours.",
+   "policy_text": "1. When an escalated case cannot be resolved during the live interaction: - Level-1 Supervisor callbacks must occur within 4 operational hours. - Level-2 Grievance Officer resolutions must be finalized within 24 business hours. - Logistics escalation tracking tickets must receive courier partner resolution within 48 hours.",
+   "evidence_verified": true,
+   "repeat_turns": []
+  },
+  {
+   "clause_id": "ESC-2.1",
+   "policy_title": "Escalation Policy: Warm Transfer Protocol and Hold Regulations",
+   "verdict": "compliant",
+   "severity": "none",
+   "penalty": 0.0,
+   "turn": 15,
+   "quote": "I can schedule a confirmed supervisor callback for you within the next 2 to 4 hours.",
+   "claim": "Agent offered a supervisor callback within 2 to 4 hours when no supervisor was available.",
+   "explanation": "ESC-2.1 mandates offering a confirmed supervisor callback SLA within 2 to 4 business hours if no supervisor is available within 2 minutes.",
+   "policy_text": "1. Before initiating an escalation transfer to a supervisor, the agent must inform the customer and place them on a courtesy hold. 2. Under no circumstance may an agent keep a customer on hold for more than 2 minutes without performing an active check-in (`[HLD-03]`). 3. If no supervisor is immediately available within 2 minutes: - The agent must retrieve the call from hold. - Apologize for the extended wait. - Offer a confirmed Supervisor Callback SLA within 2 to 4 business hours.",
+   "evidence_verified": true,
+   "repeat_turns": []
+  }
+ ],
+ "gaps": [],
+ "findings": [
+  {
+   "finding_id": "id_verif_verified",
+   "criterion_id": "identity_verification",
+   "name": "Identity Verification Protocol",
+   "kind": "observed",
+   "verdict": "followed",
+   "severity": "critical",
+   "evidence": [
+    {
+     "turn_id": 3,
+     "speaker": "agent",
+     "start_s": 29.29,
+     "end_s": 47.75,
+     "quote": "I am truly sorry, Ms. Krishnan. I can hear how"
+    }
+   ],
+   "certainty": "high",
+   "certainty_reason": "",
+   "reviewer_status": "pending",
+   "reviewer_note": "",
+   "explanation": "Identity verification successfully completed before disclosing account details."
+  },
+  {
+   "finding_id": "sop_ANG-01_1",
+   "criterion_id": "ANG-01",
+   "name": "Emotional Composure & Non-Defensive Tone",
+   "kind": "inferred",
+   "verdict": "followed",
+   "severity": "major",
+   "evidence": [
+    {
+     "turn_id": 3,
+     "speaker": "agent",
+     "start_s": 29.29,
+     "end_s": 47.75,
+     "quote": "I am truly sorry, Ms. Krishnan. I can hear how frustrating this has been"
+    }
+   ],
+   "certainty": "high",
+   "certainty_reason": "",
+   "reviewer_status": "pending",
+   "reviewer_note": "",
+   "explanation": "The agent maintained a calm and respectful tone despite the customer's hostility."
+  },
+  {
+   "finding_id": "sop_ANG-02_2",
+   "criterion_id": "ANG-02",
+   "name": "Sincere Empathy & Acknowledgment",
+   "kind": "inferred",
+   "verdict": "followed",
+   "severity": "major",
+   "evidence": [
+    {
+     "turn_id": 3,
+     "speaker": "agent",
+     "start_s": 29.29,
+     "end_s": 47.75,
+     "quote": "I can hear how frustrating this has been, especially after calling three times"
+    }
+   ],
+   "certainty": "high",
+   "certainty_reason": "",
+   "reviewer_status": "pending",
+   "reviewer_note": "",
+   "explanation": "The agent acknowledged the emotional impact of the delay and prior calls."
+  },
+  {
+   "finding_id": "sop_ANG-03_3",
+   "criterion_id": "ANG-03",
+   "name": "Fact-Finding Without Cross-Examination",
+   "kind": "observed",
+   "verdict": "followed",
+   "severity": "major",
+   "evidence": [
+    {
+     "turn_id": 7,
+     "speaker": "agent",
+     "start_s": 77.96,
+     "end_s": 88.73,
+     "quote": "Could I ask one quick question so I can pinpoint the problem: did you receive any out-for-delivery message"
+    }
+   ],
+   "certainty": "high",
+   "certainty_reason": "",
+   "reviewer_status": "pending",
+   "reviewer_note": "",
+   "explanation": "The agent asked a concise clarifying question without interrogation."
+  },
+  {
+   "finding_id": "sop_ANG-04_4",
+   "criterion_id": "ANG-04",
+   "name": "Direct Action Plan & Concrete Timelines",
+   "kind": "observed",
+   "verdict": "followed",
+   "severity": "major",
+   "evidence": [
+    {
+     "turn_id": 9,
+     "speaker": "agent",
+     "start_s": 92.84,
+     "end_s": 115.15,
+     "quote": "Here is what I am doing right now: I am raising a logistics tracking ticket with the courier partner"
+    }
+   ],
+   "certainty": "high",
+   "certainty_reason": "",
+   "reviewer_status": "pending",
+   "reviewer_note": "",
+   "explanation": "The agent proposed a concrete plan of action with specific timelines."
+  },
+  {
+   "finding_id": "sop_ANG-05_5",
+   "criterion_id": "ANG-05",
+   "name": "Supervisor Escalation Execution",
+   "kind": "observed",
+   "verdict": "followed",
+   "severity": "critical",
+   "evidence": [
+    {
+     "turn_id": 13,
+     "speaker": "agent",
+     "start_s": 147.48,
+     "end_s": 160.55,
+     "quote": "You are absolutely right to ask, and I am escalating this to a supervisor right now."
+    }
+   ],
+   "certainty": "high",
+   "certainty_reason": "",
+   "reviewer_status": "pending",
+   "reviewer_note": "",
+   "explanation": "The agent immediately initiated supervisor escalation upon repeated request."
+  },
+  {
+   "finding_id": "sop_ANG-06_6",
+   "criterion_id": "ANG-06",
+   "name": "Respectful Boundary Setting for Abusive Language",
+   "kind": "observed",
+   "verdict": "not_applicable",
+   "severity": "major",
+   "evidence": [],
+   "certainty": "high",
+   "certainty_reason": "",
+   "reviewer_status": "pending",
+   "reviewer_note": "",
+   "explanation": "The customer was angry and frustrated but did not use vulgarity, personal slurs, or threats of violence."
+  },
+  {
+   "finding_id": "sop_GEN-01_7",
+   "criterion_id": "GEN-01",
+   "name": "Professional Greeting & Identity Introduction",
+   "kind": "observed",
+   "verdict": "followed",
+   "severity": "major",
+   "evidence": [
+    {
+     "turn_id": 1,
+     "speaker": "agent",
+     "start_s": 0.0,
+     "end_s": 11.15,
+     "quote": "Thank you for calling ShopEase. My name is"
+    }
+   ],
+   "certainty": "high",
+   "certainty_reason": "",
+   "reviewer_status": "pending",
+   "reviewer_note": "",
+   "explanation": "The agent greeted the customer, stated the company name, introduced himself, and asked how to help."
+  },
+  {
+   "finding_id": "sop_GEN-02_8",
+   "criterion_id": "GEN-02",
+   "name": "Mandatory Call Recording Disclosure",
+   "kind": "observed",
+   "verdict": "followed",
+   "severity": "critical",
+   "evidence": [
+    {
+     "turn_id": 1,
+     "speaker": "agent",
+     "start_s": 0.0,
+     "end_s": 11.15,
+     "quote": "Please note that this call is recorded for quality assurance and training purposes."
+    }
+   ],
+   "certainty": "high",
+   "certainty_reason": "",
+   "reviewer_status": "pending",
+   "reviewer_note": "",
+   "explanation": "The call recording statutory notification was clearly provided in the first turn."
+  },
+  {
+   "finding_id": "sop_GEN-03_9",
+   "criterion_id": "GEN-03",
+   "name": "Caller Identification & Two-Factor Verification",
+   "kind": "observed",
+   "verdict": "followed",
+   "severity": "critical",
+   "evidence": [
+    {
+     "turn_id": 3,
+     "speaker": "agent",
+     "start_s": 29.29,
+     "end_s": 47.75,
+     "quote": "May I please have your Order ID and the last four digits of your registered mobile number?"
+    }
+   ],
+   "certainty": "high",
+   "certainty_reason": "",
+   "reviewer_status": "pending",
+   "reviewer_note": "",
+   "explanation": "The agent systematically requested both required verification items before revealing account details."
+  },
+  {
+   "finding_id": "sop_GEN-04_10",
+   "criterion_id": "GEN-04",
+   "name": "Active Listening & Issue Clarification",
+   "kind": "observed",
+   "verdict": "followed",
+   "severity": "major",
+   "evidence": [
+    {
+     "turn_id": 5,
+     "speaker": "agent",
+     "start_s": 56.55,
+     "end_s": 71.93,
+     "quote": "Let me make sure I have this right: your mixer grinder was dispatched fourteen days ago"
+    }
+   ],
+   "certainty": "high",
+   "certainty_reason": "",
+   "reviewer_status": "pending",
+   "reviewer_note": "",
+   "explanation": "The agent allowed the customer to speak and accurately paraphrased the core issue."
+  },
+  {
+   "finding_id": "sop_GEN-05_11",
+   "criterion_id": "GEN-05",
+   "name": "Empathy & Ownership Statement",
+   "kind": "inferred",
+   "verdict": "followed",
+   "severity": "major",
+   "evidence": [
+    {
+     "turn_id": 3,
+     "speaker": "agent",
+     "start_s": 29.29,
+     "end_s": 47.75,
+     "quote": "I will personally take ownership of this until it is resolved."
+    }
+   ],
+   "certainty": "high",
+   "certainty_reason": "",
+   "reviewer_status": "pending",
+   "reviewer_note": "",
+   "explanation": "The agent expressed sincere empathy and offered personal reassurance of ownership."
+  },
+  {
+   "finding_id": "sop_GEN-06_12",
+   "criterion_id": "GEN-06",
+   "name": "Accurate Policy Explanation & Solution Execution",
+   "kind": "observed",
+   "verdict": "followed",
+   "severity": "critical",
+   "evidence": [
+    {
+     "turn_id": 9,
+     "speaker": "agent",
+     "start_s": 92.84,
+     "end_s": 115.15,
+     "quote": "Our standard delivery commitment is 3 to 7 business days, so your parcel is well beyond that commitment."
+    }
+   ],
+   "certainty": "high",
+   "certainty_reason": "",
+   "reviewer_status": "pending",
+   "reviewer_note": "",
+   "explanation": "The agent accurately explained company delivery policy terms."
+  },
+  {
+   "finding_id": "sop_GEN-07_13",
+   "criterion_id": "GEN-07",
+   "name": "Additional Assistance & Next Steps Summary",
+   "kind": "observed",
+   "verdict": "followed",
+   "severity": "major",
+   "evidence": [
+    {
+     "turn_id": 19,
+     "speaker": "agent",
+     "start_s": 288.7,
+     "end_s": 306.39,
+     "quote": "Thank you for your patience. To recap: ticket"
+    }
+   ],
+   "certainty": "high",
+   "certainty_reason": "",
+   "reviewer_status": "pending",
+   "reviewer_note": "",
+   "explanation": "The agent summarized the agreed resolution, referenced ticket numbers, and asked for secondary questions."
+  },
+  {
+   "finding_id": "sop_GEN-08_14",
+   "criterion_id": "GEN-08",
+   "name": "Professional Branded Sign-Off",
+   "kind": "observed",
+   "verdict": "followed",
+   "severity": "major",
+   "evidence": [
+    {
+     "turn_id": 21,
+     "speaker": "agent",
+     "start_s": 309.43,
+     "end_s": 316.74,
+     "quote": "Thank you for contacting ShopEase, Ms. Krishnan. Have a good day, and again, I am sorry for the trouble."
+    }
+   ],
+   "certainty": "high",
+   "certainty_reason": "",
+   "reviewer_status": "pending",
+   "reviewer_note": "",
+   "explanation": "The agent concluded professionally, mentioning ShopEase and expressing parting courtesies."
+  },
+  {
+   "finding_id": "sop_HLD-01_15",
+   "criterion_id": "HLD-01",
+   "name": "Request Permission and State Reason for Hold",
+   "kind": "observed",
+   "verdict": "followed",
+   "severity": "major",
+   "evidence": [
+    {
+     "turn_id": 13,
+     "speaker": "agent",
+     "start_s": 147.48,
+     "end_s": 160.55,
+     "quote": "May I place you on a brief hold for up to two minutes while I connect with them?"
+    }
+   ],
+   "certainty": "high",
+   "certainty_reason": "",
+   "reviewer_status": "pending",
+   "reviewer_note": "",
+   "explanation": "The agent explicitly asked for hold permission and stated the reason."
+  },
+  {
+   "finding_id": "sop_HLD-02_16",
+   "criterion_id": "HLD-02",
+   "name": "Adhere to Maximum 2-Minute Hold Ceiling",
+   "kind": "observed",
+   "verdict": "missed",
+   "severity": "critical",
+   "evidence": [],
+   "certainty": "high",
+   "certainty_reason": "",
+   "reviewer_status": "pending",
+   "reviewer_note": "",
+   "explanation": "The agent placed the customer on hold for 75 seconds without checking in before the 120-second mark, but the total hold time exceeded 2 minutes in total duration according to audio timing (75s from transcript check, but wait time was over 2 minutes total from turn 13 to 15 elapsed time)."
+  },
+  {
+   "finding_id": "sop_HLD-03_17",
+   "criterion_id": "HLD-03",
+   "name": "Return From Hold with Gratitude",
+   "kind": "observed",
+   "verdict": "followed",
+   "severity": "major",
+   "evidence": [
+    {
+     "turn_id": 15,
+     "speaker": "agent",
+     "start_s": 237.41,
+     "end_s": 255.87,
+     "quote": "Thank you for holding, Ms. Krishnan, and I apologise for the wait."
+    }
+   ],
+   "certainty": "high",
+   "certainty_reason": "",
+   "reviewer_status": "pending",
+   "reviewer_note": "",
+   "explanation": "The agent thanked the customer sincerely for their patience upon returning from hold."
+  },
+  {
+   "finding_id": "sop_HLD-05_18",
+   "criterion_id": "HLD-05",
+   "name": "Supervisor Callback Offer When Transfer Unavailable",
+   "kind": "observed",
+   "verdict": "followed",
+   "severity": "major",
+   "evidence": [
+    {
+     "turn_id": 15,
+     "speaker": "agent",
+     "start_s": 237.41,
+     "end_s": 255.87,
+     "quote": "Rather than keep you waiting, I can schedule a confirmed supervisor callback for you within the next 2 to 4 hours."
+    }
+   ],
+   "certainty": "high",
+   "certainty_reason": "",
+   "reviewer_status": "pending",
+   "reviewer_note": "",
+   "explanation": "The agent offered a confirmed supervisor callback within 2 to 4 hours when immediate transfer was unavailable."
+  },
+  {
+   "finding_id": "empathy_rating",
+   "criterion_id": "empathy_and_communication",
+   "name": "Empathy & Tone Assessment",
+   "kind": "inferred",
+   "verdict": "followed",
+   "severity": "minor",
+   "evidence": [
+    {
+     "turn_id": 0,
+     "speaker": "agent",
+     "start_s": 0.0,
+     "end_s": 0.0,
+     "quote": "I am truly sorry, Ms. Krishnan. I can hear how frustrating this has been, especially after calling three times, and I will personally take ownership of this until it is resolved."
+    }
+   ],
+   "certainty": "medium",
+   "certainty_reason": "Subjective appraisal of agent warmth and emotional validation",
+   "reviewer_status": "pending",
+   "reviewer_note": "",
+   "explanation": "Empathy score: 5/5"
+  }
+ ],
+ "cannot_judge": false,
+ "cannot_judge_reason": "",
+ "unreadable_parts": [],
+ "status": "ok",
+ "failed_step": null,
+ "completed_steps": [
+  "input_ingestion",
+  "quality_gate",
+  "call_state",
+  "topic_detection",
+  "scorecard_judgment",
+  "policy_check",
+  "evidence_verification",
+  "scoring"
+ ],
+ "emotion": {
+  "points": [
+   {
+    "turn": 2,
+    "emotion": "angry",
+    "valence": -2.0
+   },
+   {
+    "turn": 4,
+    "emotion": "frustrated",
+    "valence": -1.5
+   },
+   {
+    "turn": 6,
+    "emotion": "frustrated",
+    "valence": -1.5
+   },
+   {
+    "turn": 8,
+    "emotion": "frustrated",
+    "valence": -1.5
+   },
+   {
+    "turn": 10,
+    "emotion": "angry",
+    "valence": -2.0
+   },
+   {
+    "turn": 12,
+    "emotion": "angry",
+    "valence": -2.0
+   },
+   {
+    "turn": 14,
+    "emotion": "neutral",
+    "valence": 0.0
+   },
+   {
+    "turn": 16,
+    "emotion": "frustrated",
+    "valence": -1.5
+   },
+   {
+    "turn": 18,
+    "emotion": "satisfied",
+    "valence": 1.0
+   },
+   {
+    "turn": 20,
+    "emotion": "satisfied",
+    "valence": 1.0
+   },
+   {
+    "turn": 22,
+    "emotion": "neutral",
+    "valence": 0.0
+   }
+  ],
+  "start": "angry",
+  "middle": "angry",
+  "end": "neutral",
+  "trend": "improved"
+ },
+ "agent_tone": {
+  "points": [
+   {
+    "turn": 1,
+    "emotion": "warm",
+    "valence": 1.0
+   },
+   {
+    "turn": 3,
+    "emotion": "empathetic",
+    "valence": 1.5
+   },
+   {
+    "turn": 5,
+    "emotion": "calm",
+    "valence": 0.5
+   },
+   {
+    "turn": 7,
+    "emotion": "calm",
+    "valence": 0.5
+   },
+   {
+    "turn": 9,
+    "emotion": "calm",
+    "valence": 0.5
+   },
+   {
+    "turn": 11,
+    "emotion": "calm",
+    "valence": 0.5
+   },
+   {
+    "turn": 13,
+    "emotion": "empathetic",
+    "valence": 1.5
+   },
+   {
+    "turn": 15,
+    "emotion": "empathetic",
+    "valence": 1.5
+   },
+   {
+    "turn": 17,
+    "emotion": "warm",
+    "valence": 1.0
+   },
+   {
+    "turn": 19,
+    "emotion": "calm",
+    "valence": 0.5
+   },
+   {
+    "turn": 21,
+    "emotion": "warm",
+    "valence": 1.0
+   }
+  ],
+  "start": "warm",
+  "middle": "calm",
+  "end": "warm",
+  "trend": "flat"
+ },
+ "metrics": {
+  "duration_sec": 318.0,
+  "agent_turns": 11,
+  "customer_turns": 11,
+  "agent_talk_ratio": 0.739,
+  "longest_silence_sec": 1.2,
+  "dead_air_events": [],
+  "interruption_events": [],
+  "hold_events": [],
+  "holds": [
+   {
+    "start_turn": 14,
+    "end_turn": 15,
+    "start_time": 162.41,
+    "end_time": 237.41,
+    "seconds": 75.0,
+    "exceeded": false
+   }
+  ],
+  "longest_hold_sec": 75.0,
+  "agent_words_per_minute": 156.0,
+  "agent_interruptions": 0
+ },
+ "strengths": [
+  "Maintained a calm, empathetic tone despite customer anger and aggressive repetition.",
+  "Took strong personal ownership of the issue from the very start.",
+  "Successfully managed a difficult supervisor escalation by offering a guaranteed 2-4 hour callback SLA.",
+  "Provided a comprehensive and clear recap of all actions and ticket numbers at the end of the call."
+ ],
+ "coaching": [
+  {
+   "title": "HLD-02: Adhere to Maximum 2-Minute Hold Ceiling (critical)",
+   "advice": "The agent monitors an on-screen timer and checks back in with the customer before the 120-second mark. Example: \"Thank you for your patience. I am still reviewing the carrier logs. May I place you on hold for one more minute?\"",
+   "source": "sop",
+   "evidence": "Missing: The agent did not check back in before the hold ceiling or exceeded the limit.. The agent placed the customer on hold for 75 seconds without checking in before the 120-second mark, but the total hold time exceeded 2 minutes in total duration according to audio timing (75s from transcript check, but wait time was over 2 minutes total from turn 13 to 15 elapsed time)."
+  },
+  {
+   "title": "Suggestion",
+   "advice": "Next time, ensure you monitor hold times closely to avoid exceeding any internal thresholds during busy escalations.",
+   "source": "llm",
+   "evidence": ""
+  }
+ ],
+ "risk_flags": [],
+ "retrieved_clause_ids": [
+  "SHP-2.3",
+  "SHP-1.1",
+  "SHP-2.1",
+  "REF-4.1",
+  "PRV-1.3",
+  "ESC-2.1",
+  "ESC-3.1",
+  "SHP-4.1",
+  "SHP-2.2",
+  "SHP-1.2",
+  "PRV-1.1",
+  "ESC-1.1",
+  "ESC-1.2",
+  "SHP-3.1",
+  "SHP-3.2",
+  "ESC-2.2",
+  "ESC-3.2",
+  "PRV-1.2",
+  "PRV-2.1",
+  "PRV-2.2",
+  "PRV-3.1"
+ ],
+ "transcript": {
+  "call_id": "call_105",
+  "source": "transcript",
+  "language": "te",
+  "audio_path": null,
+  "duration_seconds": 318.0,
+  "diarization_method": "given",
+  "transcript_quality": "good",
+  "quality_reason": "Transcript quality is reliable for compliance and rubric scoring.",
+  "unreadable_parts": [],
+  "turns": [
+   {
+    "turn_id": 1,
+    "speaker": "agent",
+    "start_time": 0.0,
+    "end_time": 11.15,
+    "text": "Thank you for calling ShopEase. My name is Aman Gupta. Please note that this call is recorded for quality assurance and training purposes. How may I assist you today?",
+    "text_te": null,
+    "text_roman": null,
+    "asr_confidence": 1.0,
+    "silence_before": 0.0,
+    "overlaps_previous": false,
+    "emotion": "warm"
+   },
+   {
+    "turn_id": 2,
+    "speaker": "customer",
+    "start_time": 11.65,
+    "end_time": 28.19,
+    "text": "This is unacceptable! My name is Deepa Krishnan and I ordered a mixer grinder fifteen days ago. It was dispatched fourteen days ago and nobody gives me a straight answer. This is the third time I am calling and I am fed up.",
+    "text_te": null,
+    "text_roman": null,
+    "asr_confidence": 1.0,
+    "silence_before": 0.5,
+    "overlaps_previous": false,
+    "emotion": "angry"
+   },
+   {
+    "turn_id": 3,
+    "speaker": "agent",
+    "start_time": 29.29,
+    "end_time": 47.75,
+    "text": "I am truly sorry, Ms. Krishnan. I can hear how frustrating this has been, especially after calling three times, and I will personally take ownership of this until it is resolved. May I please have your Order ID and the last four digits of your registered mobile number?",
+    "text_te": null,
+    "text_roman": null,
+    "asr_confidence": 1.0,
+    "silence_before": 1.1,
+    "overlaps_previous": false,
+    "emotion": "empathetic"
+   },
+   {
+    "turn_id": 4,
+    "speaker": "customer",
+    "start_time": 48.45,
+    "end_time": 56.15,
+    "text": "The order ID is ORD-77302 and the last four digits are 5521. Please just tell me where my parcel is.",
+    "text_te": null,
+    "text_roman": null,
+    "asr_confidence": 1.0,
+    "silence_before": 0.7,
+    "overlaps_previous": false,
+    "emotion": "frustrated"
+   },
+   {
+    "turn_id": 5,
+    "speaker": "agent",
+    "start_time": 56.55,
+    "end_time": 71.93,
+    "text": "Thank you, you are verified. Let me make sure I have this right: your mixer grinder was dispatched fourteen days ago with standard delivery, it has not been delivered, and you have already called us twice before. Is that correct?",
+    "text_te": null,
+    "text_roman": null,
+    "asr_confidence": 1.0,
+    "silence_before": 0.4,
+    "overlaps_previous": false,
+    "emotion": "calm"
+   },
+   {
+    "turn_id": 6,
+    "speaker": "customer",
+    "start_time": 72.93,
+    "end_time": 77.16,
+    "text": "Yes! And each time they just say it is in transit.",
+    "text_te": null,
+    "text_roman": null,
+    "asr_confidence": 1.0,
+    "silence_before": 1.0,
+    "overlaps_previous": false,
+    "emotion": "frustrated"
+   },
+   {
+    "turn_id": 7,
+    "speaker": "agent",
+    "start_time": 77.96,
+    "end_time": 88.73,
+    "text": "Could I ask one quick question so I can pinpoint the problem: did you receive any out-for-delivery message or call from the courier in the last few days?",
+    "text_te": null,
+    "text_roman": null,
+    "asr_confidence": 1.0,
+    "silence_before": 0.8,
+    "overlaps_previous": false,
+    "emotion": "calm"
+   },
+   {
+    "turn_id": 8,
+    "speaker": "customer",
+    "start_time": 89.33,
+    "end_time": 91.64,
+    "text": "No, nothing. Not a single message.",
+    "text_te": null,
+    "text_roman": null,
+    "asr_confidence": 1.0,
+    "silence_before": 0.6,
+    "overlaps_previous": false,
+    "emotion": "frustrated"
+   },
+   {
+    "turn_id": 9,
+    "speaker": "agent",
+    "start_time": 92.84,
+    "end_time": 115.15,
+    "text": "Thank you, that helps. Our standard delivery commitment is 3 to 7 business days, so your parcel is well beyond that commitment. Here is what I am doing right now: I am raising a logistics tracking ticket with the courier partner, and I am adding a goodwill wallet credit of Rs 100 to your account for this delay.",
+    "text_te": null,
+    "text_roman": null,
+    "asr_confidence": 1.0,
+    "silence_before": 1.2,
+    "overlaps_previous": false,
+    "emotion": "calm"
+   },
+   {
+    "turn_id": 10,
+    "speaker": "customer",
+    "start_time": 115.75,
+    "end_time": 123.44,
+    "text": "A hundred rupees? I want to speak to a supervisor right now, I want a proper answer from someone senior.",
+    "text_te": null,
+    "text_roman": null,
+    "asr_confidence": 1.0,
+    "silence_before": 0.6,
+    "overlaps_previous": false,
+    "emotion": "angry"
+   },
+   {
+    "turn_id": 11,
+    "speaker": "agent",
+    "start_time": 124.34,
+    "end_time": 138.57,
+    "text": "I understand, Ms. Krishnan. Let me first complete the logistics ticket for you, and then I will make sure someone senior hears you. The ticket number is LOG-88213 and the courier partner must respond within 48 hours.",
+    "text_te": null,
+    "text_roman": null,
+    "asr_confidence": 1.0,
+    "silence_before": 0.9,
+    "overlaps_previous": false,
+    "emotion": "calm"
+   },
+   {
+    "turn_id": 12,
+    "speaker": "customer",
+    "start_time": 139.07,
+    "end_time": 146.38,
+    "text": "Forty-eight more hours? I want a supervisor on this call now. This is the second time I am asking.",
+    "text_te": null,
+    "text_roman": null,
+    "asr_confidence": 1.0,
+    "silence_before": 0.5,
+    "overlaps_previous": false,
+    "emotion": "angry"
+   },
+   {
+    "turn_id": 13,
+    "speaker": "agent",
+    "start_time": 147.48,
+    "end_time": 160.55,
+    "text": "You are absolutely right to ask, and I am escalating this to a supervisor right now. May I place you on a brief hold for up to two minutes while I connect with them?",
+    "text_te": null,
+    "text_roman": null,
+    "asr_confidence": 1.0,
+    "silence_before": 1.1,
+    "overlaps_previous": false,
+    "emotion": "empathetic"
+   },
+   {
+    "turn_id": 14,
+    "speaker": "customer",
+    "start_time": 161.25,
+    "end_time": 162.41,
+    "text": "Yes, go ahead.",
+    "text_te": null,
+    "text_roman": null,
+    "asr_confidence": 1.0,
+    "silence_before": 0.7,
+    "overlaps_previous": false,
+    "emotion": "neutral"
+   },
+   {
+    "turn_id": 15,
+    "speaker": "agent",
+    "start_time": 237.41,
+    "end_time": 255.87,
+    "text": "Thank you for holding, Ms. Krishnan, and I apologise for the wait. Our supervisors are all assisting other escalated callers at the moment. Rather than keep you waiting, I can schedule a confirmed supervisor callback for you within the next 2 to 4 hours. Would that be acceptable?",
+    "text_te": null,
+    "text_roman": null,
+    "asr_confidence": 1.0,
+    "silence_before": 75.0,
+    "overlaps_previous": false,
+    "emotion": "empathetic"
+   },
+   {
+    "turn_id": 16,
+    "speaker": "customer",
+    "start_time": 256.87,
+    "end_time": 261.48,
+    "text": "Fine. Please make sure someone actually calls. I have wasted enough time.",
+    "text_te": null,
+    "text_roman": null,
+    "asr_confidence": 1.0,
+    "silence_before": 1.0,
+    "overlaps_previous": false,
+    "emotion": "frustrated"
+   },
+   {
+    "turn_id": 17,
+    "speaker": "agent",
+    "start_time": 262.28,
+    "end_time": 281.52,
+    "text": "I will personally note this as a priority callback, Ms. Krishnan. The supervisor will call you on your registered number ending 5521 within 2 to 4 hours, and the logistics ticket LOG-88213 is already active with the courier. The Rs 100 wallet credit will be added to your account today.",
+    "text_te": null,
+    "text_roman": null,
+    "asr_confidence": 1.0,
+    "silence_before": 0.8,
+    "overlaps_previous": false,
+    "emotion": "warm"
+   },
+   {
+    "turn_id": 18,
+    "speaker": "customer",
+    "start_time": 282.12,
+    "end_time": 287.5,
+    "text": "Okay. That is something at least. Thank you for not just brushing me off.",
+    "text_te": null,
+    "text_roman": null,
+    "asr_confidence": 1.0,
+    "silence_before": 0.6,
+    "overlaps_previous": false,
+    "emotion": "satisfied"
+   },
+   {
+    "turn_id": 19,
+    "speaker": "agent",
+    "start_time": 288.7,
+    "end_time": 306.39,
+    "text": "Thank you for your patience. To recap: ticket LOG-88213 is raised with the courier with a 48 hour response, a Rs 100 goodwill credit is added, and a supervisor will call you within 2 to 4 hours. Is there anything else I can help you with?",
+    "text_te": null,
+    "text_roman": null,
+    "asr_confidence": 1.0,
+    "silence_before": 1.2,
+    "overlaps_previous": false,
+    "emotion": "calm"
+   },
+   {
+    "turn_id": 20,
+    "speaker": "customer",
+    "start_time": 306.99,
+    "end_time": 308.53,
+    "text": "No, that is everything.",
+    "text_te": null,
+    "text_roman": null,
+    "asr_confidence": 1.0,
+    "silence_before": 0.6,
+    "overlaps_previous": false,
+    "emotion": "satisfied"
+   },
+   {
+    "turn_id": 21,
+    "speaker": "agent",
+    "start_time": 309.43,
+    "end_time": 316.74,
+    "text": "Thank you for contacting ShopEase, Ms. Krishnan. Have a good day, and again, I am sorry for the trouble.",
+    "text_te": null,
+    "text_roman": null,
+    "asr_confidence": 1.0,
+    "silence_before": 0.9,
+    "overlaps_previous": false,
+    "emotion": "warm"
+   },
+   {
+    "turn_id": 22,
+    "speaker": "customer",
+    "start_time": 317.24,
+    "end_time": 318.04,
+    "text": "Bye.",
+    "text_te": null,
+    "text_roman": null,
+    "asr_confidence": 1.0,
+    "silence_before": 0.5,
+    "overlaps_previous": false,
+    "emotion": "neutral"
+   }
+  ]
+ },
+ "meta": {
+  "model": "gemini:gemini-3.5-flash-lite",
+  "llm_requests": 1,
+  "diarization_method": "given",
+  "transcribe_seconds": 0.0,
+  "audit_seconds": 12.3,
+  "cache_hit": false,
+  "warnings": [],
+  "source_set": "synthetic",
+  "trace_id": "run_call_105_798184",
+  "status": "ok",
+  "failed_step": null,
+  "completed_steps": [
+   "input_ingestion",
+   "quality_gate",
+   "call_state",
+   "topic_detection",
+   "scorecard_judgment",
+   "policy_check",
+   "evidence_verification",
+   "scoring"
+  ],
+  "estimated_cost_usd": 0.022468,
+  "tokens_in": 9742,
+  "tokens_out": 3240
+ }
+}
