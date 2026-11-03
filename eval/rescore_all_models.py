@@ -1,10 +1,10 @@
 """Offline comparative rescoring of all policy compliance model evaluation CSVs.
 
-Evaluates Gemini Flash-Lite (runs 1, 2, 3), Gemini-2.5-Flash (run 1), and
+Evaluates Gemini Flash-Lite (runs 1, 2, 3 and 3-run avg), Gemini-2.5-Flash (run 1), and
 Gemini-3.5-Flash (run 1) on Variant G across 25 calls (13 dev, 12 held-out)
 using turn-level matching (+-2 turn window) and acceptable alternates.
-Compares baseline scoring against rescoring with the WAR-2.1 <-> WAR-2.3 alternate
-pair for call_207 turn 7 and call_209 turn 11.
+Compares old baseline ground truth (14 dev / 19 held-out / 33 combined) against
+the updated ground truth incorporating the 6 human-reviewed labels (18 dev / 21 held-out / 39 combined).
 """
 
 from __future__ import annotations
@@ -26,11 +26,42 @@ from eval.policy_e2e import ExpectedViolation, get_allowed_clauses, match_violat
 from src.audit.schemas import PolicyResult
 
 
+def load_updated_ground_truth() -> Dict[str, List[ExpectedViolation]]:
+    """Load latest ground-truth violations from data/expected and data/heldout."""
+    dev_path = ROOT / "data" / "expected" / "expected_results.json"
+    held_path = ROOT / "data" / "heldout" / "expected_heldout.json"
+
+    gt: Dict[str, List[ExpectedViolation]] = {}
+    if dev_path.exists():
+        with open(dev_path, encoding="utf-8") as f:
+            dev_data = json.load(f)
+        for cid, info in dev_data.items():
+            gt[cid] = [
+                ExpectedViolation(clause=v["clause"], turn=v.get("turn"))
+                for v in info.get("violations", [])
+                if "clause" in v
+            ]
+
+    if held_path.exists():
+        with open(held_path, encoding="utf-8") as f:
+            held_data = json.load(f)
+        for cid, info in held_data.items():
+            gt[cid] = [
+                ExpectedViolation(clause=v["clause"], turn=v.get("turn"))
+                for v in info.get("violations", [])
+                if "clause" in v
+            ]
+
+    return gt
+
+
 def rescore_dataframe(
     df_path: Path | str,
     variant: str = "G",
     run_idx: Optional[int] = 1,
     allow_war_alternate: bool = True,
+    use_new_gt: bool = False,
+    updated_gt: Optional[Dict[str, List[ExpectedViolation]]] = None,
 ) -> Dict[str, Any]:
     """Rescore an evaluation CSV file for a given variant and run index."""
     df = pd.read_csv(df_path)
@@ -44,20 +75,25 @@ def rescore_dataframe(
         call_id = r["call_id"]
         split = r["split"]
 
-        # Parse expected violations
-        expected_clauses_str = str(r["expected_clauses"]) if pd.notna(r["expected_clauses"]) else ""
-        expected: List[ExpectedViolation] = []
-        if expected_clauses_str.strip() and expected_clauses_str != "nan":
-            for item in expected_clauses_str.split(";"):
-                item = item.strip()
-                m = re.match(r"([A-Z0-9.-]+)(?:\s+\(turn\s+(\d+)\))?", item)
-                if m:
-                    expected.append(
-                        ExpectedViolation(
-                            clause=m.group(1),
-                            turn=int(m.group(2)) if m.group(2) else None,
+        if use_new_gt:
+            if updated_gt is None:
+                updated_gt = load_updated_ground_truth()
+            expected = updated_gt.get(call_id, [])
+        else:
+            # Parse expected violations from CSV column
+            expected_clauses_str = str(r["expected_clauses"]) if pd.notna(r["expected_clauses"]) else ""
+            expected = []
+            if expected_clauses_str.strip() and expected_clauses_str != "nan":
+                for item in expected_clauses_str.split(";"):
+                    item = item.strip()
+                    m = re.match(r"([A-Z0-9.-]+)(?:\s+\(turn\s+(\d+)\))?", item)
+                    if m:
+                        expected.append(
+                            ExpectedViolation(
+                                clause=m.group(1),
+                                turn=int(m.group(2)) if m.group(2) else None,
+                            )
                         )
-                    )
 
         # Reconstruct found violations as PolicyResult objects
         found_violations: List[PolicyResult] = []
@@ -156,7 +192,39 @@ def rescore_dataframe(
     }
 
 
+def compute_average(stats_list: List[Dict[str, Any]]) -> Dict[str, Any]:
+    """Compute average metrics across multiple runs."""
+    n = len(stats_list)
+    if n == 0:
+        return {}
+    dev_exp = stats_list[0]["dev_expected"]
+    held_exp = stats_list[0]["held_expected"]
+    tot_exp = stats_list[0]["tot_expected"]
+    avg_dev_mat = sum(s["dev_matched"] for s in stats_list) / n
+    avg_held_mat = sum(s["held_matched"] for s in stats_list) / n
+    avg_tot_mat = sum(s["tot_matched"] for s in stats_list) / n
+    avg_dev_ext = sum(s["dev_extras"] for s in stats_list) / n
+    avg_held_ext = sum(s["held_extras"] for s in stats_list) / n
+    avg_tot_ext = sum(s["tot_extras"] for s in stats_list) / n
+
+    return {
+        "dev_matched": avg_dev_mat,
+        "dev_expected": dev_exp,
+        "dev_recall": avg_dev_mat / dev_exp if dev_exp else 0.0,
+        "dev_extras": avg_dev_ext,
+        "held_matched": avg_held_mat,
+        "held_expected": held_exp,
+        "held_recall": avg_held_mat / held_exp if held_exp else 0.0,
+        "held_extras": avg_held_ext,
+        "tot_matched": avg_tot_mat,
+        "tot_expected": tot_exp,
+        "tot_recall": avg_tot_mat / tot_exp if tot_exp else 0.0,
+        "tot_extras": avg_tot_ext,
+    }
+
+
 def main() -> None:
+    updated_gt = load_updated_ground_truth()
     models = [
         ("Gemini Flash-Lite (Run 1)", ROOT / "eval" / "results" / "policy_e2e.csv", 1),
         ("Gemini Flash-Lite (Run 2)", ROOT / "eval" / "results" / "policy_e2e.csv", 2),
@@ -165,20 +233,60 @@ def main() -> None:
         ("Gemini-3.5-Flash (Run 1)", ROOT / "eval" / "results" / "policy_model_comparison.csv", 1),
     ]
 
+    print("=" * 115)
+    print("COMPARATIVE RESCORING: OLD DENOMINATORS vs NEW REVIEWED DENOMINATORS")
+    print("=" * 115)
     print(
-        f"{'Model':<28} | {'Dev Recall (14)':<17} | {'Held-Out Recall (19)':<20} | {'Combined Recall (33)':<20} | {'Extras (Dev/Held/Tot)':<22}"
+        f"{'Model':<25} | {'Ground Truth':<12} | {'Dev Recall':<17} | {'Held-Out Recall':<18} | {'Combined Recall':<18} | {'Extras (D/H/T)':<16}"
     )
     print("-" * 115)
 
+    flash_lite_old = []
+    flash_lite_new = []
+
     for name, path, r_idx in models:
-        for alt in [False, True]:
-            label = f"{name} [{'WITH alt' if alt else 'BEFORE'}]"
-            stats = rescore_dataframe(path, variant="G", run_idx=r_idx, allow_war_alternate=alt)
-            d_str = f"{stats['dev_matched']}/{stats['dev_expected']} ({stats['dev_recall']:.1%})"
-            h_str = f"{stats['held_matched']}/{stats['held_expected']} ({stats['held_recall']:.1%})"
-            c_str = f"{stats['tot_matched']}/{stats['tot_expected']} ({stats['tot_recall']:.1%})"
-            e_str = f"{stats['dev_extras']} / {stats['held_extras']} / {stats['tot_extras']}"
-            print(f"{label:<28} | {d_str:<17} | {h_str:<20} | {c_str:<20} | {e_str:<22}")
+        stats_old = rescore_dataframe(
+            path, variant="G", run_idx=r_idx, allow_war_alternate=True, use_new_gt=False
+        )
+        stats_new = rescore_dataframe(
+            path, variant="G", run_idx=r_idx, allow_war_alternate=True, use_new_gt=True, updated_gt=updated_gt
+        )
+
+        if "Flash-Lite" in name:
+            flash_lite_old.append(stats_old)
+            flash_lite_new.append(stats_new)
+
+        d_old = f"{stats_old['dev_matched']}/{stats_old['dev_expected']} ({stats_old['dev_recall']:.1%})"
+        h_old = f"{stats_old['held_matched']}/{stats_old['held_expected']} ({stats_old['held_recall']:.1%})"
+        c_old = f"{stats_old['tot_matched']}/{stats_old['tot_expected']} ({stats_old['tot_recall']:.1%})"
+        e_old = f"{stats_old['dev_extras']} / {stats_old['held_extras']} / {stats_old['tot_extras']}"
+
+        d_new = f"{stats_new['dev_matched']}/{stats_new['dev_expected']} ({stats_new['dev_recall']:.1%})"
+        h_new = f"{stats_new['held_matched']}/{stats_new['held_expected']} ({stats_new['held_recall']:.1%})"
+        c_new = f"{stats_new['tot_matched']}/{stats_new['tot_expected']} ({stats_new['tot_recall']:.1%})"
+        e_new = f"{stats_new['dev_extras']} / {stats_new['held_extras']} / {stats_new['tot_extras']}"
+
+        print(f"{name:<25} | {'OLD (33)':<12} | {d_old:<17} | {h_old:<18} | {c_old:<18} | {e_old:<16}")
+        print(f"{name:<25} | {'NEW (39)':<12} | {d_new:<17} | {h_new:<18} | {c_new:<18} | {e_new:<16}")
+        print("-" * 115)
+
+    # Compute and display 3-run averages for Flash-Lite
+    avg_old = compute_average(flash_lite_old)
+    avg_new = compute_average(flash_lite_new)
+
+    d_avg_old = f"{avg_old['dev_matched']:.1f}/{avg_old['dev_expected']} ({avg_old['dev_recall']:.1%})"
+    h_avg_old = f"{avg_old['held_matched']:.1f}/{avg_old['held_expected']} ({avg_old['held_recall']:.1%})"
+    c_avg_old = f"{avg_old['tot_matched']:.1f}/{avg_old['tot_expected']} ({avg_old['tot_recall']:.1%})"
+    e_avg_old = f"{avg_old['dev_extras']:.1f} / {avg_old['held_extras']:.1f} / {avg_old['tot_extras']:.1f}"
+
+    d_avg_new = f"{avg_new['dev_matched']:.1f}/{avg_new['dev_expected']} ({avg_new['dev_recall']:.1%})"
+    h_avg_new = f"{avg_new['held_matched']:.1f}/{avg_new['held_expected']} ({avg_new['held_recall']:.1%})"
+    c_avg_new = f"{avg_new['tot_matched']:.1f}/{avg_new['tot_expected']} ({avg_new['tot_recall']:.1%})"
+    e_avg_new = f"{avg_new['dev_extras']:.1f} / {avg_new['held_extras']:.1f} / {avg_new['tot_extras']:.1f}"
+
+    print(f"{'Flash-Lite (3-Run Avg)':<25} | {'OLD (33)':<12} | {d_avg_old:<17} | {h_avg_old:<18} | {c_avg_old:<18} | {e_avg_old:<16}")
+    print(f"{'Flash-Lite (3-Run Avg)':<25} | {'NEW (39)':<12} | {d_avg_new:<17} | {h_avg_new:<18} | {c_avg_new:<18} | {e_avg_new:<16}")
+    print("=" * 115)
 
 
 if __name__ == "__main__":
