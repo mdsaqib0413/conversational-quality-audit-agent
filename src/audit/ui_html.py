@@ -11,7 +11,7 @@ import re
 from typing import Iterable, List, Optional, Sequence
 
 from . import explain as X
-from .schemas import AuditReport, PolicyResult, SOPResult, extract_failure_reason
+from .schemas import AuditReport, PolicyResult, SOPResult, extract_failure_reason, extract_degraded_reason
 from .viz import (BAD, EMOTION_COLOR, GOOD, GRADE_COLOR, INK, MUTED, TONE_COLOR, WARN, emotion_timeline_svg, esc, gauge_svg, mmss,
                   build_timeline_events)
 
@@ -174,16 +174,20 @@ def report_header(rep: AuditReport, subtitle: str = "Call audit") -> str:
         risk_banner = (f'<div class="aq-banner-risk">'
                        f'Possible scam / social-engineering pattern: {flags_text}. Agent coaching may not apply.</div>')
     failed_banner = ""
-    if getattr(rep, "status", "ok") != "ok":
+    if getattr(rep, "status", "ok") == "failed":
         reason = extract_failure_reason(rep)
         failed_banner = (f'<div class="aq-banner-risk">'
                          f'Audit failed: {esc(reason)}; no score</div>')
+    elif getattr(rep, "status", "ok") == "degraded":
+        deg_reason = extract_degraded_reason(rep)
+        failed_banner = (f'<div class="aq-banner-risk" style="background:#fef3c7;color:#92400e;border-color:#fde68a">'
+                         f'degraded input quality ({esc(deg_reason)})</div>')
     return _one(f'<div class="aq-hdr"><div><div class="aq-tiny" style="letter-spacing:.1em;font-weight:700">{esc(subtitle.upper())}</div><h1>{esc(rep.call_id)}</h1><div style="display:flex;gap:8px;flex-wrap:wrap">{"".join(pills)}</div>{failed_banner}{risk_banner}{real_note}</div>'
                 f'<div class="aq-tiny" style="text-align:right">Generated {esc(rep.generated_at.replace("T", " "))}<br>{esc(rep.meta.model)} · {rep.meta.llm_requests} AI request(s){" · saved result" if rep.meta.cache_hit else ""}</div></div>')
 
 
 def verdict_banner(rep: AuditReport) -> str:
-    if getattr(rep, "status", "ok") != "ok":
+    if getattr(rep, "status", "ok") == "failed":
         reason = extract_failure_reason(rep)
         return _one(
             f'<div class="aq-card" style="border-left:5px solid #D64545"><div class="aq-verdict" style="grid-template-columns:1fr">'
@@ -203,8 +207,12 @@ def verdict_banner(rep: AuditReport) -> str:
     tone_pill = {"good": "good", "ok": "ok", "warn": "warn", "bad": "bad"}[v["tone"]]
     reasons = "".join(f'<li><span class="aq-dot {t}"></span><span>{esc(x)}</span></li>' for t, x in v["reasons"])
     cap = f'<div class="aq-tiny" style="margin-top:6px">Score before the critical-failure cap: {sc.overall_before_cap:g}</div>' if v["capped"] else ""
+    deg_note = ""
+    if getattr(rep, "status", "ok") == "degraded":
+        deg_reason = extract_degraded_reason(rep)
+        deg_note = f'<div class="aq-banner-risk" style="background:#fef3c7;color:#92400e;border-color:#fde68a;margin-bottom:12px">degraded input quality ({esc(deg_reason)})</div>'
     return _one(
-        f'<div class="aq-card"><div class="aq-verdict"><div class="gauge">{gauge_svg(sc.overall, sc.grade, width=280)}'
+        f'<div class="aq-card">{deg_note}<div class="aq-verdict"><div class="gauge">{gauge_svg(sc.overall, sc.grade, width=280)}'
         f'<div style="margin-top:2px"><span class="aq-pill {tone_pill}">Grade {esc(sc.grade)} · {esc(sc.grade_label)}</span></div>{cap}</div>'
         f'<div><div class="aq-vhead">{esc(v["headline"])}</div><div class="aq-vsub">{esc(v["sub"])}</div>'
         f'<ul class="aq-reasons">{reasons}</ul>'
@@ -212,7 +220,7 @@ def verdict_banner(rep: AuditReport) -> str:
 
 
 def score_cards(rep: AuditReport) -> str:
-    if getattr(rep, "status", "ok") != "ok":
+    if getattr(rep, "status", "ok") == "failed":
         reason = extract_failure_reason(rep)
         return _one(f'<div class="aq-banner-risk" style="font-size:14.5px;padding:12px 16px;border-radius:12px;margin:0 0 16px 0">'
                     f'Audit failed: {esc(reason)}; no score</div>')
@@ -220,6 +228,9 @@ def score_cards(rep: AuditReport) -> str:
     vals = {"sop_score": sc.sop_score, "policy_score": sc.policy_score, "empathy_score": sc.empathy_score, "communication_score": sc.communication_score}
     walk = {w["title"]: w for w in X.score_walkthrough(rep)}
     cards = []
+    if getattr(rep, "status", "ok") == "degraded":
+        deg_reason = extract_degraded_reason(rep)
+        cards.append(f'<div class="aq-banner-risk" style="grid-column:1 / -1;background:#fef3c7;color:#92400e;border-color:#fde68a;font-size:14px;padding:10px 14px;border-radius:10px;margin-bottom:12px">degraded input quality ({esc(deg_reason)})</div>')
     for key, title, mx, tech, short, what in X.CATEGORIES:
         val = vals[key]
         pct = 0 if not mx else max(0, min(100, val / mx * 100))
@@ -524,7 +535,7 @@ def transcript_section(rep: AuditReport) -> str:
 
 # ---------------------------------------------------------------------------------- how the score works / details
 def walkthrough_section(rep: AuditReport) -> str:
-    if getattr(rep, "status", "ok") != "ok":
+    if getattr(rep, "status", "ok") == "failed":
         reason = extract_failure_reason(rep)
         return _one(f'<div class="aq-card"><div class="aq-h">How the score was worked out</div><div class="aq-sub">No score was computed because this audit failed: {esc(reason)}.</div><div class="aq-banner-risk" style="margin:10px 0 0 0">Audit failed: {esc(reason)}; no score</div></div>')
     rows = []

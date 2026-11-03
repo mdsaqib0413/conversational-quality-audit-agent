@@ -402,6 +402,39 @@ def extract_failure_reason(report: Any) -> str:
     return "Pipeline execution failure"
 
 
+def extract_degraded_reason(report: Any) -> str:
+    """Extract a concise reason for a degraded AuditReport or report dict."""
+    if not report:
+        return "audio/transcript quality degraded"
+    if isinstance(report, dict):
+        t = report.get("transcript", {})
+        if isinstance(t, dict):
+            qr = str(t.get("quality_reason") or "").strip()
+            if qr and not qr.lower().startswith("transcript quality is reliable"):
+                return qr
+        if report.get("quality_reason"):
+            return str(report["quality_reason"]).strip()
+        if report.get("cannot_judge_reason"):
+            return str(report["cannot_judge_reason"]).strip()
+        warnings = report.get("meta", {}).get("warnings", [])
+        if warnings:
+            return str(warnings[0]).strip()
+        return "audio/transcript quality degraded"
+
+    t = getattr(report, "transcript", None)
+    if t and getattr(t, "quality_reason", None):
+        qr = str(t.quality_reason).strip()
+        if qr and not qr.lower().startswith("transcript quality is reliable"):
+            return qr
+    if getattr(report, "quality_reason", None) and str(report.quality_reason).strip():
+        return str(report.quality_reason).strip()
+    if getattr(report, "cannot_judge_reason", None) and str(report.cannot_judge_reason).strip():
+        return str(report.cannot_judge_reason).strip()
+    if hasattr(report, "meta") and getattr(report.meta, "warnings", None) and report.meta.warnings:
+        return str(report.meta.warnings[0]).strip()
+    return "audio/transcript quality degraded"
+
+
 class LiveWindowContext(BaseModel):
     """Phase 2: what the agent's screen should show for the last few turns."""
     window_turn_count: int

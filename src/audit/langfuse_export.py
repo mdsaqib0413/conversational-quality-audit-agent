@@ -36,7 +36,7 @@ import time
 from datetime import datetime
 from typing import Any, Dict, List, Optional
 
-from src.audit.schemas import AuditReport, extract_failure_reason
+from src.audit.schemas import AuditReport, extract_degraded_reason, extract_failure_reason
 from src.audit.tracer import TRACES_DIR, AuditTracer, estimate_cost, get_model_rates, get_rate_source, mask_pii
 
 logger = logging.getLogger(__name__)
@@ -268,17 +268,31 @@ def _export_to_cloud_otel(
     grade = str(getattr(report.scores, "grade", "")) if hasattr(report, "scores") else ""
     topic = str(getattr(report, "topic", ""))
     status = str(getattr(report, "status", "ok"))
-    is_failed = (status != "ok")
+    is_failed = (status == "failed")
     failure_reason = extract_failure_reason(report) if is_failed else ""
     rep_model = _clean_model_name(getattr(report.meta, "model", None)) if hasattr(report, "meta") else None
 
     # Root trace attributes
+    tags_list = [source, f"topic_{topic}" if topic else "topic_general"]
+    if not is_failed:
+        tags_list.append(f"grade_{grade}" if grade else "grade_none")
+        if hasattr(report, "resolved") and report.resolved is not None:
+            tags_list.append("resolved" if report.resolved else "unresolved")
+        if getattr(report.scores, "critical_failure", False):
+            tags_list.append("critical_cap")
+        if status == "degraded":
+            tags_list.append("degraded")
+    else:
+        tags_list.extend(["status_failed", "error"])
+
     root_attrs: List[Dict[str, Any]] = [
         {"key": "call_id", "value": {"stringValue": report.call_id}},
         {"key": "topic", "value": {"stringValue": topic}},
         {"key": "grade", "value": {"stringValue": grade if not is_failed else ""}},
         {"key": "status", "value": {"stringValue": status}},
         {"key": "source", "value": {"stringValue": source}},
+        {"key": "langfuse.tags", "value": {"arrayValue": {"values": [{"stringValue": t} for t in tags_list]}}},
+        {"key": "tags", "value": {"arrayValue": {"values": [{"stringValue": t} for t in tags_list]}}},
     ]
     if rep_model:
         root_attrs.append({"key": "model", "value": {"stringValue": rep_model}})
@@ -460,7 +474,10 @@ def _export_to_cloud_otel(
             logger.debug("Failed posting score %s: %s", score_name, e)
 
     if not is_failed:
-        _post_score("overall_score", overall_score, comment=f"Grade: {grade}" if grade else None)
+        score_comment = f"Grade: {grade}" if grade else None
+        if status == "degraded":
+            score_comment = f"{score_comment + ' ' if score_comment else ''}(degraded: {extract_degraded_reason(report)})"
+        _post_score("overall_score", overall_score, comment=score_comment)
         if hasattr(report, "scores"):
             sop_val = getattr(report.scores, "sop_score", None)
             if sop_val is not None:
@@ -540,7 +557,7 @@ def export_audit_to_langfuse(
         grade = str(getattr(report.scores, "grade", "")) if hasattr(report, "scores") else ""
         topic = str(getattr(report, "topic", ""))
         status = str(getattr(report, "status", "ok"))
-        is_failed = (status != "ok")
+        is_failed = (status == "failed")
         failure_reason = extract_failure_reason(report) if is_failed else ""
 
         meta_dict: Dict[str, Any] = {
@@ -590,6 +607,8 @@ def export_audit_to_langfuse(
                 tags.append("resolved" if report.resolved else "unresolved")
             if hasattr(report, "scores") and getattr(report.scores, "critical_failure", False):
                 tags.append("critical_cap")
+            if status == "degraded":
+                tags.append("degraded")
         else:
             tags.extend(["status_failed", "error"])
 

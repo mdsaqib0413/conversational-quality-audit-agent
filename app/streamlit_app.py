@@ -33,7 +33,7 @@ from src.audit.pipeline import AUDIO_EXT, AuditPipeline
 from src.audit.policy_check import get_involved_clause_ids
 from src.audit.rag import KnowledgeBase, get_embedder, get_kb
 from src.audit.review import apply_reviews_to_report, save_review_decision
-from src.audit.schemas import AuditReport, extract_failure_reason
+from src.audit.schemas import AuditReport, extract_failure_reason, extract_degraded_reason
 from src.audit.topic import detect_topic, get_live_context
 from src.audit.transcript_io import find_transcripts, load_transcript_json
 from src.live.engine import LiveSession
@@ -496,20 +496,22 @@ def page_report() -> None:
             filtered_idx = [x for x in idx if x["source_set"] == "real"]
 
         def _pick_label(x: dict) -> str:
-            if x.get("status") == "failed" or x.get("status", "ok") != "ok":
+            if x.get("status") == "failed":
                 return f"{x['call_id']}  ·  Audit failed (no score)"
             if x.get("risk_flags"):
                 return f"{x['call_id']}  ·  Not scored"
-            return f"{x['call_id']}  ·  {x['overall']:.0f}/100  {x['grade']}"
+            deg = " (degraded)" if x.get("status") == "degraded" else ""
+            return f"{x['call_id']}  ·  {x['overall']:.0f}/100  {x['grade']}{deg}"
 
         id_map = {x["call_id"]: _pick_label(x) for x in filtered_idx}
         if rep.call_id not in id_map:
-            if getattr(rep, "status", "ok") != "ok":
+            if getattr(rep, "status", "ok") == "failed":
                 id_map[rep.call_id] = f"{rep.call_id}  ·  Audit failed (no score)"
             elif getattr(rep, 'risk_flags', None):
                 id_map[rep.call_id] = f"{rep.call_id}  ·  Not scored"
             else:
-                id_map[rep.call_id] = f"{rep.call_id}  ·  {rep.scores.overall:.0f}/100 {rep.scores.grade}"
+                deg = " (degraded)" if getattr(rep, "status", "ok") == "degraded" else ""
+                id_map[rep.call_id] = f"{rep.call_id}  ·  {rep.scores.overall:.0f}/100 {rep.scores.grade}{deg}"
         sorted_ids = sorted(id_map)
         pick_labels = [id_map[i] for i in sorted_ids]
         default_idx = sorted_ids.index(rep.call_id) if rep.call_id in sorted_ids else 0
@@ -554,9 +556,12 @@ def page_report() -> None:
     if rep.meta.diarization_method.startswith("heuristic"):
         st.error("Speaker separation used a low-confidence guess. Check the transcript tab before trusting these findings.")
 
-    if getattr(rep, "status", "ok") != "ok":
+    if getattr(rep, "status", "ok") == "failed":
         reason = extract_failure_reason(rep)
         st.error(f"Audit failed: {reason}; no score")
+    elif getattr(rep, "status", "ok") == "degraded":
+        deg_reason = extract_degraded_reason(rep)
+        st.warning(f"degraded input quality ({deg_reason})")
 
     # Always show verdict banner (including scam warning)
     html(U.verdict_banner(rep))

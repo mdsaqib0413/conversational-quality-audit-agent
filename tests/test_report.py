@@ -94,6 +94,54 @@ def test_failed_report_rendering_banner_no_zero_score(report):
     assert "Audit failed: 503 UNAVAILABLE; no score" in walk
 
 
+def test_degraded_report_rendering_shows_scores_with_degraded_note(report):
+    from src.audit import ui_html as U
+
+    deg_rep = report.model_copy(update={
+        "status": "degraded",
+        "scores": ScoreBreakdown(
+            sop_score=10.0, policy_score=0.0, empathy_score=3.1, communication_score=3.0,
+            overall_before_cap=16.1, overall=16.1, grade="D", grade_label="Needs Improvement",
+            critical_failure=False, cap_reasons=[]
+        ),
+        "meta": report.meta.model_copy(update={
+            "status": "degraded",
+            "warnings": ["Substantial dead air/silence (57.1%)"]
+        }),
+    })
+
+    # 1. PDF HTML rendering
+    pdf_html = render_pdf_html(deg_rep)
+    assert "Audit failed" not in pdf_html
+    assert "degraded input quality (Substantial dead air/silence (57.1%))" in pdf_html
+    assert "16.1" in pdf_html
+
+    # 2. Standalone HTML report
+    html_out = render_html(deg_rep)
+    assert "Audit failed" not in html_out
+    assert "degraded input quality (Substantial dead air/silence (57.1%))" in html_out
+    assert "16.1" in html_out
+
+    # 3. Streamlit UI HTML components
+    v_banner = U.verdict_banner(deg_rep)
+    assert "Audit failed" not in v_banner
+    assert "degraded input quality" in v_banner
+    assert "Grade D" in v_banner
+
+    cards = U.score_cards(deg_rep)
+    assert "Audit failed" not in cards
+    assert "degraded input quality" in cards
+    assert "Call script" in cards
+    assert "10" in cards
+
+    hdr = U.report_header(deg_rep)
+    assert "Audit failed" not in hdr
+    assert "degraded input quality" in hdr
+
+    walk = U.walkthrough_section(deg_rep)
+    assert "Audit failed" not in walk
+
+
 def test_audit_index_excludes_unhashed_and_stale_cache(monkeypatch, tmp_path):
     from app import streamlit_app as app
     from src.audit.schemas import CallTranscript

@@ -635,6 +635,76 @@ def test_failed_audit_export_cloud_otel_skips_scores_and_sets_code_2(monkeypatch
     assert len(score_posts) == 0
 
 
+def test_degraded_audit_export_posts_scores_and_sets_degraded_tag_sdk(monkeypatch):
+    monkeypatch.setenv("LANGFUSE_PUBLIC_KEY", "pk-test")
+    monkeypatch.setenv("LANGFUSE_SECRET_KEY", "sk-test")
+    monkeypatch.setenv("LANGFUSE_HOST", "https://custom.langfuse.com")
+    monkeypatch.setenv("LANGFUSE_EXPORT_EVAL", "1")
+
+    fake_client = FakeLangfuseClient()
+    report = _make_dummy_report()
+    report.status = "degraded"
+    report.meta.warnings = ["Substantial dead air/silence (57.1%)"]
+
+    result = export_audit_to_langfuse(report, client=fake_client)
+    assert result is True
+    tr = fake_client.traces[0]
+
+    # Degraded audits MUST have the degraded tag and status
+    assert "degraded" in tr.tags
+    assert tr.metadata["status"] == "degraded"
+
+    # Quality scores MUST be posted (5 scores: overall, sop, policy, empathy, communication)
+    assert len(tr.scores) == 5
+    score_names = {s["name"] for s in tr.scores}
+    assert score_names == {"overall_score", "sop_score", "policy_score", "empathy_score", "communication_score"}
+
+
+def test_degraded_audit_export_cloud_otel_posts_scores_and_sets_degraded_tag(monkeypatch):
+    from src.audit.langfuse_export import _export_to_cloud_otel
+
+    posted_requests = []
+
+    class DummyResponse:
+        status_code = 200
+        text = "ok"
+
+    import requests
+    monkeypatch.setattr(requests, "post", lambda url, **kwargs: (posted_requests.append((url, kwargs)), DummyResponse())[1])
+
+    report = _make_dummy_report()
+    report.status = "degraded"
+    report.meta.warnings = ["Substantial dead air/silence (57.1%)"]
+
+    res = _export_to_cloud_otel(
+        report=report,
+        raw_steps=[],
+        pk="pk-test",
+        sk="sk-test",
+        host="https://cloud.langfuse.com",
+        source="eval",
+        capture_content=False,
+    )
+    assert res is True
+
+    # Check trace
+    otel_posts = [p for p in posted_requests if "/api/public/otel/v1/traces" in p[0]]
+    assert len(otel_posts) == 1
+    payload = otel_posts[0][1]["json"]
+    root_span = payload["resourceSpans"][0]["scopeSpans"][0]["spans"][0]
+    # Status code 1 (OK)
+    assert root_span["status"]["code"] == 1
+    root_attrs = {a["key"]: list(a["value"].values())[0] for a in root_span["attributes"]}
+    tag_strings = [x["stringValue"] for x in root_attrs["tags"]["values"]]
+    assert "degraded" in tag_strings
+
+    # Quality scores MUST be posted (5 scores)
+    score_posts = [p for p in posted_requests if "/api/public/scores" in p[0]]
+    assert len(score_posts) == 5
+    posted_score_names = {p[1]["json"]["name"] for p in score_posts}
+    assert posted_score_names == {"overall_score", "sop_score", "policy_score", "empathy_score", "communication_score"}
+
+
 def test_otlp_generation_payload_has_native_usage_and_clean_model(monkeypatch):
     from src.audit.langfuse_export import _export_to_cloud_otel
 
