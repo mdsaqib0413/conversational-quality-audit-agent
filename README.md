@@ -84,6 +84,7 @@ Design rules: no fake data on failure (errors are raised and shown), every findi
 the model may only cite retrieved clause IDs, scoring is code, not LLM.
 
 ## LLM configuration (.env)
+- `POLICY_MODEL`: Dedicated model used strictly for the policy compliance checking step (defaults to `gemini-3.5-flash`). The policy step operates with zero fallback to prevent silent model substitution: if it encounters a 429 quota exhaustion or rate limit, or if the model is unavailable, it raises a clear error and logs a trace warning.
 `GEMINI_MODEL` + optional `GEMINI_FALLBACK_MODELS` (switched automatically when a model's daily free quota is gone), and an
 optional OpenAI-compatible fallback (Groq, OpenRouter, local Ollama) via `LLM_FALLBACK_PROVIDER=openai_compat`.
 The app sidebar shows the model in use and how many requests were made today.

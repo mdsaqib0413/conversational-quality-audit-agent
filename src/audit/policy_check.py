@@ -27,6 +27,14 @@ SYSTEM = _load_agent("policy_agent.md")
 ALWAYS_INCLUDE = ["PRV-1.1", "ESC-1.1", "ESC-1.2"]
 
 
+def get_policy_model() -> str:
+    """Return the model to use for policy compliance checking.
+
+    Defaults to 'gemini-3.5-flash', overridable via POLICY_MODEL environment variable.
+    """
+    return os.environ.get("POLICY_MODEL", "gemini-3.5-flash").strip() or "gemini-3.5-flash"
+
+
 def agent_query(call: CallTranscript, limit_chars: int = 3500) -> str:
     text = " ".join(t.text for t in call.turns if t.speaker == "agent")
     return text[:limit_chars]
@@ -116,7 +124,18 @@ def get_policy_context_clauses(
     return kb.retrieve_policies(agent_query(call), topic=topic, k=k, always_include=always)
 
 
-def check_policies(call: CallTranscript, topic: str, kb: KnowledgeBase, gateway, k: int = 10) -> Tuple[List[PolicyResult], List[str], List[Chunk]]:
+def check_policies(
+    call: CallTranscript,
+    topic: str,
+    kb: KnowledgeBase,
+    gateway=None,
+    k: int = 10,
+    model: Optional[str] = None,
+) -> Tuple[List[PolicyResult], List[str], List[Chunk]]:
+    if gateway is None:
+        from .llm import get_policy_gateway
+
+        gateway = get_policy_gateway(model=model or get_policy_model())
     # Retrieve clauses according to POLICY_CONTEXT mode (default: 'G' includes all PRV and ESC clauses)
     clauses = get_policy_context_clauses(call, topic, kb, k=k)
     prompt = build_prompt(call, clauses)

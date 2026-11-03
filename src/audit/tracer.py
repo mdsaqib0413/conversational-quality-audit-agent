@@ -260,6 +260,21 @@ class AuditTracer:
         self.trace_file = self.traces_dir / f"{self.run_id}.jsonl"
         self.steps: List[TraceStep] = []
         self.llm_calls: List[dict] = []
+        self.warnings: List[str] = []
+
+    def record_warning(self, msg: str) -> None:
+        """Record a trace warning."""
+        self.warnings.append(msg)
+        try:
+            with open(self.trace_file, "a", encoding="utf-8") as f:
+                payload = {
+                    "event": "warning",
+                    "message": msg,
+                    "timestamp": datetime.now().isoformat(timespec="milliseconds"),
+                }
+                f.write(json.dumps(payload, ensure_ascii=False) + "\n")
+        except Exception:
+            pass
 
     def record_step(
         self,
@@ -379,6 +394,7 @@ class AuditTracer:
             "total_cost_usd": round(sum(valid_cost), 6) if valid_cost else 0.0,
             "statuses": [s.status for s in self.steps],
             "has_all_usage": all(s.has_usage for s in self.steps if s.decision_type == "model"),
+            "warnings": list(self.warnings),
         }
 
 

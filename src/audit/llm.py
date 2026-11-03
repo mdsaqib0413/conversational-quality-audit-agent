@@ -557,6 +557,11 @@ class LLMGateway:
                     logger.warning("Daily quota exhausted on %s:%s -> switching to %s:%s", prov.name, prov.model, nxt.name, nxt.model)
                     self._idx += 1
                     continue
+                if self.tracer and hasattr(self.tracer, "record_warning"):
+                    try:
+                        self.tracer.record_warning(f"Model '{prov.model}' rate limited / quota exhausted (429): {e}")
+                    except Exception:
+                        pass
                 raise QuotaExhaustedError(
                     f"{e}\nNo fallback model left. Add GEMINI_FALLBACK_MODELS or an openai_compat fallback "
                     f"(Groq / Ollama) in .env, or wait for the daily reset."
@@ -581,6 +586,14 @@ class LLMGateway:
                 if empty_retries > 1:
                     raise e from None
                 continue
+            if self.tracer and hasattr(self.tracer, "record_warning"):
+                try:
+                    if isinstance(e, (RateLimitedError, QuotaExhaustedError)):
+                        self.tracer.record_warning(f"Model '{prov.model}' rate limited / quota exhausted (429): {e}")
+                    elif isinstance(e, FatalLLMError):
+                        self.tracer.record_warning(f"Model '{prov.model}' unavailable: {e}")
+                except Exception:
+                    pass
             raise e from None
 
     # ---- public API ------------------------------------------------------------------
@@ -629,3 +642,20 @@ class LLMGateway:
 # Global instances (no network access happens at import time)
 gemini_gateway = LLMGateway()
 llm = gemini_gateway
+
+
+def get_policy_gateway(model: Optional[str] = None) -> LLMGateway:
+    """Create an LLMGateway dedicated to the policy compliance check.
+
+    Uses POLICY_MODEL from the environment (default: 'gemini-3.5-flash').
+    Configured with strictly a single target and NO fallback chain, ensuring
+    that on 429 or unavailability it raises without silently switching models.
+    """
+    model_name = (model or os.getenv("POLICY_MODEL", "gemini-3.5-flash")).strip() or "gemini-3.5-flash"
+    primary = os.getenv("LLM_PROVIDER", "gemini").strip().lower()
+    if primary == "openai_compat":
+        base = os.getenv("LLM_BASE_URL", "").strip()
+        target: Provider = OpenAICompatProvider(model_name, base, os.getenv("LLM_API_KEY", ""))
+    else:
+        target = GeminiProvider(model_name)
+    return LLMGateway(targets=[target])

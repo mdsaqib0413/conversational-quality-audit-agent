@@ -112,7 +112,7 @@ def test_check_policies_respects_env_switch(sample_call, kb, monkeypatch):
 
 
 def test_audit_cache_version_and_context_key_bump(sample_call, kb, tmp_path, monkeypatch):
-    """Audit cache keys reflect the v8 cache bump and differ between modes A and G."""
+    """Audit cache keys reflect the v9 cache bump and differ between modes A and G."""
     fake_gateway = FakeGateway(policy=PolicyAnalysis(claims=[]))
     pipe = AuditPipeline(kb=kb, gateway=fake_gateway, cache_dir=tmp_path)
 

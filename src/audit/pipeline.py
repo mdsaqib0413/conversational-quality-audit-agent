@@ -57,11 +57,29 @@ def _emit(progress: Progress, stage: str, frac: float, msg: str) -> None:
 
 class AuditPipeline:
     def __init__(self, kb: Optional[KnowledgeBase] = None, gateway: Optional[LLMGateway] = None,
-                 transcriber=None, cache_dir: Optional[Path] = None):
+                 transcriber=None, cache_dir: Optional[Path] = None,
+                 policy_model: Optional[str] = None, policy_gateway: Optional[LLMGateway] = None):
         self.kb = kb or get_kb()
         self.gateway = gateway or gemini_gateway
         self._transcriber = transcriber
         self.cache_dir = Path(cache_dir) if cache_dir else CACHE_ROOT
+        self._policy_model = policy_model
+        self._policy_gateway = policy_gateway
+
+    @property
+    def policy_model(self) -> str:
+        if self._policy_model:
+            return self._policy_model
+        from .policy_check import get_policy_model
+        return get_policy_model()
+
+    def get_policy_gateway(self) -> LLMGateway:
+        if self._policy_gateway is not None:
+            return self._policy_gateway
+        from .llm import LLMGateway, gemini_gateway, get_policy_gateway
+        if self.gateway is not gemini_gateway and not isinstance(self.gateway, LLMGateway):
+            return self.gateway
+        return get_policy_gateway(model=self.policy_model)
 
     @property
     def transcriber(self):
@@ -76,9 +94,10 @@ class AuditPipeline:
         h = hashlib.sha256()
         h.update(call.text_for_hash().encode("utf-8"))
         h.update(self.gateway.model_name.encode("utf-8") if self.gateway.targets else b"")
+        h.update(self.policy_model.encode("utf-8"))
         h.update(self.kb.version.encode("utf-8"))
         h.update(os.environ.get("POLICY_CONTEXT", "G").strip().upper().encode("utf-8"))
-        h.update(b"audit-v8")
+        h.update(b"audit-v9")
         return h.hexdigest()[:16]
 
     def _audit_cache_path(self, call: CallTranscript) -> Path:
@@ -348,7 +367,11 @@ class AuditPipeline:
 
         _emit(progress, "policy", 0.82, "Retrieving policies and checking what the agent promised...")
         t_pol = time.time()
-        req_before_pol = self.gateway.request_count
+        pol_gw = self.get_policy_gateway()
+        req_before_pol = pol_gw.request_count if hasattr(pol_gw, "request_count") else 0
+        if hasattr(pol_gw, "tracer"):
+            pol_gw.tracer = tracer
+
         t_pol_ret = time.time()
         from .policy_check import get_policy_context_clauses
         retrieved_clauses = get_policy_context_clauses(call, topic.topic, self.kb)
@@ -358,10 +381,11 @@ class AuditPipeline:
             outputs_summary=f"{len(retrieved_clauses)} clauses retrieved",
             start_t=t_pol_ret, end_t=time.time(),
         )
+        pol_model_name = getattr(pol_gw, "model_name", None) or self.policy_model
         try:
-            policy_results, w2, clauses = check_policies(call, topic.topic, self.kb, self.gateway)
+            policy_results, w2, clauses = check_policies(call, topic.topic, self.kb, pol_gw, model=self.policy_model)
             warnings += w2
-            usage_pol = getattr(self.gateway, "last_usage", None) or {}
+            usage_pol = getattr(pol_gw, "last_usage", None) or {}
             t_in_pol = usage_pol.get("tokens_in")
             t_out_pol = usage_pol.get("tokens_out")
             tracer.record_step(
@@ -369,24 +393,25 @@ class AuditPipeline:
                 inputs_summary=f"Topic: {topic.topic}, {len(clauses)} clauses retrieved",
                 outputs_summary=f"Checked {len(policy_results)} claims/violations",
                 start_t=t_pol, end_t=time.time(),
-                model_name=self.gateway.describe() if self.gateway.targets else "none",
+                model_name=pol_model_name,
                 tokens_in=t_in_pol,
                 tokens_out=t_out_pol,
                 prompt=usage_pol.get("prompt"),
                 response=usage_pol.get("response"),
                 has_usage=usage_pol.get("has_usage", (t_in_pol is not None and t_out_pol is not None)),
-                request_count=self.gateway.request_count - req_before_pol,
+                request_count=(pol_gw.request_count - req_before_pol) if hasattr(pol_gw, "request_count") else 0,
             )
             completed_steps.append("policy_check")
         except Exception as err:
             logger.error("Policy check failed: %s", err)
+            tracer.record_warning(f"Policy model '{pol_model_name}' failed: {err}")
             tracer.record_step(
                 "policy_check", "model", status="failed",
                 inputs_summary=f"Topic: {topic.topic}",
                 outputs_summary=f"Error: {err}",
                 start_t=t_pol, end_t=time.time(),
-                model_name=self.gateway.describe() if self.gateway.targets else "none",
-                request_count=self.gateway.request_count - req_before_pol,
+                model_name=pol_model_name,
+                request_count=(pol_gw.request_count - req_before_pol) if hasattr(pol_gw, "request_count") else 0,
                 error_text=str(err),
             )
             scores = ScoreBreakdown(
@@ -402,7 +427,7 @@ class AuditPipeline:
                 status="failed", failed_step="policy_check", completed_steps=completed_steps,
                 meta=AuditMeta(
                     model=self.gateway.describe() if self.gateway.targets else "",
-                    llm_requests=self.gateway.request_count - req0,
+                    llm_requests=(self.gateway.request_count - req0) + ((pol_gw.request_count - req_before_pol) if pol_gw != self.gateway and hasattr(pol_gw, "request_count") else 0),
                     audit_seconds=round(time.time() - t0, 1),
                     trace_id=tracer.run_id, status="failed", failed_step="policy_check", completed_steps=completed_steps,
                     warnings=[f"Failed at policy_check: {err}"]
