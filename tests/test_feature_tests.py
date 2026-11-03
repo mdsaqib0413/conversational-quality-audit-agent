@@ -26,21 +26,14 @@ def expected():
     return load_expected()
 
 
-# The 4 dev labels added during post-baseline label review (not present in raw synthetic transcripts)
-REVIEWED_LABELS_DEV = {
-    "call_102": {("PRV-1.2", 1)},
-    "call_104": {("PRV-1.2", 1), ("PRV-2.2", 5)},
-    "call_106": {("ESC-2.1", 14)},
-}
-
-
 def _strip_reviewed_labels(exp_dict: dict) -> dict:
+    """Strip violations added during post-baseline human review rounds for sync check with synthetic transcripts."""
     cleaned = copy.deepcopy(exp_dict)
-    for cid, labels in REVIEWED_LABELS_DEV.items():
-        if cid in cleaned and "violations" in cleaned[cid]:
-            cleaned[cid]["violations"] = [
-                v for v in cleaned[cid]["violations"]
-                if (v["clause"], v.get("turn")) not in labels
+    for cid, call_data in cleaned.items():
+        if "violations" in call_data:
+            call_data["violations"] = [
+                v for v in call_data["violations"]
+                if not v.get("review_round")
             ]
     return cleaned
 

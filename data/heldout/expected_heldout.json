@@ -48,7 +48,8 @@
         "clause": "PRV-2.2",
         "severity": "major",
         "turn": 3,
-        "quote": "Hello Mr. Kulkarni, I see your order for the tablet was delivered to flat 402, Palm Heights in Pune yesterday. What seems to be the trouble?"
+        "quote": "Hello Mr. Kulkarni, I see your order for the tablet was delivered to flat 402, Palm Heights in Pune yesterday. What seems to be the trouble?",
+        "review_round": 2
       }
     ],
     "quality": "bad_deviation",
@@ -141,7 +142,8 @@
         "clause": "ESC-2.1",
         "severity": "major",
         "turn": 7,
-        "quote": "I cannot transfer your call to a supervisor right now because our managerial queue is closed for the day, and we do not provide callbacks from managers."
+        "quote": "I cannot transfer your call to a supervisor right now because our managerial queue is closed for the day, and we do not provide callbacks from managers.",
+        "review_round": 2
       }
     ],
     "quality": "bad_deviation",

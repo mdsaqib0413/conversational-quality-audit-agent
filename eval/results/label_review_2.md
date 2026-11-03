@@ -229,18 +229,18 @@ WAR-2.3 ShopEase Assured Warranty Facilitation
 | # | Split | Call ID | Clause ID | Turn Index | Model-Cited Quote | Final Decision | Justification |
 |:---:|:---:|:---:|:---:|:---:|:---|:---:|:---|
 | 1 | `dev` | `call_102` | `PRV-1.2` | 1 | "Hello, ShopEase customer service. How can I help you?" | **add** | Clause PRV-1.2 mandates delivering the approved recording disclosure within the first two conversation turns, which this opening greeting fails to include. |
-| 2 | `dev` | `call_102` | `REF-1.2` | 9 | "You can keep the watch, no need to send it back." | **skip** | Clause REF-1.2 specifies item condition requirements upon return, but the agent's action on turn 9 reflects a concession under frontline discretion rather than an item condition infraction; skipped per user decision. |
+| 2 | `dev` | `call_102` | `REF-1.2` | 9 | "You can keep the watch, no need to send it back." | **borderline - not added** | Clause REF-1.2 specifies condition and verification standards for returned items, but does not prohibit frontline representatives from granting a discretionary exception waiving return pickup. |
 | 3 | `dev` | `call_104` | `PRV-1.2` | 1 | "Hello, ShopEase support, tell me." | **add** | Clause PRV-1.2 requires representatives to recite the recording disclosure during their initial greeting within the first two turns, which is entirely missing from this greeting. |
 | 4 | `dev` | `call_104` | `PRV-2.2` | 5 | "and it is shipped to Flat 8B, Lotus Residency, Linking Road, Bandra, Mumbai 400050." | **add** | Clause PRV-2.2 explicitly forbids reciting complete street addresses or door numbers out loud unless the customer recites it first for confirmation. |
 | 5 | `dev` | `call_106` | `ESC-2.1` | 14 | "Hello sir, yes, nobody is available. Anything else?" | **add** | Clause ESC-2.1 requires that if no supervisor is immediately available, the agent must apologize and offer a confirmed Supervisor Callback SLA within 2 to 4 business hours. |
 | 6 | `heldout` | `call_202` | `PRV-2.2` | 3 | "delivered to flat 402, Palm Heights in Pune yesterday" | **add** | Clause PRV-2.2 requires partial masking of delivery addresses and strictly prohibits reciting complete door numbers or street addresses out loud. |
-| 7 | `heldout` | `call_202` | `ESC-1.2` | 11 | "the amount of Rs 14,999 will only be credited as ShopEase wallet credits" | **skip** | Clause ESC-1.2 caps frontline authority at Rs 5,000, but call_202 ground truth already captures the core refund refusal violations; skipped per user decision. |
-| 8 | `heldout` | `call_202` | `ESC-1.1` | 15 | "Our payment backend restricts promotional orders to wallet refunds only, so another representative would tell you the exact same thing." | **skip** | Clause ESC-1.1 mandates supervisor escalation upon explicit request, but call_202 ground truth already focuses on refund policy infractions; skipped per user decision. |
-| 9 | `heldout` | `call_203` | `ESC-1.1` | 15 | "You are free to do so, ma'am. Thank you for contacting ShopEase." | **skip** | Clause ESC-1.1 lists mention of consumer court as an escalation trigger, but call_203 ground truth intentionally isolates warranty duration and condition rules; skipped per user decision. |
+| 7 | `heldout` | `call_202` | `ESC-1.2` | 11 | "the amount of Rs 14,999 will only be credited as ShopEase wallet credits" | **borderline - not added** | Clause ESC-1.2 limits frontline approval discretion to Rs 5,000 for approving concessions or refunds, whereas the representative in turn 11 was refusing a bank refund rather than approving an unauthorized high-value concession. |
+| 8 | `heldout` | `call_202` | `ESC-1.1` | 15 | "Our payment backend restricts promotional orders to wallet refunds only, so another representative would tell you the exact same thing." | **borderline - not added** | Customer asked for someone else once (turn 14), whereas clause ESC-1.1 requires two explicit requests or two failed frontline attempts to mandate a supervisor escalation. |
+| 9 | `heldout` | `call_203` | `ESC-1.1` | 15 | "You are free to do so, ma'am. Thank you for contacting ShopEase." | **borderline - not added** | Clause ESC-1.1 mandates escalation for consumer court or legal mentions, whereas the customer stated 'consumer affairs' during a farewell sign-off ("Goodbye") without asking for an escalation. |
 | 10 | `heldout` | `call_205` | `ESC-2.1` | 7 | "we do not provide callbacks from managers." | **add** | Clause ESC-2.1 mandates offering a confirmed Supervisor Callback SLA within 2 to 4 business hours when a supervisor is not immediately available, which claiming that callbacks are not provided directly breaches. |
 | 11 | `heldout` | `call_206` | `PRV-2.2` | 3 | "heading to your residency at Green Glen Layout." | **borderline** | Clause PRV-2.2 instructs representatives to quote only first name, city, and pin code and never recite street address or door number out loud, though here only the residential layout name was stated without a door number. |
-| 12 | `heldout` | `call_207` | `WAR-2.3` | 7 | "standard repair turnaround time is forty-five days, and we cannot offer any replacement unit or refund" | **skip** | Clause WAR-2.3 sets a maximum repair or replacement turnaround time of 14 business days, but this finding on turn 7 is already evaluated under ground truth WAR-2.1 as an alternate pair. |
-| 13 | `heldout` | `call_209` | `WAR-2.3` | 11 | "During festival months, panel replacement turnaround times are indefinite; it could take several months and we cannot commit to any timeline." | **skip** | Clause WAR-2.3 establishes a maximum turnaround time of 14 business days and prohibits quoting indefinite timelines, but this finding on turn 11 is already evaluated under ground truth WAR-2.1 as an alternate pair. |
+| 12 | `heldout` | `call_207` | `WAR-2.3` | 7 | "standard repair turnaround time is forty-five days, and we cannot offer any replacement unit or refund" | **alternate pair** | Clause WAR-2.3 sets a maximum repair or replacement turnaround time of 14 business days, but this finding on turn 7 is already evaluated under ground truth WAR-2.1 as an alternate pair. |
+| 13 | `heldout` | `call_209` | `WAR-2.3` | 11 | "During festival months, panel replacement turnaround times are indefinite; it could take several months and we cannot commit to any timeline." | **alternate pair** | Clause WAR-2.3 establishes a maximum turnaround time of 14 business days, but this finding on turn 11 is already evaluated under ground truth WAR-2.1 as an alternate pair. |
 | 14 | `heldout` | `call_212` | `WAR-2.3` | 21 | "authorized service centers must resolve the repair within a maximum turnaround window of 14 calendar days." | **borderline** | Clause WAR-2.3 specifies a maximum turnaround time of 14 business days, making the agent citation of 14 calendar days a technical discrepancy regarding business versus calendar days. |
 
 ### Itemized Detail for the 6 Added Labels
@@ -298,6 +298,72 @@ WAR-2.3 ShopEase Assured Warranty Facilitation
 - **Quote:** `"I cannot transfer your call to a supervisor right now because our managerial queue is closed for the day, and we do not provide callbacks from managers."`
 - **Final Decision:** `add`
 - **Ground Truth Target:** `data/heldout/expected_heldout.json`
+
+### Itemized Detail for Borderline and Alternate Pair Findings
+
+#### Extra 2: `call_102` (dev) — Clause `REF-1.2`
+- **File Path:** `data/transcripts/call_102.json`
+- **Clause ID:** `REF-1.2`
+- **Turn Index:** 9
+- **Quote:** `"You can keep the watch, no need to send it back."`
+- **Final Decision:** `borderline - not added`
+- **Reason:** Clause REF-1.2 specifies condition and verification standards for returned items, but does not prohibit frontline representatives from granting a discretionary exception waiving return pickup.
+
+#### Extra 7: `call_202` (heldout) — Clause `ESC-1.2`
+- **File Path:** `data/heldout/transcripts/call_202.json`
+- **Clause ID:** `ESC-1.2`
+- **Turn Index:** 11
+- **Quote:** `"the amount of Rs 14,999 will only be credited as ShopEase wallet credits"`
+- **Final Decision:** `borderline - not added`
+- **Reason:** Clause ESC-1.2 limits frontline approval discretion to Rs 5,000 for approving concessions or refunds, whereas the representative in turn 11 was refusing a bank refund rather than approving an unauthorized high-value concession.
+
+#### Extra 8: `call_202` (heldout) — Clause `ESC-1.1`
+- **File Path:** `data/heldout/transcripts/call_202.json`
+- **Clause ID:** `ESC-1.1`
+- **Turn Index:** 15
+- **Quote:** `"Our payment backend restricts promotional orders to wallet refunds only, so another representative would tell you the exact same thing."`
+- **Final Decision:** `borderline - not added`
+- **Reason:** Customer asked for someone else once (turn 14), whereas clause ESC-1.1 requires two explicit requests or two failed frontline attempts to mandate a supervisor escalation.
+
+#### Extra 9: `call_203` (heldout) — Clause `ESC-1.1`
+- **File Path:** `data/heldout/transcripts/call_203.json`
+- **Clause ID:** `ESC-1.1`
+- **Turn Index:** 15
+- **Quote:** `"You are free to do so, ma'am. Thank you for contacting ShopEase."`
+- **Final Decision:** `borderline - not added`
+- **Reason:** Clause ESC-1.1 mandates escalation for consumer court or legal mentions, whereas the customer stated 'consumer affairs' during a farewell sign-off ("Goodbye") without asking for an escalation.
+
+#### Extra 11: `call_206` (heldout) — Clause `PRV-2.2`
+- **File Path:** `data/heldout/transcripts/call_206.json`
+- **Clause ID:** `PRV-2.2`
+- **Turn Index:** 3
+- **Quote:** `"heading to your residency at Green Glen Layout."`
+- **Final Decision:** `borderline`
+- **Reason:** Clause PRV-2.2 instructs representatives to quote only first name, city, and pin code and never recite street address or door number out loud, though here only the residential layout name was stated without a door number.
+
+#### Extra 12: `call_207` (heldout) — Clause `WAR-2.3`
+- **File Path:** `data/heldout/transcripts/call_207.json`
+- **Clause ID:** `WAR-2.3`
+- **Turn Index:** 7
+- **Quote:** `"standard repair turnaround time is forty-five days, and we cannot offer any replacement unit or refund"`
+- **Final Decision:** `alternate pair`
+- **Reason:** Clause WAR-2.3 sets a maximum repair or replacement turnaround time of 14 business days, but this finding on turn 7 is already evaluated under ground truth WAR-2.1 as an alternate pair.
+
+#### Extra 13: `call_209` (heldout) — Clause `WAR-2.3`
+- **File Path:** `data/heldout/transcripts/call_209.json`
+- **Clause ID:** `WAR-2.3`
+- **Turn Index:** 11
+- **Quote:** `"During festival months, panel replacement turnaround times are indefinite; it could take several months and we cannot commit to any timeline."`
+- **Final Decision:** `alternate pair`
+- **Reason:** Clause WAR-2.3 establishes a maximum turnaround time of 14 business days, but this finding on turn 11 is already evaluated under ground truth WAR-2.1 as an alternate pair.
+
+#### Extra 14: `call_212` (heldout) — Clause `WAR-2.3`
+- **File Path:** `data/heldout/transcripts/call_212.json`
+- **Clause ID:** `WAR-2.3`
+- **Turn Index:** 21
+- **Quote:** `"authorized service centers must resolve the repair within a maximum turnaround window of 14 calendar days."`
+- **Final Decision:** `borderline`
+- **Reason:** Clause WAR-2.3 specifies a maximum turnaround time of 14 business days, making the agent citation of 14 calendar days a technical discrepancy regarding business versus calendar days.
 
 ## 4. Final Disposition and Rescoring Results (Old vs New)
 
