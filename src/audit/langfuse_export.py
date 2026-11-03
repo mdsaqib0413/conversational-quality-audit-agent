@@ -53,6 +53,18 @@ def _pct_score(val: Any, max_val: float) -> Optional[float]:
         return None
     return round((float(val) / float(max_val)) * 100.0, 2)
 
+
+def _clean_model_name(raw_model: Optional[str]) -> Optional[str]:
+    """Return normalized model name without provider prefix, e.g. 'gemini-3.5-flash-lite'."""
+    if not raw_model or raw_model == "none":
+        return None
+    m = str(raw_model).strip()
+    for prefix in ("gemini:", "google:", "fake:"):
+        if m.startswith(prefix):
+            m = m[len(prefix):].strip()
+            break
+    return m or None
+
 DEFAULT_FLUSH_TIMEOUT_SECONDS = 3.0
 
 
@@ -258,6 +270,7 @@ def _export_to_cloud_otel(
     status = str(getattr(report, "status", "ok"))
     is_failed = (status != "ok")
     failure_reason = extract_failure_reason(report) if is_failed else ""
+    rep_model = _clean_model_name(getattr(report.meta, "model", None)) if hasattr(report, "meta") else None
 
     # Root trace attributes
     root_attrs: List[Dict[str, Any]] = [
@@ -267,6 +280,9 @@ def _export_to_cloud_otel(
         {"key": "status", "value": {"stringValue": status}},
         {"key": "source", "value": {"stringValue": source}},
     ]
+    if rep_model:
+        root_attrs.append({"key": "model", "value": {"stringValue": rep_model}})
+        root_attrs.append({"key": "gen_ai.request.model", "value": {"stringValue": rep_model}})
     if not is_failed:
         root_attrs.append({"key": "overall_score", "value": {"doubleValue": overall_score}})
     else:
@@ -302,12 +318,13 @@ def _export_to_cloud_otel(
         s_type = getattr(s, "decision_type", None) or (s.get("decision_type", "plain_code") if isinstance(s, dict) else "plain_code")
         s_status = getattr(s, "status", None) or (s.get("status", "ok") if isinstance(s, dict) else "ok")
         s_model = getattr(s, "model_name", None) or (s.get("model_name", "none") if isinstance(s, dict) else "none")
+        clean_model = _clean_model_name(s_model)
         s_cost = getattr(s, "estimated_cost_usd", None) if not isinstance(s, dict) else s.get("estimated_cost_usd")
         s_tokens_in = getattr(s, "tokens_in", None) if not isinstance(s, dict) else s.get("tokens_in")
         s_tokens_out = getattr(s, "tokens_out", None) if not isinstance(s, dict) else s.get("tokens_out")
         s_tokens_cached = getattr(s, "tokens_cached", None) if not isinstance(s, dict) else s.get("tokens_cached")
-        if s_cost is None and s_tokens_in is not None and s_tokens_out is not None and s_model and s_model != "none":
-            s_cost = estimate_cost(s_model, s_tokens_in, s_tokens_out, tokens_cached=s_tokens_cached)
+        if s_cost is None and s_tokens_in is not None and s_tokens_out is not None and clean_model:
+            s_cost = estimate_cost(clean_model, s_tokens_in, s_tokens_out, tokens_cached=s_tokens_cached)
         s_start = getattr(s, "start_time", None) or (s.get("start_time") if isinstance(s, dict) else None)
         s_end = getattr(s, "end_time", None) or (s.get("end_time") if isinstance(s, dict) else None)
         s_prompt = getattr(s, "prompt", None) or (s.get("prompt") if isinstance(s, dict) else None)
@@ -317,13 +334,15 @@ def _export_to_cloud_otel(
         start_ns = _parse_time_ns(s_start, default_ns=now_ns - 100000000)
         end_ns = _parse_time_ns(s_end, default_ns=now_ns)
 
+        is_llm_step = (s_type == "model" or s_name in ("sop_check", "policy_check", "scorecard_judgment") or (clean_model is not None and (s_tokens_in is not None or s_tokens_out is not None)))
+
         child_attrs: List[Dict[str, Any]] = [
             {"key": "step_name", "value": {"stringValue": s_name}},
             {"key": "decision_type", "value": {"stringValue": s_type}},
             {"key": "status", "value": {"stringValue": s_status}},
         ]
-        if s_model and s_model != "none":
-            child_attrs.append({"key": "model", "value": {"stringValue": s_model}})
+        if clean_model:
+            child_attrs.append({"key": "model", "value": {"stringValue": clean_model}})
         if s_cost is not None:
             child_attrs.append({"key": "cost_usd", "value": {"doubleValue": float(s_cost)}})
         if s_tokens_in is not None:
@@ -332,21 +351,64 @@ def _export_to_cloud_otel(
             child_attrs.append({"key": "tokens_out", "value": {"intValue": str(s_tokens_out)}})
         if s_tokens_cached is not None:
             child_attrs.append({"key": "tokens_cached", "value": {"intValue": str(s_tokens_cached)}})
-        if s_name == "policy_retrieval":
+
+        if is_llm_step:
+            # Native Langfuse generation observation and OTel GenAI attributes
+            child_attrs.append({"key": "observation_type", "value": {"stringValue": "generation"}})
+            child_attrs.append({"key": "langfuse.observation.type", "value": {"stringValue": "generation"}})
+            child_attrs.append({"key": "gen_ai.system", "value": {"stringValue": "gemini"}})
+            if clean_model:
+                child_attrs.append({"key": "gen_ai.request.model", "value": {"stringValue": clean_model}})
+                child_attrs.append({"key": "gen_ai.response.model", "value": {"stringValue": clean_model}})
+                child_attrs.append({"key": "langfuse.model", "value": {"stringValue": clean_model}})
+
+            total_tokens = None
+            if s_tokens_in is not None or s_tokens_out is not None:
+                total_tokens = (s_tokens_in or 0) + (s_tokens_out or 0)
+
+            if s_tokens_in is not None:
+                child_attrs.append({"key": "gen_ai.usage.input_tokens", "value": {"intValue": str(s_tokens_in)}})
+                child_attrs.append({"key": "gen_ai.usage.prompt_tokens", "value": {"intValue": str(s_tokens_in)}})
+                child_attrs.append({"key": "usage_details.input", "value": {"intValue": str(s_tokens_in)}})
+                child_attrs.append({"key": "langfuse.usage_details.input", "value": {"intValue": str(s_tokens_in)}})
+            if s_tokens_out is not None:
+                child_attrs.append({"key": "gen_ai.usage.output_tokens", "value": {"intValue": str(s_tokens_out)}})
+                child_attrs.append({"key": "gen_ai.usage.completion_tokens", "value": {"intValue": str(s_tokens_out)}})
+                child_attrs.append({"key": "usage_details.output", "value": {"intValue": str(s_tokens_out)}})
+                child_attrs.append({"key": "langfuse.usage_details.output", "value": {"intValue": str(s_tokens_out)}})
+            if total_tokens is not None:
+                child_attrs.append({"key": "gen_ai.usage.total_tokens", "value": {"intValue": str(total_tokens)}})
+                child_attrs.append({"key": "usage_details.total", "value": {"intValue": str(total_tokens)}})
+                child_attrs.append({"key": "langfuse.usage_details.total", "value": {"intValue": str(total_tokens)}})
+            if s_tokens_cached is not None:
+                child_attrs.append({"key": "gen_ai.usage.cache_read_input_tokens", "value": {"intValue": str(s_tokens_cached)}})
+                child_attrs.append({"key": "usage_details.cache_read_input_tokens", "value": {"intValue": str(s_tokens_cached)}})
+
+            if s_cost is not None:
+                child_attrs.append({"key": "gen_ai.usage.cost", "value": {"doubleValue": float(s_cost)}})
+                child_attrs.append({"key": "cost_details.total", "value": {"doubleValue": float(s_cost)}})
+                child_attrs.append({"key": "langfuse.cost_details.total", "value": {"doubleValue": float(s_cost)}})
+                child_attrs.append({"key": "langfuse.cost", "value": {"doubleValue": float(s_cost)}})
+        elif s_name == "policy_retrieval":
             child_attrs.append({"key": "observation_type", "value": {"stringValue": "retriever"}})
+            child_attrs.append({"key": "langfuse.observation.type", "value": {"stringValue": "retriever"}})
 
         if capture_content:
             if s_prompt:
                 child_attrs.append({"key": "input", "value": {"stringValue": mask_pii(s_prompt) or ""}})
+                if is_llm_step:
+                    child_attrs.append({"key": "gen_ai.prompt", "value": {"stringValue": mask_pii(s_prompt) or ""}})
             if s_resp:
                 child_attrs.append({"key": "output", "value": {"stringValue": mask_pii(s_resp) or ""}})
+                if is_llm_step:
+                    child_attrs.append({"key": "gen_ai.completion", "value": {"stringValue": mask_pii(s_resp) or ""}})
 
         spans_list.append({
             "traceId": hex_trace_id,
             "spanId": child_span_id,
             "parentSpanId": root_span_id,
             "name": s_name,
-            "kind": 3 if s_type == "model" else 1,
+            "kind": 3 if is_llm_step else 1,
             "startTimeUnixNano": str(start_ns),
             "endTimeUnixNano": str(end_ns),
             "attributes": child_attrs,
@@ -499,7 +561,7 @@ def export_audit_to_langfuse(
 
         if hasattr(report, "meta"):
             if getattr(report.meta, "model", None):
-                meta_dict["model"] = report.meta.model
+                meta_dict["model"] = _clean_model_name(report.meta.model)
             if getattr(report.meta, "tokens_in", None) is not None:
                 meta_dict["tokens_in"] = report.meta.tokens_in
             if getattr(report.meta, "tokens_out", None) is not None:
@@ -596,15 +658,16 @@ def export_audit_to_langfuse(
             s_type = getattr(s, "decision_type", None) or (s.get("decision_type", "plain_code") if isinstance(s, dict) else "plain_code")
             s_status = getattr(s, "status", None) or (s.get("status", "ok") if isinstance(s, dict) else "ok")
             s_model = getattr(s, "model_name", None) or (s.get("model_name", "none") if isinstance(s, dict) else "none")
+            clean_step_model = _clean_model_name(s_model)
             s_rate_src = getattr(s, "rate_source", None) or (s.get("rate_source", "") if isinstance(s, dict) else "")
             s_tokens_in = getattr(s, "tokens_in", None) if not isinstance(s, dict) else s.get("tokens_in")
             s_tokens_out = getattr(s, "tokens_out", None) if not isinstance(s, dict) else s.get("tokens_out")
             s_tokens_cached = getattr(s, "tokens_cached", None) if not isinstance(s, dict) else s.get("tokens_cached")
             s_cost = getattr(s, "estimated_cost_usd", None) if not isinstance(s, dict) else s.get("estimated_cost_usd")
-            if s_cost is None and s_tokens_in is not None and s_tokens_out is not None and s_model and s_model != "none":
-                s_cost = estimate_cost(s_model, s_tokens_in, s_tokens_out, tokens_cached=s_tokens_cached)
-            if not s_rate_src and s_model and s_model != "none":
-                s_rate_src = get_rate_source(s_model)
+            if s_cost is None and s_tokens_in is not None and s_tokens_out is not None and clean_step_model:
+                s_cost = estimate_cost(clean_step_model, s_tokens_in, s_tokens_out, tokens_cached=s_tokens_cached)
+            if not s_rate_src and clean_step_model:
+                s_rate_src = get_rate_source(clean_step_model)
             s_lat = getattr(s, "latency_seconds", None) if not isinstance(s, dict) else s.get("latency_seconds", 0.0)
             s_start = getattr(s, "start_time", None) or (s.get("start_time", "") if isinstance(s, dict) else "")
             s_end = getattr(s, "end_time", None) or (s.get("end_time", "") if isinstance(s, dict) else "")
@@ -618,6 +681,8 @@ def export_audit_to_langfuse(
                 "latency_seconds": s_lat or 0.0,
                 "decision_type": s_type,
             }
+            if clean_step_model:
+                step_meta["model"] = clean_step_model
             if s_cost is not None:
                 step_meta["cost_usd"] = s_cost
             if s_rate_src:
@@ -643,7 +708,8 @@ def export_audit_to_langfuse(
                 elif s_out_sum:
                     step_out = mask_pii(s_out_sum)
 
-            if s_type == "model" and hasattr(trace, "generation"):
+            is_llm_step = (s_type == "model" or s_name in ("sop_check", "policy_check", "scorecard_judgment"))
+            if is_llm_step and hasattr(trace, "generation"):
                 usage_val = None
                 if s_tokens_in is not None or s_tokens_out is not None:
                     usage_val = {
@@ -651,16 +717,32 @@ def export_audit_to_langfuse(
                         "output": s_tokens_out or 0,
                         "total": (s_tokens_in or 0) + (s_tokens_out or 0),
                     }
-                trace.generation(
-                    name=s_name,
-                    model=s_model if s_model and s_model != "none" else None,
-                    usage=usage_val,
-                    start_time=_parse_time(s_start),
-                    end_time=_parse_time(s_end),
-                    metadata=step_meta,
-                    input=step_in,
-                    output=step_out,
-                )
+                gen_kwargs: Dict[str, Any] = {
+                    "name": s_name,
+                    "model": clean_step_model,
+                    "usage": usage_val,
+                    "usage_details": usage_val,
+                    "start_time": _parse_time(s_start),
+                    "end_time": _parse_time(s_end),
+                    "metadata": step_meta,
+                    "input": step_in,
+                    "output": step_out,
+                }
+                if s_cost is not None:
+                    gen_kwargs["cost_details"] = {"total": float(s_cost)}
+                try:
+                    trace.generation(**gen_kwargs)
+                except TypeError:
+                    trace.generation(
+                        name=s_name,
+                        model=clean_step_model,
+                        usage=usage_val,
+                        start_time=_parse_time(s_start),
+                        end_time=_parse_time(s_end),
+                        metadata=step_meta,
+                        input=step_in,
+                        output=step_out,
+                    )
             elif hasattr(trace, "span"):
                 trace.span(
                     name=s_name,

@@ -82,6 +82,7 @@ class FakeTrace:
         metadata: Any = None,
         input: Any = None,
         output: Any = None,
+        **kwargs,
     ) -> Dict[str, Any]:
         entry = {
             "name": name,
@@ -92,6 +93,7 @@ class FakeTrace:
             "metadata": metadata or {},
             "input": input,
             "output": output,
+            **kwargs,
         }
         self.generations.append(entry)
         return entry
@@ -631,3 +633,148 @@ def test_failed_audit_export_cloud_otel_skips_scores_and_sets_code_2(monkeypatch
     # Quality scores MUST NOT be posted to /api/public/scores
     score_posts = [p for p in posted_requests if "/api/public/scores" in p[0]]
     assert len(score_posts) == 0
+
+
+def test_otlp_generation_payload_has_native_usage_and_clean_model(monkeypatch):
+    from src.audit.langfuse_export import _export_to_cloud_otel
+
+    posted_requests = []
+
+    class DummyResponse:
+        status_code = 200
+        text = "ok"
+
+    import requests
+    monkeypatch.setattr(requests, "post", lambda url, **kwargs: (posted_requests.append((url, kwargs)), DummyResponse())[1])
+
+    report = _make_dummy_report()
+    report.meta.model = "gemini:gemini-3.5-flash-lite"
+    raw_steps = [
+        {
+            "step_name": "sop_check",
+            "decision_type": "model",
+            "status": "ok",
+            "model_name": "gemini:gemini-3.5-flash-lite",
+            "tokens_in": 1200,
+            "tokens_out": 300,
+            "estimated_cost_usd": 0.00015,
+        },
+        {
+            "step_name": "policy_check",
+            "decision_type": "model",
+            "status": "ok",
+            "model_name": "gemini:gemini-3.5-flash-lite",
+            "tokens_in": 800,
+            "tokens_out": 200,
+            "estimated_cost_usd": 0.00010,
+        },
+        {
+            "step_name": "policy_retrieval",
+            "decision_type": "plain_code",
+            "status": "ok",
+            "model_name": "none",
+        },
+    ]
+
+    res = _export_to_cloud_otel(
+        report=report,
+        raw_steps=raw_steps,
+        pk="pk-test",
+        sk="sk-test",
+        host="https://cloud.langfuse.com",
+        source="eval",
+        capture_content=False,
+    )
+    assert res is True
+
+    otel_posts = [p for p in posted_requests if "/api/public/otel/v1/traces" in p[0]]
+    assert len(otel_posts) == 1
+    payload = otel_posts[0][1]["json"]
+    spans = payload["resourceSpans"][0]["scopeSpans"][0]["spans"]
+
+    # Root span
+    root = spans[0]
+    root_attrs = {a["key"]: (list(a["value"].values())[0]) for a in root["attributes"]}
+    # Model name is consistent (no "gemini:" prefix)
+    assert root_attrs["model"] == "gemini-3.5-flash-lite"
+    assert root_attrs["gen_ai.request.model"] == "gemini-3.5-flash-lite"
+
+    # sop_check span
+    sop_span = next(s for s in spans if s["name"] == "sop_check")
+    assert sop_span["kind"] == 3
+    sop_attrs = {a["key"]: (list(a["value"].values())[0]) for a in sop_span["attributes"]}
+
+    # Observation type
+    assert sop_attrs["observation_type"] == "generation"
+    assert sop_attrs["langfuse.observation.type"] == "generation"
+    assert sop_attrs["gen_ai.system"] == "gemini"
+
+    # Model consistent
+    assert sop_attrs["model"] == "gemini-3.5-flash-lite"
+    assert sop_attrs["gen_ai.request.model"] == "gemini-3.5-flash-lite"
+    assert sop_attrs["gen_ai.response.model"] == "gemini-3.5-flash-lite"
+    assert sop_attrs["langfuse.model"] == "gemini-3.5-flash-lite"
+
+    # Native usage fields
+    assert sop_attrs["gen_ai.usage.input_tokens"] == "1200"
+    assert sop_attrs["gen_ai.usage.output_tokens"] == "300"
+    assert sop_attrs["gen_ai.usage.total_tokens"] == "1500"
+    assert sop_attrs["usage_details.input"] == "1200"
+    assert sop_attrs["usage_details.output"] == "300"
+    assert sop_attrs["usage_details.total"] == "1500"
+
+    # Native cost fields
+    assert sop_attrs["gen_ai.usage.cost"] == 0.00015
+    assert sop_attrs["cost_details.total"] == 0.00015
+    assert sop_attrs["langfuse.cost"] == 0.00015
+
+    # Existing custom attributes preserved
+    assert sop_attrs["step_name"] == "sop_check"
+    assert sop_attrs["decision_type"] == "model"
+    assert sop_attrs["status"] == "ok"
+    assert sop_attrs["cost_usd"] == 0.00015
+    assert sop_attrs["tokens_in"] == "1200"
+    assert sop_attrs["tokens_out"] == "300"
+
+    # policy_retrieval span
+    ret_span = next(s for s in spans if s["name"] == "policy_retrieval")
+    assert ret_span["kind"] == 1
+    ret_attrs = {a["key"]: (list(a["value"].values())[0]) for a in ret_span["attributes"]}
+    assert ret_attrs["observation_type"] == "retriever"
+    assert "gen_ai.usage.input_tokens" not in ret_attrs
+
+
+def test_sdk_generation_has_native_usage_and_clean_model(monkeypatch):
+    monkeypatch.setenv("LANGFUSE_PUBLIC_KEY", "pk-test")
+    monkeypatch.setenv("LANGFUSE_SECRET_KEY", "sk-test")
+    monkeypatch.setenv("LANGFUSE_HOST", "https://custom.langfuse.com")
+    monkeypatch.setenv("LANGFUSE_EXPORT_EVAL", "1")
+
+    fake_client = FakeLangfuseClient()
+    report = _make_dummy_report()
+    report.meta.model = "gemini:gemini-3.5-flash-lite"
+
+    tracer = AuditTracer(run_id="test_run_gen")
+    tracer.record_step(
+        "sop_check",
+        decision_type="model",
+        status="ok",
+        model_name="gemini:gemini-3.5-flash-lite",
+        tokens_in=1000,
+        tokens_out=250,
+    )
+
+    res = export_audit_to_langfuse(report, tracer=tracer, client=fake_client)
+    assert res is True
+
+    tr = fake_client.traces[0]
+    assert tr.metadata["model"] == "gemini-3.5-flash-lite"
+
+    assert len(tr.generations) == 1
+    gen = tr.generations[0]
+    assert gen["name"] == "sop_check"
+    assert gen["model"] == "gemini-3.5-flash-lite"
+    assert gen["usage"] == {"input": 1000, "output": 250, "total": 1250}
+    assert gen["usage_details"] == {"input": 1000, "output": 250, "total": 1250}
+    assert gen["cost_details"]["total"] == 0.000925
+    assert gen["metadata"]["model"] == "gemini-3.5-flash-lite"
