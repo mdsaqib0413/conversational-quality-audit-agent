@@ -6,11 +6,12 @@ from __future__ import annotations
 
 import json
 import os
+import re
 import sys
 import tempfile
 import time
 from pathlib import Path
-from typing import List, Optional
+from typing import Dict, List, Optional
 
 t_script_start = time.perf_counter()
 t_load_report = 0.0
@@ -141,15 +142,56 @@ def load_report_cached(path_str: str, mtime: int) -> AuditReport:
     return AuditReport.model_validate_json(Path(path_str).read_text(encoding="utf-8"))
 
 
+HEX_KEY_PATTERN = re.compile(r"^(.+)_([0-9a-f]{16})\.json$")
+
+
+def _get_current_transcript_keys(pipe: AuditPipeline) -> Dict[str, str]:
+    """Compute current cache keys for known transcripts in data/transcripts."""
+    keys: Dict[str, str] = {}
+    transcripts_dir = ROOT / "data" / "transcripts"
+    if transcripts_dir.exists():
+        for p in transcripts_dir.glob("*.json"):
+            try:
+                call, _ = load_transcript_json(p)
+                keys[call.call_id] = pipe._audit_key(call)
+            except Exception:
+                continue
+    return keys
+
+
 @st.cache_data(show_spinner=False)
 def get_audit_index(dir_mtime: int) -> List[dict]:
-    """Lightweight index of audits for navigation and selectors without parsing full reports on every rerun."""
+    """Lightweight index of audits for navigation and selectors without parsing full reports on every rerun.
+
+    Only indexes audits matching the pipeline's current configuration key (_audit_key).
+    Legacy unhashed files (e.g. call_XXX.json) and stale-key audits are excluded.
+    """
     files = sorted(AUDIT_DIR.glob("*.json")) if AUDIT_DIR.exists() else []
+    pipe = get_pipeline()
+    current_keys = _get_current_transcript_keys(pipe)
     best: dict = {}
     for f in files:
+        m_match = HEX_KEY_PATTERN.match(f.name)
+        if not m_match:
+            # Exclude unhashed legacy files (e.g. call_001.json) or non-conforming filenames
+            continue
+        file_cid, file_key = m_match.groups()
+        if file_cid in current_keys:
+            if file_key != current_keys[file_cid]:
+                # Stale cache file with older prompt/model key
+                continue
         try:
             m = json.loads(f.read_text(encoding="utf-8"))
-            cid = m.get("call_id")
+            cid = m.get("call_id") or file_cid
+            if cid in current_keys:
+                if file_key != current_keys[cid]:
+                    continue
+            elif "transcript" in m:
+                # For calls not in data/transcripts (e.g. real calls), verify against current pipeline key
+                from src.audit.schemas import CallTranscript
+                call_obj = CallTranscript.model_validate(m["transcript"])
+                if file_key != pipe._audit_key(call_obj):
+                    continue
             gen = m.get("generated_at", "")
             old = best.get(cid)
             if old is None or gen >= old.get("generated_at", ""):

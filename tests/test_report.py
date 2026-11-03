@@ -1,3 +1,5 @@
+import json
+import time
 from pathlib import Path
 
 import pytest
@@ -90,3 +92,48 @@ def test_failed_report_rendering_banner_no_zero_score(report):
 
     walk = U.walkthrough_section(failed_rep)
     assert "Audit failed: 503 UNAVAILABLE; no score" in walk
+
+
+def test_audit_index_excludes_unhashed_and_stale_cache(monkeypatch, tmp_path):
+    from app import streamlit_app as app
+    from src.audit.schemas import CallTranscript
+
+    # Create dummy audit directory with current, stale, and unhashed files
+    call_id = "call_001"
+    # Get current key for call_001
+    call, _ = load_transcript_json(ROOT / "data" / "transcripts" / f"{call_id}.json")
+    pipe = app.get_pipeline()
+    curr_key = pipe._audit_key(call)
+
+    # Mock AUDIT_DIR
+    mock_audit_dir = tmp_path / "audits"
+    mock_audit_dir.mkdir(parents=True, exist_ok=True)
+    monkeypatch.setattr(app, "AUDIT_DIR", mock_audit_dir)
+
+    # 1. Unhashed legacy file with newer timestamp
+    (mock_audit_dir / f"{call_id}.json").write_text(
+        json.dumps({"call_id": call_id, "generated_at": "2099-01-01T00:00:00", "scores": {"overall": 50.0}}),
+        encoding="utf-8"
+    )
+
+    # 2. Stale hashed file with newer timestamp
+    (mock_audit_dir / f"{call_id}_0123456789abcdef.json").write_text(
+        json.dumps({"call_id": call_id, "generated_at": "2099-01-02T00:00:00", "scores": {"overall": 60.0}}),
+        encoding="utf-8"
+    )
+
+    # 3. Current-key file
+    (mock_audit_dir / f"{call_id}_{curr_key}.json").write_text(
+        json.dumps({"call_id": call_id, "generated_at": "2026-11-03T12:00:00", "scores": {"overall": 100.0}}),
+        encoding="utf-8"
+    )
+
+    # Clear streamlit cache and call get_audit_index
+    app.get_audit_index.clear()
+    idx = app.get_audit_index(int(time.time() * 1e9))
+
+    assert len(idx) == 1
+    assert idx[0]["call_id"] == call_id
+    assert idx[0]["overall"] == 100.0
+    assert idx[0]["path"].endswith(f"{call_id}_{curr_key}.json")
+
