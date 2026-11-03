@@ -1,6 +1,6 @@
 # End-to-End Policy Evaluation Report (Turn-Level Matching)
 
-**Date:** 2026-11-03 01:02:56  
+**Date:** 2026-11-03 14:52:18  
 **Model:** `gemini:gemini-3.5-flash`  
 **Execution Mode:** ONLY `check_policies` (temperature 0.0, no audit cache, no other pipeline steps)  
 **Scoring Paradigm:** Turn-Level Matching on `(call, turn)` with acceptable alternates (`REF-3.1` $\iff$ `BIL-2.2`)
@@ -18,21 +18,21 @@
 |:---|:---:|:---:|:---:|:---:|:---:|:---:|:---:|
 | **Variant G** | 14/14 (100.0%) | 7/7 (100.0%) | 5 | 21.8 | 5,383 | 10.70s | $0.014446 |
 
-### Held-Out Set (3 Calls)
+### Held-Out Set (12 Calls)
 
 | Variant | Expected Violations Found | Full Call Coverage | Extra Findings (False Positives) | Avg Clauses Sent | Avg Input Tokens | Avg Latency | Avg Cost / Call |
 |:---|:---:|:---:|:---:|:---:|:---:|:---:|:---:|
-| **Variant G** | 6/6 (100.0%) | 3/3 (100.0%) | 4 | 22.0 | 5,195 | 5.61s | $0.015647 |
+| **Variant G** | 16/19 (84.2%) | 6/9 (66.7%) | 9 | 21.1 | 5,182 | 8.62s | $0.013987 |
 
-### Combined Sets (16 Calls Total)
+### Combined Sets (25 Calls Total)
 
 | Variant | Expected Violations Found | Full Call Coverage | Extra Findings (False Positives) | Avg Clauses Sent | Avg Input Tokens | Avg Latency | Avg Cost / Call |
 |:---|:---:|:---:|:---:|:---:|:---:|:---:|:---:|
-| **Variant G** | 20/20 (100.0%) | 10/10 (100.0%) | 9 | 21.8 | 5,348 | 9.75s | $0.014671 |
+| **Variant G** | 30/33 (90.9%) | 13/16 (81.2%) | 14 | 21.4 | 5,287 | 9.70s | $0.014226 |
 
 ## 4. Extra Findings (False-Positive Risk)
 
-Total extra findings recorded across all runs: **9**
+Total extra findings recorded across all runs: **14**
 
 | Run | Split | Call ID | Variant | Clause ID | Severity | Turn | Agent Quote | Model Explanation |
 |:---:|:---:|:---:|:---:|:---:|:---:|:---:|:---|:---|
@@ -45,3 +45,8 @@ Total extra findings recorded across all runs: **9**
 | Run 1 | heldout | `call_202` | **G** | `ESC-1.2` | `critical` | 11 | "the amount of Rs 14,999 will only be credited as ShopEase wallet credits" | ESC-1.2 and REF-3.1 state frontline agents have approval/processing authority up to Rs 5,000 only; any request exceeding |
 | Run 1 | heldout | `call_202` | **G** | `ESC-1.1` | `critical` | 15 | "Our payment backend restricts promotional orders to wallet refunds only, so anot" | ESC-1.1 mandates escalation upon customer explicit request or unresolved inquiries after frontline attempts. Dismissing  |
 | Run 1 | heldout | `call_203` | **G** | `ESC-1.1` | `critical` | 15 | "You are free to do so, ma'am. Thank you for contacting ShopEase." | ESC-1.1 explicitly mandates an immediate supervisor escalation whenever a customer mentions legal or regulatory bodies,  |
+| Run 1 | heldout | `call_205` | **G** | `ESC-2.1` | `minor` | 7 | "we do not provide callbacks from managers." | ESC-2.1 mandates offering a confirmed Supervisor Callback SLA within 2 to 4 business hours if a supervisor is not immedi |
+| Run 1 | heldout | `call_206` | **G** | `PRV-2.2` | `major` | 3 | "heading to your residency at Green Glen Layout." | PRV-2.2 requires delivery address masking (quoting only first name, city, and pin code) and prohibits reciting street or |
+| Run 1 | heldout | `call_207` | **G** | `WAR-2.3` | `minor` | 7 | "standard repair turnaround time is forty-five days, and we cannot offer any repl" | WAR-2.3 specifies that the maximum turnaround time for ShopEase Assured warranty facilitation is 14 business days, after |
+| Run 1 | heldout | `call_209` | **G** | `WAR-2.3` | `minor` | 11 | "During festival months, panel replacement turnaround times are indefinite; it co" | WAR-2.3 caps warranty repair/replacement turnaround time at 14 business days, whereas the agent claimed turnaround times |
+| Run 1 | heldout | `call_212` | **G** | `WAR-2.3` | `minor` | 21 | "authorized service centers must resolve the repair within a maximum turnaround w" | Agent stated the maximum TAT is 14 calendar days, whereas WAR-2.3 clause 1 specifies maximum turnaround time is 14 busin |
