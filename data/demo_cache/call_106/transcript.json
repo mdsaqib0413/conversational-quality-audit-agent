@@ -1,0 +1,197 @@
+{
+  "id": "call_106",
+  "topic": "complaint",
+  "quality": "bad_deviation",
+  "split": "test",
+  "applicable_sops": [
+    "general_call_flow",
+    "angry_customer_sop",
+    "hold_and_transfer_sop"
+  ],
+  "applicable_steps": [
+    "GEN-01",
+    "GEN-02",
+    "GEN-03",
+    "GEN-04",
+    "GEN-05",
+    "GEN-06",
+    "GEN-07",
+    "GEN-08",
+    "ANG-01",
+    "ANG-02",
+    "ANG-03",
+    "ANG-04",
+    "ANG-05",
+    "HLD-01",
+    "HLD-02",
+    "HLD-03"
+  ],
+  "hold_scenario": "hold_only",
+  "order_id": "ORD-90417",
+  "registered_phone_last4": "1198",
+  "agent_name": "Sunil",
+  "customer_name": "Rahul Bose",
+  "customer_persona": "Rahul Bose is furious about a monitor stuck in transit; the agent blames him, refuses a supervisor and leaves him on hold for over two minutes.",
+  "verified": true,
+  "verification_notes": "Hand-written and checked against data/policies and data/sops; labels written together with the dialogue.",
+  "source": "handwritten",
+  "turns": [
+    {
+      "i": 1,
+      "speaker": "agent",
+      "text": "ShopEase customer care, Sunil speaking. Please note this call is recorded for quality assurance and training purposes. How may I help?",
+      "pause_before_sec": 0.5,
+      "interrupts_previous": false
+    },
+    {
+      "i": 2,
+      "speaker": "customer",
+      "text": "I am calling about my order, a Samsung monitor that was dispatched fifteen days ago, and the tracking has not moved for the last ten days. This is ridiculous! Nobody has helped me in three calls.",
+      "pause_before_sec": 0.5,
+      "interrupts_previous": false
+    },
+    {
+      "i": 3,
+      "speaker": "agent",
+      "text": "Sir, you must have given the wrong address or a wrong phone number, these delays happen because of customer mistakes. Did you check your address before ordering? Are you sure the phone number was right?",
+      "pause_before_sec": 1.1,
+      "interrupts_previous": false
+    },
+    {
+      "i": 4,
+      "speaker": "customer",
+      "text": "I gave the right address, I have ordered many times before. I want to speak to a manager.",
+      "pause_before_sec": 0.7,
+      "interrupts_previous": false
+    },
+    {
+      "i": 5,
+      "speaker": "agent",
+      "text": "Sir, managers do not handle delivery issues, I can check it for you. What is your order number?",
+      "pause_before_sec": 0.4,
+      "interrupts_previous": false
+    },
+    {
+      "i": 6,
+      "speaker": "customer",
+      "text": "It is ORD-90417. And I am asking for a manager again, this is the second time.",
+      "pause_before_sec": 1.0,
+      "interrupts_previous": false
+    },
+    {
+      "i": 7,
+      "speaker": "agent",
+      "text": "Sir, I told you I cannot transfer you. It is showing in transit, the courier will deliver when it delivers.",
+      "pause_before_sec": 0.8,
+      "interrupts_previous": false
+    },
+    {
+      "i": 8,
+      "speaker": "customer",
+      "text": "In transit for fifteen days? This is unacceptable, I want my money back or a replacement.",
+      "pause_before_sec": 0.6,
+      "interrupts_previous": false
+    },
+    {
+      "i": 9,
+      "speaker": "agent",
+      "text": "Compensation or refund is not possible until thirty days are over, that is our rule. And there is no point creating a ticket, the courier will not respond.",
+      "pause_before_sec": 1.2,
+      "interrupts_previous": false
+    },
+    {
+      "i": 10,
+      "speaker": "customer",
+      "text": "That is the worst service I have ever seen, you people are cheating customers!",
+      "pause_before_sec": 0.6,
+      "interrupts_previous": false
+    },
+    {
+      "i": 11,
+      "speaker": "agent",
+      "text": "Sir please listen, sir, listen to me, you are not allowing me to speak.",
+      "pause_before_sec": 0.9,
+      "interrupts_previous": true
+    },
+    {
+      "i": 12,
+      "speaker": "customer",
+      "text": "I am done listening. I am filing a complaint in consumer court.",
+      "pause_before_sec": 0.5,
+      "interrupts_previous": false
+    },
+    {
+      "i": 13,
+      "speaker": "agent",
+      "text": "Okay sir, wait, I am putting you on hold, I will check with someone.",
+      "pause_before_sec": 1.1,
+      "interrupts_previous": false
+    },
+    {
+      "i": 14,
+      "speaker": "agent",
+      "text": "Hello sir, yes, nobody is available. Anything else?",
+      "pause_before_sec": 135.0,
+      "interrupts_previous": false
+    },
+    {
+      "i": 15,
+      "speaker": "customer",
+      "text": "Nobody? Then what is the use of this call. Forget it.",
+      "pause_before_sec": 0.4,
+      "interrupts_previous": false
+    },
+    {
+      "i": 16,
+      "speaker": "agent",
+      "text": "Okay sir. Bye.",
+      "pause_before_sec": 1.0,
+      "interrupts_previous": false
+    }
+  ],
+  "ground_truth": {
+    "sop_steps": {
+      "GEN-01": "followed",
+      "GEN-02": "followed",
+      "GEN-03": "partial",
+      "GEN-04": "missed",
+      "GEN-05": "missed",
+      "GEN-06": "missed",
+      "GEN-07": "missed",
+      "GEN-08": "missed",
+      "ANG-01": "missed",
+      "ANG-02": "missed",
+      "ANG-03": "missed",
+      "ANG-04": "missed",
+      "ANG-05": "missed",
+      "HLD-01": "partial",
+      "HLD-02": "missed",
+      "HLD-03": "missed"
+    },
+    "policy_violations": [
+      {
+        "turn": 7,
+        "said": "Sir, I told you I cannot transfer you. It is showing in transit, the courier will deliver when it delivers.",
+        "clause_id": "ESC-1.1",
+        "severity": "critical",
+        "correct_fact": "A customer who asks for a supervisor twice must be escalated immediately."
+      },
+      {
+        "turn": 9,
+        "said": "Compensation or refund is not possible until thirty days are over, that is our rule. And there is no point creating a ticket, the courier will not respond.",
+        "clause_id": "SHP-2.3",
+        "severity": "major",
+        "correct_fact": "Transit beyond 14 days without updates is declared lost: immediate full refund or priority reshipment, and a courier tracking ticket must be raised."
+      }
+    ],
+    "customer_emotion_arc": [
+      "angry",
+      "angry",
+      "angry"
+    ],
+    "gaps": [
+      "interruption",
+      "hold_too_long"
+    ]
+  }
+}

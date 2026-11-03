@@ -1,0 +1,954 @@
+{
+ "call_id": "call_107",
+ "generated_at": "2026-11-04T00:40:35",
+ "topic": "warranty",
+ "topic_confidence": 0.767,
+ "signals": [],
+ "summary": "The customer called regarding a defective boAt Airdopes earbud received six days ago. The agent informed her that the return and warranty claim window had expired, offering no replacement or refund. The customer remained dissatisfied and stated she would contact the brand directly.",
+ "customer_issue": "Defective earbud outside return window",
+ "resolved": false,
+ "scores": {
+  "sop_score": 36.3,
+  "policy_score": 11.0,
+  "empathy_score": 3.0,
+  "communication_score": 7.5,
+  "overall_before_cap": 57.8,
+  "overall": 57.8,
+  "grade": "D",
+  "grade_label": "Failing / Critical Infraction",
+  "critical_failure": false,
+  "cap_reasons": [],
+  "sop_points_earned": 24.5,
+  "sop_points_possible": 27.0,
+  "policy_penalty_total": 19.0,
+  "policy_applicable": true,
+  "timing_penalty": 0.0,
+  "timing_notes": [],
+  "empathy_rating": 1,
+  "clarity_rating": 4,
+  "professionalism_rating": 3,
+  "ownership_rating": 1,
+  "closure_rating": 2
+ },
+ "sop_results": [
+  {
+   "step_id": "GEN-01",
+   "title": "Professional Greeting & Identity Introduction",
+   "sop": "general_call_flow",
+   "weight": 2,
+   "critical": false,
+   "mandatory": true,
+   "status": "followed",
+   "points_earned": 2.0,
+   "points_possible": 2.0,
+   "turn": 1,
+   "quote": "Thank you for calling ShopEase. My name is Imran Sheikh. How may I help you today?",
+   "reason": "The agent greeted the customer, stated the company name, introduced himself, and asked how to assist.",
+   "missing": "",
+   "evidence_verified": true,
+   "what_good_looks_like": "The agent opens within 2 seconds of call connection with a polite, welcoming tone, introducing both the brand and representative name.",
+   "example_phrase": "Thank you for calling ShopEase. My name is Rahul. How may I assist you today?"
+  },
+  {
+   "step_id": "GEN-02",
+   "title": "Mandatory Call Recording Disclosure",
+   "sop": "general_call_flow",
+   "weight": 5,
+   "critical": true,
+   "mandatory": true,
+   "status": "followed",
+   "points_earned": 5.0,
+   "points_possible": 5.0,
+   "turn": 1,
+   "quote": "Please note that this call is recorded for quality assurance and training purposes.",
+   "reason": "The agent provided the statutory call recording disclosure in the first turn.",
+   "missing": "",
+   "evidence_verified": true,
+   "what_good_looks_like": "The disclosure is clearly articulated within the first two conversation turns without mumbling or skipping.",
+   "example_phrase": "Please note that this call is being recorded for quality monitoring and training purposes."
+  },
+  {
+   "step_id": "GEN-03",
+   "title": "Caller Identification & Two-Factor Verification",
+   "sop": "general_call_flow",
+   "weight": 5,
+   "critical": true,
+   "mandatory": true,
+   "status": "followed",
+   "points_earned": 5.0,
+   "points_possible": 5.0,
+   "turn": 3,
+   "quote": "For verification, please share your Order ID and the last four digits of your registered mobile number.",
+   "reason": "The agent requested both the Order ID and the last four digits of the registered mobile number.",
+   "missing": "",
+   "evidence_verified": true,
+   "what_good_looks_like": "The agent systematically validates both verification data points before disclosing addresses, order contents, or monetary info.",
+   "example_phrase": "To ensure your account security, may I please have your Order ID and the last four digits of your registered mobile number?"
+  },
+  {
+   "step_id": "GEN-04",
+   "title": "Active Listening & Issue Clarification",
+   "sop": "general_call_flow",
+   "weight": 3,
+   "critical": false,
+   "mandatory": true,
+   "status": "followed",
+   "points_earned": 3.0,
+   "points_possible": 3.0,
+   "turn": 5,
+   "quote": "So the left earbud of your boAt Airdopes stopped working and you want a solution. Correct?",
+   "reason": "The agent allowed the customer to speak and then paraphrased the issue.",
+   "missing": "",
+   "evidence_verified": true,
+   "what_good_looks_like": "The agent maintains silence while the customer speaks, takes notes, and summarizes the specific problem back to the customer.",
+   "example_phrase": "I understand that your package has not arrived and you would like to track the courier status. Is that correct?"
+  },
+  {
+   "step_id": "GEN-05",
+   "title": "Empathy & Ownership Statement",
+   "sop": "general_call_flow",
+   "weight": 3,
+   "critical": false,
+   "mandatory": true,
+   "status": "partial",
+   "points_earned": 1.5,
+   "points_possible": 3.0,
+   "turn": 3,
+   "quote": "Sorry to hear that, Ms. Sethi.",
+   "reason": "The agent expressed a basic apology in turn 3, but did not offer personal reassurance or ownership.",
+   "missing": "ownership statement",
+   "evidence_verified": true,
+   "what_good_looks_like": "Empathetic acknowledgment that avoids robotic stock phrases, validating the customer's frustration.",
+   "example_phrase": "I completely understand how frustrating it is to wait for an order, and I am personally going to sort this out for you."
+  },
+  {
+   "step_id": "GEN-06",
+   "title": "Accurate Policy Explanation & Solution Execution",
+   "sop": "general_call_flow",
+   "weight": 5,
+   "critical": true,
+   "mandatory": true,
+   "status": "followed",
+   "points_earned": 5.0,
+   "points_possible": 5.0,
+   "turn": 7,
+   "quote": "any defect has to be reported within 48 hours of delivery with photos, and since you are on day six, there is nothing we can do.",
+   "reason": "The agent clearly explained the return and defect reporting policy.",
+   "missing": "",
+   "evidence_verified": true,
+   "what_good_looks_like": "Explaining exact delivery or refund windows (e.g., 5-7 business days for refund, 7 days for electronics) without making out-of-policy promises.",
+   "example_phrase": "Per our policy, since your wireless earbuds are within the 7-day electronics return window, I have scheduled a reverse pickup for tomorrow."
+  },
+  {
+   "step_id": "GEN-07",
+   "title": "Additional Assistance & Next Steps Summary",
+   "sop": "general_call_flow",
+   "weight": 2,
+   "critical": false,
+   "mandatory": true,
+   "status": "partial",
+   "points_earned": 1.0,
+   "points_possible": 2.0,
+   "turn": 11,
+   "quote": "Is there anything else?",
+   "reason": "The agent asked if there was anything else but failed to provide a proper resolution summary or ticket reference.",
+   "missing": "resolution summary",
+   "evidence_verified": true,
+   "what_good_looks_like": "Clear recap of actions taken, tracking reference shared, and an open invitation for secondary questions.",
+   "example_phrase": "To recap, I have initiated return ticket #SR-8921. You will receive an SMS confirmation. Is there anything else I can help you with today?"
+  },
+  {
+   "step_id": "GEN-08",
+   "title": "Professional Branded Sign-Off",
+   "sop": "general_call_flow",
+   "weight": 2,
+   "critical": false,
+   "mandatory": true,
+   "status": "followed",
+   "points_earned": 2.0,
+   "points_possible": 2.0,
+   "turn": 13,
+   "quote": "Thank you for calling ShopEase, have a nice day.",
+   "reason": "The agent concluded with a professional branded sign-off.",
+   "missing": "",
+   "evidence_verified": true,
+   "what_good_looks_like": "Courteous parting statement thanking the customer, waiting for the customer to disconnect first.",
+   "example_phrase": "Thank you for contacting ShopEase. We appreciate your business and hope you have a great day ahead!"
+  }
+ ],
+ "policy_results": [
+  {
+   "clause_id": "WAR-1.2",
+   "policy_title": "Warranty and Replacement Policy: Dead on Arrival (DOA) and Transit Damage Reporting",
+   "verdict": "violation",
+   "severity": "major",
+   "penalty": 8.0,
+   "turn": 7,
+   "quote": "any defect has to be reported within 48 hours of delivery with photos, and since you are on day six, there is nothing we can do",
+   "claim": "Agent claimed no return, replacement, or warranty claim is possible after 48 hours.",
+   "explanation": "WAR-1.2 states that reporting after 48 hours proceeds under standard manufacturer warranty (WAR-1.1) and REF-1.1 allows electronics returns within 7 days. Agent wrongly claimed no return or warranty is possible.",
+   "policy_text": "1. Customers are entitled to a free replacement without any restocking fee or return shipping cost if a product is received damaged, defective, or dead-on-arrival. 2. Mandatory Reporting Window: The customer must report the transit damage or defective condition within 48 hours of delivery. 3. Mandatory Evidence Requirement: The customer must furnish clear unboxing photographs or video showing: - Outer shipping carton label with tracking barcode. - Damaged area or physical defect on the produc...",
+   "evidence_verified": true,
+   "repeat_turns": []
+  },
+  {
+   "clause_id": "REF-1.1",
+   "policy_title": "Refund and Returns Policy: Return Eligibility Windows",
+   "verdict": "violation",
+   "severity": "major",
+   "penalty": 8.0,
+   "turn": 7,
+   "quote": "No replacement, no return and no warranty claim is possible now.",
+   "claim": "Agent claimed electronics return is not possible on day six.",
+   "explanation": "REF-1.1 allows electronics category returns up to 7 calendar days from delivery. The customer was on day six, but the agent wrongly rejected the return.",
+   "policy_text": "1. Customers are entitled to initiate a return within the specified category window starting from the recorded delivery timestamp: - Electronics Category: Exactly 7 calendar days from the date of delivery. This includes smartphones, laptops, audio accessories, wearables, smart home appliances, and electronic components. - Non-Electronics Category: Exactly 14 calendar days from the date of delivery. This covers apparel, footwear, home furnishings, fitness accessories, books, and general lifest...",
+   "evidence_verified": true,
+   "repeat_turns": []
+  },
+  {
+   "clause_id": "WAR-1.1",
+   "policy_title": "Warranty and Replacement Policy: Standard Electronics Warranty Coverage",
+   "verdict": "violation",
+   "severity": "minor",
+   "penalty": 3.0,
+   "turn": 9,
+   "quote": "Warranty covers only six months for audio products, and it is void if you did not claim in the first two days.",
+   "claim": "Agent stated warranty for audio products is 6 months and is voided if not reported within two days.",
+   "explanation": "WAR-1.1 specifies a minimum 12-month manufacturer warranty for all electronics and audio gear, and failing to report within 48 hours does not void standard warranty coverage.",
+   "policy_text": "1. All consumer electronics, computer peripherals, home appliances, and audio gear sold on ShopEase are backed by a minimum 12-month manufacturer warranty against functional defects, manufacturing anomalies, and component failures. 2. The warranty coverage period begins on the recorded date of delivery invoice issuance. 3. Items damaged due to water immersion (non-waterproof models), physical drops, unauthorized dismantling, or electrical power surges are categorically excluded from standard ...",
+   "evidence_verified": true,
+   "repeat_turns": []
+  },
+  {
+   "clause_id": "PRV-1.2",
+   "policy_title": "Privacy and Identity Verification Policy: Mandatory Call Recording Disclosure",
+   "verdict": "compliant",
+   "severity": "none",
+   "penalty": 0.0,
+   "turn": 1,
+   "quote": "Please note that this call is recorded for quality assurance and training purposes.",
+   "claim": "Agent delivered the mandatory call recording disclosure in the initial greeting.",
+   "explanation": "Agent stated the exact mandatory call recording disclosure during turn 1 as required by PRV-1.2.",
+   "policy_text": "1. Indian telecom and privacy compliance mandates that every incoming and outbound call must include an explicit recording notification at the very start of the interaction. 2. Representatives must recite the approved disclosure statement during their initial call greeting: - *\"Please note this call is recorded for quality assurance and training purposes.\"* 3. Failure to deliver the recording disclosure within the first two conversation turns is a Critical Compliance Infraction.",
+   "evidence_verified": true,
+   "repeat_turns": []
+  },
+  {
+   "clause_id": "PRV-1.1",
+   "policy_title": "Privacy and Identity Verification Policy: Mandatory Two-Factor Customer Identity Verification",
+   "verdict": "compliant",
+   "severity": "none",
+   "penalty": 0.0,
+   "turn": 3,
+   "quote": "For verification, please share your Order ID and the last four digits of your registered mobile number.",
+   "claim": "Agent requested the Order ID and last four digits of the registered mobile number for identity verification.",
+   "explanation": "Agent requested the mandatory verification pair (Order ID and last 4 digits of mobile number) per PRV-1.1.",
+   "policy_text": "1. To safeguard customer accounts and prevent unauthorized data leaks, frontline representatives must perform two-factor verification before disclosing any account details, order histories, delivery addresses, payment instruments, or processing refund instructions. 2. Mandatory Verification Pair: - Order ID (e.g., `ORD-XXXXX`) or registered Account Email Address. - Last four (4) digits of the registered mobile phone number. 3. Strict Prohibition: Revealing full addresses, item descriptions, f...",
+   "evidence_verified": true,
+   "repeat_turns": []
+  }
+ ],
+ "gaps": [
+  {
+   "gap_type": "no_empathy",
+   "turn": 7,
+   "quote": "Unfortunately, any defect has to be reported within 48 hours of delivery with photos, and since you are on day six, there is nothing we can do.",
+   "detail": "The agent delivered policy constraints bluntly without offering deeper validation or reassurance.",
+   "source": "llm"
+  },
+  {
+   "gap_type": "unresolved_issue",
+   "turn": 11,
+   "quote": "I am sorry, that is our policy and I cannot do anything.",
+   "detail": "The agent closed off the conversation without resolving the customer's defective product concern.",
+   "source": "llm"
+  }
+ ],
+ "findings": [
+  {
+   "finding_id": "id_verif_verified",
+   "criterion_id": "identity_verification",
+   "name": "Identity Verification Protocol",
+   "kind": "observed",
+   "verdict": "followed",
+   "severity": "critical",
+   "evidence": [
+    {
+     "turn_id": 3,
+     "speaker": "agent",
+     "start_s": 23.52,
+     "end_s": 32.37,
+     "quote": "Sorry to hear that, Ms. Sethi. For verification, please share"
+    }
+   ],
+   "certainty": "high",
+   "certainty_reason": "",
+   "reviewer_status": "pending",
+   "reviewer_note": "",
+   "explanation": "Identity verification successfully completed before disclosing account details."
+  },
+  {
+   "finding_id": "sop_GEN-01_1",
+   "criterion_id": "GEN-01",
+   "name": "Professional Greeting & Identity Introduction",
+   "kind": "observed",
+   "verdict": "followed",
+   "severity": "major",
+   "evidence": [
+    {
+     "turn_id": 1,
+     "speaker": "agent",
+     "start_s": 0.0,
+     "end_s": 11.15,
+     "quote": "Thank you for calling ShopEase. My name is"
+    }
+   ],
+   "certainty": "high",
+   "certainty_reason": "",
+   "reviewer_status": "pending",
+   "reviewer_note": "",
+   "explanation": "The agent greeted the customer, stated the company name, introduced himself, and asked how to assist."
+  },
+  {
+   "finding_id": "sop_GEN-02_2",
+   "criterion_id": "GEN-02",
+   "name": "Mandatory Call Recording Disclosure",
+   "kind": "observed",
+   "verdict": "followed",
+   "severity": "critical",
+   "evidence": [
+    {
+     "turn_id": 1,
+     "speaker": "agent",
+     "start_s": 0.0,
+     "end_s": 11.15,
+     "quote": "Please note that this call is recorded for quality assurance and training purposes."
+    }
+   ],
+   "certainty": "high",
+   "certainty_reason": "",
+   "reviewer_status": "pending",
+   "reviewer_note": "",
+   "explanation": "The agent provided the statutory call recording disclosure in the first turn."
+  },
+  {
+   "finding_id": "sop_GEN-03_3",
+   "criterion_id": "GEN-03",
+   "name": "Caller Identification & Two-Factor Verification",
+   "kind": "observed",
+   "verdict": "followed",
+   "severity": "critical",
+   "evidence": [
+    {
+     "turn_id": 3,
+     "speaker": "agent",
+     "start_s": 23.52,
+     "end_s": 32.37,
+     "quote": "For verification, please share your Order ID and the last four digits of your registered mobile number."
+    }
+   ],
+   "certainty": "high",
+   "certainty_reason": "",
+   "reviewer_status": "pending",
+   "reviewer_note": "",
+   "explanation": "The agent requested both the Order ID and the last four digits of the registered mobile number."
+  },
+  {
+   "finding_id": "sop_GEN-04_4",
+   "criterion_id": "GEN-04",
+   "name": "Active Listening & Issue Clarification",
+   "kind": "observed",
+   "verdict": "followed",
+   "severity": "major",
+   "evidence": [
+    {
+     "turn_id": 5,
+     "speaker": "agent",
+     "start_s": 34.62,
+     "end_s": 41.55,
+     "quote": "So the left earbud of your boAt Airdopes stopped working and you want a solution. Correct?"
+    }
+   ],
+   "certainty": "high",
+   "certainty_reason": "",
+   "reviewer_status": "pending",
+   "reviewer_note": "",
+   "explanation": "The agent allowed the customer to speak and then paraphrased the issue."
+  },
+  {
+   "finding_id": "sop_GEN-05_5",
+   "criterion_id": "GEN-05",
+   "name": "Empathy & Ownership Statement",
+   "kind": "inferred",
+   "verdict": "partial",
+   "severity": "major",
+   "evidence": [
+    {
+     "turn_id": 3,
+     "speaker": "agent",
+     "start_s": 23.52,
+     "end_s": 32.37,
+     "quote": "Sorry to hear that, Ms. Sethi."
+    }
+   ],
+   "certainty": "high",
+   "certainty_reason": "",
+   "reviewer_status": "pending",
+   "reviewer_note": "",
+   "explanation": "The agent expressed a basic apology in turn 3, but did not offer personal reassurance or ownership."
+  },
+  {
+   "finding_id": "sop_GEN-06_6",
+   "criterion_id": "GEN-06",
+   "name": "Accurate Policy Explanation & Solution Execution",
+   "kind": "observed",
+   "verdict": "followed",
+   "severity": "critical",
+   "evidence": [
+    {
+     "turn_id": 7,
+     "speaker": "agent",
+     "start_s": 47.96,
+     "end_s": 63.35,
+     "quote": "any defect has to be reported within 48 hours of delivery with photos, and since you are on day six, there is nothing we can do."
+    }
+   ],
+   "certainty": "high",
+   "certainty_reason": "",
+   "reviewer_status": "pending",
+   "reviewer_note": "",
+   "explanation": "The agent clearly explained the return and defect reporting policy."
+  },
+  {
+   "finding_id": "sop_GEN-07_7",
+   "criterion_id": "GEN-07",
+   "name": "Additional Assistance & Next Steps Summary",
+   "kind": "observed",
+   "verdict": "partial",
+   "severity": "major",
+   "evidence": [
+    {
+     "turn_id": 11,
+     "speaker": "agent",
+     "start_s": 84.72,
+     "end_s": 90.88,
+     "quote": "Is there anything else?"
+    }
+   ],
+   "certainty": "high",
+   "certainty_reason": "",
+   "reviewer_status": "pending",
+   "reviewer_note": "",
+   "explanation": "The agent asked if there was anything else but failed to provide a proper resolution summary or ticket reference."
+  },
+  {
+   "finding_id": "sop_GEN-08_8",
+   "criterion_id": "GEN-08",
+   "name": "Professional Branded Sign-Off",
+   "kind": "observed",
+   "verdict": "followed",
+   "severity": "major",
+   "evidence": [
+    {
+     "turn_id": 13,
+     "speaker": "agent",
+     "start_s": 97.86,
+     "end_s": 102.86,
+     "quote": "Thank you for calling ShopEase, have a nice day."
+    }
+   ],
+   "certainty": "high",
+   "certainty_reason": "",
+   "reviewer_status": "pending",
+   "reviewer_note": "",
+   "explanation": "The agent concluded with a professional branded sign-off."
+  },
+  {
+   "finding_id": "policy_WAR-1.2_1",
+   "criterion_id": "WAR-1.2",
+   "name": "Warranty and Replacement Policy: Dead on Arrival (DOA) and Transit Damage Reporting",
+   "kind": "observed",
+   "verdict": "violation",
+   "severity": "major",
+   "evidence": [
+    {
+     "turn_id": 7,
+     "speaker": "agent",
+     "start_s": 0.0,
+     "end_s": 0.0,
+     "quote": "any defect has to be reported within 48 hours of delivery with photos, and since you are on day six, there is nothing we can do"
+    }
+   ],
+   "certainty": "high",
+   "certainty_reason": "",
+   "reviewer_status": "pending",
+   "reviewer_note": "",
+   "explanation": "WAR-1.2 states that reporting after 48 hours proceeds under standard manufacturer warranty (WAR-1.1) and REF-1.1 allows electronics returns within 7 days. Agent wrongly claimed no return or warranty is possible."
+  },
+  {
+   "finding_id": "policy_REF-1.1_2",
+   "criterion_id": "REF-1.1",
+   "name": "Refund and Returns Policy: Return Eligibility Windows",
+   "kind": "observed",
+   "verdict": "violation",
+   "severity": "major",
+   "evidence": [
+    {
+     "turn_id": 7,
+     "speaker": "agent",
+     "start_s": 0.0,
+     "end_s": 0.0,
+     "quote": "No replacement, no return and no warranty claim is possible now."
+    }
+   ],
+   "certainty": "high",
+   "certainty_reason": "",
+   "reviewer_status": "pending",
+   "reviewer_note": "",
+   "explanation": "REF-1.1 allows electronics category returns up to 7 calendar days from delivery. The customer was on day six, but the agent wrongly rejected the return."
+  },
+  {
+   "finding_id": "policy_WAR-1.1_3",
+   "criterion_id": "WAR-1.1",
+   "name": "Warranty and Replacement Policy: Standard Electronics Warranty Coverage",
+   "kind": "observed",
+   "verdict": "violation",
+   "severity": "minor",
+   "evidence": [
+    {
+     "turn_id": 9,
+     "speaker": "agent",
+     "start_s": 0.0,
+     "end_s": 0.0,
+     "quote": "Warranty covers only six months for audio products, and it is void if you did not claim in the first two days."
+    }
+   ],
+   "certainty": "high",
+   "certainty_reason": "",
+   "reviewer_status": "pending",
+   "reviewer_note": "",
+   "explanation": "WAR-1.1 specifies a minimum 12-month manufacturer warranty for all electronics and audio gear, and failing to report within 48 hours does not void standard warranty coverage."
+  },
+  {
+   "finding_id": "empathy_rating",
+   "criterion_id": "empathy_and_communication",
+   "name": "Empathy & Tone Assessment",
+   "kind": "inferred",
+   "verdict": "missed",
+   "severity": "minor",
+   "evidence": [
+    {
+     "turn_id": 0,
+     "speaker": "agent",
+     "start_s": 0.0,
+     "end_s": 0.0,
+     "quote": "I am sorry, that is our policy and I cannot do anything."
+    }
+   ],
+   "certainty": "medium",
+   "certainty_reason": "Subjective appraisal of agent warmth and emotional validation",
+   "reviewer_status": "pending",
+   "reviewer_note": "",
+   "explanation": "Empathy score: 1/5"
+  }
+ ],
+ "cannot_judge": false,
+ "cannot_judge_reason": "",
+ "unreadable_parts": [],
+ "status": "ok",
+ "failed_step": null,
+ "completed_steps": [
+  "input_ingestion",
+  "quality_gate",
+  "call_state",
+  "topic_detection",
+  "scorecard_judgment",
+  "policy_check",
+  "evidence_verification",
+  "scoring"
+ ],
+ "emotion": {
+  "points": [
+   {
+    "turn": 2,
+    "emotion": "neutral",
+    "valence": 0.0
+   },
+   {
+    "turn": 4,
+    "emotion": "neutral",
+    "valence": 0.0
+   },
+   {
+    "turn": 6,
+    "emotion": "neutral",
+    "valence": 0.0
+   },
+   {
+    "turn": 8,
+    "emotion": "frustrated",
+    "valence": -1.5
+   },
+   {
+    "turn": 10,
+    "emotion": "frustrated",
+    "valence": -1.5
+   },
+   {
+    "turn": 12,
+    "emotion": "frustrated",
+    "valence": -1.5
+   }
+  ],
+  "start": "neutral",
+  "middle": "frustrated",
+  "end": "frustrated",
+  "trend": "worsened"
+ },
+ "agent_tone": {
+  "points": [
+   {
+    "turn": 1,
+    "emotion": "warm",
+    "valence": 1.0
+   },
+   {
+    "turn": 3,
+    "emotion": "neutral",
+    "valence": 0.0
+   },
+   {
+    "turn": 5,
+    "emotion": "neutral",
+    "valence": 0.0
+   },
+   {
+    "turn": 7,
+    "emotion": "dismissive",
+    "valence": -1.5
+   },
+   {
+    "turn": 9,
+    "emotion": "neutral",
+    "valence": 0.0
+   },
+   {
+    "turn": 11,
+    "emotion": "dismissive",
+    "valence": -1.5
+   },
+   {
+    "turn": 13,
+    "emotion": "neutral",
+    "valence": 0.0
+   }
+  ],
+  "start": "warm",
+  "middle": "dismissive",
+  "end": "neutral",
+  "trend": "worsened"
+ },
+ "metrics": {
+  "duration_sec": 102.9,
+  "agent_turns": 7,
+  "customer_turns": 6,
+  "agent_talk_ratio": 0.663,
+  "longest_silence_sec": 1.2,
+  "dead_air_events": [],
+  "interruption_events": [],
+  "hold_events": [],
+  "holds": [],
+  "longest_hold_sec": 0.0,
+  "agent_words_per_minute": 156.0,
+  "agent_interruptions": 0
+ },
+ "strengths": [
+  "Followed the greeting and disclosure guidelines correctly.",
+  "Performed proper identity verification by asking for the Order ID and phone digits.",
+  "Clearly paraphrased the customer's issue back to her.",
+  "Completed all 3 critical SOP steps that applied to this call."
+ ],
+ "coaching": [
+  {
+   "title": "GEN-05: Empathy & Ownership Statement",
+   "advice": "Empathetic acknowledgment that avoids robotic stock phrases, validating the customer's frustration. Example: \"I completely understand how frustrating it is to wait for an order, and I am personally going to sort this out for you.\"",
+   "source": "sop",
+   "evidence": "Missing: ownership statement. The agent expressed a basic apology in turn 3, but did not offer personal reassurance or ownership."
+  },
+  {
+   "title": "GEN-07: Additional Assistance & Next Steps Summary",
+   "advice": "Clear recap of actions taken, tracking reference shared, and an open invitation for secondary questions. Example: \"To recap, I have initiated return ticket #SR-8921. You will receive an SMS confirmation. Is there anything else I can help you with today?\"",
+   "source": "sop",
+   "evidence": "Missing: resolution summary. The agent asked if there was anything else but failed to provide a proper resolution summary or ticket reference."
+  },
+  {
+   "title": "Policy WAR-1.2: say it correctly",
+   "advice": "WAR-1.2 states that reporting after 48 hours proceeds under standard manufacturer warranty (WAR-1.1) and REF-1.1 allows electronics returns within 7 days. Agent wrongly claimed no return or warranty is possible.",
+   "source": "policy",
+   "evidence": "any defect has to be reported within 48 hours of delivery with photos, and since you are on day six, there is nothing we can do"
+  },
+  {
+   "title": "Policy REF-1.1: say it correctly",
+   "advice": "REF-1.1 allows electronics category returns up to 7 calendar days from delivery. The customer was on day six, but the agent wrongly rejected the return.",
+   "source": "policy",
+   "evidence": "No replacement, no return and no warranty claim is possible now."
+  },
+  {
+   "title": "Policy WAR-1.1: say it correctly",
+   "advice": "WAR-1.1 specifies a minimum 12-month manufacturer warranty for all electronics and audio gear, and failing to report within 48 hours does not void standard warranty coverage.",
+   "source": "policy",
+   "evidence": "Warranty covers only six months for audio products, and it is void if you did not claim in the first two days."
+  },
+  {
+   "title": "Suggestion",
+   "advice": "Next time, show greater empathy when delivering unfavorable policy news rather than sounding dismissive.",
+   "source": "llm",
+   "evidence": ""
+  },
+  {
+   "title": "Suggestion",
+   "advice": "Next time, explore alternative support options or brand service channels when a direct return is unavailable.",
+   "source": "llm",
+   "evidence": ""
+  },
+  {
+   "title": "Suggestion",
+   "advice": "Next time, ensure you take complete ownership of the customer's experience even when policy limits resolution.",
+   "source": "llm",
+   "evidence": ""
+  }
+ ],
+ "risk_flags": [],
+ "retrieved_clause_ids": [
+  "WAR-1.2",
+  "WAR-2.1",
+  "WAR-2.3",
+  "WAR-1.1",
+  "WAR-3.2",
+  "PRV-1.3",
+  "WAR-2.2",
+  "WAR-3.1",
+  "REF-1.1",
+  "PRV-1.1",
+  "ESC-1.1",
+  "ESC-1.2",
+  "ESC-2.1",
+  "ESC-2.2",
+  "ESC-3.1",
+  "ESC-3.2",
+  "PRV-1.2",
+  "PRV-2.1",
+  "PRV-2.2",
+  "PRV-3.1"
+ ],
+ "transcript": {
+  "call_id": "call_107",
+  "source": "transcript",
+  "language": "te",
+  "audio_path": null,
+  "duration_seconds": 102.9,
+  "diarization_method": "given",
+  "transcript_quality": "good",
+  "quality_reason": "Transcript quality is reliable for compliance and rubric scoring.",
+  "unreadable_parts": [],
+  "turns": [
+   {
+    "turn_id": 1,
+    "speaker": "agent",
+    "start_time": 0.0,
+    "end_time": 11.15,
+    "text": "Thank you for calling ShopEase. My name is Imran Sheikh. Please note that this call is recorded for quality assurance and training purposes. How may I help you today?",
+    "text_te": null,
+    "text_roman": null,
+    "asr_confidence": 1.0,
+    "silence_before": 0.0,
+    "overlaps_previous": false,
+    "emotion": "warm"
+   },
+   {
+    "turn_id": 2,
+    "speaker": "customer",
+    "start_time": 11.65,
+    "end_time": 22.42,
+    "text": "Hi Imran, I am Neha Sethi. I bought boAt Airdopes six days ago and the left earbud is completely dead. I want to know what I can do.",
+    "text_te": null,
+    "text_roman": null,
+    "asr_confidence": 1.0,
+    "silence_before": 0.5,
+    "overlaps_previous": false,
+    "emotion": "neutral"
+   },
+   {
+    "turn_id": 3,
+    "speaker": "agent",
+    "start_time": 23.52,
+    "end_time": 32.37,
+    "text": "Sorry to hear that, Ms. Sethi. For verification, please share your Order ID and the last four digits of your registered mobile number.",
+    "text_te": null,
+    "text_roman": null,
+    "asr_confidence": 1.0,
+    "silence_before": 1.1,
+    "overlaps_previous": false,
+    "emotion": "neutral"
+   },
+   {
+    "turn_id": 4,
+    "speaker": "customer",
+    "start_time": 33.07,
+    "end_time": 34.22,
+    "text": "ORD-52816 and 8093.",
+    "text_te": null,
+    "text_roman": null,
+    "asr_confidence": 1.0,
+    "silence_before": 0.7,
+    "overlaps_previous": false,
+    "emotion": "neutral"
+   },
+   {
+    "turn_id": 5,
+    "speaker": "agent",
+    "start_time": 34.62,
+    "end_time": 41.55,
+    "text": "Thank you. So the left earbud of your boAt Airdopes stopped working and you want a solution. Correct?",
+    "text_te": null,
+    "text_roman": null,
+    "asr_confidence": 1.0,
+    "silence_before": 0.4,
+    "overlaps_previous": false,
+    "emotion": "neutral"
+   },
+   {
+    "turn_id": 6,
+    "speaker": "customer",
+    "start_time": 42.55,
+    "end_time": 47.16,
+    "text": "Yes, that is right. It never worked since I opened the box.",
+    "text_te": null,
+    "text_roman": null,
+    "asr_confidence": 1.0,
+    "silence_before": 1.0,
+    "overlaps_previous": false,
+    "emotion": "neutral"
+   },
+   {
+    "turn_id": 7,
+    "speaker": "agent",
+    "start_time": 47.96,
+    "end_time": 63.35,
+    "text": "I understand. Unfortunately, any defect has to be reported within 48 hours of delivery with photos, and since you are on day six, there is nothing we can do. No replacement, no return and no warranty claim is possible now.",
+    "text_te": null,
+    "text_roman": null,
+    "asr_confidence": 1.0,
+    "silence_before": 0.8,
+    "overlaps_previous": false,
+    "emotion": "dismissive"
+   },
+   {
+    "turn_id": 8,
+    "speaker": "customer",
+    "start_time": 63.95,
+    "end_time": 67.79,
+    "text": "No warranty at all? The box says one year warranty.",
+    "text_te": null,
+    "text_roman": null,
+    "asr_confidence": 1.0,
+    "silence_before": 0.6,
+    "overlaps_previous": false,
+    "emotion": "frustrated"
+   },
+   {
+    "turn_id": 9,
+    "speaker": "agent",
+    "start_time": 68.99,
+    "end_time": 77.45,
+    "text": "Warranty covers only six months for audio products, and it is void if you did not claim in the first two days.",
+    "text_te": null,
+    "text_roman": null,
+    "asr_confidence": 1.0,
+    "silence_before": 1.2,
+    "overlaps_previous": false,
+    "emotion": "neutral"
+   },
+   {
+    "turn_id": 10,
+    "speaker": "customer",
+    "start_time": 78.05,
+    "end_time": 83.82,
+    "text": "That cannot be right. Can I at least return it? It is only day six.",
+    "text_te": null,
+    "text_roman": null,
+    "asr_confidence": 1.0,
+    "silence_before": 0.6,
+    "overlaps_previous": false,
+    "emotion": "frustrated"
+   },
+   {
+    "turn_id": 11,
+    "speaker": "agent",
+    "start_time": 84.72,
+    "end_time": 90.88,
+    "text": "I am sorry, that is our policy and I cannot do anything. Is there anything else?",
+    "text_te": null,
+    "text_roman": null,
+    "asr_confidence": 1.0,
+    "silence_before": 0.9,
+    "overlaps_previous": false,
+    "emotion": "dismissive"
+   },
+   {
+    "turn_id": 12,
+    "speaker": "customer",
+    "start_time": 91.38,
+    "end_time": 96.76,
+    "text": "No, that is not helpful at all. I will check with the brand directly.",
+    "text_te": null,
+    "text_roman": null,
+    "asr_confidence": 1.0,
+    "silence_before": 0.5,
+    "overlaps_previous": false,
+    "emotion": "frustrated"
+   },
+   {
+    "turn_id": 13,
+    "speaker": "agent",
+    "start_time": 97.86,
+    "end_time": 102.86,
+    "text": "You can do that. Thank you for calling ShopEase, have a nice day.",
+    "text_te": null,
+    "text_roman": null,
+    "asr_confidence": 1.0,
+    "silence_before": 1.1,
+    "overlaps_previous": false,
+    "emotion": "neutral"
+   }
+  ]
+ },
+ "meta": {
+  "model": "SOP: gemini-3.5-flash-lite \u00b7 Policy: gemini-3.5-flash",
+  "llm_requests": 6,
+  "diarization_method": "given",
+  "transcribe_seconds": 0.0,
+  "audit_seconds": 79.0,
+  "cache_hit": false,
+  "warnings": [],
+  "source_set": "synthetic",
+  "trace_id": "run_call_107_956667",
+  "status": "ok",
+  "failed_step": null,
+  "completed_steps": [
+   "input_ingestion",
+   "quality_gate",
+   "call_state",
+   "topic_detection",
+   "scorecard_judgment",
+   "policy_check",
+   "evidence_verification",
+   "scoring"
+  ],
+  "estimated_cost_usd": 0.01788,
+  "tokens_in": 7772,
+  "tokens_out": 2162,
+  "sop_model": "gemini-3.5-flash-lite",
+  "policy_model": "gemini-3.5-flash"
+ }
+}

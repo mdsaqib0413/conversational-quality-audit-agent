@@ -1,0 +1,1239 @@
+{
+ "call_id": "call_101",
+ "generated_at": "2026-11-03T18:34:43",
+ "topic": "refund",
+ "topic_confidence": 0.707,
+ "signals": [],
+ "summary": "The customer wanted to return a cotton kurta set due to an incorrect size and receive a refund. The agent successfully verified the order, checked the return policy, approved the refund, and scheduled a reverse pickup. The issue was fully resolved.",
+ "customer_issue": "Return of cotton kurta set due to wrong size",
+ "resolved": true,
+ "scores": {
+  "sop_score": 40.0,
+  "policy_score": 30.0,
+  "empathy_score": 15.0,
+  "communication_score": 15.0,
+  "overall_before_cap": 100.0,
+  "overall": 100.0,
+  "grade": "A",
+  "grade_label": "Exemplary Performance",
+  "critical_failure": false,
+  "cap_reasons": [],
+  "sop_points_earned": 53.0,
+  "sop_points_possible": 53.0,
+  "policy_penalty_total": 0.0,
+  "policy_applicable": true,
+  "timing_penalty": 0.0,
+  "timing_notes": [],
+  "empathy_rating": 5,
+  "clarity_rating": 5,
+  "professionalism_rating": 5,
+  "ownership_rating": 5,
+  "closure_rating": 5
+ },
+ "sop_results": [
+  {
+   "step_id": "GEN-01",
+   "title": "Professional Greeting & Identity Introduction",
+   "sop": "general_call_flow",
+   "weight": 2,
+   "critical": false,
+   "mandatory": true,
+   "status": "followed",
+   "points_earned": 2.0,
+   "points_possible": 2.0,
+   "turn": 1,
+   "quote": "Thank you for calling ShopEase. My name is Sneha Iyer.",
+   "reason": "The agent greeted with company name, representative name, and offered assistance.",
+   "missing": "",
+   "evidence_verified": true,
+   "what_good_looks_like": "The agent opens within 2 seconds of call connection with a polite, welcoming tone, introducing both the brand and representative name.",
+   "example_phrase": "Thank you for calling ShopEase. My name is Rahul. How may I assist you today?"
+  },
+  {
+   "step_id": "GEN-02",
+   "title": "Mandatory Call Recording Disclosure",
+   "sop": "general_call_flow",
+   "weight": 5,
+   "critical": true,
+   "mandatory": true,
+   "status": "followed",
+   "points_earned": 5.0,
+   "points_possible": 5.0,
+   "turn": 1,
+   "quote": "Please note that this call is recorded for quality assurance and training purposes.",
+   "reason": "Call recording disclosure was clearly stated in the first turn.",
+   "missing": "",
+   "evidence_verified": true,
+   "what_good_looks_like": "The disclosure is clearly articulated within the first two conversation turns without mumbling or skipping.",
+   "example_phrase": "Please note that this call is being recorded for quality monitoring and training purposes."
+  },
+  {
+   "step_id": "GEN-03",
+   "title": "Caller Identification & Two-Factor Verification",
+   "sop": "general_call_flow",
+   "weight": 5,
+   "critical": true,
+   "mandatory": true,
+   "status": "followed",
+   "points_earned": 5.0,
+   "points_possible": 5.0,
+   "turn": 3,
+   "quote": "To verify your identity first, could you please share your Order ID and the last four digits",
+   "reason": "Both Order ID and last 4 digits of the phone were requested before account details.",
+   "missing": "",
+   "evidence_verified": true,
+   "what_good_looks_like": "The agent systematically validates both verification data points before disclosing addresses, order contents, or monetary info.",
+   "example_phrase": "To ensure your account security, may I please have your Order ID and the last four digits of your registered mobile number?"
+  },
+  {
+   "step_id": "GEN-04",
+   "title": "Active Listening & Issue Clarification",
+   "sop": "general_call_flow",
+   "weight": 3,
+   "critical": false,
+   "mandatory": true,
+   "status": "followed",
+   "points_earned": 3.0,
+   "points_possible": 3.0,
+   "turn": 5,
+   "quote": "Just to confirm that I have understood correctly, you received the cotton kurta set in size M",
+   "reason": "The agent listened without interruption and paraphrased the core issue accurately.",
+   "missing": "",
+   "evidence_verified": true,
+   "what_good_looks_like": "The agent maintains silence while the customer speaks, takes notes, and summarizes the specific problem back to the customer.",
+   "example_phrase": "I understand that your package has not arrived and you would like to track the courier status. Is that correct?"
+  },
+  {
+   "step_id": "GEN-05",
+   "title": "Empathy & Ownership Statement",
+   "sop": "general_call_flow",
+   "weight": 3,
+   "critical": false,
+   "mandatory": true,
+   "status": "followed",
+   "points_earned": 3.0,
+   "points_possible": 3.0,
+   "turn": 7,
+   "quote": "I am sorry for the inconvenience, Ms. Menon, and I will personally make sure this return is arranged",
+   "reason": "Expressed sincere empathy and took personal ownership of the resolution.",
+   "missing": "",
+   "evidence_verified": true,
+   "what_good_looks_like": "Empathetic acknowledgment that avoids robotic stock phrases, validating the customer's frustration.",
+   "example_phrase": "I completely understand how frustrating it is to wait for an order, and I am personally going to sort this out for you."
+  },
+  {
+   "step_id": "GEN-06",
+   "title": "Accurate Policy Explanation & Solution Execution",
+   "sop": "general_call_flow",
+   "weight": 5,
+   "critical": true,
+   "mandatory": true,
+   "status": "followed",
+   "points_earned": 5.0,
+   "points_possible": 5.0,
+   "turn": 9,
+   "quote": "A kurta set falls under the non-electronics category, which has a return window of 14 calendar days",
+   "reason": "The correct return policy and category window were clearly explained.",
+   "missing": "",
+   "evidence_verified": true,
+   "what_good_looks_like": "Explaining exact delivery or refund windows (e.g., 5-7 business days for refund, 7 days for electronics) without making out-of-policy promises.",
+   "example_phrase": "Per our policy, since your wireless earbuds are within the 7-day electronics return window, I have scheduled a reverse pickup for tomorrow."
+  },
+  {
+   "step_id": "GEN-07",
+   "title": "Additional Assistance & Next Steps Summary",
+   "sop": "general_call_flow",
+   "weight": 2,
+   "critical": false,
+   "mandatory": true,
+   "status": "followed",
+   "points_earned": 2.0,
+   "points_possible": 2.0,
+   "turn": 17,
+   "quote": "To summarise, the return for order ORD-44210 is approved under ticket RTN-55120",
+   "reason": "The agent summarized the resolution, provided the ticket reference, and asked if anything else was needed.",
+   "missing": "",
+   "evidence_verified": true,
+   "what_good_looks_like": "Clear recap of actions taken, tracking reference shared, and an open invitation for secondary questions.",
+   "example_phrase": "To recap, I have initiated return ticket #SR-8921. You will receive an SMS confirmation. Is there anything else I can help you with today?"
+  },
+  {
+   "step_id": "GEN-08",
+   "title": "Professional Branded Sign-Off",
+   "sop": "general_call_flow",
+   "weight": 2,
+   "critical": false,
+   "mandatory": true,
+   "status": "followed",
+   "points_earned": 2.0,
+   "points_possible": 2.0,
+   "turn": 19,
+   "quote": "It was my pleasure, Ms. Menon. Thank you for contacting ShopEase. Have a wonderful day!",
+   "reason": "The agent concluded with a professional, branded sign-off.",
+   "missing": "",
+   "evidence_verified": true,
+   "what_good_looks_like": "Courteous parting statement thanking the customer, waiting for the customer to disconnect first.",
+   "example_phrase": "Thank you for contacting ShopEase. We appreciate your business and hope you have a great day ahead!"
+  },
+  {
+   "step_id": "REF-S1",
+   "title": "Authenticate Order and Customer Identity",
+   "sop": "refund_call_sop",
+   "weight": 5,
+   "critical": true,
+   "mandatory": true,
+   "status": "followed",
+   "points_earned": 5.0,
+   "points_possible": 5.0,
+   "turn": 3,
+   "quote": "could you please share your Order ID and the last four digits of your registered mobile number?",
+   "reason": "Order and customer identity were verified before discussing any order details.",
+   "missing": "",
+   "evidence_verified": true,
+   "what_good_looks_like": "The agent confirms both values in the CRM portal before mentioning what items were purchased or amounts paid.",
+   "example_phrase": "I will be glad to assist with your refund. First, could you please confirm your Order ID and the last four digits of your registered mobile number?"
+  },
+  {
+   "step_id": "REF-S2",
+   "title": "Determine Return Window Eligibility by Category",
+   "sop": "refund_call_sop",
+   "weight": 4,
+   "critical": true,
+   "mandatory": true,
+   "status": "followed",
+   "points_earned": 4.0,
+   "points_possible": 4.0,
+   "turn": 9,
+   "quote": "A kurta set falls under the non-electronics category, which has a return window of 14 calendar days",
+   "reason": "Return window eligibility was accurately verified against the category.",
+   "missing": "",
+   "evidence_verified": true,
+   "what_good_looks_like": "The agent explicitly checks the delivery timestamp in the CRM and articulates the applicable category window clearly.",
+   "example_phrase": "I see this smartwatch was delivered on October 10th. Because electronics have a 7-day return window, your request today is fully eligible."
+  },
+  {
+   "step_id": "REF-S3",
+   "title": "Inspect Reason for Return and Evidence",
+   "sop": "refund_call_sop",
+   "weight": 3,
+   "critical": false,
+   "mandatory": true,
+   "status": "followed",
+   "points_earned": 3.0,
+   "points_possible": 3.0,
+   "turn": 11,
+   "quote": "Since the reason is a size issue, I do not need photographs.",
+   "reason": "The return reason was checked and the photo evidence requirement was appropriately assessed.",
+   "missing": "",
+   "evidence_verified": true,
+   "what_good_looks_like": "If customer claims damage or wrong product, agent confirms whether it was reported within 48 hours and verifies unboxing photos.",
+   "example_phrase": "Could you please let me know the specific issue you encountered with the product?"
+  },
+  {
+   "step_id": "REF-S4",
+   "title": "Verify Monetary Approval Threshold Limit",
+   "sop": "refund_call_sop",
+   "weight": 4,
+   "critical": true,
+   "mandatory": true,
+   "status": "followed",
+   "points_earned": 4.0,
+   "points_possible": 4.0,
+   "turn": 11,
+   "quote": "The order value is Rs 1,299, which is within my approval limit of Rs 5,000, so I can approve",
+   "reason": "Frontline monetary approval threshold limit was correctly checked and confirmed.",
+   "missing": "",
+   "evidence_verified": true,
+   "what_good_looks_like": "If the refund is Rs 5,000 or less, the agent approves immediately. If above Rs 5,000, the agent informs the customer that supervisor sign-off is required.",
+   "example_phrase": "The refund amount of Rs 2,499 is within my authorization limit, and I have approved the return immediately."
+  },
+  {
+   "step_id": "REF-S5",
+   "title": "Communicate Refund Method and Payment Destination",
+   "sop": "refund_call_sop",
+   "weight": 4,
+   "critical": true,
+   "mandatory": true,
+   "status": "followed",
+   "points_earned": 4.0,
+   "points_possible": 4.0,
+   "turn": 13,
+   "quote": "The refund will be sent by NEFT bank transfer to your verified bank account",
+   "reason": "The correct refund method for COD orders was clearly communicated.",
+   "missing": "",
+   "evidence_verified": true,
+   "what_good_looks_like": "Clear communication preventing customer expectation of cash payouts or transfers to unverified third-party wallets.",
+   "example_phrase": "Your refund will be returned directly to the HDFC credit card used during purchase."
+  },
+  {
+   "step_id": "REF-S6",
+   "title": "Articulate the 5-7 Business Day SLA Timeline",
+   "sop": "refund_call_sop",
+   "weight": 3,
+   "critical": false,
+   "mandatory": true,
+   "status": "followed",
+   "points_earned": 3.0,
+   "points_possible": 3.0,
+   "turn": 13,
+   "quote": "within 5 to 7 business days after the reverse pickup and warehouse verification.",
+   "reason": "The 5-7 business day SLA timeline was explicitly communicated.",
+   "missing": "",
+   "evidence_verified": true,
+   "what_good_looks_like": "The agent quotes the exact 5-7 business day timeline without promising unrealistic instant or same-day turnaround.",
+   "example_phrase": "Once the courier collects the parcel, the refund will be credited to your account within 5 to 7 business days."
+  },
+  {
+   "step_id": "REF-S7",
+   "title": "Generate Reverse Pickup and Share Reference Ticket",
+   "sop": "refund_call_sop",
+   "weight": 3,
+   "critical": false,
+   "mandatory": true,
+   "status": "followed",
+   "points_earned": 3.0,
+   "points_possible": 3.0,
+   "turn": 15,
+   "quote": "I have booked the reverse pickup, and it will be scheduled within 48 to 72 hours. Your return reference ticket is RTN-55120.",
+   "reason": "Reverse pickup was booked, reference ticket shared, and pickup instructions provided.",
+   "missing": "",
+   "evidence_verified": true,
+   "what_good_looks_like": "",
+   "example_phrase": "I have scheduled your return pickup for tomorrow. Your return tracking number is RTN-55412. Please keep the item packed with all tags and original box."
+  }
+ ],
+ "policy_results": [
+  {
+   "clause_id": "PRV-1.2",
+   "policy_title": "Privacy and Identity Verification Policy: Mandatory Call Recording Disclosure",
+   "verdict": "compliant",
+   "severity": "none",
+   "penalty": 0.0,
+   "turn": 1,
+   "quote": "Please note that this call is recorded for quality assurance and training purposes.",
+   "claim": "The agent provided the required call recording disclosure.",
+   "explanation": "The agent recited the mandatory call recording disclosure in the initial call greeting as required by PRV-1.2.",
+   "policy_text": "1. Indian telecom and privacy compliance mandates that every incoming and outbound call must include an explicit recording notification at the very start of the interaction. 2. Representatives must recite the approved disclosure statement during their initial call greeting: - *\"Please note this call is recorded for quality assurance and training purposes.\"* 3. Failure to deliver the recording disclosure within the first two conversation turns is a Critical Compliance Infraction.",
+   "evidence_verified": true,
+   "repeat_turns": []
+  },
+  {
+   "clause_id": "REF-1.1",
+   "policy_title": "Refund and Returns Policy: Return Eligibility Windows",
+   "verdict": "compliant",
+   "severity": "none",
+   "penalty": 0.0,
+   "turn": 9,
+   "quote": "A kurta set falls under the non-electronics category, which has a return window of 14 calendar days from delivery",
+   "claim": "Non-electronics have a return window of 14 calendar days from delivery.",
+   "explanation": "REF-1.1 specifies that non-electronics apparel has a return window of 14 calendar days from delivery.",
+   "policy_text": "1. Customers are entitled to initiate a return within the specified category window starting from the recorded delivery timestamp: - Electronics Category: Exactly 7 calendar days from the date of delivery. This includes smartphones, laptops, audio accessories, wearables, smart home appliances, and electronic components. - Non-Electronics Category: Exactly 14 calendar days from the date of delivery. This covers apparel, footwear, home furnishings, fitness accessories, books, and general lifest...",
+   "evidence_verified": true,
+   "repeat_turns": []
+  },
+  {
+   "clause_id": "REF-3.1",
+   "policy_title": "Refund and Returns Policy: Agent Approval Authority Threshold",
+   "verdict": "compliant",
+   "severity": "none",
+   "penalty": 0.0,
+   "turn": 11,
+   "quote": "The order value is Rs 1,299, which is within my approval limit of Rs 5,000, so I can approve the refund right away.",
+   "claim": "Agent has approval authority limit of Rs 5,000 for instant refund.",
+   "explanation": "REF-3.1 states frontline agents have authority to approve refunds up to Rs 5,000, and Rs 1,299 is within this threshold.",
+   "policy_text": "1. Frontline customer support agents possess discretionary authority to approve instant refunds and concessions up to a maximum limit of Rs 5,000 (Rupees Five Thousand only) per order, provided return eligibility criteria are met. 2. Any refund request exceeding Rs 5,000 strictly requires supervisor review, fraud desk clearance, and secondary authorization prior to confirmation. 3. Agents are strictly prohibited from splitting refund line items across multiple tickets to circumvent the Rs 5,0...",
+   "evidence_verified": true,
+   "repeat_turns": []
+  },
+  {
+   "clause_id": "REF-2.2",
+   "policy_title": "Refund and Returns Policy: Method of Refund Disbursement",
+   "verdict": "compliant",
+   "severity": "none",
+   "penalty": 0.0,
+   "turn": 13,
+   "quote": "The refund will be sent by NEFT bank transfer to your verified bank account, within 5 to 7 business days after the reverse pickup",
+   "claim": "COD refund will be paid via NEFT within 5 to 7 business days post pickup and verification.",
+   "explanation": "REF-2.2 and BIL-1.3 mandate COD refunds via NEFT, and REF-2.1 sets the refund SLA to 5 to 7 business days.",
+   "policy_text": "1. Refunds must be remitted strictly to the original payment method utilized during checkout: - Credit / Debit Card payments return to the identical card account. - Net Banking and UPI payments return to the source bank account. 2. Cash on Delivery (COD) Purchases: Refunds for COD orders are disbursed via NEFT bank transfer to the verified bank account or UPI VPA nominated by the customer in their account profile after completing identity verification. Refunds cannot be handed over in physica...",
+   "evidence_verified": true,
+   "repeat_turns": []
+  },
+  {
+   "clause_id": "REF-4.1",
+   "policy_title": "Refund and Returns Policy: Return Logistics and Reverse Pickup",
+   "verdict": "compliant",
+   "severity": "none",
+   "penalty": 0.0,
+   "turn": 15,
+   "quote": "I have booked the reverse pickup, and it will be scheduled within 48 to 72 hours.",
+   "claim": "Reverse pickup is scheduled within 48 to 72 hours.",
+   "explanation": "REF-4.1 states reverse pickup is scheduled within 48 to 72 hours of return acceptance.",
+   "policy_text": "1. Reverse pickup is scheduled within 48 to 72 hours of return acceptance across standard service pin codes. 2. In non-serviceable pin codes, customers may self-ship the product via registered India Post Speed Post. ShopEase reimburses courier expenses up to Rs 200 upon presentation of valid courier receipts. 3. Maximum 3 reverse pickup attempts will be made by our logistics partner before the return request is automatically cancelled.",
+   "evidence_verified": true,
+   "repeat_turns": []
+  }
+ ],
+ "gaps": [],
+ "findings": [
+  {
+   "finding_id": "id_verif_verified",
+   "criterion_id": "identity_verification",
+   "name": "Identity Verification Protocol",
+   "kind": "observed",
+   "verdict": "followed",
+   "severity": "critical",
+   "evidence": [
+    {
+     "turn_id": 3,
+     "speaker": "agent",
+     "start_s": 25.45,
+     "end_s": 37.75,
+     "quote": "I would be happy to help with that, Ms. Menon."
+    }
+   ],
+   "certainty": "high",
+   "certainty_reason": "",
+   "reviewer_status": "pending",
+   "reviewer_note": "",
+   "explanation": "Identity verification successfully completed before disclosing account details."
+  },
+  {
+   "finding_id": "sop_GEN-01_1",
+   "criterion_id": "GEN-01",
+   "name": "Professional Greeting & Identity Introduction",
+   "kind": "observed",
+   "verdict": "followed",
+   "severity": "major",
+   "evidence": [
+    {
+     "turn_id": 1,
+     "speaker": "agent",
+     "start_s": 0.0,
+     "end_s": 11.15,
+     "quote": "Thank you for calling ShopEase. My name is Sneha Iyer."
+    }
+   ],
+   "certainty": "high",
+   "certainty_reason": "",
+   "reviewer_status": "pending",
+   "reviewer_note": "",
+   "explanation": "The agent greeted with company name, representative name, and offered assistance."
+  },
+  {
+   "finding_id": "sop_GEN-02_2",
+   "criterion_id": "GEN-02",
+   "name": "Mandatory Call Recording Disclosure",
+   "kind": "observed",
+   "verdict": "followed",
+   "severity": "critical",
+   "evidence": [
+    {
+     "turn_id": 1,
+     "speaker": "agent",
+     "start_s": 0.0,
+     "end_s": 11.15,
+     "quote": "Please note that this call is recorded for quality assurance and training purposes."
+    }
+   ],
+   "certainty": "high",
+   "certainty_reason": "",
+   "reviewer_status": "pending",
+   "reviewer_note": "",
+   "explanation": "Call recording disclosure was clearly stated in the first turn."
+  },
+  {
+   "finding_id": "sop_GEN-03_3",
+   "criterion_id": "GEN-03",
+   "name": "Caller Identification & Two-Factor Verification",
+   "kind": "observed",
+   "verdict": "followed",
+   "severity": "critical",
+   "evidence": [
+    {
+     "turn_id": 3,
+     "speaker": "agent",
+     "start_s": 25.45,
+     "end_s": 37.75,
+     "quote": "To verify your identity first, could you please share your Order ID and the last four digits"
+    }
+   ],
+   "certainty": "high",
+   "certainty_reason": "",
+   "reviewer_status": "pending",
+   "reviewer_note": "",
+   "explanation": "Both Order ID and last 4 digits of the phone were requested before account details."
+  },
+  {
+   "finding_id": "sop_GEN-04_4",
+   "criterion_id": "GEN-04",
+   "name": "Active Listening & Issue Clarification",
+   "kind": "observed",
+   "verdict": "followed",
+   "severity": "major",
+   "evidence": [
+    {
+     "turn_id": 5,
+     "speaker": "agent",
+     "start_s": 45.39,
+     "end_s": 60.78,
+     "quote": "Just to confirm that I have understood correctly, you received the cotton kurta set in size M"
+    }
+   ],
+   "certainty": "high",
+   "certainty_reason": "",
+   "reviewer_status": "pending",
+   "reviewer_note": "",
+   "explanation": "The agent listened without interruption and paraphrased the core issue accurately."
+  },
+  {
+   "finding_id": "sop_GEN-05_5",
+   "criterion_id": "GEN-05",
+   "name": "Empathy & Ownership Statement",
+   "kind": "inferred",
+   "verdict": "followed",
+   "severity": "major",
+   "evidence": [
+    {
+     "turn_id": 7,
+     "speaker": "agent",
+     "start_s": 65.65,
+     "end_s": 76.81,
+     "quote": "I am sorry for the inconvenience, Ms. Menon, and I will personally make sure this return is arranged"
+    }
+   ],
+   "certainty": "high",
+   "certainty_reason": "",
+   "reviewer_status": "pending",
+   "reviewer_note": "",
+   "explanation": "Expressed sincere empathy and took personal ownership of the resolution."
+  },
+  {
+   "finding_id": "sop_GEN-06_6",
+   "criterion_id": "GEN-06",
+   "name": "Accurate Policy Explanation & Solution Execution",
+   "kind": "observed",
+   "verdict": "followed",
+   "severity": "critical",
+   "evidence": [
+    {
+     "turn_id": 9,
+     "speaker": "agent",
+     "start_s": 80.92,
+     "end_s": 95.53,
+     "quote": "A kurta set falls under the non-electronics category, which has a return window of 14 calendar days"
+    }
+   ],
+   "certainty": "high",
+   "certainty_reason": "",
+   "reviewer_status": "pending",
+   "reviewer_note": "",
+   "explanation": "The correct return policy and category window were clearly explained."
+  },
+  {
+   "finding_id": "sop_GEN-07_7",
+   "criterion_id": "GEN-07",
+   "name": "Additional Assistance & Next Steps Summary",
+   "kind": "observed",
+   "verdict": "followed",
+   "severity": "major",
+   "evidence": [
+    {
+     "turn_id": 17,
+     "speaker": "agent",
+     "start_s": 164.22,
+     "end_s": 181.15,
+     "quote": "To summarise, the return for order ORD-44210 is approved under ticket RTN-55120"
+    }
+   ],
+   "certainty": "high",
+   "certainty_reason": "",
+   "reviewer_status": "pending",
+   "reviewer_note": "",
+   "explanation": "The agent summarized the resolution, provided the ticket reference, and asked if anything else was needed."
+  },
+  {
+   "finding_id": "sop_GEN-08_8",
+   "criterion_id": "GEN-08",
+   "name": "Professional Branded Sign-Off",
+   "kind": "observed",
+   "verdict": "followed",
+   "severity": "major",
+   "evidence": [
+    {
+     "turn_id": 19,
+     "speaker": "agent",
+     "start_s": 186.41,
+     "end_s": 192.18,
+     "quote": "It was my pleasure, Ms. Menon. Thank you for contacting ShopEase. Have a wonderful day!"
+    }
+   ],
+   "certainty": "high",
+   "certainty_reason": "",
+   "reviewer_status": "pending",
+   "reviewer_note": "",
+   "explanation": "The agent concluded with a professional, branded sign-off."
+  },
+  {
+   "finding_id": "sop_REF-S1_9",
+   "criterion_id": "REF-S1",
+   "name": "Authenticate Order and Customer Identity",
+   "kind": "observed",
+   "verdict": "followed",
+   "severity": "critical",
+   "evidence": [
+    {
+     "turn_id": 3,
+     "speaker": "agent",
+     "start_s": 25.45,
+     "end_s": 37.75,
+     "quote": "could you please share your Order ID and the last four digits of your registered mobile number?"
+    }
+   ],
+   "certainty": "high",
+   "certainty_reason": "",
+   "reviewer_status": "pending",
+   "reviewer_note": "",
+   "explanation": "Order and customer identity were verified before discussing any order details."
+  },
+  {
+   "finding_id": "sop_REF-S2_10",
+   "criterion_id": "REF-S2",
+   "name": "Determine Return Window Eligibility by Category",
+   "kind": "observed",
+   "verdict": "followed",
+   "severity": "critical",
+   "evidence": [
+    {
+     "turn_id": 9,
+     "speaker": "agent",
+     "start_s": 80.92,
+     "end_s": 95.53,
+     "quote": "A kurta set falls under the non-electronics category, which has a return window of 14 calendar days"
+    }
+   ],
+   "certainty": "high",
+   "certainty_reason": "",
+   "reviewer_status": "pending",
+   "reviewer_note": "",
+   "explanation": "Return window eligibility was accurately verified against the category."
+  },
+  {
+   "finding_id": "sop_REF-S3_11",
+   "criterion_id": "REF-S3",
+   "name": "Inspect Reason for Return and Evidence",
+   "kind": "observed",
+   "verdict": "followed",
+   "severity": "major",
+   "evidence": [
+    {
+     "turn_id": 11,
+     "speaker": "agent",
+     "start_s": 103.18,
+     "end_s": 117.03,
+     "quote": "Since the reason is a size issue, I do not need photographs."
+    }
+   ],
+   "certainty": "high",
+   "certainty_reason": "",
+   "reviewer_status": "pending",
+   "reviewer_note": "",
+   "explanation": "The return reason was checked and the photo evidence requirement was appropriately assessed."
+  },
+  {
+   "finding_id": "sop_REF-S4_12",
+   "criterion_id": "REF-S4",
+   "name": "Verify Monetary Approval Threshold Limit",
+   "kind": "observed",
+   "verdict": "followed",
+   "severity": "critical",
+   "evidence": [
+    {
+     "turn_id": 11,
+     "speaker": "agent",
+     "start_s": 103.18,
+     "end_s": 117.03,
+     "quote": "The order value is Rs 1,299, which is within my approval limit of Rs 5,000, so I can approve"
+    }
+   ],
+   "certainty": "high",
+   "certainty_reason": "",
+   "reviewer_status": "pending",
+   "reviewer_note": "",
+   "explanation": "Frontline monetary approval threshold limit was correctly checked and confirmed."
+  },
+  {
+   "finding_id": "sop_REF-S5_13",
+   "criterion_id": "REF-S5",
+   "name": "Communicate Refund Method and Payment Destination",
+   "kind": "observed",
+   "verdict": "followed",
+   "severity": "critical",
+   "evidence": [
+    {
+     "turn_id": 13,
+     "speaker": "agent",
+     "start_s": 124.4,
+     "end_s": 140.55,
+     "quote": "The refund will be sent by NEFT bank transfer to your verified bank account"
+    }
+   ],
+   "certainty": "high",
+   "certainty_reason": "",
+   "reviewer_status": "pending",
+   "reviewer_note": "",
+   "explanation": "The correct refund method for COD orders was clearly communicated."
+  },
+  {
+   "finding_id": "sop_REF-S6_14",
+   "criterion_id": "REF-S6",
+   "name": "Articulate the 5-7 Business Day SLA Timeline",
+   "kind": "observed",
+   "verdict": "followed",
+   "severity": "major",
+   "evidence": [
+    {
+     "turn_id": 13,
+     "speaker": "agent",
+     "start_s": 124.4,
+     "end_s": 140.55,
+     "quote": "within 5 to 7 business days after the reverse pickup and warehouse verification."
+    }
+   ],
+   "certainty": "high",
+   "certainty_reason": "",
+   "reviewer_status": "pending",
+   "reviewer_note": "",
+   "explanation": "The 5-7 business day SLA timeline was explicitly communicated."
+  },
+  {
+   "finding_id": "sop_REF-S7_15",
+   "criterion_id": "REF-S7",
+   "name": "Generate Reverse Pickup and Share Reference Ticket",
+   "kind": "observed",
+   "verdict": "followed",
+   "severity": "major",
+   "evidence": [
+    {
+     "turn_id": 15,
+     "speaker": "agent",
+     "start_s": 145.5,
+     "end_s": 160.12,
+     "quote": "I have booked the reverse pickup, and it will be scheduled within 48 to 72 hours. Your return reference ticket is RTN-55120."
+    }
+   ],
+   "certainty": "high",
+   "certainty_reason": "",
+   "reviewer_status": "pending",
+   "reviewer_note": "",
+   "explanation": "Reverse pickup was booked, reference ticket shared, and pickup instructions provided."
+  },
+  {
+   "finding_id": "empathy_rating",
+   "criterion_id": "empathy_and_communication",
+   "name": "Empathy & Tone Assessment",
+   "kind": "inferred",
+   "verdict": "followed",
+   "severity": "minor",
+   "evidence": [
+    {
+     "turn_id": 0,
+     "speaker": "agent",
+     "start_s": 0.0,
+     "end_s": 0.0,
+     "quote": "I am sorry for the inconvenience, Ms. Menon, and I will personally make sure this return is arranged smoothly for you."
+    }
+   ],
+   "certainty": "medium",
+   "certainty_reason": "Subjective appraisal of agent warmth and emotional validation",
+   "reviewer_status": "pending",
+   "reviewer_note": "",
+   "explanation": "Empathy score: 5/5"
+  }
+ ],
+ "cannot_judge": false,
+ "cannot_judge_reason": "",
+ "unreadable_parts": [],
+ "status": "ok",
+ "failed_step": null,
+ "completed_steps": [
+  "input_ingestion",
+  "quality_gate",
+  "call_state",
+  "topic_detection",
+  "scorecard_judgment",
+  "policy_check",
+  "evidence_verification",
+  "scoring"
+ ],
+ "emotion": {
+  "points": [
+   {
+    "turn": 2,
+    "emotion": "neutral",
+    "valence": 0.0
+   },
+   {
+    "turn": 4,
+    "emotion": "neutral",
+    "valence": 0.0
+   },
+   {
+    "turn": 6,
+    "emotion": "neutral",
+    "valence": 0.0
+   },
+   {
+    "turn": 8,
+    "emotion": "neutral",
+    "valence": 0.0
+   },
+   {
+    "turn": 10,
+    "emotion": "satisfied",
+    "valence": 1.0
+   },
+   {
+    "turn": 12,
+    "emotion": "neutral",
+    "valence": 0.0
+   },
+   {
+    "turn": 14,
+    "emotion": "satisfied",
+    "valence": 1.0
+   },
+   {
+    "turn": 16,
+    "emotion": "satisfied",
+    "valence": 1.0
+   },
+   {
+    "turn": 18,
+    "emotion": "satisfied",
+    "valence": 1.0
+   },
+   {
+    "turn": 20,
+    "emotion": "satisfied",
+    "valence": 1.0
+   }
+  ],
+  "start": "neutral",
+  "middle": "neutral",
+  "end": "satisfied",
+  "trend": "improved"
+ },
+ "agent_tone": {
+  "points": [
+   {
+    "turn": 1,
+    "emotion": "warm",
+    "valence": 1.0
+   },
+   {
+    "turn": 3,
+    "emotion": "calm",
+    "valence": 0.5
+   },
+   {
+    "turn": 5,
+    "emotion": "warm",
+    "valence": 1.0
+   },
+   {
+    "turn": 7,
+    "emotion": "empathetic",
+    "valence": 1.5
+   },
+   {
+    "turn": 9,
+    "emotion": "calm",
+    "valence": 0.5
+   },
+   {
+    "turn": 11,
+    "emotion": "calm",
+    "valence": 0.5
+   },
+   {
+    "turn": 13,
+    "emotion": "calm",
+    "valence": 0.5
+   },
+   {
+    "turn": 15,
+    "emotion": "calm",
+    "valence": 0.5
+   },
+   {
+    "turn": 17,
+    "emotion": "calm",
+    "valence": 0.5
+   },
+   {
+    "turn": 19,
+    "emotion": "warm",
+    "valence": 1.0
+   }
+  ],
+  "start": "warm",
+  "middle": "calm",
+  "end": "warm",
+  "trend": "flat"
+ },
+ "metrics": {
+  "duration_sec": 193.9,
+  "agent_turns": 10,
+  "customer_turns": 10,
+  "agent_talk_ratio": 0.736,
+  "longest_silence_sec": 1.2,
+  "dead_air_events": [],
+  "interruption_events": [],
+  "hold_events": [],
+  "holds": [],
+  "longest_hold_sec": 0.0,
+  "agent_words_per_minute": 156.0,
+  "agent_interruptions": 0
+ },
+ "strengths": [
+  "Thorough execution of identity verification before discussing account details.",
+  "Clear and accurate explanation of the return policy and timelines.",
+  "Strong personal ownership and empathetic response to the customer.",
+  "Comprehensive call summary and ticket reference provided at the end.",
+  "Completed all 7 critical SOP steps that applied to this call."
+ ],
+ "coaching": [
+  {
+   "title": "Suggestion",
+   "advice": "Next time, continue maintaining this high level of adherence to all SOP and policy guidelines.",
+   "source": "llm",
+   "evidence": ""
+  }
+ ],
+ "risk_flags": [],
+ "retrieved_clause_ids": [
+  "REF-4.1",
+  "REF-2.2",
+  "REF-2.1",
+  "REF-1.2",
+  "REF-1.1",
+  "BIL-1.3",
+  "REF-3.2",
+  "REF-3.1",
+  "PRV-1.1",
+  "PRV-1.3",
+  "ESC-1.1",
+  "ESC-1.2",
+  "REF-4.2",
+  "ESC-2.1",
+  "ESC-2.2",
+  "ESC-3.1",
+  "ESC-3.2",
+  "PRV-1.2",
+  "PRV-2.1",
+  "PRV-2.2",
+  "PRV-3.1"
+ ],
+ "transcript": {
+  "call_id": "call_101",
+  "source": "transcript",
+  "language": "te",
+  "audio_path": null,
+  "duration_seconds": 193.9,
+  "diarization_method": "given",
+  "transcript_quality": "good",
+  "quality_reason": "Transcript quality is reliable for compliance and rubric scoring.",
+  "unreadable_parts": [],
+  "turns": [
+   {
+    "turn_id": 1,
+    "speaker": "agent",
+    "start_time": 0.0,
+    "end_time": 11.15,
+    "text": "Thank you for calling ShopEase. My name is Sneha Iyer. Please note that this call is recorded for quality assurance and training purposes. How may I help you today?",
+    "text_te": null,
+    "text_roman": null,
+    "asr_confidence": 1.0,
+    "silence_before": 0.0,
+    "overlaps_previous": false,
+    "emotion": "warm"
+   },
+   {
+    "turn_id": 2,
+    "speaker": "customer",
+    "start_time": 11.65,
+    "end_time": 24.35,
+    "text": "Hi Sneha, this is Pooja Menon. I ordered a cotton kurta set last week but the size is too small for me, and I would like to return it and get a refund.",
+    "text_te": null,
+    "text_roman": null,
+    "asr_confidence": 1.0,
+    "silence_before": 0.5,
+    "overlaps_previous": false,
+    "emotion": "neutral"
+   },
+   {
+    "turn_id": 3,
+    "speaker": "agent",
+    "start_time": 25.45,
+    "end_time": 37.75,
+    "text": "I would be happy to help with that, Ms. Menon. To verify your identity first, could you please share your Order ID and the last four digits of your registered mobile number?",
+    "text_te": null,
+    "text_roman": null,
+    "asr_confidence": 1.0,
+    "silence_before": 1.1,
+    "overlaps_previous": false,
+    "emotion": "calm"
+   },
+   {
+    "turn_id": 4,
+    "speaker": "customer",
+    "start_time": 38.45,
+    "end_time": 44.99,
+    "text": "Sure, the order ID is ORD-44210 and the last four digits of my phone number are 7186.",
+    "text_te": null,
+    "text_roman": null,
+    "asr_confidence": 1.0,
+    "silence_before": 0.7,
+    "overlaps_previous": false,
+    "emotion": "neutral"
+   },
+   {
+    "turn_id": 5,
+    "speaker": "agent",
+    "start_time": 45.39,
+    "end_time": 60.78,
+    "text": "Thank you, that matches our records. Just to confirm that I have understood correctly, you received the cotton kurta set in size M, it does not fit, and you would like to return it for a refund. Is that right?",
+    "text_te": null,
+    "text_roman": null,
+    "asr_confidence": 1.0,
+    "silence_before": 0.4,
+    "overlaps_previous": false,
+    "emotion": "warm"
+   },
+   {
+    "turn_id": 6,
+    "speaker": "customer",
+    "start_time": 61.78,
+    "end_time": 64.85,
+    "text": "Yes, exactly. I should have ordered size L.",
+    "text_te": null,
+    "text_roman": null,
+    "asr_confidence": 1.0,
+    "silence_before": 1.0,
+    "overlaps_previous": false,
+    "emotion": "neutral"
+   },
+   {
+    "turn_id": 7,
+    "speaker": "agent",
+    "start_time": 65.65,
+    "end_time": 76.81,
+    "text": "I am sorry for the inconvenience, Ms. Menon, and I will personally make sure this return is arranged smoothly for you. May I ask when the parcel was delivered?",
+    "text_te": null,
+    "text_roman": null,
+    "asr_confidence": 1.0,
+    "silence_before": 0.8,
+    "overlaps_previous": false,
+    "emotion": "empathetic"
+   },
+   {
+    "turn_id": 8,
+    "speaker": "customer",
+    "start_time": 77.41,
+    "end_time": 79.72,
+    "text": "It was delivered nine days ago.",
+    "text_te": null,
+    "text_roman": null,
+    "asr_confidence": 1.0,
+    "silence_before": 0.6,
+    "overlaps_previous": false,
+    "emotion": "neutral"
+   },
+   {
+    "turn_id": 9,
+    "speaker": "agent",
+    "start_time": 80.92,
+    "end_time": 95.53,
+    "text": "Thank you. A kurta set falls under the non-electronics category, which has a return window of 14 calendar days from delivery, so your return is eligible. Is the item unused and with the tags and original packaging intact?",
+    "text_te": null,
+    "text_roman": null,
+    "asr_confidence": 1.0,
+    "silence_before": 1.2,
+    "overlaps_previous": false,
+    "emotion": "calm"
+   },
+   {
+    "turn_id": 10,
+    "speaker": "customer",
+    "start_time": 96.13,
+    "end_time": 102.28,
+    "text": "Yes, I only tried it once, the tags are still on and I have the packaging.",
+    "text_te": null,
+    "text_roman": null,
+    "asr_confidence": 1.0,
+    "silence_before": 0.6,
+    "overlaps_previous": false,
+    "emotion": "satisfied"
+   },
+   {
+    "turn_id": 11,
+    "speaker": "agent",
+    "start_time": 103.18,
+    "end_time": 117.03,
+    "text": "Perfect. Since the reason is a size issue, I do not need photographs. The order value is Rs 1,299, which is within my approval limit of Rs 5,000, so I can approve the refund right away.",
+    "text_te": null,
+    "text_roman": null,
+    "asr_confidence": 1.0,
+    "silence_before": 0.9,
+    "overlaps_previous": false,
+    "emotion": "calm"
+   },
+   {
+    "turn_id": 12,
+    "speaker": "customer",
+    "start_time": 117.53,
+    "end_time": 123.3,
+    "text": "That is great. How will I get the money back? I paid cash on delivery.",
+    "text_te": null,
+    "text_roman": null,
+    "asr_confidence": 1.0,
+    "silence_before": 0.5,
+    "overlaps_previous": false,
+    "emotion": "neutral"
+   },
+   {
+    "turn_id": 13,
+    "speaker": "agent",
+    "start_time": 124.4,
+    "end_time": 140.55,
+    "text": "Since this was a cash on delivery order, our delivery partner cannot hand over cash. The refund will be sent by NEFT bank transfer to your verified bank account, within 5 to 7 business days after the reverse pickup and warehouse verification.",
+    "text_te": null,
+    "text_roman": null,
+    "asr_confidence": 1.0,
+    "silence_before": 1.1,
+    "overlaps_previous": false,
+    "emotion": "calm"
+   },
+   {
+    "turn_id": 14,
+    "speaker": "customer",
+    "start_time": 141.25,
+    "end_time": 145.1,
+    "text": "Okay, that works for me. When will the pickup happen?",
+    "text_te": null,
+    "text_roman": null,
+    "asr_confidence": 1.0,
+    "silence_before": 0.7,
+    "overlaps_previous": false,
+    "emotion": "satisfied"
+   },
+   {
+    "turn_id": 15,
+    "speaker": "agent",
+    "start_time": 145.5,
+    "end_time": 160.12,
+    "text": "I have booked the reverse pickup, and it will be scheduled within 48 to 72 hours. Your return reference ticket is RTN-55120. Please keep the kurta set in its original packaging with the tags attached for the courier.",
+    "text_te": null,
+    "text_roman": null,
+    "asr_confidence": 1.0,
+    "silence_before": 0.4,
+    "overlaps_previous": false,
+    "emotion": "calm"
+   },
+   {
+    "turn_id": 16,
+    "speaker": "customer",
+    "start_time": 161.12,
+    "end_time": 163.42,
+    "text": "Alright, I will keep it ready.",
+    "text_te": null,
+    "text_roman": null,
+    "asr_confidence": 1.0,
+    "silence_before": 1.0,
+    "overlaps_previous": false,
+    "emotion": "satisfied"
+   },
+   {
+    "turn_id": 17,
+    "speaker": "agent",
+    "start_time": 164.22,
+    "end_time": 181.15,
+    "text": "To summarise, the return for order ORD-44210 is approved under ticket RTN-55120, pickup within 48 to 72 hours, and a refund of Rs 1,299 by NEFT within 5 to 7 business days after verification. Is there anything else I can help you with today?",
+    "text_te": null,
+    "text_roman": null,
+    "asr_confidence": 1.0,
+    "silence_before": 0.8,
+    "overlaps_previous": false,
+    "emotion": "calm"
+   },
+   {
+    "turn_id": 18,
+    "speaker": "customer",
+    "start_time": 181.75,
+    "end_time": 185.21,
+    "text": "No, that is all. Thank you so much, Sneha.",
+    "text_te": null,
+    "text_roman": null,
+    "asr_confidence": 1.0,
+    "silence_before": 0.6,
+    "overlaps_previous": false,
+    "emotion": "satisfied"
+   },
+   {
+    "turn_id": 19,
+    "speaker": "agent",
+    "start_time": 186.41,
+    "end_time": 192.18,
+    "text": "It was my pleasure, Ms. Menon. Thank you for contacting ShopEase. Have a wonderful day!",
+    "text_te": null,
+    "text_roman": null,
+    "asr_confidence": 1.0,
+    "silence_before": 1.2,
+    "overlaps_previous": false,
+    "emotion": "warm"
+   },
+   {
+    "turn_id": 20,
+    "speaker": "customer",
+    "start_time": 192.78,
+    "end_time": 193.93,
+    "text": "You too, goodbye.",
+    "text_te": null,
+    "text_roman": null,
+    "asr_confidence": 1.0,
+    "silence_before": 0.6,
+    "overlaps_previous": false,
+    "emotion": "satisfied"
+   }
+  ]
+ },
+ "meta": {
+  "model": "SOP: gemini-3.5-flash-lite \u00b7 Policy: gemini-3.5-flash",
+  "llm_requests": 2,
+  "diarization_method": "given",
+  "transcribe_seconds": 0.0,
+  "audit_seconds": 34.0,
+  "cache_hit": false,
+  "warnings": [],
+  "source_set": "synthetic",
+  "trace_id": "run_call_101_49922",
+  "status": "ok",
+  "failed_step": null,
+  "completed_steps": [
+   "input_ingestion",
+   "quality_gate",
+   "call_state",
+   "topic_detection",
+   "scorecard_judgment",
+   "policy_check",
+   "evidence_verification",
+   "scoring"
+  ],
+  "estimated_cost_usd": 0.020473,
+  "tokens_in": 9244,
+  "tokens_out": 2758,
+  "sop_model": "gemini-3.5-flash-lite",
+  "policy_model": "gemini-3.5-flash"
+ }
+}

@@ -1,0 +1,1302 @@
+{
+ "call_id": "call_102",
+ "generated_at": "2026-11-03T18:35:32",
+ "topic": "refund",
+ "topic_confidence": 0.837,
+ "signals": [],
+ "summary": "A customer called to request a refund for a flickering smartwatch valued at Rs 8,500. The agent failed to verify identity or follow policy, promising an immediate Paytm refund within 24 hours without reverse pickup and allowing the customer to keep the item. The call ended abruptly with a brief sign-off.",
+ "customer_issue": "Flickering smartwatch screen and refund request",
+ "resolved": true,
+ "scores": {
+  "sop_score": 3.4,
+  "policy_score": 0.0,
+  "empathy_score": 0.0,
+  "communication_score": 6.8,
+  "overall_before_cap": 10.1,
+  "overall": 10.1,
+  "grade": "D",
+  "grade_label": "Failing / Critical Infraction",
+  "critical_failure": true,
+  "cap_reasons": [
+   "Critical step GEN-02 (Mandatory Call Recording Disclosure) was missed",
+   "Critical step GEN-03 (Caller Identification & Two-Factor Verification) was missed",
+   "Critical step GEN-06 (Accurate Policy Explanation & Solution Execution) was missed",
+   "Critical step REF-S1 (Authenticate Order and Customer Identity) was missed",
+   "Critical step REF-S2 (Determine Return Window Eligibility by Category) was missed",
+   "Critical step REF-S4 (Verify Monetary Approval Threshold Limit) was missed",
+   "Critical step REF-S5 (Communicate Refund Method and Payment Destination) was missed",
+   "Critical privacy violation (PRV-1.2)",
+   "Critical privacy violation (PRV-1.1)"
+  ],
+  "sop_points_earned": 4.5,
+  "sop_points_possible": 53.0,
+  "policy_penalty_total": 72.0,
+  "policy_applicable": true,
+  "timing_penalty": 0.0,
+  "timing_notes": [],
+  "empathy_rating": 0,
+  "clarity_rating": 3,
+  "professionalism_rating": 1,
+  "ownership_rating": 5,
+  "closure_rating": 0
+ },
+ "sop_results": [
+  {
+   "step_id": "GEN-01",
+   "title": "Professional Greeting & Identity Introduction",
+   "sop": "general_call_flow",
+   "weight": 2,
+   "critical": false,
+   "mandatory": true,
+   "status": "followed",
+   "points_earned": 2.0,
+   "points_possible": 2.0,
+   "turn": 1,
+   "quote": "Hello, ShopEase customer service. How can I help you?",
+   "reason": "The agent greeted the customer and stated the company name.",
+   "missing": "",
+   "evidence_verified": true,
+   "what_good_looks_like": "The agent opens within 2 seconds of call connection with a polite, welcoming tone, introducing both the brand and representative name.",
+   "example_phrase": "Thank you for calling ShopEase. My name is Rahul. How may I assist you today?"
+  },
+  {
+   "step_id": "GEN-02",
+   "title": "Mandatory Call Recording Disclosure",
+   "sop": "general_call_flow",
+   "weight": 5,
+   "critical": true,
+   "mandatory": true,
+   "status": "missed",
+   "points_earned": 0.0,
+   "points_possible": 5.0,
+   "turn": null,
+   "quote": "",
+   "reason": "The agent did not disclose that the call is being recorded.",
+   "missing": "Call recording disclosure",
+   "evidence_verified": true,
+   "what_good_looks_like": "The disclosure is clearly articulated within the first two conversation turns without mumbling or skipping.",
+   "example_phrase": "Please note that this call is being recorded for quality monitoring and training purposes."
+  },
+  {
+   "step_id": "GEN-03",
+   "title": "Caller Identification & Two-Factor Verification",
+   "sop": "general_call_flow",
+   "weight": 5,
+   "critical": true,
+   "mandatory": true,
+   "status": "missed",
+   "points_earned": 0.0,
+   "points_possible": 5.0,
+   "turn": 3,
+   "quote": "Okay Mr. Rao, no problem, I can see your order here, the smartwatch delivered to",
+   "reason": "Critical breach: account details discussed at turn 3 before identity verification completed.",
+   "missing": "Order ID and last 4 digits of registered phone number",
+   "evidence_verified": true,
+   "what_good_looks_like": "The agent systematically validates both verification data points before disclosing addresses, order contents, or monetary info.",
+   "example_phrase": "To ensure your account security, may I please have your Order ID and the last four digits of your registered mobile number?"
+  },
+  {
+   "step_id": "GEN-04",
+   "title": "Active Listening & Issue Clarification",
+   "sop": "general_call_flow",
+   "weight": 3,
+   "critical": false,
+   "mandatory": true,
+   "status": "partial",
+   "points_earned": 1.5,
+   "points_possible": 3.0,
+   "turn": 3,
+   "quote": "Okay Mr. Rao, no problem, I can see your order here",
+   "reason": "The agent allowed the customer to speak but did not paraphrase the core issue back.",
+   "missing": "Paraphrase the core issue",
+   "evidence_verified": true,
+   "what_good_looks_like": "The agent maintains silence while the customer speaks, takes notes, and summarizes the specific problem back to the customer.",
+   "example_phrase": "I understand that your package has not arrived and you would like to track the courier status. Is that correct?"
+  },
+  {
+   "step_id": "GEN-05",
+   "title": "Empathy & Ownership Statement",
+   "sop": "general_call_flow",
+   "weight": 3,
+   "critical": false,
+   "mandatory": true,
+   "status": "missed",
+   "points_earned": 0.0,
+   "points_possible": 3.0,
+   "turn": null,
+   "quote": "",
+   "reason": "The agent did not express sincere empathy for the product defect or inconvenience.",
+   "missing": "Empathy statement and validation",
+   "evidence_verified": true,
+   "what_good_looks_like": "Empathetic acknowledgment that avoids robotic stock phrases, validating the customer's frustration.",
+   "example_phrase": "I completely understand how frustrating it is to wait for an order, and I am personally going to sort this out for you."
+  },
+  {
+   "step_id": "GEN-06",
+   "title": "Accurate Policy Explanation & Solution Execution",
+   "sop": "general_call_flow",
+   "weight": 5,
+   "critical": true,
+   "mandatory": true,
+   "status": "missed",
+   "points_earned": 0.0,
+   "points_possible": 5.0,
+   "turn": null,
+   "quote": "",
+   "reason": "The agent bypassed standard policy entirely by approving an out-of-policy refund and allowing the customer to keep the item.",
+   "missing": "Strictly grounded policy explanation and adherence",
+   "evidence_verified": true,
+   "what_good_looks_like": "Explaining exact delivery or refund windows (e.g., 5-7 business days for refund, 7 days for electronics) without making out-of-policy promises.",
+   "example_phrase": "Per our policy, since your wireless earbuds are within the 7-day electronics return window, I have scheduled a reverse pickup for tomorrow."
+  },
+  {
+   "step_id": "GEN-07",
+   "title": "Additional Assistance & Next Steps Summary",
+   "sop": "general_call_flow",
+   "weight": 2,
+   "critical": false,
+   "mandatory": true,
+   "status": "missed",
+   "points_earned": 0.0,
+   "points_possible": 2.0,
+   "turn": null,
+   "quote": "",
+   "reason": "The agent failed to summarize the exact resolution or reference ticket numbers.",
+   "missing": "Resolution summary and reference ticket",
+   "evidence_verified": true,
+   "what_good_looks_like": "Clear recap of actions taken, tracking reference shared, and an open invitation for secondary questions.",
+   "example_phrase": "To recap, I have initiated return ticket #SR-8921. You will receive an SMS confirmation. Is there anything else I can help you with today?"
+  },
+  {
+   "step_id": "GEN-08",
+   "title": "Professional Branded Sign-Off",
+   "sop": "general_call_flow",
+   "weight": 2,
+   "critical": false,
+   "mandatory": true,
+   "status": "partial",
+   "points_earned": 1.0,
+   "points_possible": 2.0,
+   "turn": 13,
+   "quote": "Okay, bye.",
+   "reason": "The agent closed the call without mentioning the company name.",
+   "missing": "Warm professional closing mentioning ShopEase",
+   "evidence_verified": true,
+   "what_good_looks_like": "Courteous parting statement thanking the customer, waiting for the customer to disconnect first.",
+   "example_phrase": "Thank you for contacting ShopEase. We appreciate your business and hope you have a great day ahead!"
+  },
+  {
+   "step_id": "REF-S1",
+   "title": "Authenticate Order and Customer Identity",
+   "sop": "refund_call_sop",
+   "weight": 5,
+   "critical": true,
+   "mandatory": true,
+   "status": "missed",
+   "points_earned": 0.0,
+   "points_possible": 5.0,
+   "turn": 3,
+   "quote": "Okay Mr. Rao, no problem, I can see your order here, the smartwatch delivered to",
+   "reason": "Critical breach: account details discussed at turn 3 before identity verification completed.",
+   "missing": "Order ID and phone digits verification",
+   "evidence_verified": true,
+   "what_good_looks_like": "The agent confirms both values in the CRM portal before mentioning what items were purchased or amounts paid.",
+   "example_phrase": "I will be glad to assist with your refund. First, could you please confirm your Order ID and the last four digits of your registered mobile number?"
+  },
+  {
+   "step_id": "REF-S2",
+   "title": "Determine Return Window Eligibility by Category",
+   "sop": "refund_call_sop",
+   "weight": 4,
+   "critical": true,
+   "mandatory": true,
+   "status": "missed",
+   "points_earned": 0.0,
+   "points_possible": 4.0,
+   "turn": null,
+   "quote": "",
+   "reason": "The agent did not check return window eligibility against the item category.",
+   "missing": "Return window eligibility check",
+   "evidence_verified": true,
+   "what_good_looks_like": "The agent explicitly checks the delivery timestamp in the CRM and articulates the applicable category window clearly.",
+   "example_phrase": "I see this smartwatch was delivered on October 10th. Because electronics have a 7-day return window, your request today is fully eligible."
+  },
+  {
+   "step_id": "REF-S3",
+   "title": "Inspect Reason for Return and Evidence",
+   "sop": "refund_call_sop",
+   "weight": 3,
+   "critical": false,
+   "mandatory": true,
+   "status": "missed",
+   "points_earned": 0.0,
+   "points_possible": 3.0,
+   "turn": null,
+   "quote": "",
+   "reason": "The agent did not inspect the reason for return or request evidence.",
+   "missing": "Inspect reason and request photo proof",
+   "evidence_verified": true,
+   "what_good_looks_like": "If customer claims damage or wrong product, agent confirms whether it was reported within 48 hours and verifies unboxing photos.",
+   "example_phrase": "Could you please let me know the specific issue you encountered with the product?"
+  },
+  {
+   "step_id": "REF-S4",
+   "title": "Verify Monetary Approval Threshold Limit",
+   "sop": "refund_call_sop",
+   "weight": 4,
+   "critical": true,
+   "mandatory": true,
+   "status": "missed",
+   "points_earned": 0.0,
+   "points_possible": 4.0,
+   "turn": null,
+   "quote": "",
+   "reason": "The agent exceeded the Rs 5,000 frontline limit without supervisor sign-off.",
+   "missing": "Supervisor sign-off for amount above Rs 5,000",
+   "evidence_verified": true,
+   "what_good_looks_like": "If the refund is Rs 5,000 or less, the agent approves immediately. If above Rs 5,000, the agent informs the customer that supervisor sign-off is required.",
+   "example_phrase": "The refund amount of Rs 2,499 is within my authorization limit, and I have approved the return immediately."
+  },
+  {
+   "step_id": "REF-S5",
+   "title": "Communicate Refund Method and Payment Destination",
+   "sop": "refund_call_sop",
+   "weight": 4,
+   "critical": true,
+   "mandatory": true,
+   "status": "missed",
+   "points_earned": 0.0,
+   "points_possible": 4.0,
+   "turn": null,
+   "quote": "",
+   "reason": "The agent agreed to send the refund to a Paytm wallet instead of the original payment source.",
+   "missing": "Refund strictly to original payment source",
+   "evidence_verified": true,
+   "what_good_looks_like": "Clear communication preventing customer expectation of cash payouts or transfers to unverified third-party wallets.",
+   "example_phrase": "Your refund will be returned directly to the HDFC credit card used during purchase."
+  },
+  {
+   "step_id": "REF-S6",
+   "title": "Articulate the 5-7 Business Day SLA Timeline",
+   "sop": "refund_call_sop",
+   "weight": 3,
+   "critical": false,
+   "mandatory": true,
+   "status": "missed",
+   "points_earned": 0.0,
+   "points_possible": 3.0,
+   "turn": null,
+   "quote": "",
+   "reason": "The agent promised an instant 24-hour credit instead of the 5-7 business day SLA.",
+   "missing": "5-7 business day SLA timeline",
+   "evidence_verified": true,
+   "what_good_looks_like": "The agent quotes the exact 5-7 business day timeline without promising unrealistic instant or same-day turnaround.",
+   "example_phrase": "Once the courier collects the parcel, the refund will be credited to your account within 5 to 7 business days."
+  },
+  {
+   "step_id": "REF-S7",
+   "title": "Generate Reverse Pickup and Share Reference Ticket",
+   "sop": "refund_call_sop",
+   "weight": 3,
+   "critical": false,
+   "mandatory": true,
+   "status": "missed",
+   "points_earned": 0.0,
+   "points_possible": 3.0,
+   "turn": null,
+   "quote": "",
+   "reason": "The agent failed to generate a reverse pickup or share a reference ticket.",
+   "missing": "Reverse pickup booking and service ticket reference",
+   "evidence_verified": true,
+   "what_good_looks_like": "",
+   "example_phrase": "I have scheduled your return pickup for tomorrow. Your return tracking number is RTN-55412. Please keep the item packed with all tags and original box."
+  }
+ ],
+ "policy_results": [
+  {
+   "clause_id": "PRV-1.2",
+   "policy_title": "Privacy and Identity Verification Policy: Mandatory Call Recording Disclosure",
+   "verdict": "violation",
+   "severity": "critical",
+   "penalty": 15.0,
+   "turn": 1,
+   "quote": "Hello, ShopEase customer service. How can I help you?",
+   "claim": "Agent failed to state the mandatory call recording disclosure upon initial call greeting.",
+   "explanation": "PRV-1.2 requires an explicit call recording disclosure within the first two conversation turns. The agent omitted this entirely.",
+   "policy_text": "1. Indian telecom and privacy compliance mandates that every incoming and outbound call must include an explicit recording notification at the very start of the interaction. 2. Representatives must recite the approved disclosure statement during their initial call greeting: - *\"Please note this call is recorded for quality assurance and training purposes.\"* 3. Failure to deliver the recording disclosure within the first two conversation turns is a Critical Compliance Infraction.",
+   "evidence_verified": true,
+   "repeat_turns": []
+  },
+  {
+   "clause_id": "PRV-1.1",
+   "policy_title": "Privacy and Identity Verification Policy: Mandatory Two-Factor Customer Identity Verification",
+   "verdict": "violation",
+   "severity": "critical",
+   "penalty": 15.0,
+   "turn": 3,
+   "quote": "I can see your order here, the smartwatch delivered to Flat 12, Sai Residency, Pune.",
+   "claim": "Agent disclosed full delivery address without performing mandatory customer identity verification.",
+   "explanation": "PRV-1.1 strictly prohibits disclosing full delivery addresses before validating two-factor verification (Order ID/email plus last 4 digits of phone number).",
+   "policy_text": "1. To safeguard customer accounts and prevent unauthorized data leaks, frontline representatives must perform two-factor verification before disclosing any account details, order histories, delivery addresses, payment instruments, or processing refund instructions. 2. Mandatory Verification Pair: - Order ID (e.g., `ORD-XXXXX`) or registered Account Email Address. - Last four (4) digits of the registered mobile phone number. 3. Strict Prohibition: Revealing full addresses, item descriptions, f...",
+   "evidence_verified": true,
+   "repeat_turns": []
+  },
+  {
+   "clause_id": "PRV-2.2",
+   "policy_title": "Privacy and Identity Verification Policy: Delivery Address Masking and Privacy",
+   "verdict": "violation",
+   "severity": "major",
+   "penalty": 8.0,
+   "turn": 3,
+   "quote": "the smartwatch delivered to Flat 12, Sai Residency, Pune.",
+   "claim": "Agent read out the complete street address out loud instead of using partial masking.",
+   "explanation": "PRV-2.2 mandates partial address masking (first name, city, pin code only) unless the customer recites the full address first.",
+   "policy_text": "1. When confirming shipping details with an authenticated caller, representatives must use partial masking: - Quote only the recipient's first name, city, and pin code. - Never recite the complete street address or door number out loud unless the customer recites it first for confirmation.",
+   "evidence_verified": true,
+   "repeat_turns": []
+  },
+  {
+   "clause_id": "REF-3.1",
+   "policy_title": "Refund and Returns Policy: Agent Approval Authority Threshold",
+   "verdict": "violation",
+   "severity": "critical",
+   "penalty": 15.0,
+   "turn": 5,
+   "quote": "The refund of Rs 8,500 is approved by me, I have full authority for this, so no supervisor is needed.",
+   "claim": "Agent approved a refund of Rs 8,500 claiming full approval authority without a supervisor.",
+   "explanation": "REF-3.1 limits agent single-approval authority to Rs 5,000. Any refund above Rs 5,000 strictly requires supervisor review and secondary authorization.",
+   "policy_text": "1. Frontline customer support agents possess discretionary authority to approve instant refunds and concessions up to a maximum limit of Rs 5,000 (Rupees Five Thousand only) per order, provided return eligibility criteria are met. 2. Any refund request exceeding Rs 5,000 strictly requires supervisor review, fraud desk clearance, and secondary authorization prior to confirmation. 3. Agents are strictly prohibited from splitting refund line items across multiple tickets to circumvent the Rs 5,0...",
+   "evidence_verified": true,
+   "repeat_turns": []
+  },
+  {
+   "clause_id": "REF-2.2",
+   "policy_title": "Refund and Returns Policy: Method of Refund Disbursement",
+   "verdict": "violation",
+   "severity": "major",
+   "penalty": 8.0,
+   "turn": 7,
+   "quote": "I will send it to your Paytm wallet, that is the quickest way.",
+   "claim": "Agent promised to disburse the refund to a third-party Paytm wallet.",
+   "explanation": "REF-2.2 mandates that refunds must be remitted strictly to the original payment method used during checkout and prohibits redirecting funds to third-party wallets.",
+   "policy_text": "1. Refunds must be remitted strictly to the original payment method utilized during checkout: - Credit / Debit Card payments return to the identical card account. - Net Banking and UPI payments return to the source bank account. 2. Cash on Delivery (COD) Purchases: Refunds for COD orders are disbursed via NEFT bank transfer to the verified bank account or UPI VPA nominated by the customer in their account profile after completing identity verification. Refunds cannot be handed over in physica...",
+   "evidence_verified": true,
+   "repeat_turns": []
+  },
+  {
+   "clause_id": "REF-2.1",
+   "policy_title": "Refund and Returns Policy: Refund Processing Timelines",
+   "verdict": "violation",
+   "severity": "minor",
+   "penalty": 3.0,
+   "turn": 9,
+   "quote": "It will be credited within 24 hours.",
+   "claim": "Agent stated that the refund would be credited within 24 hours.",
+   "explanation": "REF-2.1 specifies that standard approved refunds take 5 to 7 business days following item return and verification.",
+   "policy_text": "1. All approved refunds are processed within 5 to 7 business days following successful return pickup and warehouse verification. 2. Public holidays, second/fourth Saturdays, and Sundays are excluded from business day calculations. 3. Once initiated by ShopEase finance, bank clearance times depend on the recipient financial institution: - UPI and IMPS transfers typically credit within 24 to 48 hours. - Credit card and debit card accounts reflect within 5 to 7 business days.",
+   "evidence_verified": true,
+   "repeat_turns": []
+  },
+  {
+   "clause_id": "REF-1.2",
+   "policy_title": "Refund and Returns Policy: Item Condition and Verification",
+   "verdict": "violation",
+   "severity": "major",
+   "penalty": 8.0,
+   "turn": 9,
+   "quote": "You can keep the watch, no need to send it back.",
+   "claim": "Agent allowed the customer to retain the product without requiring physical return/verification.",
+   "explanation": "REF-1.2 requires items to be returned in original condition with intact packaging for mandatory courier physical check to qualify for a full refund.",
+   "policy_text": "1. To qualify for a return and full refund, items must be in original condition, unused, unwashed, and accompanied by: - Original brand packaging, tags, warranty cards, manuals, and bundled accessories. - Intact serial numbers / IMEI numbers matching the invoice record. 2. Couriers perform a mandatory physical doorstep check upon pickup. Pickup will be rejected if serial numbers do not match or if physical abuse is detected.",
+   "evidence_verified": true,
+   "repeat_turns": []
+  }
+ ],
+ "gaps": [
+  {
+   "gap_type": "no_empathy",
+   "turn": 3,
+   "quote": "Okay Mr. Rao, no problem, I can see your order here",
+   "detail": "The agent completely ignored the customer's frustration regarding the defective product and offered no empathy.",
+   "source": "llm"
+  },
+  {
+   "gap_type": "no_summary",
+   "turn": 13,
+   "quote": "Okay, bye.",
+   "detail": "The agent ended the call without summarizing the resolution or next steps.",
+   "source": "llm"
+  },
+  {
+   "gap_type": "no_closing",
+   "turn": 13,
+   "quote": "Okay, bye.",
+   "detail": "The agent used an abrupt sign-off without mentioning the company name.",
+   "source": "llm"
+  },
+  {
+   "gap_type": "other",
+   "turn": 3,
+   "quote": "I can see your order here, the smartwatch delivered to Flat 12, Sai Residency, Pune.",
+   "detail": "Critical compliance failure: Agent disclosed account details before verifying customer identity.",
+   "source": "llm"
+  }
+ ],
+ "findings": [
+  {
+   "finding_id": "id_verif_breach",
+   "criterion_id": "identity_verification",
+   "name": "Identity Verification Protocol",
+   "kind": "observed",
+   "verdict": "missed",
+   "severity": "critical",
+   "evidence": [
+    {
+     "turn_id": 3,
+     "speaker": "agent",
+     "start_s": 17.37,
+     "end_s": 27.75,
+     "quote": "Okay Mr. Rao, no problem, I can see your order"
+    }
+   ],
+   "certainty": "high",
+   "certainty_reason": "",
+   "reviewer_status": "pending",
+   "reviewer_note": "",
+   "explanation": "Critical failure: Account details discussed at turn 3 before identity verification completed."
+  },
+  {
+   "finding_id": "sop_GEN-01_1",
+   "criterion_id": "GEN-01",
+   "name": "Professional Greeting & Identity Introduction",
+   "kind": "observed",
+   "verdict": "followed",
+   "severity": "major",
+   "evidence": [
+    {
+     "turn_id": 1,
+     "speaker": "agent",
+     "start_s": 0.0,
+     "end_s": 3.46,
+     "quote": "Hello, ShopEase customer service. How can I help you?"
+    }
+   ],
+   "certainty": "high",
+   "certainty_reason": "",
+   "reviewer_status": "pending",
+   "reviewer_note": "",
+   "explanation": "The agent greeted the customer and stated the company name."
+  },
+  {
+   "finding_id": "sop_GEN-02_2",
+   "criterion_id": "GEN-02",
+   "name": "Mandatory Call Recording Disclosure",
+   "kind": "observed",
+   "verdict": "missed",
+   "severity": "critical",
+   "evidence": [],
+   "certainty": "high",
+   "certainty_reason": "",
+   "reviewer_status": "pending",
+   "reviewer_note": "",
+   "explanation": "The agent did not disclose that the call is being recorded."
+  },
+  {
+   "finding_id": "sop_GEN-03_3",
+   "criterion_id": "GEN-03",
+   "name": "Caller Identification & Two-Factor Verification",
+   "kind": "observed",
+   "verdict": "missed",
+   "severity": "critical",
+   "evidence": [
+    {
+     "turn_id": 3,
+     "speaker": "agent",
+     "start_s": 17.37,
+     "end_s": 27.75,
+     "quote": "Okay Mr. Rao, no problem, I can see your order here, the smartwatch delivered to"
+    }
+   ],
+   "certainty": "high",
+   "certainty_reason": "",
+   "reviewer_status": "pending",
+   "reviewer_note": "",
+   "explanation": "Critical breach: account details discussed at turn 3 before identity verification completed."
+  },
+  {
+   "finding_id": "sop_GEN-04_4",
+   "criterion_id": "GEN-04",
+   "name": "Active Listening & Issue Clarification",
+   "kind": "observed",
+   "verdict": "partial",
+   "severity": "major",
+   "evidence": [
+    {
+     "turn_id": 3,
+     "speaker": "agent",
+     "start_s": 17.37,
+     "end_s": 27.75,
+     "quote": "Okay Mr. Rao, no problem, I can see your order here"
+    }
+   ],
+   "certainty": "high",
+   "certainty_reason": "",
+   "reviewer_status": "pending",
+   "reviewer_note": "",
+   "explanation": "The agent allowed the customer to speak but did not paraphrase the core issue back."
+  },
+  {
+   "finding_id": "sop_GEN-05_5",
+   "criterion_id": "GEN-05",
+   "name": "Empathy & Ownership Statement",
+   "kind": "inferred",
+   "verdict": "missed",
+   "severity": "major",
+   "evidence": [],
+   "certainty": "high",
+   "certainty_reason": "",
+   "reviewer_status": "pending",
+   "reviewer_note": "",
+   "explanation": "The agent did not express sincere empathy for the product defect or inconvenience."
+  },
+  {
+   "finding_id": "sop_GEN-06_6",
+   "criterion_id": "GEN-06",
+   "name": "Accurate Policy Explanation & Solution Execution",
+   "kind": "observed",
+   "verdict": "missed",
+   "severity": "critical",
+   "evidence": [],
+   "certainty": "high",
+   "certainty_reason": "",
+   "reviewer_status": "pending",
+   "reviewer_note": "",
+   "explanation": "The agent bypassed standard policy entirely by approving an out-of-policy refund and allowing the customer to keep the item."
+  },
+  {
+   "finding_id": "sop_GEN-07_7",
+   "criterion_id": "GEN-07",
+   "name": "Additional Assistance & Next Steps Summary",
+   "kind": "observed",
+   "verdict": "missed",
+   "severity": "major",
+   "evidence": [],
+   "certainty": "high",
+   "certainty_reason": "",
+   "reviewer_status": "pending",
+   "reviewer_note": "",
+   "explanation": "The agent failed to summarize the exact resolution or reference ticket numbers."
+  },
+  {
+   "finding_id": "sop_GEN-08_8",
+   "criterion_id": "GEN-08",
+   "name": "Professional Branded Sign-Off",
+   "kind": "observed",
+   "verdict": "partial",
+   "severity": "major",
+   "evidence": [
+    {
+     "turn_id": 13,
+     "speaker": "agent",
+     "start_s": 77.48,
+     "end_s": 78.28,
+     "quote": "Okay, bye."
+    }
+   ],
+   "certainty": "high",
+   "certainty_reason": "",
+   "reviewer_status": "pending",
+   "reviewer_note": "",
+   "explanation": "The agent closed the call without mentioning the company name."
+  },
+  {
+   "finding_id": "sop_REF-S1_9",
+   "criterion_id": "REF-S1",
+   "name": "Authenticate Order and Customer Identity",
+   "kind": "observed",
+   "verdict": "missed",
+   "severity": "critical",
+   "evidence": [
+    {
+     "turn_id": 3,
+     "speaker": "agent",
+     "start_s": 17.37,
+     "end_s": 27.75,
+     "quote": "Okay Mr. Rao, no problem, I can see your order here, the smartwatch delivered to"
+    }
+   ],
+   "certainty": "high",
+   "certainty_reason": "",
+   "reviewer_status": "pending",
+   "reviewer_note": "",
+   "explanation": "Critical breach: account details discussed at turn 3 before identity verification completed."
+  },
+  {
+   "finding_id": "sop_REF-S2_10",
+   "criterion_id": "REF-S2",
+   "name": "Determine Return Window Eligibility by Category",
+   "kind": "observed",
+   "verdict": "missed",
+   "severity": "critical",
+   "evidence": [],
+   "certainty": "high",
+   "certainty_reason": "",
+   "reviewer_status": "pending",
+   "reviewer_note": "",
+   "explanation": "The agent did not check return window eligibility against the item category."
+  },
+  {
+   "finding_id": "sop_REF-S3_11",
+   "criterion_id": "REF-S3",
+   "name": "Inspect Reason for Return and Evidence",
+   "kind": "observed",
+   "verdict": "missed",
+   "severity": "major",
+   "evidence": [],
+   "certainty": "high",
+   "certainty_reason": "",
+   "reviewer_status": "pending",
+   "reviewer_note": "",
+   "explanation": "The agent did not inspect the reason for return or request evidence."
+  },
+  {
+   "finding_id": "sop_REF-S4_12",
+   "criterion_id": "REF-S4",
+   "name": "Verify Monetary Approval Threshold Limit",
+   "kind": "observed",
+   "verdict": "missed",
+   "severity": "critical",
+   "evidence": [],
+   "certainty": "high",
+   "certainty_reason": "",
+   "reviewer_status": "pending",
+   "reviewer_note": "",
+   "explanation": "The agent exceeded the Rs 5,000 frontline limit without supervisor sign-off."
+  },
+  {
+   "finding_id": "sop_REF-S5_13",
+   "criterion_id": "REF-S5",
+   "name": "Communicate Refund Method and Payment Destination",
+   "kind": "observed",
+   "verdict": "missed",
+   "severity": "critical",
+   "evidence": [],
+   "certainty": "high",
+   "certainty_reason": "",
+   "reviewer_status": "pending",
+   "reviewer_note": "",
+   "explanation": "The agent agreed to send the refund to a Paytm wallet instead of the original payment source."
+  },
+  {
+   "finding_id": "sop_REF-S6_14",
+   "criterion_id": "REF-S6",
+   "name": "Articulate the 5-7 Business Day SLA Timeline",
+   "kind": "observed",
+   "verdict": "missed",
+   "severity": "major",
+   "evidence": [],
+   "certainty": "high",
+   "certainty_reason": "",
+   "reviewer_status": "pending",
+   "reviewer_note": "",
+   "explanation": "The agent promised an instant 24-hour credit instead of the 5-7 business day SLA."
+  },
+  {
+   "finding_id": "sop_REF-S7_15",
+   "criterion_id": "REF-S7",
+   "name": "Generate Reverse Pickup and Share Reference Ticket",
+   "kind": "observed",
+   "verdict": "missed",
+   "severity": "major",
+   "evidence": [],
+   "certainty": "high",
+   "certainty_reason": "",
+   "reviewer_status": "pending",
+   "reviewer_note": "",
+   "explanation": "The agent failed to generate a reverse pickup or share a reference ticket."
+  },
+  {
+   "finding_id": "policy_PRV-1.2_1",
+   "criterion_id": "PRV-1.2",
+   "name": "Privacy and Identity Verification Policy: Mandatory Call Recording Disclosure",
+   "kind": "observed",
+   "verdict": "violation",
+   "severity": "critical",
+   "evidence": [
+    {
+     "turn_id": 1,
+     "speaker": "agent",
+     "start_s": 0.0,
+     "end_s": 0.0,
+     "quote": "Hello, ShopEase customer service. How can I help you?"
+    }
+   ],
+   "certainty": "high",
+   "certainty_reason": "",
+   "reviewer_status": "pending",
+   "reviewer_note": "",
+   "explanation": "PRV-1.2 requires an explicit call recording disclosure within the first two conversation turns. The agent omitted this entirely."
+  },
+  {
+   "finding_id": "policy_PRV-1.1_2",
+   "criterion_id": "PRV-1.1",
+   "name": "Privacy and Identity Verification Policy: Mandatory Two-Factor Customer Identity Verification",
+   "kind": "observed",
+   "verdict": "violation",
+   "severity": "critical",
+   "evidence": [
+    {
+     "turn_id": 3,
+     "speaker": "agent",
+     "start_s": 0.0,
+     "end_s": 0.0,
+     "quote": "I can see your order here, the smartwatch delivered to Flat 12, Sai Residency, Pune."
+    }
+   ],
+   "certainty": "high",
+   "certainty_reason": "",
+   "reviewer_status": "pending",
+   "reviewer_note": "",
+   "explanation": "PRV-1.1 strictly prohibits disclosing full delivery addresses before validating two-factor verification (Order ID/email plus last 4 digits of phone number)."
+  },
+  {
+   "finding_id": "policy_PRV-2.2_3",
+   "criterion_id": "PRV-2.2",
+   "name": "Privacy and Identity Verification Policy: Delivery Address Masking and Privacy",
+   "kind": "observed",
+   "verdict": "violation",
+   "severity": "major",
+   "evidence": [
+    {
+     "turn_id": 3,
+     "speaker": "agent",
+     "start_s": 0.0,
+     "end_s": 0.0,
+     "quote": "the smartwatch delivered to Flat 12, Sai Residency, Pune."
+    }
+   ],
+   "certainty": "high",
+   "certainty_reason": "",
+   "reviewer_status": "pending",
+   "reviewer_note": "",
+   "explanation": "PRV-2.2 mandates partial address masking (first name, city, pin code only) unless the customer recites the full address first."
+  },
+  {
+   "finding_id": "policy_REF-3.1_4",
+   "criterion_id": "REF-3.1",
+   "name": "Refund and Returns Policy: Agent Approval Authority Threshold",
+   "kind": "observed",
+   "verdict": "violation",
+   "severity": "critical",
+   "evidence": [
+    {
+     "turn_id": 5,
+     "speaker": "agent",
+     "start_s": 0.0,
+     "end_s": 0.0,
+     "quote": "The refund of Rs 8,500 is approved by me, I have full authority for this, so no supervisor is needed."
+    }
+   ],
+   "certainty": "high",
+   "certainty_reason": "",
+   "reviewer_status": "pending",
+   "reviewer_note": "",
+   "explanation": "REF-3.1 limits agent single-approval authority to Rs 5,000. Any refund above Rs 5,000 strictly requires supervisor review and secondary authorization."
+  },
+  {
+   "finding_id": "policy_REF-2.2_5",
+   "criterion_id": "REF-2.2",
+   "name": "Refund and Returns Policy: Method of Refund Disbursement",
+   "kind": "observed",
+   "verdict": "violation",
+   "severity": "major",
+   "evidence": [
+    {
+     "turn_id": 7,
+     "speaker": "agent",
+     "start_s": 0.0,
+     "end_s": 0.0,
+     "quote": "I will send it to your Paytm wallet, that is the quickest way."
+    }
+   ],
+   "certainty": "high",
+   "certainty_reason": "",
+   "reviewer_status": "pending",
+   "reviewer_note": "",
+   "explanation": "REF-2.2 mandates that refunds must be remitted strictly to the original payment method used during checkout and prohibits redirecting funds to third-party wallets."
+  },
+  {
+   "finding_id": "policy_REF-2.1_6",
+   "criterion_id": "REF-2.1",
+   "name": "Refund and Returns Policy: Refund Processing Timelines",
+   "kind": "observed",
+   "verdict": "violation",
+   "severity": "minor",
+   "evidence": [
+    {
+     "turn_id": 9,
+     "speaker": "agent",
+     "start_s": 0.0,
+     "end_s": 0.0,
+     "quote": "It will be credited within 24 hours."
+    }
+   ],
+   "certainty": "high",
+   "certainty_reason": "",
+   "reviewer_status": "pending",
+   "reviewer_note": "",
+   "explanation": "REF-2.1 specifies that standard approved refunds take 5 to 7 business days following item return and verification."
+  },
+  {
+   "finding_id": "policy_REF-1.2_7",
+   "criterion_id": "REF-1.2",
+   "name": "Refund and Returns Policy: Item Condition and Verification",
+   "kind": "observed",
+   "verdict": "violation",
+   "severity": "major",
+   "evidence": [
+    {
+     "turn_id": 9,
+     "speaker": "agent",
+     "start_s": 0.0,
+     "end_s": 0.0,
+     "quote": "You can keep the watch, no need to send it back."
+    }
+   ],
+   "certainty": "high",
+   "certainty_reason": "",
+   "reviewer_status": "pending",
+   "reviewer_note": "",
+   "explanation": "REF-1.2 requires items to be returned in original condition with intact packaging for mandatory courier physical check to qualify for a full refund."
+  },
+  {
+   "finding_id": "empathy_rating",
+   "criterion_id": "empathy_and_communication",
+   "name": "Empathy & Tone Assessment",
+   "kind": "inferred",
+   "verdict": "missed",
+   "severity": "minor",
+   "evidence": [
+    {
+     "turn_id": 0,
+     "speaker": "agent",
+     "start_s": 0.0,
+     "end_s": 0.0,
+     "quote": "Okay Mr. Rao, no problem, I can see your order here, the smartwatch delivered to Flat 12, Sai Residency, Pune."
+    }
+   ],
+   "certainty": "medium",
+   "certainty_reason": "Subjective appraisal of agent warmth and emotional validation",
+   "reviewer_status": "pending",
+   "reviewer_note": "",
+   "explanation": "Empathy score: 0/5"
+  }
+ ],
+ "cannot_judge": false,
+ "cannot_judge_reason": "",
+ "unreadable_parts": [],
+ "status": "ok",
+ "failed_step": null,
+ "completed_steps": [
+  "input_ingestion",
+  "quality_gate",
+  "call_state",
+  "topic_detection",
+  "scorecard_judgment",
+  "policy_check",
+  "evidence_verification",
+  "scoring"
+ ],
+ "emotion": {
+  "points": [
+   {
+    "turn": 2,
+    "emotion": "frustrated",
+    "valence": -1.5
+   },
+   {
+    "turn": 4,
+    "emotion": "confused",
+    "valence": -0.5
+   },
+   {
+    "turn": 6,
+    "emotion": "neutral",
+    "valence": 0.0
+   },
+   {
+    "turn": 8,
+    "emotion": "neutral",
+    "valence": 0.0
+   },
+   {
+    "turn": 10,
+    "emotion": "satisfied",
+    "valence": 1.0
+   },
+   {
+    "turn": 12,
+    "emotion": "neutral",
+    "valence": 0.0
+   }
+  ],
+  "start": "frustrated",
+  "middle": "neutral",
+  "end": "neutral",
+  "trend": "improved"
+ },
+ "agent_tone": {
+  "points": [
+   {
+    "turn": 1,
+    "emotion": "warm",
+    "valence": 1.0
+   },
+   {
+    "turn": 3,
+    "emotion": "calm",
+    "valence": 0.5
+   },
+   {
+    "turn": 5,
+    "emotion": "calm",
+    "valence": 0.5
+   },
+   {
+    "turn": 7,
+    "emotion": "calm",
+    "valence": 0.5
+   },
+   {
+    "turn": 9,
+    "emotion": "calm",
+    "valence": 0.5
+   },
+   {
+    "turn": 11,
+    "emotion": "neutral",
+    "valence": 0.0
+   },
+   {
+    "turn": 13,
+    "emotion": "rushed",
+    "valence": -0.5
+   }
+  ],
+  "start": "warm",
+  "middle": "calm",
+  "end": "rushed",
+  "trend": "worsened"
+ },
+ "metrics": {
+  "duration_sec": 78.3,
+  "agent_turns": 7,
+  "customer_turns": 6,
+  "agent_talk_ratio": 0.536,
+  "longest_silence_sec": 1.2,
+  "dead_air_events": [],
+  "interruption_events": [],
+  "hold_events": [],
+  "holds": [],
+  "longest_hold_sec": 0.0,
+  "agent_words_per_minute": 156.0,
+  "agent_interruptions": 0
+ },
+ "strengths": [],
+ "coaching": [
+  {
+   "title": "GEN-02: Mandatory Call Recording Disclosure (critical)",
+   "advice": "The disclosure is clearly articulated within the first two conversation turns without mumbling or skipping. Example: \"Please note that this call is being recorded for quality monitoring and training purposes.\"",
+   "source": "sop",
+   "evidence": "Missing: Call recording disclosure. The agent did not disclose that the call is being recorded."
+  },
+  {
+   "title": "GEN-03: Caller Identification & Two-Factor Verification (critical)",
+   "advice": "The agent systematically validates both verification data points before disclosing addresses, order contents, or monetary info. Example: \"To ensure your account security, may I please have your Order ID and the last four digits of your registered mobile number?\"",
+   "source": "sop",
+   "evidence": "Missing: Order ID and last 4 digits of registered phone number. Critical breach: account details discussed at turn 3 before identity verification completed."
+  },
+  {
+   "title": "GEN-06: Accurate Policy Explanation & Solution Execution (critical)",
+   "advice": "Explaining exact delivery or refund windows (e.g., 5-7 business days for refund, 7 days for electronics) without making out-of-policy promises. Example: \"Per our policy, since your wireless earbuds are within the 7-day electronics return window, I have scheduled a reverse pickup for tomorrow.\"",
+   "source": "sop",
+   "evidence": "Missing: Strictly grounded policy explanation and adherence. The agent bypassed standard policy entirely by approving an out-of-policy refund and allowing the customer to keep the item."
+  },
+  {
+   "title": "REF-S1: Authenticate Order and Customer Identity (critical)",
+   "advice": "The agent confirms both values in the CRM portal before mentioning what items were purchased or amounts paid. Example: \"I will be glad to assist with your refund. First, could you please confirm your Order ID and the last four digits of your registered mobile number?\"",
+   "source": "sop",
+   "evidence": "Missing: Order ID and phone digits verification. Critical breach: account details discussed at turn 3 before identity verification completed."
+  },
+  {
+   "title": "Policy PRV-1.2: say it correctly",
+   "advice": "PRV-1.2 requires an explicit call recording disclosure within the first two conversation turns. The agent omitted this entirely.",
+   "source": "policy",
+   "evidence": "Hello, ShopEase customer service. How can I help you?"
+  },
+  {
+   "title": "Policy PRV-1.1: say it correctly",
+   "advice": "PRV-1.1 strictly prohibits disclosing full delivery addresses before validating two-factor verification (Order ID/email plus last 4 digits of phone number).",
+   "source": "policy",
+   "evidence": "I can see your order here, the smartwatch delivered to Flat 12, Sai Residency, Pune."
+  },
+  {
+   "title": "Policy PRV-2.2: say it correctly",
+   "advice": "PRV-2.2 mandates partial address masking (first name, city, pin code only) unless the customer recites the full address first.",
+   "source": "policy",
+   "evidence": "the smartwatch delivered to Flat 12, Sai Residency, Pune."
+  },
+  {
+   "title": "Policy REF-3.1: say it correctly",
+   "advice": "REF-3.1 limits agent single-approval authority to Rs 5,000. Any refund above Rs 5,000 strictly requires supervisor review and secondary authorization.",
+   "source": "policy",
+   "evidence": "The refund of Rs 8,500 is approved by me, I have full authority for this, so no supervisor is needed."
+  },
+  {
+   "title": "Policy REF-2.2: say it correctly",
+   "advice": "REF-2.2 mandates that refunds must be remitted strictly to the original payment method used during checkout and prohibits redirecting funds to third-party wallets.",
+   "source": "policy",
+   "evidence": "I will send it to your Paytm wallet, that is the quickest way."
+  }
+ ],
+ "risk_flags": [
+  "CRITICAL: Account details disclosed without prior authentication (Identity verification failure)."
+ ],
+ "retrieved_clause_ids": [
+  "REF-3.1",
+  "REF-2.1",
+  "REF-4.1",
+  "WAR-2.3",
+  "BIL-1.2",
+  "REF-3.2",
+  "BIL-1.1",
+  "REF-2.2",
+  "SHP-2.3",
+  "BIL-2.2",
+  "PRV-1.1",
+  "ESC-1.1",
+  "ESC-1.2",
+  "REF-1.1",
+  "REF-1.2",
+  "REF-4.2",
+  "ESC-2.1",
+  "ESC-2.2",
+  "ESC-3.1",
+  "ESC-3.2",
+  "PRV-1.2",
+  "PRV-1.3",
+  "PRV-2.1",
+  "PRV-2.2",
+  "PRV-3.1"
+ ],
+ "transcript": {
+  "call_id": "call_102",
+  "source": "transcript",
+  "language": "te",
+  "audio_path": null,
+  "duration_seconds": 78.3,
+  "diarization_method": "given",
+  "transcript_quality": "good",
+  "quality_reason": "Transcript quality is reliable for compliance and rubric scoring.",
+  "unreadable_parts": [],
+  "turns": [
+   {
+    "turn_id": 1,
+    "speaker": "agent",
+    "start_time": 0.0,
+    "end_time": 3.46,
+    "text": "Hello, ShopEase customer service. How can I help you?",
+    "text_te": null,
+    "text_roman": null,
+    "asr_confidence": 1.0,
+    "silence_before": 0.0,
+    "overlaps_previous": false,
+    "emotion": "warm"
+   },
+   {
+    "turn_id": 2,
+    "speaker": "customer",
+    "start_time": 3.96,
+    "end_time": 16.27,
+    "text": "Hi, my name is Vikram Rao. I bought a Noise ColorFit smartwatch from your website four days ago and the screen keeps flickering. I want a refund, the price was Rs 8,500.",
+    "text_te": null,
+    "text_roman": null,
+    "asr_confidence": 1.0,
+    "silence_before": 0.5,
+    "overlaps_previous": false,
+    "emotion": "frustrated"
+   },
+   {
+    "turn_id": 3,
+    "speaker": "agent",
+    "start_time": 17.37,
+    "end_time": 27.75,
+    "text": "Okay Mr. Rao, no problem, I can see your order here, the smartwatch delivered to Flat 12, Sai Residency, Pune. I will process the refund right away.",
+    "text_te": null,
+    "text_roman": null,
+    "asr_confidence": 1.0,
+    "silence_before": 1.1,
+    "overlaps_previous": false,
+    "emotion": "calm"
+   },
+   {
+    "turn_id": 4,
+    "speaker": "customer",
+    "start_time": 28.45,
+    "end_time": 33.45,
+    "text": "Oh, that was quick. Do you not need my order number or anything?",
+    "text_te": null,
+    "text_roman": null,
+    "asr_confidence": 1.0,
+    "silence_before": 0.7,
+    "overlaps_previous": false,
+    "emotion": "confused"
+   },
+   {
+    "turn_id": 5,
+    "speaker": "agent",
+    "start_time": 33.85,
+    "end_time": 42.7,
+    "text": "No, no need. The refund of Rs 8,500 is approved by me, I have full authority for this, so no supervisor is needed.",
+    "text_te": null,
+    "text_roman": null,
+    "asr_confidence": 1.0,
+    "silence_before": 0.4,
+    "overlaps_previous": false,
+    "emotion": "calm"
+   },
+   {
+    "turn_id": 6,
+    "speaker": "customer",
+    "start_time": 43.7,
+    "end_time": 48.32,
+    "text": "Okay. And how will I get the money back, to my card?",
+    "text_te": null,
+    "text_roman": null,
+    "asr_confidence": 1.0,
+    "silence_before": 1.0,
+    "overlaps_previous": false,
+    "emotion": "neutral"
+   },
+   {
+    "turn_id": 7,
+    "speaker": "agent",
+    "start_time": 49.12,
+    "end_time": 54.12,
+    "text": "I will send it to your Paytm wallet, that is the quickest way.",
+    "text_te": null,
+    "text_roman": null,
+    "asr_confidence": 1.0,
+    "silence_before": 0.8,
+    "overlaps_previous": false,
+    "emotion": "calm"
+   },
+   {
+    "turn_id": 8,
+    "speaker": "customer",
+    "start_time": 54.72,
+    "end_time": 58.18,
+    "text": "Alright. How long will it take to show up?",
+    "text_te": null,
+    "text_roman": null,
+    "asr_confidence": 1.0,
+    "silence_before": 0.6,
+    "overlaps_previous": false,
+    "emotion": "neutral"
+   },
+   {
+    "turn_id": 9,
+    "speaker": "agent",
+    "start_time": 59.38,
+    "end_time": 66.3,
+    "text": "It will be credited within 24 hours. You can keep the watch, no need to send it back.",
+    "text_te": null,
+    "text_roman": null,
+    "asr_confidence": 1.0,
+    "silence_before": 1.2,
+    "overlaps_previous": false,
+    "emotion": "calm"
+   },
+   {
+    "turn_id": 10,
+    "speaker": "customer",
+    "start_time": 66.9,
+    "end_time": 71.9,
+    "text": "Really? I can keep the watch as well? That is surprising, but okay.",
+    "text_te": null,
+    "text_roman": null,
+    "asr_confidence": 1.0,
+    "silence_before": 0.6,
+    "overlaps_previous": false,
+    "emotion": "satisfied"
+   },
+   {
+    "turn_id": 11,
+    "speaker": "agent",
+    "start_time": 72.8,
+    "end_time": 74.34,
+    "text": "Yes sir. Anything else?",
+    "text_te": null,
+    "text_roman": null,
+    "asr_confidence": 1.0,
+    "silence_before": 0.9,
+    "overlaps_previous": false,
+    "emotion": "neutral"
+   },
+   {
+    "turn_id": 12,
+    "speaker": "customer",
+    "start_time": 74.84,
+    "end_time": 76.38,
+    "text": "No, that is all.",
+    "text_te": null,
+    "text_roman": null,
+    "asr_confidence": 1.0,
+    "silence_before": 0.5,
+    "overlaps_previous": false,
+    "emotion": "neutral"
+   },
+   {
+    "turn_id": 13,
+    "speaker": "agent",
+    "start_time": 77.48,
+    "end_time": 78.28,
+    "text": "Okay, bye.",
+    "text_te": null,
+    "text_roman": null,
+    "asr_confidence": 1.0,
+    "silence_before": 1.1,
+    "overlaps_previous": false,
+    "emotion": "rushed"
+   }
+  ]
+ },
+ "meta": {
+  "model": "SOP: gemini-3.5-flash-lite \u00b7 Policy: gemini-3.5-flash",
+  "llm_requests": 2,
+  "diarization_method": "given",
+  "transcribe_seconds": 0.0,
+  "audit_seconds": 44.1,
+  "cache_hit": false,
+  "warnings": [],
+  "source_set": "synthetic",
+  "trace_id": "run_call_102_87938",
+  "status": "ok",
+  "failed_step": null,
+  "completed_steps": [
+   "input_ingestion",
+   "quality_gate",
+   "call_state",
+   "topic_detection",
+   "scorecard_judgment",
+   "policy_check",
+   "evidence_verification",
+   "scoring"
+  ],
+  "estimated_cost_usd": 0.022705,
+  "tokens_in": 9007,
+  "tokens_out": 3012,
+  "sop_model": "gemini-3.5-flash-lite",
+  "policy_model": "gemini-3.5-flash"
+ }
+}

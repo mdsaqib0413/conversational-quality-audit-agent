@@ -1,0 +1,223 @@
+{
+  "id": "call_105",
+  "topic": "complaint",
+  "quality": "good",
+  "split": "train",
+  "applicable_sops": [
+    "general_call_flow",
+    "angry_customer_sop",
+    "hold_and_transfer_sop"
+  ],
+  "applicable_steps": [
+    "GEN-01",
+    "GEN-02",
+    "GEN-03",
+    "GEN-04",
+    "GEN-05",
+    "GEN-06",
+    "GEN-07",
+    "GEN-08",
+    "ANG-01",
+    "ANG-02",
+    "ANG-03",
+    "ANG-04",
+    "ANG-05",
+    "HLD-01",
+    "HLD-02",
+    "HLD-03",
+    "HLD-05"
+  ],
+  "hold_scenario": "callback",
+  "order_id": "ORD-77302",
+  "registered_phone_last4": "5521",
+  "agent_name": "Aman Gupta",
+  "customer_name": "Deepa Krishnan",
+  "customer_persona": "Deepa Krishnan is angry about a mixer grinder stuck in transit; the agent stays composed and escalates correctly.",
+  "verified": true,
+  "verification_notes": "Hand-written and checked against data/policies and data/sops; labels written together with the dialogue.",
+  "source": "handwritten",
+  "turns": [
+    {
+      "i": 1,
+      "speaker": "agent",
+      "text": "Thank you for calling ShopEase. My name is Aman Gupta. Please note that this call is recorded for quality assurance and training purposes. How may I assist you today?",
+      "pause_before_sec": 0.5,
+      "interrupts_previous": false
+    },
+    {
+      "i": 2,
+      "speaker": "customer",
+      "text": "This is unacceptable! My name is Deepa Krishnan and I ordered a mixer grinder fifteen days ago. It was dispatched fourteen days ago and nobody gives me a straight answer. This is the third time I am calling and I am fed up.",
+      "pause_before_sec": 0.5,
+      "interrupts_previous": false
+    },
+    {
+      "i": 3,
+      "speaker": "agent",
+      "text": "I am truly sorry, Ms. Krishnan. I can hear how frustrating this has been, especially after calling three times, and I will personally take ownership of this until it is resolved. May I please have your Order ID and the last four digits of your registered mobile number?",
+      "pause_before_sec": 1.1,
+      "interrupts_previous": false
+    },
+    {
+      "i": 4,
+      "speaker": "customer",
+      "text": "The order ID is ORD-77302 and the last four digits are 5521. Please just tell me where my parcel is.",
+      "pause_before_sec": 0.7,
+      "interrupts_previous": false
+    },
+    {
+      "i": 5,
+      "speaker": "agent",
+      "text": "Thank you, you are verified. Let me make sure I have this right: your mixer grinder was dispatched fourteen days ago with standard delivery, it has not been delivered, and you have already called us twice before. Is that correct?",
+      "pause_before_sec": 0.4,
+      "interrupts_previous": false
+    },
+    {
+      "i": 6,
+      "speaker": "customer",
+      "text": "Yes! And each time they just say it is in transit.",
+      "pause_before_sec": 1.0,
+      "interrupts_previous": false
+    },
+    {
+      "i": 7,
+      "speaker": "agent",
+      "text": "Could I ask one quick question so I can pinpoint the problem: did you receive any out-for-delivery message or call from the courier in the last few days?",
+      "pause_before_sec": 0.8,
+      "interrupts_previous": false
+    },
+    {
+      "i": 8,
+      "speaker": "customer",
+      "text": "No, nothing. Not a single message.",
+      "pause_before_sec": 0.6,
+      "interrupts_previous": false
+    },
+    {
+      "i": 9,
+      "speaker": "agent",
+      "text": "Thank you, that helps. Our standard delivery commitment is 3 to 7 business days, so your parcel is well beyond that commitment. Here is what I am doing right now: I am raising a logistics tracking ticket with the courier partner, and I am adding a goodwill wallet credit of Rs 100 to your account for this delay.",
+      "pause_before_sec": 1.2,
+      "interrupts_previous": false
+    },
+    {
+      "i": 10,
+      "speaker": "customer",
+      "text": "A hundred rupees? I want to speak to a supervisor right now, I want a proper answer from someone senior.",
+      "pause_before_sec": 0.6,
+      "interrupts_previous": false
+    },
+    {
+      "i": 11,
+      "speaker": "agent",
+      "text": "I understand, Ms. Krishnan. Let me first complete the logistics ticket for you, and then I will make sure someone senior hears you. The ticket number is LOG-88213 and the courier partner must respond within 48 hours.",
+      "pause_before_sec": 0.9,
+      "interrupts_previous": false
+    },
+    {
+      "i": 12,
+      "speaker": "customer",
+      "text": "Forty-eight more hours? I want a supervisor on this call now. This is the second time I am asking.",
+      "pause_before_sec": 0.5,
+      "interrupts_previous": false
+    },
+    {
+      "i": 13,
+      "speaker": "agent",
+      "text": "You are absolutely right to ask, and I am escalating this to a supervisor right now. May I place you on a brief hold for up to two minutes while I connect with them?",
+      "pause_before_sec": 1.1,
+      "interrupts_previous": false
+    },
+    {
+      "i": 14,
+      "speaker": "customer",
+      "text": "Yes, go ahead.",
+      "pause_before_sec": 0.7,
+      "interrupts_previous": false
+    },
+    {
+      "i": 15,
+      "speaker": "agent",
+      "text": "Thank you for holding, Ms. Krishnan, and I apologise for the wait. Our supervisors are all assisting other escalated callers at the moment. Rather than keep you waiting, I can schedule a confirmed supervisor callback for you within the next 2 to 4 hours. Would that be acceptable?",
+      "pause_before_sec": 75.0,
+      "interrupts_previous": false
+    },
+    {
+      "i": 16,
+      "speaker": "customer",
+      "text": "Fine. Please make sure someone actually calls. I have wasted enough time.",
+      "pause_before_sec": 1.0,
+      "interrupts_previous": false
+    },
+    {
+      "i": 17,
+      "speaker": "agent",
+      "text": "I will personally note this as a priority callback, Ms. Krishnan. The supervisor will call you on your registered number ending 5521 within 2 to 4 hours, and the logistics ticket LOG-88213 is already active with the courier. The Rs 100 wallet credit will be added to your account today.",
+      "pause_before_sec": 0.8,
+      "interrupts_previous": false
+    },
+    {
+      "i": 18,
+      "speaker": "customer",
+      "text": "Okay. That is something at least. Thank you for not just brushing me off.",
+      "pause_before_sec": 0.6,
+      "interrupts_previous": false
+    },
+    {
+      "i": 19,
+      "speaker": "agent",
+      "text": "Thank you for your patience. To recap: ticket LOG-88213 is raised with the courier with a 48 hour response, a Rs 100 goodwill credit is added, and a supervisor will call you within 2 to 4 hours. Is there anything else I can help you with?",
+      "pause_before_sec": 1.2,
+      "interrupts_previous": false
+    },
+    {
+      "i": 20,
+      "speaker": "customer",
+      "text": "No, that is everything.",
+      "pause_before_sec": 0.6,
+      "interrupts_previous": false
+    },
+    {
+      "i": 21,
+      "speaker": "agent",
+      "text": "Thank you for contacting ShopEase, Ms. Krishnan. Have a good day, and again, I am sorry for the trouble.",
+      "pause_before_sec": 0.9,
+      "interrupts_previous": false
+    },
+    {
+      "i": 22,
+      "speaker": "customer",
+      "text": "Bye.",
+      "pause_before_sec": 0.5,
+      "interrupts_previous": false
+    }
+  ],
+  "ground_truth": {
+    "sop_steps": {
+      "GEN-01": "followed",
+      "GEN-02": "followed",
+      "GEN-03": "followed",
+      "GEN-04": "followed",
+      "GEN-05": "followed",
+      "GEN-06": "followed",
+      "GEN-07": "followed",
+      "GEN-08": "followed",
+      "ANG-01": "followed",
+      "ANG-02": "followed",
+      "ANG-03": "followed",
+      "ANG-04": "followed",
+      "ANG-05": "followed",
+      "HLD-01": "followed",
+      "HLD-02": "followed",
+      "HLD-03": "followed",
+      "HLD-05": "followed"
+    },
+    "policy_violations": [],
+    "customer_emotion_arc": [
+      "angry",
+      "frustrated",
+      "satisfied"
+    ],
+    "gaps": []
+  }
+}

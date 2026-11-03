@@ -924,8 +924,8 @@
   ]
  },
  "meta": {
-  "model": "gemini:gemini-3.5-flash-lite",
-  "llm_requests": 1,
+  "model": "SOP: gemini-3.5-flash-lite \u00b7 Policy: gemini-3.5-flash",
+  "llm_requests": 6,
   "diarization_method": "given",
   "transcribe_seconds": 0.0,
   "audit_seconds": 79.0,
@@ -947,6 +947,8 @@
   ],
   "estimated_cost_usd": 0.01788,
   "tokens_in": 7772,
-  "tokens_out": 2162
+  "tokens_out": 2162,
+  "sop_model": "gemini-3.5-flash-lite",
+  "policy_model": "gemini-3.5-flash"
  }
 }

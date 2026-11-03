@@ -1,0 +1,923 @@
+{
+ "call_id": "call_108",
+ "generated_at": "2026-11-04T00:43:41",
+ "topic": "shipping",
+ "topic_confidence": 0.816,
+ "signals": [],
+ "summary": "The customer needed to change the delivery address of a recently placed order due to a house move. The agent informed the customer that address changes are not possible once an order is shipped, successfully raised a cancellation request instead, and summarized the next steps.",
+ "customer_issue": "Change delivery address on shipped order",
+ "resolved": true,
+ "scores": {
+  "sop_score": 40.0,
+  "policy_score": 30.0,
+  "empathy_score": 15.0,
+  "communication_score": 15.0,
+  "overall_before_cap": 100.0,
+  "overall": 100.0,
+  "grade": "A",
+  "grade_label": "Exemplary Performance",
+  "critical_failure": false,
+  "cap_reasons": [],
+  "sop_points_earned": 27.0,
+  "sop_points_possible": 27.0,
+  "policy_penalty_total": 0.0,
+  "policy_applicable": true,
+  "timing_penalty": 0.0,
+  "timing_notes": [],
+  "empathy_rating": 5,
+  "clarity_rating": 5,
+  "professionalism_rating": 5,
+  "ownership_rating": 5,
+  "closure_rating": 5
+ },
+ "sop_results": [
+  {
+   "step_id": "GEN-01",
+   "title": "Professional Greeting & Identity Introduction",
+   "sop": "general_call_flow",
+   "weight": 2,
+   "critical": false,
+   "mandatory": true,
+   "status": "followed",
+   "points_earned": 2.0,
+   "points_possible": 2.0,
+   "turn": 1,
+   "quote": "Thank you for calling ShopEase. My name is Farah Khan. How may I assist you today?",
+   "reason": "The agent greeted the customer with high energy, stated the company name, introduced herself, and offered assistance.",
+   "missing": "",
+   "evidence_verified": true,
+   "what_good_looks_like": "The agent opens within 2 seconds of call connection with a polite, welcoming tone, introducing both the brand and representative name.",
+   "example_phrase": "Thank you for calling ShopEase. My name is Rahul. How may I assist you today?"
+  },
+  {
+   "step_id": "GEN-02",
+   "title": "Mandatory Call Recording Disclosure",
+   "sop": "general_call_flow",
+   "weight": 5,
+   "critical": true,
+   "mandatory": true,
+   "status": "followed",
+   "points_earned": 5.0,
+   "points_possible": 5.0,
+   "turn": 1,
+   "quote": "Please note that this call is recorded for quality assurance and training purposes.",
+   "reason": "The mandatory recording disclosure was clearly stated in the first turn.",
+   "missing": "",
+   "evidence_verified": true,
+   "what_good_looks_like": "The disclosure is clearly articulated within the first two conversation turns without mumbling or skipping.",
+   "example_phrase": "Please note that this call is being recorded for quality monitoring and training purposes."
+  },
+  {
+   "step_id": "GEN-03",
+   "title": "Caller Identification & Two-Factor Verification",
+   "sop": "general_call_flow",
+   "weight": 5,
+   "critical": true,
+   "mandatory": true,
+   "status": "followed",
+   "points_earned": 5.0,
+   "points_possible": 5.0,
+   "turn": 3,
+   "quote": "First, could you please share your Order ID and the last four digits of your registered mobile number for verification?",
+   "reason": "The agent requested both the Order ID and the last four digits of the phone number before proceeding.",
+   "missing": "",
+   "evidence_verified": true,
+   "what_good_looks_like": "The agent systematically validates both verification data points before disclosing addresses, order contents, or monetary info.",
+   "example_phrase": "To ensure your account security, may I please have your Order ID and the last four digits of your registered mobile number?"
+  },
+  {
+   "step_id": "GEN-04",
+   "title": "Active Listening & Issue Clarification",
+   "sop": "general_call_flow",
+   "weight": 3,
+   "critical": false,
+   "mandatory": true,
+   "status": "followed",
+   "points_earned": 3.0,
+   "points_possible": 3.0,
+   "turn": 5,
+   "quote": "To make sure I understand, you would like to change the delivery address for order ORD-38760 because you have moved. Is that right?",
+   "reason": "The agent listened without interruption and paraphrased the customer's core issue back to them.",
+   "missing": "",
+   "evidence_verified": true,
+   "what_good_looks_like": "The agent maintains silence while the customer speaks, takes notes, and summarizes the specific problem back to the customer.",
+   "example_phrase": "I understand that your package has not arrived and you would like to track the courier status. Is that correct?"
+  },
+  {
+   "step_id": "GEN-05",
+   "title": "Empathy & Ownership Statement",
+   "sop": "general_call_flow",
+   "weight": 3,
+   "critical": false,
+   "mandatory": true,
+   "status": "followed",
+   "points_earned": 3.0,
+   "points_possible": 3.0,
+   "turn": 7,
+   "quote": "I understand how inconvenient a house move can be, and I will personally help you find the best option.",
+   "reason": "The agent expressed sincere empathy regarding the inconvenience and took personal ownership.",
+   "missing": "",
+   "evidence_verified": true,
+   "what_good_looks_like": "Empathetic acknowledgment that avoids robotic stock phrases, validating the customer's frustration.",
+   "example_phrase": "I completely understand how frustrating it is to wait for an order, and I am personally going to sort this out for you."
+  },
+  {
+   "step_id": "GEN-06",
+   "title": "Accurate Policy Explanation & Solution Execution",
+   "sop": "general_call_flow",
+   "weight": 5,
+   "critical": true,
+   "mandatory": true,
+   "status": "followed",
+   "points_earned": 5.0,
+   "points_possible": 5.0,
+   "turn": 9,
+   "quote": "Address changes are only possible while an order is Confirmed or Processing, and once it is shipped, none of our agents has system permission to alter the address",
+   "reason": "The agent accurately explained company policy regarding address changes on shipped orders.",
+   "missing": "",
+   "evidence_verified": true,
+   "what_good_looks_like": "Explaining exact delivery or refund windows (e.g., 5-7 business days for refund, 7 days for electronics) without making out-of-policy promises.",
+   "example_phrase": "Per our policy, since your wireless earbuds are within the 7-day electronics return window, I have scheduled a reverse pickup for tomorrow."
+  },
+  {
+   "step_id": "GEN-07",
+   "title": "Additional Assistance & Next Steps Summary",
+   "sop": "general_call_flow",
+   "weight": 2,
+   "critical": false,
+   "mandatory": true,
+   "status": "followed",
+   "points_earned": 2.0,
+   "points_possible": 2.0,
+   "turn": 15,
+   "quote": "To summarise, the address cannot be changed on a shipped order, the cancellation request is raised under ticket SHP-77412, and you can place a fresh order",
+   "reason": "The agent provided a thorough summary, referenced the ticket number, and asked if anything else was needed.",
+   "missing": "",
+   "evidence_verified": true,
+   "what_good_looks_like": "Clear recap of actions taken, tracking reference shared, and an open invitation for secondary questions.",
+   "example_phrase": "To recap, I have initiated return ticket #SR-8921. You will receive an SMS confirmation. Is there anything else I can help you with today?"
+  },
+  {
+   "step_id": "GEN-08",
+   "title": "Professional Branded Sign-Off",
+   "sop": "general_call_flow",
+   "weight": 2,
+   "critical": false,
+   "mandatory": true,
+   "status": "followed",
+   "points_earned": 2.0,
+   "points_possible": 2.0,
+   "turn": 17,
+   "quote": "Thank you for contacting ShopEase, Mr. Chawla. Have a wonderful day and best wishes for your new home!",
+   "reason": "The agent concluded the call with a warm, professional branded sign-off.",
+   "missing": "",
+   "evidence_verified": true,
+   "what_good_looks_like": "Courteous parting statement thanking the customer, waiting for the customer to disconnect first.",
+   "example_phrase": "Thank you for contacting ShopEase. We appreciate your business and hope you have a great day ahead!"
+  }
+ ],
+ "policy_results": [
+  {
+   "clause_id": "PRV-1.2",
+   "policy_title": "Privacy and Identity Verification Policy: Mandatory Call Recording Disclosure",
+   "verdict": "compliant",
+   "severity": "none",
+   "penalty": 0.0,
+   "turn": 1,
+   "quote": "Please note that this call is recorded for quality assurance and training purposes.",
+   "claim": "Agent provided the mandatory call recording disclosure at the beginning of the call.",
+   "explanation": "The agent recited the exact mandatory disclosure statement within the first turn, adhering to PRV-1.2.",
+   "policy_text": "1. Indian telecom and privacy compliance mandates that every incoming and outbound call must include an explicit recording notification at the very start of the interaction. 2. Representatives must recite the approved disclosure statement during their initial call greeting: - *\"Please note this call is recorded for quality assurance and training purposes.\"* 3. Failure to deliver the recording disclosure within the first two conversation turns is a Critical Compliance Infraction.",
+   "evidence_verified": true,
+   "repeat_turns": []
+  },
+  {
+   "clause_id": "PRV-1.1",
+   "policy_title": "Privacy and Identity Verification Policy: Mandatory Two-Factor Customer Identity Verification",
+   "verdict": "compliant",
+   "severity": "none",
+   "penalty": 0.0,
+   "turn": 5,
+   "quote": "Thank you, you are verified.",
+   "claim": "Agent verified the customer using Order ID and the last 4 digits of the registered mobile number.",
+   "explanation": "The customer provided ORD-38760 and last 4 digits 6612, completing the mandatory two-factor verification required by PRV-1.1 before proceeding.",
+   "policy_text": "1. To safeguard customer accounts and prevent unauthorized data leaks, frontline representatives must perform two-factor verification before disclosing any account details, order histories, delivery addresses, payment instruments, or processing refund instructions. 2. Mandatory Verification Pair: - Order ID (e.g., `ORD-XXXXX`) or registered Account Email Address. - Last four (4) digits of the registered mobile phone number. 3. Strict Prohibition: Revealing full addresses, item descriptions, f...",
+   "evidence_verified": true,
+   "repeat_turns": []
+  },
+  {
+   "clause_id": "SHP-2.2",
+   "policy_title": "Shipping and Delivery Policy: Address Modifications Post-Dispatch",
+   "verdict": "compliant",
+   "severity": "none",
+   "penalty": 0.0,
+   "turn": 9,
+   "quote": "Address changes are only possible while an order is Confirmed or Processing, and once it is shipped, none of our agents has system permission",
+   "claim": "Address modifications cannot be done once an order is shipped.",
+   "explanation": "The agent correctly informed the customer that address changes are restricted to Confirmed or Processing status, and agents cannot alter shipped orders per SHP-2.2.",
+   "policy_text": "1. Customers may modify their delivery address only while the order remains in \"Confirmed\" or \"Processing\" status. 2. Once the order reaches \"Shipped\" or \"Out for Delivery\" status, no frontline agent has system permission to alter the delivery address or recipient name. 3. In exceptional emergency cases, the customer must request an order cancellation and reorder to the updated address.",
+   "evidence_verified": true,
+   "repeat_turns": []
+  },
+  {
+   "clause_id": "SHP-2.2",
+   "policy_title": "Shipping and Delivery Policy: Address Modifications Post-Dispatch",
+   "verdict": "compliant",
+   "severity": "none",
+   "penalty": 0.0,
+   "turn": 11,
+   "quote": "In such cases you can request a cancellation of this order and place a fresh order to your new address.",
+   "claim": "Customer can request an order cancellation and reorder to the new address for a shipped order.",
+   "explanation": "This aligns with SHP-2.2 clause 3, which states that for shipped orders, the customer must request an order cancellation and reorder to the updated address.",
+   "policy_text": "1. Customers may modify their delivery address only while the order remains in \"Confirmed\" or \"Processing\" status. 2. Once the order reaches \"Shipped\" or \"Out for Delivery\" status, no frontline agent has system permission to alter the delivery address or recipient name. 3. In exceptional emergency cases, the customer must request an order cancellation and reorder to the updated address.",
+   "evidence_verified": true,
+   "repeat_turns": []
+  },
+  {
+   "clause_id": "REF-2.2",
+   "policy_title": "Refund and Returns Policy: Method of Refund Disbursement",
+   "verdict": "compliant",
+   "severity": "none",
+   "penalty": 0.0,
+   "turn": 13,
+   "quote": "any amount paid will return to your original payment method.",
+   "claim": "Refunds will be remitted to the original payment method.",
+   "explanation": "The agent accurately stated that refunded amounts return strictly to the original payment method as required by REF-2.2.",
+   "policy_text": "1. Refunds must be remitted strictly to the original payment method utilized during checkout: - Credit / Debit Card payments return to the identical card account. - Net Banking and UPI payments return to the source bank account. 2. Cash on Delivery (COD) Purchases: Refunds for COD orders are disbursed via NEFT bank transfer to the verified bank account or UPI VPA nominated by the customer in their account profile after completing identity verification. Refunds cannot be handed over in physica...",
+   "evidence_verified": true,
+   "repeat_turns": []
+  }
+ ],
+ "gaps": [],
+ "findings": [
+  {
+   "finding_id": "id_verif_verified",
+   "criterion_id": "identity_verification",
+   "name": "Identity Verification Protocol",
+   "kind": "observed",
+   "verdict": "followed",
+   "severity": "critical",
+   "evidence": [
+    {
+     "turn_id": 3,
+     "speaker": "agent",
+     "start_s": 24.29,
+     "end_s": 35.83,
+     "quote": "I would be glad to look into that, Mr. Chawla."
+    }
+   ],
+   "certainty": "high",
+   "certainty_reason": "",
+   "reviewer_status": "pending",
+   "reviewer_note": "",
+   "explanation": "Identity verification successfully completed before disclosing account details."
+  },
+  {
+   "finding_id": "sop_GEN-01_1",
+   "criterion_id": "GEN-01",
+   "name": "Professional Greeting & Identity Introduction",
+   "kind": "observed",
+   "verdict": "followed",
+   "severity": "major",
+   "evidence": [
+    {
+     "turn_id": 1,
+     "speaker": "agent",
+     "start_s": 0.0,
+     "end_s": 11.15,
+     "quote": "Thank you for calling ShopEase. My name is"
+    }
+   ],
+   "certainty": "high",
+   "certainty_reason": "",
+   "reviewer_status": "pending",
+   "reviewer_note": "",
+   "explanation": "The agent greeted the customer with high energy, stated the company name, introduced herself, and offered assistance."
+  },
+  {
+   "finding_id": "sop_GEN-02_2",
+   "criterion_id": "GEN-02",
+   "name": "Mandatory Call Recording Disclosure",
+   "kind": "observed",
+   "verdict": "followed",
+   "severity": "critical",
+   "evidence": [
+    {
+     "turn_id": 1,
+     "speaker": "agent",
+     "start_s": 0.0,
+     "end_s": 11.15,
+     "quote": "Please note that this call is recorded for quality assurance and training purposes."
+    }
+   ],
+   "certainty": "high",
+   "certainty_reason": "",
+   "reviewer_status": "pending",
+   "reviewer_note": "",
+   "explanation": "The mandatory recording disclosure was clearly stated in the first turn."
+  },
+  {
+   "finding_id": "sop_GEN-03_3",
+   "criterion_id": "GEN-03",
+   "name": "Caller Identification & Two-Factor Verification",
+   "kind": "observed",
+   "verdict": "followed",
+   "severity": "critical",
+   "evidence": [
+    {
+     "turn_id": 3,
+     "speaker": "agent",
+     "start_s": 24.29,
+     "end_s": 35.83,
+     "quote": "First, could you please share your Order ID and the last four digits of your registered mobile number for verification?"
+    }
+   ],
+   "certainty": "high",
+   "certainty_reason": "",
+   "reviewer_status": "pending",
+   "reviewer_note": "",
+   "explanation": "The agent requested both the Order ID and the last four digits of the phone number before proceeding."
+  },
+  {
+   "finding_id": "sop_GEN-04_4",
+   "criterion_id": "GEN-04",
+   "name": "Active Listening & Issue Clarification",
+   "kind": "observed",
+   "verdict": "followed",
+   "severity": "major",
+   "evidence": [
+    {
+     "turn_id": 5,
+     "speaker": "agent",
+     "start_s": 40.39,
+     "end_s": 51.16,
+     "quote": "To make sure I understand, you would like to change the delivery address for order ORD-38760 because you have moved. Is that right?"
+    }
+   ],
+   "certainty": "high",
+   "certainty_reason": "",
+   "reviewer_status": "pending",
+   "reviewer_note": "",
+   "explanation": "The agent listened without interruption and paraphrased the customer's core issue back to them."
+  },
+  {
+   "finding_id": "sop_GEN-05_5",
+   "criterion_id": "GEN-05",
+   "name": "Empathy & Ownership Statement",
+   "kind": "inferred",
+   "verdict": "followed",
+   "severity": "major",
+   "evidence": [
+    {
+     "turn_id": 7,
+     "speaker": "agent",
+     "start_s": 53.76,
+     "end_s": 63.38,
+     "quote": "I understand how inconvenient a house move can be, and I will personally help you find the best option."
+    }
+   ],
+   "certainty": "high",
+   "certainty_reason": "",
+   "reviewer_status": "pending",
+   "reviewer_note": "",
+   "explanation": "The agent expressed sincere empathy regarding the inconvenience and took personal ownership."
+  },
+  {
+   "finding_id": "sop_GEN-06_6",
+   "criterion_id": "GEN-06",
+   "name": "Accurate Policy Explanation & Solution Execution",
+   "kind": "observed",
+   "verdict": "followed",
+   "severity": "critical",
+   "evidence": [
+    {
+     "turn_id": 9,
+     "speaker": "agent",
+     "start_s": 65.98,
+     "end_s": 81.75,
+     "quote": "Address changes are only possible while an order is Confirmed or Processing, and once it is shipped, none of our agents has system permission to alter the address"
+    }
+   ],
+   "certainty": "high",
+   "certainty_reason": "",
+   "reviewer_status": "pending",
+   "reviewer_note": "",
+   "explanation": "The agent accurately explained company policy regarding address changes on shipped orders."
+  },
+  {
+   "finding_id": "sop_GEN-07_7",
+   "criterion_id": "GEN-07",
+   "name": "Additional Assistance & Next Steps Summary",
+   "kind": "observed",
+   "verdict": "followed",
+   "severity": "major",
+   "evidence": [
+    {
+     "turn_id": 15,
+     "speaker": "agent",
+     "start_s": 129.02,
+     "end_s": 144.02,
+     "quote": "To summarise, the address cannot be changed on a shipped order, the cancellation request is raised under ticket SHP-77412, and you can place a fresh order"
+    }
+   ],
+   "certainty": "high",
+   "certainty_reason": "",
+   "reviewer_status": "pending",
+   "reviewer_note": "",
+   "explanation": "The agent provided a thorough summary, referenced the ticket number, and asked if anything else was needed."
+  },
+  {
+   "finding_id": "sop_GEN-08_8",
+   "criterion_id": "GEN-08",
+   "name": "Professional Branded Sign-Off",
+   "kind": "observed",
+   "verdict": "followed",
+   "severity": "major",
+   "evidence": [
+    {
+     "turn_id": 17,
+     "speaker": "agent",
+     "start_s": 147.36,
+     "end_s": 154.28,
+     "quote": "Thank you for contacting ShopEase, Mr. Chawla. Have a wonderful day and best wishes for your new home!"
+    }
+   ],
+   "certainty": "high",
+   "certainty_reason": "",
+   "reviewer_status": "pending",
+   "reviewer_note": "",
+   "explanation": "The agent concluded the call with a warm, professional branded sign-off."
+  },
+  {
+   "finding_id": "empathy_rating",
+   "criterion_id": "empathy_and_communication",
+   "name": "Empathy & Tone Assessment",
+   "kind": "inferred",
+   "verdict": "followed",
+   "severity": "minor",
+   "evidence": [
+    {
+     "turn_id": 0,
+     "speaker": "agent",
+     "start_s": 0.0,
+     "end_s": 0.0,
+     "quote": "I understand how inconvenient a house move can be, and I will personally help you find the best option."
+    }
+   ],
+   "certainty": "medium",
+   "certainty_reason": "Subjective appraisal of agent warmth and emotional validation",
+   "reviewer_status": "pending",
+   "reviewer_note": "",
+   "explanation": "Empathy score: 5/5"
+  }
+ ],
+ "cannot_judge": false,
+ "cannot_judge_reason": "",
+ "unreadable_parts": [],
+ "status": "ok",
+ "failed_step": null,
+ "completed_steps": [
+  "input_ingestion",
+  "quality_gate",
+  "call_state",
+  "topic_detection",
+  "scorecard_judgment",
+  "policy_check",
+  "evidence_verification",
+  "scoring"
+ ],
+ "emotion": {
+  "points": [
+   {
+    "turn": 2,
+    "emotion": "neutral",
+    "valence": 0.0
+   },
+   {
+    "turn": 4,
+    "emotion": "neutral",
+    "valence": 0.0
+   },
+   {
+    "turn": 6,
+    "emotion": "satisfied",
+    "valence": 1.0
+   },
+   {
+    "turn": 8,
+    "emotion": "neutral",
+    "valence": 0.0
+   },
+   {
+    "turn": 10,
+    "emotion": "frustrated",
+    "valence": -1.5
+   },
+   {
+    "turn": 12,
+    "emotion": "neutral",
+    "valence": 0.0
+   },
+   {
+    "turn": 14,
+    "emotion": "satisfied",
+    "valence": 1.0
+   },
+   {
+    "turn": 16,
+    "emotion": "neutral",
+    "valence": 0.0
+   },
+   {
+    "turn": 18,
+    "emotion": "satisfied",
+    "valence": 1.0
+   }
+  ],
+  "start": "neutral",
+  "middle": "frustrated",
+  "end": "satisfied",
+  "trend": "flat"
+ },
+ "agent_tone": {
+  "points": [
+   {
+    "turn": 1,
+    "emotion": "warm",
+    "valence": 1.0
+   },
+   {
+    "turn": 3,
+    "emotion": "calm",
+    "valence": 0.5
+   },
+   {
+    "turn": 5,
+    "emotion": "warm",
+    "valence": 1.0
+   },
+   {
+    "turn": 7,
+    "emotion": "empathetic",
+    "valence": 1.5
+   },
+   {
+    "turn": 9,
+    "emotion": "calm",
+    "valence": 0.5
+   },
+   {
+    "turn": 11,
+    "emotion": "warm",
+    "valence": 1.0
+   },
+   {
+    "turn": 13,
+    "emotion": "calm",
+    "valence": 0.5
+   },
+   {
+    "turn": 15,
+    "emotion": "neutral",
+    "valence": 0.0
+   },
+   {
+    "turn": 17,
+    "emotion": "warm",
+    "valence": 1.0
+   }
+  ],
+  "start": "warm",
+  "middle": "calm",
+  "end": "warm",
+  "trend": "flat"
+ },
+ "metrics": {
+  "duration_sec": 156.0,
+  "agent_turns": 9,
+  "customer_turns": 9,
+  "agent_talk_ratio": 0.763,
+  "longest_silence_sec": 1.2,
+  "dead_air_events": [],
+  "interruption_events": [],
+  "hold_events": [],
+  "holds": [],
+  "longest_hold_sec": 0.0,
+  "agent_words_per_minute": 156.0,
+  "agent_interruptions": 0
+ },
+ "strengths": [
+  "Greeted the customer professionally and completed identity verification correctly.",
+  "Paraphrased the customer's core issue clearly to confirm mutual understanding.",
+  "Expressed sincere empathy regarding the customer's house move and took personal ownership.",
+  "Provided a clear recap of the resolution and ticket number before closing the call.",
+  "Completed all 3 critical SOP steps that applied to this call."
+ ],
+ "coaching": [
+  {
+   "title": "Suggestion",
+   "advice": "Next time, maintain this high level of clarity and empathy throughout all customer interactions.",
+   "source": "llm",
+   "evidence": ""
+  }
+ ],
+ "risk_flags": [],
+ "retrieved_clause_ids": [
+  "SHP-2.2",
+  "SHP-2.1",
+  "PRV-1.3",
+  "SHP-1.1",
+  "PRV-2.2",
+  "SHP-2.3",
+  "SHP-3.1",
+  "PRV-1.1",
+  "REF-2.2",
+  "SHP-4.1",
+  "ESC-1.1",
+  "ESC-1.2",
+  "SHP-1.2",
+  "SHP-3.2",
+  "ESC-2.1",
+  "ESC-2.2",
+  "ESC-3.1",
+  "ESC-3.2",
+  "PRV-1.2",
+  "PRV-2.1",
+  "PRV-3.1"
+ ],
+ "transcript": {
+  "call_id": "call_108",
+  "source": "transcript",
+  "language": "te",
+  "audio_path": null,
+  "duration_seconds": 156.0,
+  "diarization_method": "given",
+  "transcript_quality": "good",
+  "quality_reason": "Transcript quality is reliable for compliance and rubric scoring.",
+  "unreadable_parts": [],
+  "turns": [
+   {
+    "turn_id": 1,
+    "speaker": "agent",
+    "start_time": 0.0,
+    "end_time": 11.15,
+    "text": "Thank you for calling ShopEase. My name is Farah Khan. Please note that this call is recorded for quality assurance and training purposes. How may I assist you today?",
+    "text_te": null,
+    "text_roman": null,
+    "asr_confidence": 1.0,
+    "silence_before": 0.0,
+    "overlaps_previous": false,
+    "emotion": "warm"
+   },
+   {
+    "turn_id": 2,
+    "speaker": "customer",
+    "start_time": 11.65,
+    "end_time": 23.19,
+    "text": "Hi Farah, I am Rohit Chawla. I moved to a new flat last week and I want to change the delivery address on an order I placed two days ago.",
+    "text_te": null,
+    "text_roman": null,
+    "asr_confidence": 1.0,
+    "silence_before": 0.5,
+    "overlaps_previous": false,
+    "emotion": "neutral"
+   },
+   {
+    "turn_id": 3,
+    "speaker": "agent",
+    "start_time": 24.29,
+    "end_time": 35.83,
+    "text": "I would be glad to look into that, Mr. Chawla. First, could you please share your Order ID and the last four digits of your registered mobile number for verification?",
+    "text_te": null,
+    "text_roman": null,
+    "asr_confidence": 1.0,
+    "silence_before": 1.1,
+    "overlaps_previous": false,
+    "emotion": "calm"
+   },
+   {
+    "turn_id": 4,
+    "speaker": "customer",
+    "start_time": 36.53,
+    "end_time": 39.99,
+    "text": "Sure, ORD-38760, and the last four digits are 6612.",
+    "text_te": null,
+    "text_roman": null,
+    "asr_confidence": 1.0,
+    "silence_before": 0.7,
+    "overlaps_previous": false,
+    "emotion": "neutral"
+   },
+   {
+    "turn_id": 5,
+    "speaker": "agent",
+    "start_time": 40.39,
+    "end_time": 51.16,
+    "text": "Thank you, you are verified. To make sure I understand, you would like to change the delivery address for order ORD-38760 because you have moved. Is that right?",
+    "text_te": null,
+    "text_roman": null,
+    "asr_confidence": 1.0,
+    "silence_before": 0.4,
+    "overlaps_previous": false,
+    "emotion": "warm"
+   },
+   {
+    "turn_id": 6,
+    "speaker": "customer",
+    "start_time": 52.16,
+    "end_time": 52.96,
+    "text": "Yes, exactly.",
+    "text_te": null,
+    "text_roman": null,
+    "asr_confidence": 1.0,
+    "silence_before": 1.0,
+    "overlaps_previous": false,
+    "emotion": "satisfied"
+   },
+   {
+    "turn_id": 7,
+    "speaker": "agent",
+    "start_time": 53.76,
+    "end_time": 63.38,
+    "text": "I understand how inconvenient a house move can be, and I will personally help you find the best option. Let me check the order status.",
+    "text_te": null,
+    "text_roman": null,
+    "asr_confidence": 1.0,
+    "silence_before": 0.8,
+    "overlaps_previous": false,
+    "emotion": "empathetic"
+   },
+   {
+    "turn_id": 8,
+    "speaker": "customer",
+    "start_time": 63.98,
+    "end_time": 64.78,
+    "text": "Okay.",
+    "text_te": null,
+    "text_roman": null,
+    "asr_confidence": 1.0,
+    "silence_before": 0.6,
+    "overlaps_previous": false,
+    "emotion": "neutral"
+   },
+   {
+    "turn_id": 9,
+    "speaker": "agent",
+    "start_time": 65.98,
+    "end_time": 81.75,
+    "text": "I can see the order is already in Shipped status. Address changes are only possible while an order is Confirmed or Processing, and once it is shipped, none of our agents has system permission to alter the address or recipient name.",
+    "text_te": null,
+    "text_roman": null,
+    "asr_confidence": 1.0,
+    "silence_before": 1.2,
+    "overlaps_previous": false,
+    "emotion": "calm"
+   },
+   {
+    "turn_id": 10,
+    "speaker": "customer",
+    "start_time": 82.35,
+    "end_time": 89.27,
+    "text": "Oh no. Is there nothing at all I can do? I will not be at the old address.",
+    "text_te": null,
+    "text_roman": null,
+    "asr_confidence": 1.0,
+    "silence_before": 0.6,
+    "overlaps_previous": false,
+    "emotion": "frustrated"
+   },
+   {
+    "turn_id": 11,
+    "speaker": "agent",
+    "start_time": 90.17,
+    "end_time": 107.48,
+    "text": "There is one option. In such cases you can request a cancellation of this order and place a fresh order to your new address. Since the order has not been delivered yet, I can raise the cancellation request for you right now if you wish.",
+    "text_te": null,
+    "text_roman": null,
+    "asr_confidence": 1.0,
+    "silence_before": 0.9,
+    "overlaps_previous": false,
+    "emotion": "warm"
+   },
+   {
+    "turn_id": 12,
+    "speaker": "customer",
+    "start_time": 107.98,
+    "end_time": 113.36,
+    "text": "That sounds fine. Please cancel it and I will reorder with the new address.",
+    "text_te": null,
+    "text_roman": null,
+    "asr_confidence": 1.0,
+    "silence_before": 0.5,
+    "overlaps_previous": false,
+    "emotion": "neutral"
+   },
+   {
+    "turn_id": 13,
+    "speaker": "agent",
+    "start_time": 114.46,
+    "end_time": 125.62,
+    "text": "Done, I have raised the cancellation request under ticket SHP-77412. Our team will confirm the cancellation by SMS, and any amount paid will return to your original payment method.",
+    "text_te": null,
+    "text_roman": null,
+    "asr_confidence": 1.0,
+    "silence_before": 1.1,
+    "overlaps_previous": false,
+    "emotion": "calm"
+   },
+   {
+    "turn_id": 14,
+    "speaker": "customer",
+    "start_time": 126.32,
+    "end_time": 128.62,
+    "text": "Great, thanks for explaining this clearly.",
+    "text_te": null,
+    "text_roman": null,
+    "asr_confidence": 1.0,
+    "silence_before": 0.7,
+    "overlaps_previous": false,
+    "emotion": "satisfied"
+   },
+   {
+    "turn_id": 15,
+    "speaker": "agent",
+    "start_time": 129.02,
+    "end_time": 144.02,
+    "text": "To summarise, the address cannot be changed on a shipped order, the cancellation request is raised under ticket SHP-77412, and you can place a fresh order with your new address. Is there anything else I can help you with?",
+    "text_te": null,
+    "text_roman": null,
+    "asr_confidence": 1.0,
+    "silence_before": 0.4,
+    "overlaps_previous": false,
+    "emotion": "neutral"
+   },
+   {
+    "turn_id": 16,
+    "speaker": "customer",
+    "start_time": 145.02,
+    "end_time": 146.56,
+    "text": "No, that is all.",
+    "text_te": null,
+    "text_roman": null,
+    "asr_confidence": 1.0,
+    "silence_before": 1.0,
+    "overlaps_previous": false,
+    "emotion": "neutral"
+   },
+   {
+    "turn_id": 17,
+    "speaker": "agent",
+    "start_time": 147.36,
+    "end_time": 154.28,
+    "text": "Thank you for contacting ShopEase, Mr. Chawla. Have a wonderful day and best wishes for your new home!",
+    "text_te": null,
+    "text_roman": null,
+    "asr_confidence": 1.0,
+    "silence_before": 0.8,
+    "overlaps_previous": false,
+    "emotion": "warm"
+   },
+   {
+    "turn_id": 18,
+    "speaker": "customer",
+    "start_time": 154.88,
+    "end_time": 156.04,
+    "text": "Thank you, goodbye.",
+    "text_te": null,
+    "text_roman": null,
+    "asr_confidence": 1.0,
+    "silence_before": 0.6,
+    "overlaps_previous": false,
+    "emotion": "satisfied"
+   }
+  ]
+ },
+ "meta": {
+  "model": "SOP: gemini-3.5-flash-lite \u00b7 Policy: gemini-3.5-flash",
+  "llm_requests": 2,
+  "diarization_method": "given",
+  "transcribe_seconds": 0.0,
+  "audit_seconds": 12.4,
+  "cache_hit": false,
+  "warnings": [],
+  "source_set": "synthetic",
+  "trace_id": "run_call_108_209342",
+  "status": "ok",
+  "failed_step": null,
+  "completed_steps": [
+   "input_ingestion",
+   "quality_gate",
+   "call_state",
+   "topic_detection",
+   "scorecard_judgment",
+   "policy_check",
+   "evidence_verification",
+   "scoring"
+  ],
+  "estimated_cost_usd": 0.018189,
+  "tokens_in": 8396,
+  "tokens_out": 2129,
+  "sop_model": "gemini-3.5-flash-lite",
+  "policy_model": "gemini-3.5-flash"
+ }
+}

@@ -298,4 +298,98 @@ def test_grade_badge_wording_critical_vs_failing(report):
     assert lbl_crit == "Failing / Critical Infraction"
     vb_crit = U.verdict_banner(crit_rep)
     assert "Critical Infraction" in vb_crit
+def test_report_header_mode_badge(report):
+    from src.audit import ui_html as U
+
+    # 1. Transcript audit mode
+    trans_rep = report.model_copy(update={
+        "meta": report.meta.model_copy(update={
+            "diarization_method": "given",
+        })
+    })
+    badge_trans = U.audit_mode_badge(trans_rep)
+    assert badge_trans == "Transcript audit"
+    hdr_trans = U.report_header(trans_rep)
+    assert "Transcript audit" in hdr_trans
+
+    # 2. Audio audit (stereo) mode
+    audio_rep = report.model_copy(update={
+        "meta": report.meta.model_copy(update={
+            "diarization_method": "stereo-channels (agent=left)",
+        })
+    })
+    badge_audio = U.audit_mode_badge(audio_rep)
+    assert badge_audio == "Audio audit (stereo)"
+    hdr_audio = U.report_header(audio_rep)
+    assert "Audio audit (stereo)" in hdr_audio
+
+    # 3. Old report without the field (empty or None)
+    old_rep = report.model_copy(update={
+        "meta": report.meta.model_copy(update={
+            "diarization_method": "",
+        })
+    })
+    badge_old = U.audit_mode_badge(old_rep)
+    assert badge_old is None
+    hdr_old = U.report_header(old_rep)
+    assert "Transcript audit" not in hdr_old
+    assert "Audio audit (stereo)" not in hdr_old
+
+    # None diarization_method
+    old_none_rep = report.model_copy(update={
+        "meta": report.meta.model_copy(update={
+            "diarization_method": None,
+        })
+    })
+    assert U.audit_mode_badge(old_none_rep) is None
+    hdr_none = U.report_header(old_none_rep)
+    assert "Transcript audit" not in hdr_none
+    assert "Audio audit (stereo)" not in hdr_none
+def test_report_header_mode_badge(report):
+    from src.audit import ui_html as U
+
+    # 1. Transcript audit mode
+    trans_rep = report.model_copy(update={
+        "meta": report.meta.model_copy(update={
+            "diarization_method": "given",
+        })
+    })
+    badge_trans = U.audit_mode_badge(trans_rep)
+    assert badge_trans == "Transcript audit"
+    hdr_trans = U.report_header(trans_rep)
+    assert "Transcript audit" in hdr_trans
+
+    # 2. Audio audit (stereo) mode
+    audio_rep = report.model_copy(update={
+        "meta": report.meta.model_copy(update={
+            "diarization_method": "stereo-channels (agent=left)",
+        })
+    })
+    badge_audio = U.audit_mode_badge(audio_rep)
+    assert badge_audio == "Audio audit (stereo)"
+    hdr_audio = U.report_header(audio_rep)
+    assert "Audio audit (stereo)" in hdr_audio
+
+    # 3. Old report without the field (empty or None)
+    old_rep = report.model_copy(update={
+        "meta": report.meta.model_copy(update={
+            "diarization_method": "",
+        })
+    })
+    badge_old = U.audit_mode_badge(old_rep)
+    assert badge_old is None
+    hdr_old = U.report_header(old_rep)
+    assert "Transcript audit" not in hdr_old
+    assert "Audio audit (stereo)" not in hdr_old
+
+    # None diarization_method
+    old_none_rep = report.model_copy(update={
+        "meta": report.meta.model_copy(update={
+            "diarization_method": None,
+        })
+    })
+    assert U.audit_mode_badge(old_none_rep) is None
+    hdr_none = U.report_header(old_none_rep)
+    assert "Transcript audit" not in hdr_none
+    assert "Audio audit (stereo)" not in hdr_none
 

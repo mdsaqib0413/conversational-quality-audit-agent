@@ -1,0 +1,946 @@
+{
+ "call_id": "call_103",
+ "generated_at": "2026-11-03T18:46:12",
+ "topic": "billing",
+ "topic_confidence": 0.928,
+ "signals": [],
+ "summary": "The customer called because their payment was deducted twice for a single order. The agent verified the account, explained that the second charge was a duplicate gateway re-attempt, and confirmed that the refund would be processed within 24 hours.",
+ "customer_issue": "double charge on bank statement",
+ "resolved": true,
+ "scores": {
+  "sop_score": 40.0,
+  "policy_score": 30.0,
+  "empathy_score": 15.0,
+  "communication_score": 15.0,
+  "overall_before_cap": 100.0,
+  "overall": 100.0,
+  "grade": "A",
+  "grade_label": "Exemplary Performance",
+  "critical_failure": false,
+  "cap_reasons": [],
+  "sop_points_earned": 27.0,
+  "sop_points_possible": 27.0,
+  "policy_penalty_total": 0.0,
+  "policy_applicable": true,
+  "timing_penalty": 0.0,
+  "timing_notes": [],
+  "empathy_rating": 5,
+  "clarity_rating": 5,
+  "professionalism_rating": 5,
+  "ownership_rating": 5,
+  "closure_rating": 5
+ },
+ "sop_results": [
+  {
+   "step_id": "GEN-01",
+   "title": "Professional Greeting & Identity Introduction",
+   "sop": "general_call_flow",
+   "weight": 2,
+   "critical": false,
+   "mandatory": true,
+   "status": "followed",
+   "points_earned": 2.0,
+   "points_possible": 2.0,
+   "turn": 1,
+   "quote": "Thank you for calling ShopEase. My name is Meera Pillai.",
+   "reason": "The agent greeted the customer, stated the company name, introduced herself, and asked how she could help.",
+   "missing": "",
+   "evidence_verified": true,
+   "what_good_looks_like": "The agent opens within 2 seconds of call connection with a polite, welcoming tone, introducing both the brand and representative name.",
+   "example_phrase": "Thank you for calling ShopEase. My name is Rahul. How may I assist you today?"
+  },
+  {
+   "step_id": "GEN-02",
+   "title": "Mandatory Call Recording Disclosure",
+   "sop": "general_call_flow",
+   "weight": 5,
+   "critical": true,
+   "mandatory": true,
+   "status": "followed",
+   "points_earned": 5.0,
+   "points_possible": 5.0,
+   "turn": 1,
+   "quote": "Please note that this call is recorded for quality assurance and training purposes.",
+   "reason": "The call recording disclosure was clearly stated in the first turn.",
+   "missing": "",
+   "evidence_verified": true,
+   "what_good_looks_like": "The disclosure is clearly articulated within the first two conversation turns without mumbling or skipping.",
+   "example_phrase": "Please note that this call is being recorded for quality monitoring and training purposes."
+  },
+  {
+   "step_id": "GEN-03",
+   "title": "Caller Identification & Two-Factor Verification",
+   "sop": "general_call_flow",
+   "weight": 5,
+   "critical": true,
+   "mandatory": true,
+   "status": "followed",
+   "points_earned": 5.0,
+   "points_possible": 5.0,
+   "turn": 3,
+   "quote": "could you please share your Order ID and the last four digits of your registered mobile number?",
+   "reason": "The agent requested both the Order ID and the last four digits of the phone number before revealing any account details.",
+   "missing": "",
+   "evidence_verified": true,
+   "what_good_looks_like": "The agent systematically validates both verification data points before disclosing addresses, order contents, or monetary info.",
+   "example_phrase": "To ensure your account security, may I please have your Order ID and the last four digits of your registered mobile number?"
+  },
+  {
+   "step_id": "GEN-04",
+   "title": "Active Listening & Issue Clarification",
+   "sop": "general_call_flow",
+   "weight": 3,
+   "critical": false,
+   "mandatory": true,
+   "status": "followed",
+   "points_earned": 3.0,
+   "points_possible": 3.0,
+   "turn": 5,
+   "quote": "Just to make sure I have understood correctly, you placed one order for Rs 2,199 but your bank shows two debits",
+   "reason": "The agent paraphrased the customer's core issue accurately to confirm mutual understanding.",
+   "missing": "",
+   "evidence_verified": true,
+   "what_good_looks_like": "The agent maintains silence while the customer speaks, takes notes, and summarizes the specific problem back to the customer.",
+   "example_phrase": "I understand that your package has not arrived and you would like to track the courier status. Is that correct?"
+  },
+  {
+   "step_id": "GEN-05",
+   "title": "Empathy & Ownership Statement",
+   "sop": "general_call_flow",
+   "weight": 3,
+   "critical": false,
+   "mandatory": true,
+   "status": "followed",
+   "points_earned": 3.0,
+   "points_possible": 3.0,
+   "turn": 7,
+   "quote": "I am sorry for the worry this has caused, Mr. Nair, and I will personally follow this through",
+   "reason": "The agent expressed genuine empathy for the customer's worry and took personal ownership of the solution.",
+   "missing": "",
+   "evidence_verified": true,
+   "what_good_looks_like": "Empathetic acknowledgment that avoids robotic stock phrases, validating the customer's frustration.",
+   "example_phrase": "I completely understand how frustrating it is to wait for an order, and I am personally going to sort this out for you."
+  },
+  {
+   "step_id": "GEN-06",
+   "title": "Accurate Policy Explanation & Solution Execution",
+   "sop": "general_call_flow",
+   "weight": 5,
+   "critical": true,
+   "mandatory": true,
+   "status": "followed",
+   "points_earned": 5.0,
+   "points_possible": 5.0,
+   "turn": 11,
+   "quote": "the full duplicate amount of Rs 2,199 is released to your original payment source... within 24 hours.",
+   "reason": "The agent accurately explained the company policy and exact timelines for the refund.",
+   "missing": "",
+   "evidence_verified": true,
+   "what_good_looks_like": "Explaining exact delivery or refund windows (e.g., 5-7 business days for refund, 7 days for electronics) without making out-of-policy promises.",
+   "example_phrase": "Per our policy, since your wireless earbuds are within the 7-day electronics return window, I have scheduled a reverse pickup for tomorrow."
+  },
+  {
+   "step_id": "GEN-07",
+   "title": "Additional Assistance & Next Steps Summary",
+   "sop": "general_call_flow",
+   "weight": 2,
+   "critical": false,
+   "mandatory": true,
+   "status": "followed",
+   "points_earned": 2.0,
+   "points_possible": 2.0,
+   "turn": 17,
+   "quote": "To summarise, one duplicate debit of Rs 2,199 on order ORD-61905 has been flagged, the amount is released",
+   "reason": "The agent provided a thorough recap of the resolution, referenced the ticket number, and asked if there was anything else.",
+   "missing": "",
+   "evidence_verified": true,
+   "what_good_looks_like": "Clear recap of actions taken, tracking reference shared, and an open invitation for secondary questions.",
+   "example_phrase": "To recap, I have initiated return ticket #SR-8921. You will receive an SMS confirmation. Is there anything else I can help you with today?"
+  },
+  {
+   "step_id": "GEN-08",
+   "title": "Professional Branded Sign-Off",
+   "sop": "general_call_flow",
+   "weight": 2,
+   "critical": false,
+   "mandatory": true,
+   "status": "followed",
+   "points_earned": 2.0,
+   "points_possible": 2.0,
+   "turn": 19,
+   "quote": "You are most welcome, Mr. Nair. Thank you for contacting ShopEase. Have a great day!",
+   "reason": "The agent concluded the interaction with a warm, professional branded sign-off.",
+   "missing": "",
+   "evidence_verified": true,
+   "what_good_looks_like": "Courteous parting statement thanking the customer, waiting for the customer to disconnect first.",
+   "example_phrase": "Thank you for contacting ShopEase. We appreciate your business and hope you have a great day ahead!"
+  }
+ ],
+ "policy_results": [
+  {
+   "clause_id": "PRV-1.2",
+   "policy_title": "Privacy and Identity Verification Policy: Mandatory Call Recording Disclosure",
+   "verdict": "compliant",
+   "severity": "none",
+   "penalty": 0.0,
+   "turn": 1,
+   "quote": "Please note that this call is recorded for quality assurance and training purposes.",
+   "claim": "Agent provided the mandatory call recording disclosure at the start of the call.",
+   "explanation": "The agent recited the exact mandatory recording disclosure during the initial call greeting, adhering to PRV-1.2.",
+   "policy_text": "1. Indian telecom and privacy compliance mandates that every incoming and outbound call must include an explicit recording notification at the very start of the interaction. 2. Representatives must recite the approved disclosure statement during their initial call greeting: - *\"Please note this call is recorded for quality assurance and training purposes.\"* 3. Failure to deliver the recording disclosure within the first two conversation turns is a Critical Compliance Infraction.",
+   "evidence_verified": true,
+   "repeat_turns": []
+  },
+  {
+   "clause_id": "PRV-1.1",
+   "policy_title": "Privacy and Identity Verification Policy: Mandatory Two-Factor Customer Identity Verification",
+   "verdict": "compliant",
+   "severity": "none",
+   "penalty": 0.0,
+   "turn": 3,
+   "quote": "could you please share your Order ID and the last four digits of your registered mobile number?",
+   "claim": "Agent asked for Order ID and last 4 digits of registered mobile number for identity verification.",
+   "explanation": "The agent requested the correct mandatory verification pair (Order ID and last 4 digits of mobile number) before providing details, complying with PRV-1.1.",
+   "policy_text": "1. To safeguard customer accounts and prevent unauthorized data leaks, frontline representatives must perform two-factor verification before disclosing any account details, order histories, delivery addresses, payment instruments, or processing refund instructions. 2. Mandatory Verification Pair: - Order ID (e.g., `ORD-XXXXX`) or registered Account Email Address. - Last four (4) digits of the registered mobile phone number. 3. Strict Prohibition: Revealing full addresses, item descriptions, f...",
+   "evidence_verified": true,
+   "repeat_turns": []
+  },
+  {
+   "clause_id": "BIL-2.1",
+   "policy_title": "Billing and Payments Policy: Double Deductions and Duplicate Billings",
+   "verdict": "compliant",
+   "severity": "none",
+   "penalty": 0.0,
+   "turn": 11,
+   "quote": "the full duplicate amount of Rs 2,199 is released to your original payment source, your UPI bank account, within 24 hours.",
+   "claim": "Agent stated that the duplicate charge of Rs 2,199 will be released to the original UPI payment source within 24 hours.",
+   "explanation": "Clause BIL-2.1 states that the duplicate charge is released to the original payment source within 24 hours, matching the agent's statement.",
+   "policy_text": "1. In instances where a customer is charged twice for a single order due to gateway re-attempts: - The secondary debit is flagged by the automated audit reconciliation. - Full restitution of the duplicate charge is released immediately to the original payment source within 24 hours. - Reversal reflection in the customer's statement takes 5 to 7 business days.",
+   "evidence_verified": true,
+   "repeat_turns": []
+  },
+  {
+   "clause_id": "REF-2.2",
+   "policy_title": "Refund and Returns Policy: Method of Refund Disbursement",
+   "verdict": "compliant",
+   "severity": "none",
+   "penalty": 0.0,
+   "turn": 17,
+   "quote": "the amount is released to your UPI source within 24 hours, and the bank statement will reflect it in 5 to 7 business days.",
+   "claim": "Agent summarized that the refund goes to the UPI source within 24 hours and reflects in 5 to 7 business days.",
+   "explanation": "Clause REF-2.2 states UPI payments return to the source bank account, and BIL-2.1 confirms the 24-hour release and 5 to 7 business day reflection timeline.",
+   "policy_text": "1. Refunds must be remitted strictly to the original payment method utilized during checkout: - Credit / Debit Card payments return to the identical card account. - Net Banking and UPI payments return to the source bank account. 2. Cash on Delivery (COD) Purchases: Refunds for COD orders are disbursed via NEFT bank transfer to the verified bank account or UPI VPA nominated by the customer in their account profile after completing identity verification. Refunds cannot be handed over in physica...",
+   "evidence_verified": true,
+   "repeat_turns": []
+  }
+ ],
+ "gaps": [],
+ "findings": [
+  {
+   "finding_id": "id_verif_verified",
+   "criterion_id": "identity_verification",
+   "name": "Identity Verification Protocol",
+   "kind": "observed",
+   "verdict": "followed",
+   "severity": "critical",
+   "evidence": [
+    {
+     "turn_id": 3,
+     "speaker": "agent",
+     "start_s": 25.45,
+     "end_s": 38.91,
+     "quote": "I understand your concern, Mr. Nair, and I will look"
+    }
+   ],
+   "certainty": "high",
+   "certainty_reason": "",
+   "reviewer_status": "pending",
+   "reviewer_note": "",
+   "explanation": "Identity verification successfully completed before disclosing account details."
+  },
+  {
+   "finding_id": "sop_GEN-01_1",
+   "criterion_id": "GEN-01",
+   "name": "Professional Greeting & Identity Introduction",
+   "kind": "observed",
+   "verdict": "followed",
+   "severity": "major",
+   "evidence": [
+    {
+     "turn_id": 1,
+     "speaker": "agent",
+     "start_s": 0.0,
+     "end_s": 11.15,
+     "quote": "Thank you for calling ShopEase. My name is Meera Pillai."
+    }
+   ],
+   "certainty": "high",
+   "certainty_reason": "",
+   "reviewer_status": "pending",
+   "reviewer_note": "",
+   "explanation": "The agent greeted the customer, stated the company name, introduced herself, and asked how she could help."
+  },
+  {
+   "finding_id": "sop_GEN-02_2",
+   "criterion_id": "GEN-02",
+   "name": "Mandatory Call Recording Disclosure",
+   "kind": "observed",
+   "verdict": "followed",
+   "severity": "critical",
+   "evidence": [
+    {
+     "turn_id": 1,
+     "speaker": "agent",
+     "start_s": 0.0,
+     "end_s": 11.15,
+     "quote": "Please note that this call is recorded for quality assurance and training purposes."
+    }
+   ],
+   "certainty": "high",
+   "certainty_reason": "",
+   "reviewer_status": "pending",
+   "reviewer_note": "",
+   "explanation": "The call recording disclosure was clearly stated in the first turn."
+  },
+  {
+   "finding_id": "sop_GEN-03_3",
+   "criterion_id": "GEN-03",
+   "name": "Caller Identification & Two-Factor Verification",
+   "kind": "observed",
+   "verdict": "followed",
+   "severity": "critical",
+   "evidence": [
+    {
+     "turn_id": 3,
+     "speaker": "agent",
+     "start_s": 25.45,
+     "end_s": 38.91,
+     "quote": "could you please share your Order ID and the last four digits of your registered mobile number?"
+    }
+   ],
+   "certainty": "high",
+   "certainty_reason": "",
+   "reviewer_status": "pending",
+   "reviewer_note": "",
+   "explanation": "The agent requested both the Order ID and the last four digits of the phone number before revealing any account details."
+  },
+  {
+   "finding_id": "sop_GEN-04_4",
+   "criterion_id": "GEN-04",
+   "name": "Active Listening & Issue Clarification",
+   "kind": "observed",
+   "verdict": "followed",
+   "severity": "major",
+   "evidence": [
+    {
+     "turn_id": 5,
+     "speaker": "agent",
+     "start_s": 45.01,
+     "end_s": 57.7,
+     "quote": "Just to make sure I have understood correctly, you placed one order for Rs 2,199 but your bank shows two debits"
+    }
+   ],
+   "certainty": "high",
+   "certainty_reason": "",
+   "reviewer_status": "pending",
+   "reviewer_note": "",
+   "explanation": "The agent paraphrased the customer's core issue accurately to confirm mutual understanding."
+  },
+  {
+   "finding_id": "sop_GEN-05_5",
+   "criterion_id": "GEN-05",
+   "name": "Empathy & Ownership Statement",
+   "kind": "inferred",
+   "verdict": "followed",
+   "severity": "major",
+   "evidence": [
+    {
+     "turn_id": 7,
+     "speaker": "agent",
+     "start_s": 65.65,
+     "end_s": 76.81,
+     "quote": "I am sorry for the worry this has caused, Mr. Nair, and I will personally follow this through"
+    }
+   ],
+   "certainty": "high",
+   "certainty_reason": "",
+   "reviewer_status": "pending",
+   "reviewer_note": "",
+   "explanation": "The agent expressed genuine empathy for the customer's worry and took personal ownership of the solution."
+  },
+  {
+   "finding_id": "sop_GEN-06_6",
+   "criterion_id": "GEN-06",
+   "name": "Accurate Policy Explanation & Solution Execution",
+   "kind": "observed",
+   "verdict": "followed",
+   "severity": "critical",
+   "evidence": [
+    {
+     "turn_id": 11,
+     "speaker": "agent",
+     "start_s": 96.65,
+     "end_s": 112.03,
+     "quote": "Under our policy, the full duplicate amount of"
+    }
+   ],
+   "certainty": "high",
+   "certainty_reason": "",
+   "reviewer_status": "pending",
+   "reviewer_note": "",
+   "explanation": "The agent accurately explained the company policy and exact timelines for the refund."
+  },
+  {
+   "finding_id": "sop_GEN-07_7",
+   "criterion_id": "GEN-07",
+   "name": "Additional Assistance & Next Steps Summary",
+   "kind": "observed",
+   "verdict": "followed",
+   "severity": "major",
+   "evidence": [
+    {
+     "turn_id": 17,
+     "speaker": "agent",
+     "start_s": 148.07,
+     "end_s": 167.68,
+     "quote": "To summarise, one duplicate debit of Rs 2,199 on order ORD-61905 has been flagged, the amount is released"
+    }
+   ],
+   "certainty": "high",
+   "certainty_reason": "",
+   "reviewer_status": "pending",
+   "reviewer_note": "",
+   "explanation": "The agent provided a thorough recap of the resolution, referenced the ticket number, and asked if there was anything else."
+  },
+  {
+   "finding_id": "sop_GEN-08_8",
+   "criterion_id": "GEN-08",
+   "name": "Professional Branded Sign-Off",
+   "kind": "observed",
+   "verdict": "followed",
+   "severity": "major",
+   "evidence": [
+    {
+     "turn_id": 19,
+     "speaker": "agent",
+     "start_s": 173.33,
+     "end_s": 179.1,
+     "quote": "You are most welcome, Mr. Nair. Thank you for contacting ShopEase. Have a great day!"
+    }
+   ],
+   "certainty": "high",
+   "certainty_reason": "",
+   "reviewer_status": "pending",
+   "reviewer_note": "",
+   "explanation": "The agent concluded the interaction with a warm, professional branded sign-off."
+  },
+  {
+   "finding_id": "empathy_rating",
+   "criterion_id": "empathy_and_communication",
+   "name": "Empathy & Tone Assessment",
+   "kind": "inferred",
+   "verdict": "followed",
+   "severity": "minor",
+   "evidence": [
+    {
+     "turn_id": 0,
+     "speaker": "agent",
+     "start_s": 0.0,
+     "end_s": 0.0,
+     "quote": "I am sorry for the worry this has caused, Mr. Nair, and I will personally follow this through until it is resolved."
+    }
+   ],
+   "certainty": "medium",
+   "certainty_reason": "Subjective appraisal of agent warmth and emotional validation",
+   "reviewer_status": "pending",
+   "reviewer_note": "",
+   "explanation": "Empathy score: 5/5"
+  }
+ ],
+ "cannot_judge": false,
+ "cannot_judge_reason": "",
+ "unreadable_parts": [],
+ "status": "ok",
+ "failed_step": null,
+ "completed_steps": [
+  "input_ingestion",
+  "quality_gate",
+  "call_state",
+  "topic_detection",
+  "scorecard_judgment",
+  "policy_check",
+  "evidence_verification",
+  "scoring"
+ ],
+ "emotion": {
+  "points": [
+   {
+    "turn": 2,
+    "emotion": "anxious",
+    "valence": -1.0
+   },
+   {
+    "turn": 4,
+    "emotion": "neutral",
+    "valence": 0.0
+   },
+   {
+    "turn": 6,
+    "emotion": "neutral",
+    "valence": 0.0
+   },
+   {
+    "turn": 8,
+    "emotion": "neutral",
+    "valence": 0.0
+   },
+   {
+    "turn": 10,
+    "emotion": "confused",
+    "valence": -0.5
+   },
+   {
+    "turn": 12,
+    "emotion": "neutral",
+    "valence": 0.0
+   },
+   {
+    "turn": 14,
+    "emotion": "satisfied",
+    "valence": 1.0
+   },
+   {
+    "turn": 16,
+    "emotion": "satisfied",
+    "valence": 1.0
+   },
+   {
+    "turn": 18,
+    "emotion": "satisfied",
+    "valence": 1.0
+   },
+   {
+    "turn": 20,
+    "emotion": "satisfied",
+    "valence": 1.0
+   }
+  ],
+  "start": "anxious",
+  "middle": "neutral",
+  "end": "satisfied",
+  "trend": "improved"
+ },
+ "agent_tone": {
+  "points": [
+   {
+    "turn": 1,
+    "emotion": "warm",
+    "valence": 1.0
+   },
+   {
+    "turn": 3,
+    "emotion": "calm",
+    "valence": 0.5
+   },
+   {
+    "turn": 5,
+    "emotion": "empathetic",
+    "valence": 1.5
+   },
+   {
+    "turn": 7,
+    "emotion": "empathetic",
+    "valence": 1.5
+   },
+   {
+    "turn": 9,
+    "emotion": "calm",
+    "valence": 0.5
+   },
+   {
+    "turn": 11,
+    "emotion": "calm",
+    "valence": 0.5
+   },
+   {
+    "turn": 13,
+    "emotion": "calm",
+    "valence": 0.5
+   },
+   {
+    "turn": 15,
+    "emotion": "warm",
+    "valence": 1.0
+   },
+   {
+    "turn": 17,
+    "emotion": "calm",
+    "valence": 0.5
+   },
+   {
+    "turn": 19,
+    "emotion": "warm",
+    "valence": 1.0
+   }
+  ],
+  "start": "warm",
+  "middle": "calm",
+  "end": "warm",
+  "trend": "flat"
+ },
+ "metrics": {
+  "duration_sec": 180.5,
+  "agent_turns": 10,
+  "customer_turns": 10,
+  "agent_talk_ratio": 0.742,
+  "longest_silence_sec": 1.2,
+  "dead_air_events": [],
+  "interruption_events": [],
+  "hold_events": [],
+  "holds": [],
+  "longest_hold_sec": 0.0,
+  "agent_words_per_minute": 156.0,
+  "agent_interruptions": 0
+ },
+ "strengths": [
+  "Used the customer's name naturally throughout the conversation.",
+  "Correctly verified identity before discussing any order or payment specifics.",
+  "Clearly paraphrased the issue to confirm understanding.",
+  "Delivered a precise and professional summary with the ticket reference at the end.",
+  "Completed all 3 critical SOP steps that applied to this call."
+ ],
+ "coaching": [
+  {
+   "title": "Suggestion",
+   "advice": "Next time, maintain this high level of active listening and structured closing for all billing disputes.",
+   "source": "llm",
+   "evidence": ""
+  }
+ ],
+ "risk_flags": [],
+ "retrieved_clause_ids": [
+  "BIL-2.1",
+  "BIL-1.2",
+  "BIL-1.1",
+  "REF-2.1",
+  "BIL-1.3",
+  "REF-2.2",
+  "BIL-2.3",
+  "PRV-1.3",
+  "PRV-1.1",
+  "REF-4.1",
+  "ESC-1.1",
+  "ESC-1.2",
+  "BIL-2.2",
+  "BIL-3.1",
+  "ESC-2.1",
+  "ESC-2.2",
+  "ESC-3.1",
+  "ESC-3.2",
+  "PRV-1.2",
+  "PRV-2.1",
+  "PRV-2.2",
+  "PRV-3.1"
+ ],
+ "transcript": {
+  "call_id": "call_103",
+  "source": "transcript",
+  "language": "te",
+  "audio_path": null,
+  "duration_seconds": 180.5,
+  "diarization_method": "given",
+  "transcript_quality": "good",
+  "quality_reason": "Transcript quality is reliable for compliance and rubric scoring.",
+  "unreadable_parts": [],
+  "turns": [
+   {
+    "turn_id": 1,
+    "speaker": "agent",
+    "start_time": 0.0,
+    "end_time": 11.15,
+    "text": "Thank you for calling ShopEase. My name is Meera Pillai. Please note that this call is recorded for quality assurance and training purposes. How may I help you today?",
+    "text_te": null,
+    "text_roman": null,
+    "asr_confidence": 1.0,
+    "silence_before": 0.0,
+    "overlaps_previous": false,
+    "emotion": "warm"
+   },
+   {
+    "turn_id": 2,
+    "speaker": "customer",
+    "start_time": 11.65,
+    "end_time": 24.35,
+    "text": "Hello Meera, I am Arjun Nair. I placed an order yesterday and my bank statement shows that the payment of Rs 2,199 was deducted twice. I am quite worried about this double charge.",
+    "text_te": null,
+    "text_roman": null,
+    "asr_confidence": 1.0,
+    "silence_before": 0.5,
+    "overlaps_previous": false,
+    "emotion": "anxious"
+   },
+   {
+    "turn_id": 3,
+    "speaker": "agent",
+    "start_time": 25.45,
+    "end_time": 38.91,
+    "text": "I understand your concern, Mr. Nair, and I will look into this right away. First, for your security, could you please share your Order ID and the last four digits of your registered mobile number?",
+    "text_te": null,
+    "text_roman": null,
+    "asr_confidence": 1.0,
+    "silence_before": 1.1,
+    "overlaps_previous": false,
+    "emotion": "calm"
+   },
+   {
+    "turn_id": 4,
+    "speaker": "customer",
+    "start_time": 39.61,
+    "end_time": 44.61,
+    "text": "Yes, the order ID is ORD-61905 and the last four digits are 3340.",
+    "text_te": null,
+    "text_roman": null,
+    "asr_confidence": 1.0,
+    "silence_before": 0.7,
+    "overlaps_previous": false,
+    "emotion": "neutral"
+   },
+   {
+    "turn_id": 5,
+    "speaker": "agent",
+    "start_time": 45.01,
+    "end_time": 57.7,
+    "text": "Thank you, you are verified. Just to make sure I have understood correctly, you placed one order for Rs 2,199 but your bank shows two debits of the same amount. Is that correct?",
+    "text_te": null,
+    "text_roman": null,
+    "asr_confidence": 1.0,
+    "silence_before": 0.4,
+    "overlaps_previous": false,
+    "emotion": "empathetic"
+   },
+   {
+    "turn_id": 6,
+    "speaker": "customer",
+    "start_time": 58.7,
+    "end_time": 64.85,
+    "text": "Yes, that is exactly it. Two debits within a minute of each other, both through UPI.",
+    "text_te": null,
+    "text_roman": null,
+    "asr_confidence": 1.0,
+    "silence_before": 1.0,
+    "overlaps_previous": false,
+    "emotion": "neutral"
+   },
+   {
+    "turn_id": 7,
+    "speaker": "agent",
+    "start_time": 65.65,
+    "end_time": 76.81,
+    "text": "I am sorry for the worry this has caused, Mr. Nair, and I will personally follow this through until it is resolved. Let me check the payment gateway logs.",
+    "text_te": null,
+    "text_roman": null,
+    "asr_confidence": 1.0,
+    "silence_before": 0.8,
+    "overlaps_previous": false,
+    "emotion": "empathetic"
+   },
+   {
+    "turn_id": 8,
+    "speaker": "customer",
+    "start_time": 77.41,
+    "end_time": 78.56,
+    "text": "Sure, please check.",
+    "text_te": null,
+    "text_roman": null,
+    "asr_confidence": 1.0,
+    "silence_before": 0.6,
+    "overlaps_previous": false,
+    "emotion": "neutral"
+   },
+   {
+    "turn_id": 9,
+    "speaker": "agent",
+    "start_time": 79.76,
+    "end_time": 92.07,
+    "text": "I can see the second debit was caused by a gateway re-attempt while the first payment was being confirmed. It has already been flagged by our automated audit reconciliation as a duplicate.",
+    "text_te": null,
+    "text_roman": null,
+    "asr_confidence": 1.0,
+    "silence_before": 1.2,
+    "overlaps_previous": false,
+    "emotion": "calm"
+   },
+   {
+    "turn_id": 10,
+    "speaker": "customer",
+    "start_time": 92.67,
+    "end_time": 95.75,
+    "text": "Okay. So what happens to the extra amount?",
+    "text_te": null,
+    "text_roman": null,
+    "asr_confidence": 1.0,
+    "silence_before": 0.6,
+    "overlaps_previous": false,
+    "emotion": "confused"
+   },
+   {
+    "turn_id": 11,
+    "speaker": "agent",
+    "start_time": 96.65,
+    "end_time": 112.03,
+    "text": "Under our policy, the full duplicate amount of Rs 2,199 is released to your original payment source, your UPI bank account, within 24 hours. After that, it can take 5 to 7 business days to show in your bank statement.",
+    "text_te": null,
+    "text_roman": null,
+    "asr_confidence": 1.0,
+    "silence_before": 0.9,
+    "overlaps_previous": false,
+    "emotion": "calm"
+   },
+   {
+    "turn_id": 12,
+    "speaker": "customer",
+    "start_time": 112.53,
+    "end_time": 117.92,
+    "text": "So it may take up to a week to see it in my statement?",
+    "text_te": null,
+    "text_roman": null,
+    "asr_confidence": 1.0,
+    "silence_before": 0.5,
+    "overlaps_previous": false,
+    "emotion": "neutral"
+   },
+   {
+    "turn_id": 13,
+    "speaker": "agent",
+    "start_time": 119.02,
+    "end_time": 133.25,
+    "text": "Yes, the release from our side happens within 24 hours, but the bank's own clearance can take 5 to 7 business days to reflect. Your actual order for Rs 2,199 is confirmed and will not be affected.",
+    "text_te": null,
+    "text_roman": null,
+    "asr_confidence": 1.0,
+    "silence_before": 1.1,
+    "overlaps_previous": false,
+    "emotion": "calm"
+   },
+   {
+    "turn_id": 14,
+    "speaker": "customer",
+    "start_time": 133.95,
+    "end_time": 137.41,
+    "text": "That is a relief. Will I get any confirmation?",
+    "text_te": null,
+    "text_roman": null,
+    "asr_confidence": 1.0,
+    "silence_before": 0.7,
+    "overlaps_previous": false,
+    "emotion": "satisfied"
+   },
+   {
+    "turn_id": 15,
+    "speaker": "agent",
+    "start_time": 137.81,
+    "end_time": 145.12,
+    "text": "I have logged this under ticket number BIL-30871, and you will receive an SMS once the release is initiated.",
+    "text_te": null,
+    "text_roman": null,
+    "asr_confidence": 1.0,
+    "silence_before": 0.4,
+    "overlaps_previous": false,
+    "emotion": "warm"
+   },
+   {
+    "turn_id": 16,
+    "speaker": "customer",
+    "start_time": 146.12,
+    "end_time": 147.27,
+    "text": "Great, thank you.",
+    "text_te": null,
+    "text_roman": null,
+    "asr_confidence": 1.0,
+    "silence_before": 1.0,
+    "overlaps_previous": false,
+    "emotion": "satisfied"
+   },
+   {
+    "turn_id": 17,
+    "speaker": "agent",
+    "start_time": 148.07,
+    "end_time": 167.68,
+    "text": "To summarise, one duplicate debit of Rs 2,199 on order ORD-61905 has been flagged, the amount is released to your UPI source within 24 hours, and the bank statement will reflect it in 5 to 7 business days. The reference is BIL-30871. Is there anything else I can help you with?",
+    "text_te": null,
+    "text_roman": null,
+    "asr_confidence": 1.0,
+    "silence_before": 0.8,
+    "overlaps_previous": false,
+    "emotion": "calm"
+   },
+   {
+    "turn_id": 18,
+    "speaker": "customer",
+    "start_time": 168.28,
+    "end_time": 172.13,
+    "text": "No, that covers everything. Thanks for sorting it out quickly.",
+    "text_te": null,
+    "text_roman": null,
+    "asr_confidence": 1.0,
+    "silence_before": 0.6,
+    "overlaps_previous": false,
+    "emotion": "satisfied"
+   },
+   {
+    "turn_id": 19,
+    "speaker": "agent",
+    "start_time": 173.33,
+    "end_time": 179.1,
+    "text": "You are most welcome, Mr. Nair. Thank you for contacting ShopEase. Have a great day!",
+    "text_te": null,
+    "text_roman": null,
+    "asr_confidence": 1.0,
+    "silence_before": 1.2,
+    "overlaps_previous": false,
+    "emotion": "warm"
+   },
+   {
+    "turn_id": 20,
+    "speaker": "customer",
+    "start_time": 179.7,
+    "end_time": 180.5,
+    "text": "Bye.",
+    "text_te": null,
+    "text_roman": null,
+    "asr_confidence": 1.0,
+    "silence_before": 0.6,
+    "overlaps_previous": false,
+    "emotion": "satisfied"
+   }
+  ]
+ },
+ "meta": {
+  "model": "SOP: gemini-3.5-flash-lite \u00b7 Policy: gemini-3.5-flash",
+  "llm_requests": 2,
+  "diarization_method": "given",
+  "transcribe_seconds": 0.0,
+  "audit_seconds": 39.2,
+  "cache_hit": false,
+  "warnings": [],
+  "source_set": "synthetic",
+  "trace_id": "run_call_103_733355",
+  "status": "ok",
+  "failed_step": null,
+  "completed_steps": [
+   "input_ingestion",
+   "quality_gate",
+   "call_state",
+   "topic_detection",
+   "scorecard_judgment",
+   "policy_check",
+   "evidence_verification",
+   "scoring"
+  ],
+  "estimated_cost_usd": 0.019487,
+  "tokens_in": 8869,
+  "tokens_out": 2234,
+  "sop_model": "gemini-3.5-flash-lite",
+  "policy_model": "gemini-3.5-flash"
+ }
+}

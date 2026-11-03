@@ -1,0 +1,985 @@
+{
+ "call_id": "call_104",
+ "generated_at": "2026-11-03T18:46:32",
+ "topic": "billing",
+ "topic_confidence": 0.769,
+ "signals": [],
+ "summary": "The customer called to inquire about a bank charge of Rs 4,750 and the shipping details for an order placed by his wife. The agent revealed account details without proper verification and handled the duplicate charge complaint poorly. The call ended without a proper summary or branded sign-off.",
+ "customer_issue": "Unknown bank charge and duplicate billing",
+ "resolved": false,
+ "scores": {
+  "sop_score": 11.1,
+  "policy_score": 0.0,
+  "empathy_score": 0.0,
+  "communication_score": 3.8,
+  "overall_before_cap": 14.9,
+  "overall": 14.9,
+  "grade": "D",
+  "grade_label": "Failing / Critical Infraction",
+  "critical_failure": true,
+  "cap_reasons": [
+   "Critical step GEN-02 (Mandatory Call Recording Disclosure) was missed",
+   "Critical step GEN-03 (Caller Identification & Two-Factor Verification) was missed",
+   "Critical privacy violation (PRV-1.2)",
+   "Critical privacy violation (PRV-1.1)",
+   "Critical privacy violation (PRV-1.3)"
+  ],
+  "sop_points_earned": 7.5,
+  "sop_points_possible": 27.0,
+  "policy_penalty_total": 56.0,
+  "policy_applicable": true,
+  "timing_penalty": 0.0,
+  "timing_notes": [],
+  "empathy_rating": 0,
+  "clarity_rating": 3,
+  "professionalism_rating": 1,
+  "ownership_rating": 1,
+  "closure_rating": 0
+ },
+ "sop_results": [
+  {
+   "step_id": "GEN-01",
+   "title": "Professional Greeting & Identity Introduction",
+   "sop": "general_call_flow",
+   "weight": 2,
+   "critical": false,
+   "mandatory": true,
+   "status": "partial",
+   "points_earned": 1.0,
+   "points_possible": 2.0,
+   "turn": 1,
+   "quote": "Hello, ShopEase support, tell me.",
+   "reason": "The agent stated the company name and greeted the customer, but failed to provide their own name and use a high-energy welcoming tone.",
+   "missing": "agent name and welcoming tone",
+   "evidence_verified": true,
+   "what_good_looks_like": "The agent opens within 2 seconds of call connection with a polite, welcoming tone, introducing both the brand and representative name.",
+   "example_phrase": "Thank you for calling ShopEase. My name is Rahul. How may I assist you today?"
+  },
+  {
+   "step_id": "GEN-02",
+   "title": "Mandatory Call Recording Disclosure",
+   "sop": "general_call_flow",
+   "weight": 5,
+   "critical": true,
+   "mandatory": true,
+   "status": "missed",
+   "points_earned": 0.0,
+   "points_possible": 5.0,
+   "turn": null,
+   "quote": "",
+   "reason": "The agent completely omitted the statutory call recording disclosure.",
+   "missing": "recording disclosure notification",
+   "evidence_verified": true,
+   "what_good_looks_like": "The disclosure is clearly articulated within the first two conversation turns without mumbling or skipping.",
+   "example_phrase": "Please note that this call is being recorded for quality monitoring and training purposes."
+  },
+  {
+   "step_id": "GEN-03",
+   "title": "Caller Identification & Two-Factor Verification",
+   "sop": "general_call_flow",
+   "weight": 5,
+   "critical": true,
+   "mandatory": true,
+   "status": "missed",
+   "points_earned": 0.0,
+   "points_possible": 5.0,
+   "turn": 5,
+   "quote": "No problem, I found it. The order is for a Prestige induction cooktop, Rs 4,750,",
+   "reason": "Critical breach: account details discussed at turn 5 before identity verification completed.",
+   "missing": "order id and phone number verification",
+   "evidence_verified": true,
+   "what_good_looks_like": "The agent systematically validates both verification data points before disclosing addresses, order contents, or monetary info.",
+   "example_phrase": "To ensure your account security, may I please have your Order ID and the last four digits of your registered mobile number?"
+  },
+  {
+   "step_id": "GEN-04",
+   "title": "Active Listening & Issue Clarification",
+   "sop": "general_call_flow",
+   "weight": 3,
+   "critical": false,
+   "mandatory": true,
+   "status": "partial",
+   "points_earned": 1.5,
+   "points_possible": 3.0,
+   "turn": 3,
+   "quote": "Sure sir, give me your wife's name and I will check.",
+   "reason": "The agent asked for information but failed to paraphrase or confirm mutual understanding of the core issue.",
+   "missing": "paraphrasing the core issue",
+   "evidence_verified": true,
+   "what_good_looks_like": "The agent maintains silence while the customer speaks, takes notes, and summarizes the specific problem back to the customer.",
+   "example_phrase": "I understand that your package has not arrived and you would like to track the courier status. Is that correct?"
+  },
+  {
+   "step_id": "GEN-05",
+   "title": "Empathy & Ownership Statement",
+   "sop": "general_call_flow",
+   "weight": 3,
+   "critical": false,
+   "mandatory": true,
+   "status": "missed",
+   "points_earned": 0.0,
+   "points_possible": 3.0,
+   "turn": null,
+   "quote": "",
+   "reason": "The agent did not express empathy or offer personal reassurance regarding the charges or the customer's concerns.",
+   "missing": "empathy statement and personal reassurance",
+   "evidence_verified": true,
+   "what_good_looks_like": "Empathetic acknowledgment that avoids robotic stock phrases, validating the customer's frustration.",
+   "example_phrase": "I completely understand how frustrating it is to wait for an order, and I am personally going to sort this out for you."
+  },
+  {
+   "step_id": "GEN-06",
+   "title": "Accurate Policy Explanation & Solution Execution",
+   "sop": "general_call_flow",
+   "weight": 5,
+   "critical": true,
+   "mandatory": true,
+   "status": "followed",
+   "points_earned": 5.0,
+   "points_possible": 5.0,
+   "turn": 7,
+   "quote": "The duplicate will be sorted out, it takes around 15 to 20 working days to come back.",
+   "reason": "The agent correctly explained the timeline for resolving the duplicate charge.",
+   "missing": "",
+   "evidence_verified": true,
+   "what_good_looks_like": "Explaining exact delivery or refund windows (e.g., 5-7 business days for refund, 7 days for electronics) without making out-of-policy promises.",
+   "example_phrase": "Per our policy, since your wireless earbuds are within the 7-day electronics return window, I have scheduled a reverse pickup for tomorrow."
+  },
+  {
+   "step_id": "GEN-07",
+   "title": "Additional Assistance & Next Steps Summary",
+   "sop": "general_call_flow",
+   "weight": 2,
+   "critical": false,
+   "mandatory": true,
+   "status": "missed",
+   "points_earned": 0.0,
+   "points_possible": 2.0,
+   "turn": null,
+   "quote": "",
+   "reason": "The agent failed to summarize the agreed resolution or provide a ticket reference number.",
+   "missing": "summary of resolution and ticket reference",
+   "evidence_verified": true,
+   "what_good_looks_like": "Clear recap of actions taken, tracking reference shared, and an open invitation for secondary questions.",
+   "example_phrase": "To recap, I have initiated return ticket #SR-8921. You will receive an SMS confirmation. Is there anything else I can help you with today?"
+  },
+  {
+   "step_id": "GEN-08",
+   "title": "Professional Branded Sign-Off",
+   "sop": "general_call_flow",
+   "weight": 2,
+   "critical": false,
+   "mandatory": true,
+   "status": "missed",
+   "points_earned": 0.0,
+   "points_possible": 2.0,
+   "turn": null,
+   "quote": "",
+   "reason": "The agent ended the call abruptly with a casual 'Okay.' instead of a professional branded sign-off.",
+   "missing": "professional branded sign-off",
+   "evidence_verified": true,
+   "what_good_looks_like": "Courteous parting statement thanking the customer, waiting for the customer to disconnect first.",
+   "example_phrase": "Thank you for contacting ShopEase. We appreciate your business and hope you have a great day ahead!"
+  }
+ ],
+ "policy_results": [
+  {
+   "clause_id": "PRV-1.2",
+   "policy_title": "Privacy and Identity Verification Policy: Mandatory Call Recording Disclosure",
+   "verdict": "violation",
+   "severity": "critical",
+   "penalty": 15.0,
+   "turn": 1,
+   "quote": "Hello, ShopEase support, tell me.",
+   "claim": "Agent opened the call without stating the mandatory call recording disclosure.",
+   "explanation": "PRV-1.2 requires the mandatory call recording disclosure to be recited within the first two turns. The agent failed to recite it.",
+   "policy_text": "1. Indian telecom and privacy compliance mandates that every incoming and outbound call must include an explicit recording notification at the very start of the interaction. 2. Representatives must recite the approved disclosure statement during their initial call greeting: - *\"Please note this call is recorded for quality assurance and training purposes.\"* 3. Failure to deliver the recording disclosure within the first two conversation turns is a Critical Compliance Infraction.",
+   "evidence_verified": true,
+   "repeat_turns": []
+  },
+  {
+   "clause_id": "PRV-1.1",
+   "policy_title": "Privacy and Identity Verification Policy: Mandatory Two-Factor Customer Identity Verification",
+   "verdict": "violation",
+   "severity": "critical",
+   "penalty": 15.0,
+   "turn": 5,
+   "quote": "The order is for a Prestige induction cooktop, Rs 4,750, paid with a debit card ending 4412, and it is shipped to Flat 8B",
+   "claim": "Agent shared order details and full shipping address without conducting 2FA verification.",
+   "explanation": "PRV-1.1 strictly prohibits disclosing order details or delivery addresses before performing two-factor verification (Order ID/email + last 4 digits of phone number).",
+   "policy_text": "1. To safeguard customer accounts and prevent unauthorized data leaks, frontline representatives must perform two-factor verification before disclosing any account details, order histories, delivery addresses, payment instruments, or processing refund instructions. 2. Mandatory Verification Pair: - Order ID (e.g., `ORD-XXXXX`) or registered Account Email Address. - Last four (4) digits of the registered mobile phone number. 3. Strict Prohibition: Revealing full addresses, item descriptions, f...",
+   "evidence_verified": true,
+   "repeat_turns": []
+  },
+  {
+   "clause_id": "PRV-2.2",
+   "policy_title": "Privacy and Identity Verification Policy: Delivery Address Masking and Privacy",
+   "verdict": "violation",
+   "severity": "major",
+   "penalty": 8.0,
+   "turn": 5,
+   "quote": "shipped to Flat 8B, Lotus Residency, Linking Road, Bandra, Mumbai 400050",
+   "claim": "Agent read out the complete street address and door number out loud.",
+   "explanation": "PRV-2.2 states representatives must use partial masking and never recite the complete street address or door number out loud unless the customer recites it first.",
+   "policy_text": "1. When confirming shipping details with an authenticated caller, representatives must use partial masking: - Quote only the recipient's first name, city, and pin code. - Never recite the complete street address or door number out loud unless the customer recites it first for confirmation.",
+   "evidence_verified": true,
+   "repeat_turns": []
+  },
+  {
+   "clause_id": "PRV-1.3",
+   "policy_title": "Privacy and Identity Verification Policy: Handling Unauthenticated Callers",
+   "verdict": "violation",
+   "severity": "critical",
+   "penalty": 15.0,
+   "turn": 5,
+   "quote": "No problem, I found it.",
+   "claim": "Agent looked up and revealed account details for an unauthenticated caller who provided no Order ID or phone number.",
+   "explanation": "PRV-1.3 forbids providing order/address details to an unauthenticated caller and prohibits prompting or guessing account details.",
+   "policy_text": "1. If a caller cannot provide the correct Order ID or the last 4 digits of the registered mobile phone number after two consecutive attempts: - The agent must not provide any order information, address details, or tracking updates. - The agent must direct the caller to access their registered ShopEase mobile app to verify their credentials or trigger a self-service password reset. 2. Under no circumstance may an agent prompt or guess account details to assist an unverified caller.",
+   "evidence_verified": true,
+   "repeat_turns": []
+  },
+  {
+   "clause_id": "BIL-2.1",
+   "policy_title": "Billing and Payments Policy: Double Deductions and Duplicate Billings",
+   "verdict": "violation",
+   "severity": "minor",
+   "penalty": 3.0,
+   "turn": 7,
+   "quote": "it takes around 15 to 20 working days to come back",
+   "claim": "Agent stated that duplicate billing refunds take 15 to 20 working days to reflect.",
+   "explanation": "BIL-2.1 states that duplicate charge reflection in the customer's statement takes 5 to 7 business days, not 15 to 20 working days.",
+   "policy_text": "1. In instances where a customer is charged twice for a single order due to gateway re-attempts: - The secondary debit is flagged by the automated audit reconciliation. - Full restitution of the duplicate charge is released immediately to the original payment source within 24 hours. - Reversal reflection in the customer's statement takes 5 to 7 business days.",
+   "evidence_verified": true,
+   "repeat_turns": []
+  }
+ ],
+ "gaps": [
+  {
+   "gap_type": "no_empathy",
+   "turn": 9,
+   "quote": "That is the process sir, nothing can be done.",
+   "detail": "The agent failed to show empathy or offer any reassurance when the customer expressed frustration over the refund timeline.",
+   "source": "llm"
+  },
+  {
+   "gap_type": "no_summary",
+   "turn": 11,
+   "quote": "Done sir. Anything else?",
+   "detail": "The agent closed the issue without providing a summary of the actions taken or any ticket reference.",
+   "source": "llm"
+  },
+  {
+   "gap_type": "no_closing",
+   "turn": 13,
+   "quote": "Okay.",
+   "detail": "The agent ended the call abruptly without a professional branded sign-off.",
+   "source": "llm"
+  }
+ ],
+ "findings": [
+  {
+   "finding_id": "id_verif_breach",
+   "criterion_id": "identity_verification",
+   "name": "Identity Verification Protocol",
+   "kind": "observed",
+   "verdict": "missed",
+   "severity": "critical",
+   "evidence": [
+    {
+     "turn_id": 5,
+     "speaker": "agent",
+     "start_s": 31.55,
+     "end_s": 45.39,
+     "quote": "No problem, I found it. The order is for a"
+    }
+   ],
+   "certainty": "high",
+   "certainty_reason": "",
+   "reviewer_status": "pending",
+   "reviewer_note": "",
+   "explanation": "Critical failure: Account details discussed at turn 5 before identity verification completed."
+  },
+  {
+   "finding_id": "sop_GEN-01_1",
+   "criterion_id": "GEN-01",
+   "name": "Professional Greeting & Identity Introduction",
+   "kind": "observed",
+   "verdict": "partial",
+   "severity": "major",
+   "evidence": [
+    {
+     "turn_id": 1,
+     "speaker": "agent",
+     "start_s": 0.0,
+     "end_s": 1.92,
+     "quote": "Hello, ShopEase support, tell me."
+    }
+   ],
+   "certainty": "high",
+   "certainty_reason": "",
+   "reviewer_status": "pending",
+   "reviewer_note": "",
+   "explanation": "The agent stated the company name and greeted the customer, but failed to provide their own name and use a high-energy welcoming tone."
+  },
+  {
+   "finding_id": "sop_GEN-02_2",
+   "criterion_id": "GEN-02",
+   "name": "Mandatory Call Recording Disclosure",
+   "kind": "observed",
+   "verdict": "missed",
+   "severity": "critical",
+   "evidence": [],
+   "certainty": "high",
+   "certainty_reason": "",
+   "reviewer_status": "pending",
+   "reviewer_note": "",
+   "explanation": "The agent completely omitted the statutory call recording disclosure."
+  },
+  {
+   "finding_id": "sop_GEN-03_3",
+   "criterion_id": "GEN-03",
+   "name": "Caller Identification & Two-Factor Verification",
+   "kind": "observed",
+   "verdict": "missed",
+   "severity": "critical",
+   "evidence": [
+    {
+     "turn_id": 5,
+     "speaker": "agent",
+     "start_s": 31.55,
+     "end_s": 45.39,
+     "quote": "No problem, I found it. The order is for a Prestige induction cooktop, Rs 4,750,"
+    }
+   ],
+   "certainty": "high",
+   "certainty_reason": "",
+   "reviewer_status": "pending",
+   "reviewer_note": "",
+   "explanation": "Critical breach: account details discussed at turn 5 before identity verification completed."
+  },
+  {
+   "finding_id": "sop_GEN-04_4",
+   "criterion_id": "GEN-04",
+   "name": "Active Listening & Issue Clarification",
+   "kind": "observed",
+   "verdict": "partial",
+   "severity": "major",
+   "evidence": [
+    {
+     "turn_id": 3,
+     "speaker": "agent",
+     "start_s": 16.98,
+     "end_s": 21.22,
+     "quote": "Sure sir, give me your wife's name and I will check."
+    }
+   ],
+   "certainty": "high",
+   "certainty_reason": "",
+   "reviewer_status": "pending",
+   "reviewer_note": "",
+   "explanation": "The agent asked for information but failed to paraphrase or confirm mutual understanding of the core issue."
+  },
+  {
+   "finding_id": "sop_GEN-05_5",
+   "criterion_id": "GEN-05",
+   "name": "Empathy & Ownership Statement",
+   "kind": "inferred",
+   "verdict": "missed",
+   "severity": "major",
+   "evidence": [],
+   "certainty": "high",
+   "certainty_reason": "",
+   "reviewer_status": "pending",
+   "reviewer_note": "",
+   "explanation": "The agent did not express empathy or offer personal reassurance regarding the charges or the customer's concerns."
+  },
+  {
+   "finding_id": "sop_GEN-06_6",
+   "criterion_id": "GEN-06",
+   "name": "Accurate Policy Explanation & Solution Execution",
+   "kind": "observed",
+   "verdict": "followed",
+   "severity": "critical",
+   "evidence": [
+    {
+     "turn_id": 7,
+     "speaker": "agent",
+     "start_s": 55.65,
+     "end_s": 64.5,
+     "quote": "The duplicate will be sorted out, it takes around 15 to 20 working days to come back."
+    }
+   ],
+   "certainty": "high",
+   "certainty_reason": "",
+   "reviewer_status": "pending",
+   "reviewer_note": "",
+   "explanation": "The agent correctly explained the timeline for resolving the duplicate charge."
+  },
+  {
+   "finding_id": "sop_GEN-07_7",
+   "criterion_id": "GEN-07",
+   "name": "Additional Assistance & Next Steps Summary",
+   "kind": "observed",
+   "verdict": "missed",
+   "severity": "major",
+   "evidence": [],
+   "certainty": "high",
+   "certainty_reason": "",
+   "reviewer_status": "pending",
+   "reviewer_note": "",
+   "explanation": "The agent failed to summarize the agreed resolution or provide a ticket reference number."
+  },
+  {
+   "finding_id": "sop_GEN-08_8",
+   "criterion_id": "GEN-08",
+   "name": "Professional Branded Sign-Off",
+   "kind": "observed",
+   "verdict": "missed",
+   "severity": "major",
+   "evidence": [],
+   "certainty": "high",
+   "certainty_reason": "",
+   "reviewer_status": "pending",
+   "reviewer_note": "",
+   "explanation": "The agent ended the call abruptly with a casual 'Okay.' instead of a professional branded sign-off."
+  },
+  {
+   "finding_id": "policy_PRV-1.2_1",
+   "criterion_id": "PRV-1.2",
+   "name": "Privacy and Identity Verification Policy: Mandatory Call Recording Disclosure",
+   "kind": "observed",
+   "verdict": "violation",
+   "severity": "critical",
+   "evidence": [
+    {
+     "turn_id": 1,
+     "speaker": "agent",
+     "start_s": 0.0,
+     "end_s": 0.0,
+     "quote": "Hello, ShopEase support, tell me."
+    }
+   ],
+   "certainty": "high",
+   "certainty_reason": "",
+   "reviewer_status": "pending",
+   "reviewer_note": "",
+   "explanation": "PRV-1.2 requires the mandatory call recording disclosure to be recited within the first two turns. The agent failed to recite it."
+  },
+  {
+   "finding_id": "policy_PRV-1.1_2",
+   "criterion_id": "PRV-1.1",
+   "name": "Privacy and Identity Verification Policy: Mandatory Two-Factor Customer Identity Verification",
+   "kind": "observed",
+   "verdict": "violation",
+   "severity": "critical",
+   "evidence": [
+    {
+     "turn_id": 5,
+     "speaker": "agent",
+     "start_s": 0.0,
+     "end_s": 0.0,
+     "quote": "The order is for a Prestige induction cooktop, Rs 4,750, paid with a debit card ending 4412, and it is shipped to Flat 8B"
+    }
+   ],
+   "certainty": "high",
+   "certainty_reason": "",
+   "reviewer_status": "pending",
+   "reviewer_note": "",
+   "explanation": "PRV-1.1 strictly prohibits disclosing order details or delivery addresses before performing two-factor verification (Order ID/email + last 4 digits of phone number)."
+  },
+  {
+   "finding_id": "policy_PRV-2.2_3",
+   "criterion_id": "PRV-2.2",
+   "name": "Privacy and Identity Verification Policy: Delivery Address Masking and Privacy",
+   "kind": "observed",
+   "verdict": "violation",
+   "severity": "major",
+   "evidence": [
+    {
+     "turn_id": 5,
+     "speaker": "agent",
+     "start_s": 0.0,
+     "end_s": 0.0,
+     "quote": "shipped to Flat 8B, Lotus Residency, Linking Road, Bandra, Mumbai 400050"
+    }
+   ],
+   "certainty": "high",
+   "certainty_reason": "",
+   "reviewer_status": "pending",
+   "reviewer_note": "",
+   "explanation": "PRV-2.2 states representatives must use partial masking and never recite the complete street address or door number out loud unless the customer recites it first."
+  },
+  {
+   "finding_id": "policy_PRV-1.3_4",
+   "criterion_id": "PRV-1.3",
+   "name": "Privacy and Identity Verification Policy: Handling Unauthenticated Callers",
+   "kind": "observed",
+   "verdict": "violation",
+   "severity": "critical",
+   "evidence": [
+    {
+     "turn_id": 5,
+     "speaker": "agent",
+     "start_s": 0.0,
+     "end_s": 0.0,
+     "quote": "No problem, I found it."
+    }
+   ],
+   "certainty": "high",
+   "certainty_reason": "",
+   "reviewer_status": "pending",
+   "reviewer_note": "",
+   "explanation": "PRV-1.3 forbids providing order/address details to an unauthenticated caller and prohibits prompting or guessing account details."
+  },
+  {
+   "finding_id": "policy_BIL-2.1_5",
+   "criterion_id": "BIL-2.1",
+   "name": "Billing and Payments Policy: Double Deductions and Duplicate Billings",
+   "kind": "observed",
+   "verdict": "violation",
+   "severity": "minor",
+   "evidence": [
+    {
+     "turn_id": 7,
+     "speaker": "agent",
+     "start_s": 0.0,
+     "end_s": 0.0,
+     "quote": "it takes around 15 to 20 working days to come back"
+    }
+   ],
+   "certainty": "high",
+   "certainty_reason": "",
+   "reviewer_status": "pending",
+   "reviewer_note": "",
+   "explanation": "BIL-2.1 states that duplicate charge reflection in the customer's statement takes 5 to 7 business days, not 15 to 20 working days."
+  },
+  {
+   "finding_id": "empathy_rating",
+   "criterion_id": "empathy_and_communication",
+   "name": "Empathy & Tone Assessment",
+   "kind": "inferred",
+   "verdict": "missed",
+   "severity": "minor",
+   "evidence": [
+    {
+     "turn_id": 0,
+     "speaker": "agent",
+     "start_s": 0.0,
+     "end_s": 0.0,
+     "quote": "That is the process sir, nothing can be done."
+    }
+   ],
+   "certainty": "medium",
+   "certainty_reason": "Subjective appraisal of agent warmth and emotional validation",
+   "reviewer_status": "pending",
+   "reviewer_note": "",
+   "explanation": "Empathy score: 0/5"
+  }
+ ],
+ "cannot_judge": false,
+ "cannot_judge_reason": "",
+ "unreadable_parts": [],
+ "status": "ok",
+ "failed_step": null,
+ "completed_steps": [
+  "input_ingestion",
+  "quality_gate",
+  "call_state",
+  "topic_detection",
+  "scorecard_judgment",
+  "policy_check",
+  "evidence_verification",
+  "scoring"
+ ],
+ "emotion": {
+  "points": [
+   {
+    "turn": 2,
+    "emotion": "neutral",
+    "valence": 0.0
+   },
+   {
+    "turn": 4,
+    "emotion": "neutral",
+    "valence": 0.0
+   },
+   {
+    "turn": 6,
+    "emotion": "frustrated",
+    "valence": -1.5
+   },
+   {
+    "turn": 8,
+    "emotion": "frustrated",
+    "valence": -1.5
+   },
+   {
+    "turn": 10,
+    "emotion": "neutral",
+    "valence": 0.0
+   },
+   {
+    "turn": 12,
+    "emotion": "neutral",
+    "valence": 0.0
+   }
+  ],
+  "start": "neutral",
+  "middle": "frustrated",
+  "end": "neutral",
+  "trend": "flat"
+ },
+ "agent_tone": {
+  "points": [
+   {
+    "turn": 1,
+    "emotion": "rushed",
+    "valence": -0.5
+   },
+   {
+    "turn": 3,
+    "emotion": "neutral",
+    "valence": 0.0
+   },
+   {
+    "turn": 5,
+    "emotion": "neutral",
+    "valence": 0.0
+   },
+   {
+    "turn": 7,
+    "emotion": "neutral",
+    "valence": 0.0
+   },
+   {
+    "turn": 9,
+    "emotion": "dismissive",
+    "valence": -1.5
+   },
+   {
+    "turn": 11,
+    "emotion": "neutral",
+    "valence": 0.0
+   },
+   {
+    "turn": 13,
+    "emotion": "neutral",
+    "valence": 0.0
+   }
+  ],
+  "start": "rushed",
+  "middle": "neutral",
+  "end": "neutral",
+  "trend": "flat"
+ },
+ "metrics": {
+  "duration_sec": 83.7,
+  "agent_turns": 7,
+  "customer_turns": 6,
+  "agent_talk_ratio": 0.466,
+  "longest_silence_sec": 1.2,
+  "dead_air_events": [],
+  "interruption_events": [],
+  "hold_events": [],
+  "holds": [],
+  "longest_hold_sec": 0.0,
+  "agent_words_per_minute": 154.0,
+  "agent_interruptions": 0
+ },
+ "strengths": [],
+ "coaching": [
+  {
+   "title": "GEN-02: Mandatory Call Recording Disclosure (critical)",
+   "advice": "The disclosure is clearly articulated within the first two conversation turns without mumbling or skipping. Example: \"Please note that this call is being recorded for quality monitoring and training purposes.\"",
+   "source": "sop",
+   "evidence": "Missing: recording disclosure notification. The agent completely omitted the statutory call recording disclosure."
+  },
+  {
+   "title": "GEN-03: Caller Identification & Two-Factor Verification (critical)",
+   "advice": "The agent systematically validates both verification data points before disclosing addresses, order contents, or monetary info. Example: \"To ensure your account security, may I please have your Order ID and the last four digits of your registered mobile number?\"",
+   "source": "sop",
+   "evidence": "Missing: order id and phone number verification. Critical breach: account details discussed at turn 5 before identity verification completed."
+  },
+  {
+   "title": "GEN-04: Active Listening & Issue Clarification",
+   "advice": "The agent maintains silence while the customer speaks, takes notes, and summarizes the specific problem back to the customer. Example: \"I understand that your package has not arrived and you would like to track the courier status. Is that correct?\"",
+   "source": "sop",
+   "evidence": "Missing: paraphrasing the core issue. The agent asked for information but failed to paraphrase or confirm mutual understanding of the core issue."
+  },
+  {
+   "title": "GEN-05: Empathy & Ownership Statement",
+   "advice": "Empathetic acknowledgment that avoids robotic stock phrases, validating the customer's frustration. Example: \"I completely understand how frustrating it is to wait for an order, and I am personally going to sort this out for you.\"",
+   "source": "sop",
+   "evidence": "Missing: empathy statement and personal reassurance. The agent did not express empathy or offer personal reassurance regarding the charges or the customer's concerns."
+  },
+  {
+   "title": "Policy PRV-1.2: say it correctly",
+   "advice": "PRV-1.2 requires the mandatory call recording disclosure to be recited within the first two turns. The agent failed to recite it.",
+   "source": "policy",
+   "evidence": "Hello, ShopEase support, tell me."
+  },
+  {
+   "title": "Policy PRV-1.1: say it correctly",
+   "advice": "PRV-1.1 strictly prohibits disclosing order details or delivery addresses before performing two-factor verification (Order ID/email + last 4 digits of phone number).",
+   "source": "policy",
+   "evidence": "The order is for a Prestige induction cooktop, Rs 4,750, paid with a debit card ending 4412, and it is shipped to Flat 8B"
+  },
+  {
+   "title": "Policy PRV-2.2: say it correctly",
+   "advice": "PRV-2.2 states representatives must use partial masking and never recite the complete street address or door number out loud unless the customer recites it first.",
+   "source": "policy",
+   "evidence": "shipped to Flat 8B, Lotus Residency, Linking Road, Bandra, Mumbai 400050"
+  },
+  {
+   "title": "Policy PRV-1.3: say it correctly",
+   "advice": "PRV-1.3 forbids providing order/address details to an unauthenticated caller and prohibits prompting or guessing account details.",
+   "source": "policy",
+   "evidence": "No problem, I found it."
+  },
+  {
+   "title": "Policy BIL-2.1: say it correctly",
+   "advice": "BIL-2.1 states that duplicate charge reflection in the customer's statement takes 5 to 7 business days, not 15 to 20 working days.",
+   "source": "policy",
+   "evidence": "it takes around 15 to 20 working days to come back"
+  }
+ ],
+ "risk_flags": [
+  "Potential security violation: disclosed order details and delivery address without proper caller identity verification."
+ ],
+ "retrieved_clause_ids": [
+  "BIL-2.1",
+  "BIL-1.2",
+  "BIL-1.1",
+  "BIL-2.3",
+  "REF-2.1",
+  "BIL-1.3",
+  "SHP-1.1",
+  "BIL-3.1",
+  "REF-4.1",
+  "REF-2.2",
+  "PRV-1.1",
+  "ESC-1.1",
+  "ESC-1.2",
+  "BIL-2.2",
+  "ESC-2.1",
+  "ESC-2.2",
+  "ESC-3.1",
+  "ESC-3.2",
+  "PRV-1.2",
+  "PRV-1.3",
+  "PRV-2.1",
+  "PRV-2.2",
+  "PRV-3.1"
+ ],
+ "transcript": {
+  "call_id": "call_104",
+  "source": "transcript",
+  "language": "te",
+  "audio_path": null,
+  "duration_seconds": 83.7,
+  "diarization_method": "given",
+  "transcript_quality": "good",
+  "quality_reason": "Transcript quality is reliable for compliance and rubric scoring.",
+  "unreadable_parts": [],
+  "turns": [
+   {
+    "turn_id": 1,
+    "speaker": "agent",
+    "start_time": 0.0,
+    "end_time": 1.92,
+    "text": "Hello, ShopEase support, tell me.",
+    "text_te": null,
+    "text_roman": null,
+    "asr_confidence": 1.0,
+    "silence_before": 0.0,
+    "overlaps_previous": false,
+    "emotion": "rushed"
+   },
+   {
+    "turn_id": 2,
+    "speaker": "customer",
+    "start_time": 2.42,
+    "end_time": 15.88,
+    "text": "Hi, my wife placed an order on your website and there is a charge of Rs 4,750 on our bank statement. I want to know what this payment is for and where it was shipped.",
+    "text_te": null,
+    "text_roman": null,
+    "asr_confidence": 1.0,
+    "silence_before": 0.5,
+    "overlaps_previous": false,
+    "emotion": "neutral"
+   },
+   {
+    "turn_id": 3,
+    "speaker": "agent",
+    "start_time": 16.98,
+    "end_time": 21.22,
+    "text": "Sure sir, give me your wife's name and I will check.",
+    "text_te": null,
+    "text_roman": null,
+    "asr_confidence": 1.0,
+    "silence_before": 1.1,
+    "overlaps_previous": false,
+    "emotion": "neutral"
+   },
+   {
+    "turn_id": 4,
+    "speaker": "customer",
+    "start_time": 21.92,
+    "end_time": 31.15,
+    "text": "Her name is Anita Gupta. I do not have the order ID with me, and I do not know her phone number by heart.",
+    "text_te": null,
+    "text_roman": null,
+    "asr_confidence": 1.0,
+    "silence_before": 0.7,
+    "overlaps_previous": false,
+    "emotion": "neutral"
+   },
+   {
+    "turn_id": 5,
+    "speaker": "agent",
+    "start_time": 31.55,
+    "end_time": 45.39,
+    "text": "No problem, I found it. The order is for a Prestige induction cooktop, Rs 4,750, paid with a debit card ending 4412, and it is shipped to Flat 8B, Lotus Residency, Linking Road, Bandra, Mumbai 400050.",
+    "text_te": null,
+    "text_roman": null,
+    "asr_confidence": 1.0,
+    "silence_before": 0.4,
+    "overlaps_previous": false,
+    "emotion": "neutral"
+   },
+   {
+    "turn_id": 6,
+    "speaker": "customer",
+    "start_time": 46.39,
+    "end_time": 54.85,
+    "text": "Okay, that is what I wanted to know. But I see the same Rs 4,750 charged two times on our bank statement.",
+    "text_te": null,
+    "text_roman": null,
+    "asr_confidence": 1.0,
+    "silence_before": 1.0,
+    "overlaps_previous": false,
+    "emotion": "frustrated"
+   },
+   {
+    "turn_id": 7,
+    "speaker": "agent",
+    "start_time": 55.65,
+    "end_time": 64.5,
+    "text": "Yes, I can see two charges. The duplicate will be sorted out, it takes around 15 to 20 working days to come back.",
+    "text_te": null,
+    "text_roman": null,
+    "asr_confidence": 1.0,
+    "silence_before": 0.8,
+    "overlaps_previous": false,
+    "emotion": "neutral"
+   },
+   {
+    "turn_id": 8,
+    "speaker": "customer",
+    "start_time": 65.1,
+    "end_time": 68.95,
+    "text": "That is very long. Can you not do it faster?",
+    "text_te": null,
+    "text_roman": null,
+    "asr_confidence": 1.0,
+    "silence_before": 0.6,
+    "overlaps_previous": false,
+    "emotion": "frustrated"
+   },
+   {
+    "turn_id": 9,
+    "speaker": "agent",
+    "start_time": 70.15,
+    "end_time": 73.61,
+    "text": "That is the process sir, nothing can be done.",
+    "text_te": null,
+    "text_roman": null,
+    "asr_confidence": 1.0,
+    "silence_before": 1.2,
+    "overlaps_previous": false,
+    "emotion": "dismissive"
+   },
+   {
+    "turn_id": 10,
+    "speaker": "customer",
+    "start_time": 74.21,
+    "end_time": 78.05,
+    "text": "Fine. Please just note my complaint about the double charge.",
+    "text_te": null,
+    "text_roman": null,
+    "asr_confidence": 1.0,
+    "silence_before": 0.6,
+    "overlaps_previous": false,
+    "emotion": "neutral"
+   },
+   {
+    "turn_id": 11,
+    "speaker": "agent",
+    "start_time": 78.95,
+    "end_time": 80.49,
+    "text": "Done sir. Anything else?",
+    "text_te": null,
+    "text_roman": null,
+    "asr_confidence": 1.0,
+    "silence_before": 0.9,
+    "overlaps_previous": false,
+    "emotion": "neutral"
+   },
+   {
+    "turn_id": 12,
+    "speaker": "customer",
+    "start_time": 80.99,
+    "end_time": 81.79,
+    "text": "No.",
+    "text_te": null,
+    "text_roman": null,
+    "asr_confidence": 1.0,
+    "silence_before": 0.5,
+    "overlaps_previous": false,
+    "emotion": "neutral"
+   },
+   {
+    "turn_id": 13,
+    "speaker": "agent",
+    "start_time": 82.89,
+    "end_time": 83.69,
+    "text": "Okay.",
+    "text_te": null,
+    "text_roman": null,
+    "asr_confidence": 1.0,
+    "silence_before": 1.1,
+    "overlaps_previous": false,
+    "emotion": "neutral"
+   }
+  ]
+ },
+ "meta": {
+  "model": "SOP: gemini-3.5-flash-lite \u00b7 Policy: gemini-3.5-flash",
+  "llm_requests": 2,
+  "diarization_method": "given",
+  "transcribe_seconds": 0.0,
+  "audit_seconds": 13.6,
+  "cache_hit": false,
+  "warnings": [],
+  "source_set": "synthetic",
+  "trace_id": "run_call_104_778521",
+  "status": "ok",
+  "failed_step": null,
+  "completed_steps": [
+   "input_ingestion",
+   "quality_gate",
+   "call_state",
+   "topic_detection",
+   "scorecard_judgment",
+   "policy_check",
+   "evidence_verification",
+   "scoring"
+  ],
+  "estimated_cost_usd": 0.018567,
+  "tokens_in": 8212,
+  "tokens_out": 2185,
+  "sop_model": "gemini-3.5-flash-lite",
+  "policy_model": "gemini-3.5-flash"
+ }
+}

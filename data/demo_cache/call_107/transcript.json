@@ -1,0 +1,162 @@
+{
+  "id": "call_107",
+  "topic": "warranty",
+  "quality": "bad_deviation",
+  "split": "train",
+  "applicable_sops": [
+    "general_call_flow"
+  ],
+  "applicable_steps": [
+    "GEN-01",
+    "GEN-02",
+    "GEN-03",
+    "GEN-04",
+    "GEN-05",
+    "GEN-06",
+    "GEN-07",
+    "GEN-08"
+  ],
+  "hold_scenario": "none",
+  "order_id": "ORD-52816",
+  "registered_phone_last4": "8093",
+  "agent_name": "Imran Sheikh",
+  "customer_name": "Neha Sethi",
+  "customer_persona": "Neha Sethi has a dead earbud on day six; the agent wrongly says nothing can be done.",
+  "verified": true,
+  "verification_notes": "Hand-written and checked against data/policies and data/sops; labels written together with the dialogue.",
+  "source": "handwritten",
+  "turns": [
+    {
+      "i": 1,
+      "speaker": "agent",
+      "text": "Thank you for calling ShopEase. My name is Imran Sheikh. Please note that this call is recorded for quality assurance and training purposes. How may I help you today?",
+      "pause_before_sec": 0.5,
+      "interrupts_previous": false
+    },
+    {
+      "i": 2,
+      "speaker": "customer",
+      "text": "Hi Imran, I am Neha Sethi. I bought boAt Airdopes six days ago and the left earbud is completely dead. I want to know what I can do.",
+      "pause_before_sec": 0.5,
+      "interrupts_previous": false
+    },
+    {
+      "i": 3,
+      "speaker": "agent",
+      "text": "Sorry to hear that, Ms. Sethi. For verification, please share your Order ID and the last four digits of your registered mobile number.",
+      "pause_before_sec": 1.1,
+      "interrupts_previous": false
+    },
+    {
+      "i": 4,
+      "speaker": "customer",
+      "text": "ORD-52816 and 8093.",
+      "pause_before_sec": 0.7,
+      "interrupts_previous": false
+    },
+    {
+      "i": 5,
+      "speaker": "agent",
+      "text": "Thank you. So the left earbud of your boAt Airdopes stopped working and you want a solution. Correct?",
+      "pause_before_sec": 0.4,
+      "interrupts_previous": false
+    },
+    {
+      "i": 6,
+      "speaker": "customer",
+      "text": "Yes, that is right. It never worked since I opened the box.",
+      "pause_before_sec": 1.0,
+      "interrupts_previous": false
+    },
+    {
+      "i": 7,
+      "speaker": "agent",
+      "text": "I understand. Unfortunately, any defect has to be reported within 48 hours of delivery with photos, and since you are on day six, there is nothing we can do. No replacement, no return and no warranty claim is possible now.",
+      "pause_before_sec": 0.8,
+      "interrupts_previous": false
+    },
+    {
+      "i": 8,
+      "speaker": "customer",
+      "text": "No warranty at all? The box says one year warranty.",
+      "pause_before_sec": 0.6,
+      "interrupts_previous": false
+    },
+    {
+      "i": 9,
+      "speaker": "agent",
+      "text": "Warranty covers only six months for audio products, and it is void if you did not claim in the first two days.",
+      "pause_before_sec": 1.2,
+      "interrupts_previous": false
+    },
+    {
+      "i": 10,
+      "speaker": "customer",
+      "text": "That cannot be right. Can I at least return it? It is only day six.",
+      "pause_before_sec": 0.6,
+      "interrupts_previous": false
+    },
+    {
+      "i": 11,
+      "speaker": "agent",
+      "text": "I am sorry, that is our policy and I cannot do anything. Is there anything else?",
+      "pause_before_sec": 0.9,
+      "interrupts_previous": false
+    },
+    {
+      "i": 12,
+      "speaker": "customer",
+      "text": "No, that is not helpful at all. I will check with the brand directly.",
+      "pause_before_sec": 0.5,
+      "interrupts_previous": false
+    },
+    {
+      "i": 13,
+      "speaker": "agent",
+      "text": "You can do that. Thank you for calling ShopEase, have a nice day.",
+      "pause_before_sec": 1.1,
+      "interrupts_previous": false
+    }
+  ],
+  "ground_truth": {
+    "sop_steps": {
+      "GEN-01": "followed",
+      "GEN-02": "followed",
+      "GEN-03": "followed",
+      "GEN-04": "followed",
+      "GEN-05": "partial",
+      "GEN-06": "missed",
+      "GEN-07": "partial",
+      "GEN-08": "followed"
+    },
+    "policy_violations": [
+      {
+        "turn": 7,
+        "said": "I understand. Unfortunately, any defect has to be reported within 48 hours of delivery with photos, and since you are on day six, there is nothing we can do. No replacement, no return and no warranty claim is possible now.",
+        "clause_id": "WAR-1.2",
+        "severity": "major",
+        "correct_fact": "After the 48-hour transit-damage window, the request proceeds under the regular manufacturer warranty claim process; it is not refused."
+      },
+      {
+        "turn": 7,
+        "said": "I understand. Unfortunately, any defect has to be reported within 48 hours of delivery with photos, and since you are on day six, there is nothing we can do. No replacement, no return and no warranty claim is possible now.",
+        "clause_id": "REF-1.1",
+        "severity": "major",
+        "correct_fact": "Electronics can be returned within exactly 7 calendar days of delivery, so day six is still eligible."
+      },
+      {
+        "turn": 9,
+        "said": "Warranty covers only six months for audio products, and it is void if you did not claim in the first two days.",
+        "clause_id": "WAR-1.1",
+        "severity": "minor",
+        "correct_fact": "Electronics carry a minimum 12-month manufacturer warranty."
+      }
+    ],
+    "customer_emotion_arc": [
+      "neutral",
+      "frustrated",
+      "frustrated"
+    ],
+    "gaps": []
+  }
+}

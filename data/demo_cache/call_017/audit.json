@@ -1,0 +1,992 @@
+{
+ "call_id": "call_017",
+ "generated_at": "2026-11-03T18:11:00",
+ "topic": "shipping",
+ "topic_confidence": 0.91,
+ "signals": [],
+ "summary": "The customer called to check the status of his shipment scheduled for delivery today. The agent successfully verified his details, provided the delivery status, explained the single delivery attempt policy and OTP rules, and summarized the resolution. The issue was resolved satisfactorily.",
+ "customer_issue": "Check shipment delivery status",
+ "resolved": true,
+ "scores": {
+  "sop_score": 37.8,
+  "policy_score": 27.0,
+  "empathy_score": 15.0,
+  "communication_score": 15.0,
+  "overall_before_cap": 94.8,
+  "overall": 94.8,
+  "grade": "A",
+  "grade_label": "Exemplary Performance",
+  "critical_failure": false,
+  "cap_reasons": [],
+  "sop_points_earned": 25.5,
+  "sop_points_possible": 27.0,
+  "policy_penalty_total": 3.0,
+  "policy_applicable": true,
+  "timing_penalty": 0.0,
+  "timing_notes": [],
+  "empathy_rating": 5,
+  "clarity_rating": 5,
+  "professionalism_rating": 5,
+  "ownership_rating": 5,
+  "closure_rating": 5
+ },
+ "sop_results": [
+  {
+   "step_id": "GEN-01",
+   "title": "Professional Greeting & Identity Introduction",
+   "sop": "general_call_flow",
+   "weight": 2,
+   "critical": false,
+   "mandatory": true,
+   "status": "followed",
+   "points_earned": 2.0,
+   "points_possible": 2.0,
+   "turn": 1,
+   "quote": "Thank you for calling ShopEase customer support. My name is Ananya Sen. How may I assist you today?",
+   "reason": "The agent greeted the customer warmly, stated the company name, introduced herself, and asked how to assist.",
+   "missing": "",
+   "evidence_verified": true,
+   "what_good_looks_like": "The agent opens within 2 seconds of call connection with a polite, welcoming tone, introducing both the brand and representative name.",
+   "example_phrase": "Thank you for calling ShopEase. My name is Rahul. How may I assist you today?"
+  },
+  {
+   "step_id": "GEN-02",
+   "title": "Mandatory Call Recording Disclosure",
+   "sop": "general_call_flow",
+   "weight": 5,
+   "critical": true,
+   "mandatory": true,
+   "status": "followed",
+   "points_earned": 5.0,
+   "points_possible": 5.0,
+   "turn": 1,
+   "quote": "Please note that this call is recorded for quality assurance and training purposes.",
+   "reason": "The call recording disclosure was clearly provided in the first turn.",
+   "missing": "",
+   "evidence_verified": true,
+   "what_good_looks_like": "The disclosure is clearly articulated within the first two conversation turns without mumbling or skipping.",
+   "example_phrase": "Please note that this call is being recorded for quality monitoring and training purposes."
+  },
+  {
+   "step_id": "GEN-03",
+   "title": "Caller Identification & Two-Factor Verification",
+   "sop": "general_call_flow",
+   "weight": 5,
+   "critical": true,
+   "mandatory": true,
+   "status": "followed",
+   "points_earned": 5.0,
+   "points_possible": 5.0,
+   "turn": 3,
+   "quote": "For account security, could you please share your Order ID and the last four digits of your registered mobile number?",
+   "reason": "The agent properly requested both the Order ID and last four digits of the registered mobile number before providing account details.",
+   "missing": "",
+   "evidence_verified": true,
+   "what_good_looks_like": "The agent systematically validates both verification data points before disclosing addresses, order contents, or monetary info.",
+   "example_phrase": "To ensure your account security, may I please have your Order ID and the last four digits of your registered mobile number?"
+  },
+  {
+   "step_id": "GEN-04",
+   "title": "Active Listening & Issue Clarification",
+   "sop": "general_call_flow",
+   "weight": 3,
+   "critical": false,
+   "mandatory": true,
+   "status": "partial",
+   "points_earned": 1.5,
+   "points_possible": 3.0,
+   "turn": 5,
+   "quote": "I understand how essential it is to have clear visibility on your delivery",
+   "reason": "The agent acknowledged the customer's need but did not explicitly paraphrase the core issue back to the customer.",
+   "missing": "paraphrase the core issue back to the customer",
+   "evidence_verified": true,
+   "what_good_looks_like": "The agent maintains silence while the customer speaks, takes notes, and summarizes the specific problem back to the customer.",
+   "example_phrase": "I understand that your package has not arrived and you would like to track the courier status. Is that correct?"
+  },
+  {
+   "step_id": "GEN-05",
+   "title": "Empathy & Ownership Statement",
+   "sop": "general_call_flow",
+   "weight": 3,
+   "critical": false,
+   "mandatory": true,
+   "status": "followed",
+   "points_earned": 3.0,
+   "points_possible": 3.0,
+   "turn": 5,
+   "quote": "I understand how essential it is to have clear visibility on your delivery, and I will personally take charge of this to give you complete clarity on the shipment status.",
+   "reason": "The agent expressed empathy and took personal ownership of the solution.",
+   "missing": "",
+   "evidence_verified": true,
+   "what_good_looks_like": "Empathetic acknowledgment that avoids robotic stock phrases, validating the customer's frustration.",
+   "example_phrase": "I completely understand how frustrating it is to wait for an order, and I am personally going to sort this out for you."
+  },
+  {
+   "step_id": "GEN-06",
+   "title": "Accurate Policy Explanation & Solution Execution",
+   "sop": "general_call_flow",
+   "weight": 5,
+   "critical": true,
+   "mandatory": true,
+   "status": "followed",
+   "points_earned": 5.0,
+   "points_possible": 5.0,
+   "turn": 7,
+   "quote": "It was dispatched under standard shipping and is currently out for delivery with our logistics executive today.",
+   "reason": "The agent accurately provided the shipment status and policy details based on verified information.",
+   "missing": "",
+   "evidence_verified": true,
+   "what_good_looks_like": "Explaining exact delivery or refund windows (e.g., 5-7 business days for refund, 7 days for electronics) without making out-of-policy promises.",
+   "example_phrase": "Per our policy, since your wireless earbuds are within the 7-day electronics return window, I have scheduled a reverse pickup for tomorrow."
+  },
+  {
+   "step_id": "GEN-07",
+   "title": "Additional Assistance & Next Steps Summary",
+   "sop": "general_call_flow",
+   "weight": 2,
+   "critical": false,
+   "mandatory": true,
+   "status": "followed",
+   "points_earned": 2.0,
+   "points_possible": 2.0,
+   "turn": 17,
+   "quote": "To summarize, your order ORD-96951 for the Levi's jeans is out for delivery today without requiring an OTP... I have logged this inquiry under reference ticket SR-77120. Is there anything else I can assist you with today?",
+   "reason": "The agent summarized the resolution, referenced the ticket number, and checked for additional assistance.",
+   "missing": "",
+   "evidence_verified": true,
+   "what_good_looks_like": "Clear recap of actions taken, tracking reference shared, and an open invitation for secondary questions.",
+   "example_phrase": "To recap, I have initiated return ticket #SR-8921. You will receive an SMS confirmation. Is there anything else I can help you with today?"
+  },
+  {
+   "step_id": "GEN-08",
+   "title": "Professional Branded Sign-Off",
+   "sop": "general_call_flow",
+   "weight": 2,
+   "critical": false,
+   "mandatory": true,
+   "status": "followed",
+   "points_earned": 2.0,
+   "points_possible": 2.0,
+   "turn": 19,
+   "quote": "Thank you for contacting ShopEase. We appreciate your time and hope you have a great day ahead!",
+   "reason": "The agent concluded the call with a professional branded sign-off.",
+   "missing": "",
+   "evidence_verified": true,
+   "what_good_looks_like": "Courteous parting statement thanking the customer, waiting for the customer to disconnect first.",
+   "example_phrase": "Thank you for contacting ShopEase. We appreciate your business and hope you have a great day ahead!"
+  }
+ ],
+ "policy_results": [
+  {
+   "clause_id": "SHP-2.1",
+   "policy_title": "Shipping and Delivery Policy: Carrier Attempts and Undelivered Consignments",
+   "verdict": "violation",
+   "severity": "minor",
+   "penalty": 3.0,
+   "turn": 9,
+   "quote": "the delivery agent will make only one single delivery attempt at your door.",
+   "claim": "Agent stated that the delivery partner will make only one single delivery attempt before cancelling the order.",
+   "explanation": "The agent claimed only 1 attempt is made, but clause SHP-2.1 states delivery partners will make up to three (3) independent delivery attempts before RTO.",
+   "policy_text": "1. Delivery partners will make up to three (3) independent delivery attempts at the customer's shipping address. 2. Prior to each attempt, the customer receives an automated SMS and WhatsApp notification containing an Out-For-Delivery (OFD) alert and the delivery partner contact number. 3. If all three attempts fail due to customer unavailability, incorrect landmark, or contact failure, the shipment is marked \"Return To Origin\" (RTO). 4. Prepaid orders that encounter RTO are processed for aut...",
+   "evidence_verified": true,
+   "repeat_turns": []
+  },
+  {
+   "clause_id": "PRV-1.2",
+   "policy_title": "Privacy and Identity Verification Policy: Mandatory Call Recording Disclosure",
+   "verdict": "compliant",
+   "severity": "none",
+   "penalty": 0.0,
+   "turn": 1,
+   "quote": "Please note that this call is recorded for quality assurance and training purposes.",
+   "claim": "Agent stated the mandatory call recording disclosure at the beginning of the call.",
+   "explanation": "The agent delivered the exact mandated recording disclosure during the initial greeting in turn 1, fulfilling PRV-1.2.",
+   "policy_text": "1. Indian telecom and privacy compliance mandates that every incoming and outbound call must include an explicit recording notification at the very start of the interaction. 2. Representatives must recite the approved disclosure statement during their initial call greeting: - *\"Please note this call is recorded for quality assurance and training purposes.\"* 3. Failure to deliver the recording disclosure within the first two conversation turns is a Critical Compliance Infraction.",
+   "evidence_verified": true,
+   "repeat_turns": []
+  },
+  {
+   "clause_id": "PRV-1.1",
+   "policy_title": "Privacy and Identity Verification Policy: Mandatory Two-Factor Customer Identity Verification",
+   "verdict": "compliant",
+   "severity": "none",
+   "penalty": 0.0,
+   "turn": 3,
+   "quote": "could you please share your Order ID and the last four digits of your registered mobile number?",
+   "claim": "Agent requested Order ID and last 4 digits of registered mobile number for identity verification.",
+   "explanation": "The agent requested the exact mandatory verification pair required by PRV-1.1 before sharing order details.",
+   "policy_text": "1. To safeguard customer accounts and prevent unauthorized data leaks, frontline representatives must perform two-factor verification before disclosing any account details, order histories, delivery addresses, payment instruments, or processing refund instructions. 2. Mandatory Verification Pair: - Order ID (e.g., `ORD-XXXXX`) or registered Account Email Address. - Last four (4) digits of the registered mobile phone number. 3. Strict Prohibition: Revealing full addresses, item descriptions, f...",
+   "evidence_verified": true,
+   "repeat_turns": []
+  },
+  {
+   "clause_id": "SHP-2.1",
+   "policy_title": "Shipping and Delivery Policy: Carrier Attempts and Undelivered Consignments",
+   "verdict": "compliant",
+   "severity": "none",
+   "penalty": 0.0,
+   "turn": 11,
+   "quote": "An automated Out-For-Delivery text was sent to your phone this morning containing the delivery associate's direct contact number",
+   "claim": "Agent stated that an automated Out-For-Delivery notification with the delivery driver's contact number was sent.",
+   "explanation": "Clause SHP-2.1 specifies that prior to each attempt, an automated SMS containing an Out-For-Delivery alert and courier contact number is sent.",
+   "policy_text": "1. Delivery partners will make up to three (3) independent delivery attempts at the customer's shipping address. 2. Prior to each attempt, the customer receives an automated SMS and WhatsApp notification containing an Out-For-Delivery (OFD) alert and the delivery partner contact number. 3. If all three attempts fail due to customer unavailability, incorrect landmark, or contact failure, the shipment is marked \"Return To Origin\" (RTO). 4. Prepaid orders that encounter RTO are processed for aut...",
+   "evidence_verified": true,
+   "repeat_turns": []
+  },
+  {
+   "clause_id": "SHP-3.1",
+   "policy_title": "Shipping and Delivery Policy: Secure One-Time Password (OTP) Delivery Protocol",
+   "verdict": "compliant",
+   "severity": "none",
+   "penalty": 0.0,
+   "turn": 13,
+   "quote": "delivery OTP verification is only mandated for orders valued above Rs 2,500. Since your order total is Rs 1899, no OTP is required",
+   "claim": "Agent stated that OTP verification is required only for orders over Rs 2,500, so Rs 1899 does not require an OTP.",
+   "explanation": "Clause SHP-3.1 mandates delivery OTP only for high-value orders exceeding Rs 2,500 (and smartphones). The agent correctly applied this threshold.",
+   "policy_text": "1. High-value orders exceeding Rs 2,500 and all smartphone consignments are secured using a mandatory 4-digit Delivery Verification OTP. 2. Couriers are legally prohibited from releasing parcels without entering the customer-provided OTP into the field scanner. 3. Agents must never disclose the delivery OTP to any caller over phone support.",
+   "evidence_verified": true,
+   "repeat_turns": []
+  }
+ ],
+ "gaps": [],
+ "findings": [
+  {
+   "finding_id": "id_verif_verified",
+   "criterion_id": "identity_verification",
+   "name": "Identity Verification Protocol",
+   "kind": "observed",
+   "verdict": "followed",
+   "severity": "critical",
+   "evidence": [
+    {
+     "turn_id": 3,
+     "speaker": "agent",
+     "start_s": 22.17,
+     "end_s": 34.09,
+     "quote": "I would be happy to check that for you, Mr."
+    }
+   ],
+   "certainty": "high",
+   "certainty_reason": "",
+   "reviewer_status": "pending",
+   "reviewer_note": "",
+   "explanation": "Identity verification successfully completed before disclosing account details."
+  },
+  {
+   "finding_id": "sop_GEN-01_1",
+   "criterion_id": "GEN-01",
+   "name": "Professional Greeting & Identity Introduction",
+   "kind": "observed",
+   "verdict": "followed",
+   "severity": "major",
+   "evidence": [
+    {
+     "turn_id": 1,
+     "speaker": "agent",
+     "start_s": 0.0,
+     "end_s": 11.92,
+     "quote": "Thank you for calling ShopEase customer support. My name is Ananya Sen. How may I assist you today?"
+    }
+   ],
+   "certainty": "high",
+   "certainty_reason": "",
+   "reviewer_status": "pending",
+   "reviewer_note": "",
+   "explanation": "The agent greeted the customer warmly, stated the company name, introduced herself, and asked how to assist."
+  },
+  {
+   "finding_id": "sop_GEN-02_2",
+   "criterion_id": "GEN-02",
+   "name": "Mandatory Call Recording Disclosure",
+   "kind": "observed",
+   "verdict": "followed",
+   "severity": "critical",
+   "evidence": [
+    {
+     "turn_id": 1,
+     "speaker": "agent",
+     "start_s": 0.0,
+     "end_s": 11.92,
+     "quote": "Please note that this call is recorded for quality assurance and training purposes."
+    }
+   ],
+   "certainty": "high",
+   "certainty_reason": "",
+   "reviewer_status": "pending",
+   "reviewer_note": "",
+   "explanation": "The call recording disclosure was clearly provided in the first turn."
+  },
+  {
+   "finding_id": "sop_GEN-03_3",
+   "criterion_id": "GEN-03",
+   "name": "Caller Identification & Two-Factor Verification",
+   "kind": "observed",
+   "verdict": "followed",
+   "severity": "critical",
+   "evidence": [
+    {
+     "turn_id": 3,
+     "speaker": "agent",
+     "start_s": 22.17,
+     "end_s": 34.09,
+     "quote": "For account security, could you please share your Order ID and the last four digits of your registered mobile number?"
+    }
+   ],
+   "certainty": "high",
+   "certainty_reason": "",
+   "reviewer_status": "pending",
+   "reviewer_note": "",
+   "explanation": "The agent properly requested both the Order ID and last four digits of the registered mobile number before providing account details."
+  },
+  {
+   "finding_id": "sop_GEN-04_4",
+   "criterion_id": "GEN-04",
+   "name": "Active Listening & Issue Clarification",
+   "kind": "observed",
+   "verdict": "partial",
+   "severity": "major",
+   "evidence": [
+    {
+     "turn_id": 5,
+     "speaker": "agent",
+     "start_s": 42.23,
+     "end_s": 56.85,
+     "quote": "I understand how essential it is to have clear visibility on your delivery"
+    }
+   ],
+   "certainty": "high",
+   "certainty_reason": "",
+   "reviewer_status": "pending",
+   "reviewer_note": "",
+   "explanation": "The agent acknowledged the customer's need but did not explicitly paraphrase the core issue back to the customer."
+  },
+  {
+   "finding_id": "sop_GEN-05_5",
+   "criterion_id": "GEN-05",
+   "name": "Empathy & Ownership Statement",
+   "kind": "inferred",
+   "verdict": "followed",
+   "severity": "major",
+   "evidence": [
+    {
+     "turn_id": 5,
+     "speaker": "agent",
+     "start_s": 42.23,
+     "end_s": 56.85,
+     "quote": "I understand how essential it is to have clear visibility on your delivery, and I will personally take charge of this to give you complete clarity on the shipment status."
+    }
+   ],
+   "certainty": "high",
+   "certainty_reason": "",
+   "reviewer_status": "pending",
+   "reviewer_note": "",
+   "explanation": "The agent expressed empathy and took personal ownership of the solution."
+  },
+  {
+   "finding_id": "sop_GEN-06_6",
+   "criterion_id": "GEN-06",
+   "name": "Accurate Policy Explanation & Solution Execution",
+   "kind": "observed",
+   "verdict": "followed",
+   "severity": "critical",
+   "evidence": [
+    {
+     "turn_id": 7,
+     "speaker": "agent",
+     "start_s": 66.61,
+     "end_s": 80.45,
+     "quote": "It was dispatched under standard shipping and is currently out for delivery with our logistics executive today."
+    }
+   ],
+   "certainty": "high",
+   "certainty_reason": "",
+   "reviewer_status": "pending",
+   "reviewer_note": "",
+   "explanation": "The agent accurately provided the shipment status and policy details based on verified information."
+  },
+  {
+   "finding_id": "sop_GEN-07_7",
+   "criterion_id": "GEN-07",
+   "name": "Additional Assistance & Next Steps Summary",
+   "kind": "observed",
+   "verdict": "followed",
+   "severity": "major",
+   "evidence": [
+    {
+     "turn_id": 17,
+     "speaker": "agent",
+     "start_s": 166.95,
+     "end_s": 186.95,
+     "quote": "To summarize, your order ORD-96951 for the Levi's"
+    }
+   ],
+   "certainty": "high",
+   "certainty_reason": "",
+   "reviewer_status": "pending",
+   "reviewer_note": "",
+   "explanation": "The agent summarized the resolution, referenced the ticket number, and checked for additional assistance."
+  },
+  {
+   "finding_id": "sop_GEN-08_8",
+   "criterion_id": "GEN-08",
+   "name": "Professional Branded Sign-Off",
+   "kind": "observed",
+   "verdict": "followed",
+   "severity": "major",
+   "evidence": [
+    {
+     "turn_id": 19,
+     "speaker": "agent",
+     "start_s": 192.38,
+     "end_s": 198.92,
+     "quote": "Thank you for contacting ShopEase. We appreciate your time and hope you have a great day ahead!"
+    }
+   ],
+   "certainty": "high",
+   "certainty_reason": "",
+   "reviewer_status": "pending",
+   "reviewer_note": "",
+   "explanation": "The agent concluded the call with a professional branded sign-off."
+  },
+  {
+   "finding_id": "policy_SHP-2.1_1",
+   "criterion_id": "SHP-2.1",
+   "name": "Shipping and Delivery Policy: Carrier Attempts and Undelivered Consignments",
+   "kind": "observed",
+   "verdict": "violation",
+   "severity": "minor",
+   "evidence": [
+    {
+     "turn_id": 9,
+     "speaker": "agent",
+     "start_s": 0.0,
+     "end_s": 0.0,
+     "quote": "the delivery agent will make only one single delivery attempt at your door."
+    }
+   ],
+   "certainty": "high",
+   "certainty_reason": "",
+   "reviewer_status": "pending",
+   "reviewer_note": "",
+   "explanation": "The agent claimed only 1 attempt is made, but clause SHP-2.1 states delivery partners will make up to three (3) independent delivery attempts before RTO."
+  },
+  {
+   "finding_id": "empathy_rating",
+   "criterion_id": "empathy_and_communication",
+   "name": "Empathy & Tone Assessment",
+   "kind": "inferred",
+   "verdict": "followed",
+   "severity": "minor",
+   "evidence": [
+    {
+     "turn_id": 0,
+     "speaker": "agent",
+     "start_s": 0.0,
+     "end_s": 0.0,
+     "quote": "I understand how essential it is to have clear visibility on your delivery, and I will personally take charge of this to give you complete clarity on the shipment status."
+    }
+   ],
+   "certainty": "medium",
+   "certainty_reason": "Subjective appraisal of agent warmth and emotional validation",
+   "reviewer_status": "pending",
+   "reviewer_note": "",
+   "explanation": "Empathy score: 5/5"
+  }
+ ],
+ "cannot_judge": false,
+ "cannot_judge_reason": "",
+ "unreadable_parts": [],
+ "status": "ok",
+ "failed_step": null,
+ "completed_steps": [
+  "input_ingestion",
+  "quality_gate",
+  "call_state",
+  "topic_detection",
+  "scorecard_judgment",
+  "policy_check",
+  "evidence_verification",
+  "scoring"
+ ],
+ "emotion": {
+  "points": [
+   {
+    "turn": 2,
+    "emotion": "neutral",
+    "valence": 0.0
+   },
+   {
+    "turn": 4,
+    "emotion": "neutral",
+    "valence": 0.0
+   },
+   {
+    "turn": 6,
+    "emotion": "anxious",
+    "valence": -1.0
+   },
+   {
+    "turn": 8,
+    "emotion": "neutral",
+    "valence": 0.0
+   },
+   {
+    "turn": 10,
+    "emotion": "frustrated",
+    "valence": -1.5
+   },
+   {
+    "turn": 12,
+    "emotion": "satisfied",
+    "valence": 1.0
+   },
+   {
+    "turn": 14,
+    "emotion": "satisfied",
+    "valence": 1.0
+   },
+   {
+    "turn": 16,
+    "emotion": "satisfied",
+    "valence": 1.0
+   },
+   {
+    "turn": 18,
+    "emotion": "satisfied",
+    "valence": 1.0
+   },
+   {
+    "turn": 20,
+    "emotion": "satisfied",
+    "valence": 1.0
+   }
+  ],
+  "start": "neutral",
+  "middle": "satisfied",
+  "end": "satisfied",
+  "trend": "improved"
+ },
+ "agent_tone": {
+  "points": [
+   {
+    "turn": 1,
+    "emotion": "warm",
+    "valence": 1.0
+   },
+   {
+    "turn": 3,
+    "emotion": "calm",
+    "valence": 0.5
+   },
+   {
+    "turn": 5,
+    "emotion": "empathetic",
+    "valence": 1.5
+   },
+   {
+    "turn": 7,
+    "emotion": "calm",
+    "valence": 0.5
+   },
+   {
+    "turn": 9,
+    "emotion": "calm",
+    "valence": 0.5
+   },
+   {
+    "turn": 11,
+    "emotion": "warm",
+    "valence": 1.0
+   },
+   {
+    "turn": 13,
+    "emotion": "calm",
+    "valence": 0.5
+   },
+   {
+    "turn": 15,
+    "emotion": "warm",
+    "valence": 1.0
+   },
+   {
+    "turn": 17,
+    "emotion": "calm",
+    "valence": 0.5
+   },
+   {
+    "turn": 19,
+    "emotion": "warm",
+    "valence": 1.0
+   }
+  ],
+  "start": "warm",
+  "middle": "warm",
+  "end": "warm",
+  "trend": "flat"
+ },
+ "metrics": {
+  "duration_sec": 201.8,
+  "agent_turns": 10,
+  "customer_turns": 10,
+  "agent_talk_ratio": 0.679,
+  "longest_silence_sec": 0.9,
+  "dead_air_events": [],
+  "interruption_events": [],
+  "hold_events": [],
+  "holds": [],
+  "longest_hold_sec": 0.0,
+  "agent_words_per_minute": 156.0,
+  "agent_interruptions": 0
+ },
+ "strengths": [
+  "Followed authentication protocol strictly before revealing order details.",
+  "Expressed strong empathy and took personal ownership of the customer's request.",
+  "Provided clear and accurate policy explanations regarding OTP and delivery attempts.",
+  "Delivered a thorough summary and professional sign-off at the end of the call.",
+  "Completed all 3 critical SOP steps that applied to this call."
+ ],
+ "coaching": [
+  {
+   "title": "GEN-04: Active Listening & Issue Clarification",
+   "advice": "The agent maintains silence while the customer speaks, takes notes, and summarizes the specific problem back to the customer. Example: \"I understand that your package has not arrived and you would like to track the courier status. Is that correct?\"",
+   "source": "sop",
+   "evidence": "Missing: paraphrase the core issue back to the customer. The agent acknowledged the customer's need but did not explicitly paraphrase the core issue back to the customer."
+  },
+  {
+   "title": "Policy SHP-2.1: say it correctly",
+   "advice": "The agent claimed only 1 attempt is made, but clause SHP-2.1 states delivery partners will make up to three (3) independent delivery attempts before RTO.",
+   "source": "policy",
+   "evidence": "the delivery agent will make only one single delivery attempt at your door."
+  },
+  {
+   "title": "Suggestion",
+   "advice": "Next time, ensure you explicitly paraphrase the customer's specific concern back to them to fully satisfy active listening steps.",
+   "source": "llm",
+   "evidence": ""
+  }
+ ],
+ "risk_flags": [],
+ "retrieved_clause_ids": [
+  "SHP-2.1",
+  "SHP-3.1",
+  "SHP-1.1",
+  "SHP-2.3",
+  "SHP-1.2",
+  "SHP-2.2",
+  "PRV-1.3",
+  "PRV-2.2",
+  "SHP-3.2",
+  "SHP-4.1",
+  "PRV-1.1",
+  "ESC-1.1",
+  "ESC-1.2",
+  "ESC-2.1",
+  "ESC-2.2",
+  "ESC-3.1",
+  "ESC-3.2",
+  "PRV-1.2",
+  "PRV-2.1",
+  "PRV-3.1"
+ ],
+ "transcript": {
+  "call_id": "call_017",
+  "source": "transcript",
+  "language": "te",
+  "audio_path": null,
+  "duration_seconds": 201.8,
+  "diarization_method": "given",
+  "transcript_quality": "good",
+  "quality_reason": "Transcript quality is reliable for compliance and rubric scoring.",
+  "unreadable_parts": [],
+  "turns": [
+   {
+    "turn_id": 1,
+    "speaker": "agent",
+    "start_time": 0.0,
+    "end_time": 11.92,
+    "text": "Thank you for calling ShopEase customer support. My name is Ananya Sen. How may I assist you today? Please note that this call is recorded for quality assurance and training purposes.",
+    "text_te": null,
+    "text_roman": null,
+    "asr_confidence": 1.0,
+    "silence_before": 0.0,
+    "overlaps_previous": false,
+    "emotion": "warm"
+   },
+   {
+    "turn_id": 2,
+    "speaker": "customer",
+    "start_time": 12.72,
+    "end_time": 21.57,
+    "text": "Hello Ananya, my name is Karan Patel. I am calling to check the status of my shipment that was supposed to arrive today.",
+    "text_te": null,
+    "text_roman": null,
+    "asr_confidence": 1.0,
+    "silence_before": 0.8,
+    "overlaps_previous": false,
+    "emotion": "neutral"
+   },
+   {
+    "turn_id": 3,
+    "speaker": "agent",
+    "start_time": 22.17,
+    "end_time": 34.09,
+    "text": "I would be happy to check that for you, Mr. Patel. For account security, could you please share your Order ID and the last four digits of your registered mobile number?",
+    "text_te": null,
+    "text_roman": null,
+    "asr_confidence": 1.0,
+    "silence_before": 0.6,
+    "overlaps_previous": false,
+    "emotion": "calm"
+   },
+   {
+    "turn_id": 4,
+    "speaker": "customer",
+    "start_time": 34.99,
+    "end_time": 41.53,
+    "text": "Sure, the order ID is ORD-96951, and the last four digits of my phone number are 2697.",
+    "text_te": null,
+    "text_roman": null,
+    "asr_confidence": 1.0,
+    "silence_before": 0.9,
+    "overlaps_previous": false,
+    "emotion": "neutral"
+   },
+   {
+    "turn_id": 5,
+    "speaker": "agent",
+    "start_time": 42.23,
+    "end_time": 56.85,
+    "text": "Thank you for confirming your details, Mr. Patel. I understand how essential it is to have clear visibility on your delivery, and I will personally take charge of this to give you complete clarity on the shipment status.",
+    "text_te": null,
+    "text_roman": null,
+    "asr_confidence": 1.0,
+    "silence_before": 0.7,
+    "overlaps_previous": false,
+    "emotion": "empathetic"
+   },
+   {
+    "turn_id": 6,
+    "speaker": "customer",
+    "start_time": 57.35,
+    "end_time": 65.81,
+    "text": "Thank you. I just wanted to know if the courier will be coming soon because I might step out for an hour.",
+    "text_te": null,
+    "text_roman": null,
+    "asr_confidence": 1.0,
+    "silence_before": 0.5,
+    "overlaps_previous": false,
+    "emotion": "anxious"
+   },
+   {
+    "turn_id": 7,
+    "speaker": "agent",
+    "start_time": 66.61,
+    "end_time": 80.45,
+    "text": "I have accessed your file now. Your parcel contains the Levi's Slim Fit Cotton Jeans, billed at Rs 1899. It was dispatched under standard shipping and is currently out for delivery with our logistics executive today.",
+    "text_te": null,
+    "text_roman": null,
+    "asr_confidence": 1.0,
+    "silence_before": 0.8,
+    "overlaps_previous": false,
+    "emotion": "calm"
+   },
+   {
+    "turn_id": 8,
+    "speaker": "customer",
+    "start_time": 81.15,
+    "end_time": 86.92,
+    "text": "Understood. What happens if the delivery executive reaches my flat while I am briefly outside?",
+    "text_te": null,
+    "text_roman": null,
+    "asr_confidence": 1.0,
+    "silence_before": 0.7,
+    "overlaps_previous": false,
+    "emotion": "neutral"
+   },
+   {
+    "turn_id": 9,
+    "speaker": "agent",
+    "start_time": 87.82,
+    "end_time": 103.59,
+    "text": "As per our courier guidelines, the delivery agent will make only one single delivery attempt at your door. If you are not available during that visit, they will immediately cancel the order and return the parcel back to our origin warehouse.",
+    "text_te": null,
+    "text_roman": null,
+    "asr_confidence": 1.0,
+    "silence_before": 0.9,
+    "overlaps_previous": false,
+    "emotion": "calm"
+   },
+   {
+    "turn_id": 10,
+    "speaker": "customer",
+    "start_time": 104.19,
+    "end_time": 111.5,
+    "text": "Oh, only one attempt? That feels a bit strict. Can I contact the driver directly to coordinate the timing?",
+    "text_te": null,
+    "text_roman": null,
+    "asr_confidence": 1.0,
+    "silence_before": 0.6,
+    "overlaps_previous": false,
+    "emotion": "frustrated"
+   },
+   {
+    "turn_id": 11,
+    "speaker": "agent",
+    "start_time": 112.2,
+    "end_time": 123.74,
+    "text": "Yes, absolutely. An automated Out-For-Delivery text was sent to your phone this morning containing the delivery associate's direct contact number, so you can reach out directly to coordinate your arrival.",
+    "text_te": null,
+    "text_roman": null,
+    "asr_confidence": 1.0,
+    "silence_before": 0.7,
+    "overlaps_previous": false,
+    "emotion": "warm"
+   },
+   {
+    "turn_id": 12,
+    "speaker": "customer",
+    "start_time": 124.54,
+    "end_time": 133.77,
+    "text": "Right, I do see that text message on my mobile. Also, will I need to give them any delivery OTP when receiving the parcel?",
+    "text_te": null,
+    "text_roman": null,
+    "asr_confidence": 1.0,
+    "silence_before": 0.8,
+    "overlaps_previous": false,
+    "emotion": "satisfied"
+   },
+   {
+    "turn_id": 13,
+    "speaker": "agent",
+    "start_time": 134.27,
+    "end_time": 150.42,
+    "text": "No, Mr. Patel. As per ShopEase policy, delivery OTP verification is only mandated for orders valued above Rs 2,500. Since your order total is Rs 1899, no OTP is required, and any representative at your address can accept it on your behalf.",
+    "text_te": null,
+    "text_roman": null,
+    "asr_confidence": 1.0,
+    "silence_before": 0.5,
+    "overlaps_previous": false,
+    "emotion": "calm"
+   },
+   {
+    "turn_id": 14,
+    "speaker": "customer",
+    "start_time": 151.02,
+    "end_time": 157.18,
+    "text": "Okay, perfect. That makes it easier in case my neighbor has to collect it for me.",
+    "text_te": null,
+    "text_roman": null,
+    "asr_confidence": 1.0,
+    "silence_before": 0.6,
+    "overlaps_previous": false,
+    "emotion": "satisfied"
+   },
+   {
+    "turn_id": 15,
+    "speaker": "agent",
+    "start_time": 157.58,
+    "end_time": 163.73,
+    "text": "Yes, that will work completely fine as long as they confirm your name at the doorstep.",
+    "text_te": null,
+    "text_roman": null,
+    "asr_confidence": 1.0,
+    "silence_before": 0.4,
+    "overlaps_previous": false,
+    "emotion": "warm"
+   },
+   {
+    "turn_id": 16,
+    "speaker": "customer",
+    "start_time": 164.23,
+    "end_time": 166.15,
+    "text": "Great, thanks for confirming that.",
+    "text_te": null,
+    "text_roman": null,
+    "asr_confidence": 1.0,
+    "silence_before": 0.5,
+    "overlaps_previous": false,
+    "emotion": "satisfied"
+   },
+   {
+    "turn_id": 17,
+    "speaker": "agent",
+    "start_time": 166.95,
+    "end_time": 186.95,
+    "text": "To summarize, your order ORD-96951 for the Levi's jeans is out for delivery today without requiring an OTP, and you have the courier partner's direct number from the SMS alert to coordinate timing. I have logged this inquiry under reference ticket SR-77120. Is there anything else I can assist you with today?",
+    "text_te": null,
+    "text_roman": null,
+    "asr_confidence": 1.0,
+    "silence_before": 0.8,
+    "overlaps_previous": false,
+    "emotion": "calm"
+   },
+   {
+    "turn_id": 18,
+    "speaker": "customer",
+    "start_time": 187.65,
+    "end_time": 191.88,
+    "text": "No, that was very clear. Thank you for your assistance, Ananya.",
+    "text_te": null,
+    "text_roman": null,
+    "asr_confidence": 1.0,
+    "silence_before": 0.7,
+    "overlaps_previous": false,
+    "emotion": "satisfied"
+   },
+   {
+    "turn_id": 19,
+    "speaker": "agent",
+    "start_time": 192.38,
+    "end_time": 198.92,
+    "text": "Thank you for contacting ShopEase. We appreciate your time and hope you have a great day ahead!",
+    "text_te": null,
+    "text_roman": null,
+    "asr_confidence": 1.0,
+    "silence_before": 0.5,
+    "overlaps_previous": false,
+    "emotion": "warm"
+   },
+   {
+    "turn_id": 20,
+    "speaker": "customer",
+    "start_time": 199.52,
+    "end_time": 201.83,
+    "text": "Have a great day too. Goodbye.",
+    "text_te": null,
+    "text_roman": null,
+    "asr_confidence": 1.0,
+    "silence_before": 0.6,
+    "overlaps_previous": false,
+    "emotion": "satisfied"
+   }
+  ]
+ },
+ "meta": {
+  "model": "SOP: gemini-3.5-flash-lite \u00b7 Policy: gemini-3.5-flash",
+  "llm_requests": 2,
+  "diarization_method": "given",
+  "transcribe_seconds": 0.0,
+  "audit_seconds": 9.9,
+  "cache_hit": false,
+  "warnings": [],
+  "source_set": "synthetic",
+  "trace_id": "run_call_017_651049",
+  "status": "ok",
+  "failed_step": null,
+  "completed_steps": [
+   "input_ingestion",
+   "quality_gate",
+   "call_state",
+   "topic_detection",
+   "scorecard_judgment",
+   "policy_check",
+   "evidence_verification",
+   "scoring"
+  ],
+  "estimated_cost_usd": 0.018883,
+  "tokens_in": 8555,
+  "tokens_out": 2253,
+  "sop_model": "gemini-3.5-flash-lite",
+  "policy_model": "gemini-3.5-flash"
+ }
+}

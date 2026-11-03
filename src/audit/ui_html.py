@@ -231,9 +231,28 @@ def display_grade_label(sc: Any) -> str:
     return lbl
 
 
+def audit_mode_badge(rep: Any) -> Optional[str]:
+    meta = getattr(rep, "meta", None) if not isinstance(rep, dict) else rep.get("meta")
+    if not meta:
+        return None
+    diar = getattr(meta, "diarization_method", "") if not isinstance(meta, dict) else meta.get("diarization_method", "")
+    if not diar:
+        return None
+    diar_str = str(diar).strip()
+    if diar_str == "given":
+        return "Transcript audit"
+    if diar_str.startswith("stereo"):
+        return "Audio audit (stereo)"
+    return None
+
+
 def report_header(rep: AuditReport, subtitle: str = "Call audit") -> str:
     m = rep.metrics
-    pills = [_pill(X.topic_label(rep.topic), "dark"), _pill(f"{m.duration_sec / 60:.1f} min"), _pill(f"{m.agent_turns + m.customer_turns} turns")]
+    pills = [_pill(X.topic_label(rep.topic), "dark")]
+    mode = audit_mode_badge(rep)
+    if mode:
+        pills.append(_pill(mode, ""))
+    pills += [_pill(f"{m.duration_sec / 60:.1f} min"), _pill(f"{m.agent_turns + m.customer_turns} turns")]
     if rep.meta.diarization_method:
         pills.append(_pill("Speakers: " + ("by channel" if rep.meta.diarization_method.startswith("stereo") else "by AI" if "llm" in rep.meta.diarization_method else "from the script" if rep.meta.diarization_method == "given" else "estimated"), ""))
     pills += [_pill(s.replace("_", " "), "info") for s in rep.signals[:4]]

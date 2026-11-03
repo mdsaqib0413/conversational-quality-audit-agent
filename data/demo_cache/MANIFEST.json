@@ -1,85 +1,203 @@
 {
   "audit_key_salt": "audit-v9",
+  "sop_model": "gemini-3.5-flash-lite",
   "policy_model": "gemini-3.5-flash",
-  "generation_date": "2026-11-04T01:35:05",
+  "build_date": "2026-11-04T01:47:25",
   "calls": [
     {
       "call_id": "call_001",
       "overall": 100.0,
       "grade": "A",
-      "status": "ok"
+      "status": "ok",
+      "sop_model": "gemini-3.5-flash-lite",
+      "policy_model": "gemini-3.5-flash",
+      "llm_requests": 2,
+      "trace_id": "run_call_001_789672",
+      "sizes": {
+        "audit_json_bytes": 56343,
+        "trace_jsonl_bytes": 40978,
+        "transcript_json_bytes": 10560
+      }
     },
     {
       "call_id": "call_009",
       "overall": 99.0,
       "grade": "A",
-      "status": "ok"
+      "status": "ok",
+      "sop_model": "gemini-3.5-flash-lite",
+      "policy_model": "gemini-3.5-flash",
+      "llm_requests": 2,
+      "trace_id": "run_call_009_625207",
+      "sizes": {
+        "audit_json_bytes": 34044,
+        "trace_jsonl_bytes": 35812,
+        "transcript_json_bytes": 7352
+      }
     },
     {
       "call_id": "call_017",
       "overall": 94.8,
       "grade": "A",
-      "status": "ok"
+      "status": "ok",
+      "sop_model": "gemini-3.5-flash-lite",
+      "policy_model": "gemini-3.5-flash",
+      "llm_requests": 2,
+      "trace_id": "run_call_017_651049",
+      "sizes": {
+        "audit_json_bytes": 35625,
+        "trace_jsonl_bytes": 36141,
+        "transcript_json_bytes": 7730
+      }
     },
     {
       "call_id": "call_025",
       "overall": 85.0,
       "grade": "B",
-      "status": "ok"
+      "status": "ok",
+      "sop_model": "gemini-3.5-flash-lite",
+      "policy_model": "gemini-3.5-flash",
+      "llm_requests": 3,
+      "trace_id": "run_call_025_663988",
+      "sizes": {
+        "audit_json_bytes": 36187,
+        "trace_jsonl_bytes": 36633,
+        "transcript_json_bytes": 7351
+      }
     },
     {
       "call_id": "call_041",
       "overall": 81.8,
       "grade": "B",
-      "status": "ok"
+      "status": "ok",
+      "sop_model": "gemini-3.5-flash-lite",
+      "policy_model": "gemini-3.5-flash",
+      "llm_requests": 2,
+      "trace_id": "run_call_041_711804",
+      "sizes": {
+        "audit_json_bytes": 37098,
+        "trace_jsonl_bytes": 36217,
+        "transcript_json_bytes": 8458
+      }
     },
     {
       "call_id": "call_101",
       "overall": 100.0,
       "grade": "A",
-      "status": "ok"
+      "status": "ok",
+      "sop_model": "gemini-3.5-flash-lite",
+      "policy_model": "gemini-3.5-flash",
+      "llm_requests": 2,
+      "trace_id": "run_call_101_49922",
+      "sizes": {
+        "audit_json_bytes": 42816,
+        "trace_jsonl_bytes": 37575,
+        "transcript_json_bytes": 6929
+      }
     },
     {
       "call_id": "call_102",
       "overall": 10.1,
       "grade": "D",
-      "status": "ok"
+      "status": "ok",
+      "sop_model": "gemini-3.5-flash-lite",
+      "policy_model": "gemini-3.5-flash",
+      "llm_requests": 2,
+      "trace_id": "run_call_102_87938",
+      "sizes": {
+        "audit_json_bytes": 48304,
+        "trace_jsonl_bytes": 38839,
+        "transcript_json_bytes": 5762
+      }
     },
     {
       "call_id": "call_103",
       "overall": 100.0,
       "grade": "A",
-      "status": "ok"
+      "status": "ok",
+      "sop_model": "gemini-3.5-flash-lite",
+      "policy_model": "gemini-3.5-flash",
+      "llm_requests": 2,
+      "trace_id": "run_call_103_733355",
+      "sizes": {
+        "audit_json_bytes": 31814,
+        "trace_jsonl_bytes": 35713,
+        "transcript_json_bytes": 6431
+      }
     },
     {
       "call_id": "call_104",
       "overall": 14.9,
       "grade": "D",
-      "status": "ok"
+      "status": "ok",
+      "sop_model": "gemini-3.5-flash-lite",
+      "policy_model": "gemini-3.5-flash",
+      "llm_requests": 2,
+      "trace_id": "run_call_104_778521",
+      "sizes": {
+        "audit_json_bytes": 35362,
+        "trace_jsonl_bytes": 34416,
+        "transcript_json_bytes": 4906
+      }
     },
     {
       "call_id": "call_105",
       "overall": 70.0,
       "grade": "C",
-      "status": "ok"
+      "status": "ok",
+      "sop_model": "gemini-3.5-flash-lite",
+      "policy_model": "gemini-3.5-flash",
+      "llm_requests": 2,
+      "trace_id": "run_call_105_798184",
+      "sizes": {
+        "audit_json_bytes": 51012,
+        "trace_jsonl_bytes": 39749,
+        "transcript_json_bytes": 8113
+      }
     },
     {
       "call_id": "call_106",
       "overall": 16.1,
       "grade": "D",
-      "status": "degraded"
+      "status": "degraded",
+      "sop_model": "gemini-3.5-flash-lite",
+      "policy_model": "gemini-3.5-flash",
+      "llm_requests": 2,
+      "trace_id": "run_call_106_553659",
+      "sizes": {
+        "audit_json_bytes": 50627,
+        "trace_jsonl_bytes": 40179,
+        "transcript_json_bytes": 6355
+      }
     },
     {
       "call_id": "call_107",
       "overall": 57.8,
       "grade": "D",
-      "status": "ok"
+      "status": "ok",
+      "sop_model": "gemini-3.5-flash-lite",
+      "policy_model": "gemini-3.5-flash",
+      "llm_requests": 6,
+      "trace_id": "run_call_107_956667",
+      "sizes": {
+        "audit_json_bytes": 34619,
+        "trace_jsonl_bytes": 34799,
+        "transcript_json_bytes": 5679
+      }
     },
     {
       "call_id": "call_108",
       "overall": 100.0,
       "grade": "A",
-      "status": "ok"
+      "status": "ok",
+      "sop_model": "gemini-3.5-flash-lite",
+      "policy_model": "gemini-3.5-flash",
+      "llm_requests": 2,
+      "trace_id": "run_call_108_209342",
+      "sizes": {
+        "audit_json_bytes": 32083,
+        "trace_jsonl_bytes": 35502,
+        "transcript_json_bytes": 5841
+      }
     }
   ]
 }
