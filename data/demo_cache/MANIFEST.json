@@ -2,7 +2,7 @@
   "audit_key_salt": "audit-v9",
   "sop_model": "gemini-3.5-flash-lite",
   "policy_model": "gemini-3.5-flash",
-  "build_date": "2026-11-04T01:47:25",
+  "build_date": "2026-11-04T01:58:37",
   "calls": [
     {
       "call_id": "call_001",

@@ -206,8 +206,16 @@ def format_models_header(rep: AuditReport) -> str:
     sop_clean = _clean_model_name(sop_model) if sop_model else ""
     pol_clean = _clean_model_name(policy_model) if policy_model else ""
 
+    def _req_label(n: int) -> str:
+        if n == 1:
+            return "1 AI request"
+        if n > 2:
+            return f"{n} AI requests (includes retries)"
+        return f"{n} AI requests"
+
+    req_label = _req_label(reqs)
+
     if sop_clean and pol_clean:
-        req_label = f"{reqs} AI request" if reqs == 1 else f"{reqs} AI requests"
         if sop_clean == pol_clean:
             return f"{sop_clean} · {req_label}"
         return f"SOP: {sop_clean} · Policy: {pol_clean} · {req_label}"
@@ -215,7 +223,6 @@ def format_models_header(rep: AuditReport) -> str:
     raw_model = _clean_model_name(getattr(rep.meta, "model", "") if hasattr(rep, "meta") else "")
     if not raw_model:
         raw_model = "gemini-3.5-flash-lite"
-    req_label = f"{reqs} AI request" if reqs == 1 else f"{reqs} AI requests"
     return f"{raw_model} · {req_label}"
 
 
