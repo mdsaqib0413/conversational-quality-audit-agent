@@ -35,3 +35,5 @@ traces/*.jsonl
 # Local vector database
 data/qdrant_db/
 data/index_cache/
+
+.agents/
