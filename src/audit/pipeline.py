@@ -501,7 +501,12 @@ class AuditPipeline:
             status="degraded" if quality == "degraded" else "ok",
             completed_steps=completed_steps,
             meta=AuditMeta(
-                model=self.gateway.describe() if self.gateway.targets else "", llm_requests=self.gateway.request_count - req0,
+                model=(f"SOP: {(self.gateway.describe() if self.gateway.targets else '').removeprefix('gemini:').strip()} · Policy: {(self.policy_model or '').removeprefix('gemini:').strip()}"
+                       if (self.policy_model and self.gateway.targets and (self.gateway.describe() if self.gateway.targets else '').removeprefix('gemini:').strip() != (self.policy_model or '').removeprefix('gemini:').strip())
+                       else ((self.gateway.describe() if self.gateway.targets else '').removeprefix('gemini:').strip() or (self.policy_model or '').removeprefix('gemini:').strip() or "")),
+                sop_model=(self.gateway.describe() if self.gateway.targets else '').removeprefix('gemini:').strip() or None,
+                policy_model=(self.policy_model or '').removeprefix('gemini:').strip() or None,
+                llm_requests=trace_summary["total_requests"] or (self.gateway.request_count - req0),
                 diarization_method=call.diarization_method, audit_seconds=round(time.time() - t0, 1), warnings=warnings,
                 source_set=source_set, trace_id=tracer.run_id, status="degraded" if quality == "degraded" else "ok",
                 completed_steps=completed_steps, estimated_cost_usd=trace_summary["total_cost_usd"],

@@ -55,7 +55,7 @@ TEMPLATE = """<!doctype html>
   {% else %}
   <div class="grade" style="color:{{ grade_color }}">{{ r.scores.grade }}</div>
   <div><b>{{ r.scores.overall }}</b> / 100</div>
-  <div class="muted">{{ r.scores.grade_label }}</div>
+  <div class="muted">{{ grade_label_display }}</div>
   {% endif %}
  </td></tr></table>
 
@@ -79,7 +79,12 @@ Possible scam / social-engineering pattern: {{ r.risk_flags|join(', ') }}. Agent
 <div class="warn" style="margin-top:8px"><b>Real call:</b> Real call from a third-party dataset. Not scored against ShopEase policies. Scoring is for pipeline robustness testing only; speaker roles may not match a ShopEase agent/customer setup.</div>
 {% endif %}
 
-{% if r.scores.cap_reasons %}
+{% if is_capped and r.scores.overall < r.scores.overall_before_cap %}
+<div class="warn" style="background-color:#fee2e2; border:1px solid #ef4444; color:#991b1b; padding:8px 12px; margin-top:8px; font-weight:600; border-radius:6px">
+<b>Score capped at {{ capped_overall_display }} because:</b> {{ cap_reasons_summary }}
+<div style="font-weight:normal; margin-top:2px; color:#7f1d1d">Score before the critical-failure cap: {{ capped_before_display }}.</div>
+</div>
+{% elif r.scores.cap_reasons %}
 <div class="warn"><b>Score capped / flagged:</b>
  <ul>{% for c in r.scores.cap_reasons %}<li>{{ c }}</li>{% endfor %}</ul>
  {% if r.scores.overall_before_cap != r.scores.overall %}Score before the critical-failure cap: {{ r.scores.overall_before_cap }}.{% endif %}
@@ -288,10 +293,22 @@ def render_pdf_html(report: AuditReport) -> str:
 
     failed_reason = extract_failure_reason(report) if getattr(report, "status", "ok") == "failed" else ""
     degraded_reason = extract_degraded_reason(report) if getattr(report, "status", "ok") == "degraded" else ""
+    is_capped = (bool(sc.cap_reasons) and sc.overall < sc.overall_before_cap) or getattr(sc, "critical_failure", False)
+    meaningful = [r for r in sc.cap_reasons if not r.startswith("No topic-specific") and not r.startswith("No applicable SOP")]
+    cap_reasons_summary = "; ".join(meaningful) if meaningful else "; ".join(sc.cap_reasons)
+    if not cap_reasons_summary:
+        cap_reasons_summary = "critical rule violation"
+
+    from .ui_html import display_grade_label
+    grade_label_display = display_grade_label(sc)
+    capped_overall_display = f"{sc.overall:g}"
+    capped_before_display = f"{sc.overall_before_cap:g}"
+
     return env.from_string(TEMPLATE).render(
         r=report, bars=bars, sop=sop, status_color=STATUS_COLOR, status_label=STATUS_LABEL, sev_color=SEV_COLOR,
         grade_color=GRADE_COLOR.get(sc.grade, "#111827"), chart=emotion_chart_base64(report),
         failed_reason=failed_reason, degraded_reason=degraded_reason,
+        is_capped=is_capped, cap_reasons_summary=cap_reasons_summary, grade_label_display=grade_label_display, capped_overall_display=capped_overall_display, capped_before_display=capped_before_display,
         violations=[
             p.model_copy(update={"policy_text": _clean_display_policy_text(p.policy_text)})
             for p in report.policy_results if p.verdict == "violation"

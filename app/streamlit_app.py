@@ -517,7 +517,8 @@ def page_report() -> None:
         default_idx = sorted_ids.index(rep.call_id) if rep.call_id in sorted_ids else 0
         chosen_label = st.selectbox("Open a saved audit", pick_labels, index=default_idx, label_visibility="collapsed")
         choice = sorted_ids[pick_labels.index(chosen_label)]
-        if choice != rep.call_id:
+        cur_item = next((x for x in idx if x["call_id"] == rep.call_id), None)
+        if choice != rep.call_id or (cur_item and (abs(cur_item["overall"] - rep.scores.overall) > 0.05 or cur_item["grade"] != rep.scores.grade)):
             nxt = get_report_by_id(choice)
             if nxt:
                 st.session_state["report"] = nxt

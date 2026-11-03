@@ -7,8 +7,9 @@ passes through `esc()`, class names are prefixed `aq-`.
 
 from __future__ import annotations
 
+import json
 import re
-from typing import Iterable, List, Optional, Sequence
+from typing import Any, Iterable, List, Optional, Sequence
 
 from . import explain as X
 from .schemas import AuditReport, PolicyResult, SOPResult, extract_failure_reason, extract_degraded_reason
@@ -157,6 +158,79 @@ def _emo_chip(emotion: Optional[str], speaker: str) -> str:
 
 
 # ---------------------------------------------------------------------------------- header + verdict
+def _clean_model_name(name: Optional[str]) -> str:
+    if not name:
+        return ""
+    n = str(name).strip()
+    if n.startswith("gemini:"):
+        n = n[len("gemini:"):]
+    return n
+
+
+def format_models_header(rep: AuditReport) -> str:
+    sop_model = getattr(rep.meta, "sop_model", None) if hasattr(rep, "meta") else None
+    policy_model = getattr(rep.meta, "policy_model", None) if hasattr(rep, "meta") else None
+    reqs = getattr(rep.meta, "llm_requests", 1) if hasattr(rep, "meta") else 1
+
+    # Check trace file if models are not directly populated on rep.meta
+    trace_id = getattr(rep.meta, "trace_id", "") if hasattr(rep, "meta") else ""
+    if (not sop_model or not policy_model) and trace_id:
+        from .tracer import TRACES_DIR
+        t_path = TRACES_DIR / f"{trace_id}.jsonl"
+        if t_path.exists():
+            try:
+                found_sop = None
+                found_pol = None
+                t_reqs = 0
+                for line in t_path.read_text(encoding="utf-8").splitlines():
+                    if not line.strip():
+                        continue
+                    st = json.loads(line)
+                    s_name = st.get("step_name", "")
+                    m_name = st.get("model_name", "")
+                    cnt = st.get("request_count", 0)
+                    t_reqs += cnt
+                    if s_name in ("sop_check", "scorecard_judgment") and m_name and m_name != "none":
+                        found_sop = _clean_model_name(m_name)
+                    elif s_name == "policy_check" and m_name and m_name != "none":
+                        found_pol = _clean_model_name(m_name)
+                if found_sop:
+                    sop_model = found_sop
+                if found_pol:
+                    policy_model = found_pol
+                if t_reqs > 0:
+                    reqs = t_reqs
+            except Exception:
+                pass
+
+    sop_clean = _clean_model_name(sop_model) if sop_model else ""
+    pol_clean = _clean_model_name(policy_model) if policy_model else ""
+
+    if sop_clean and pol_clean:
+        req_label = f"{reqs} AI request" if reqs == 1 else f"{reqs} AI requests"
+        if sop_clean == pol_clean:
+            return f"{sop_clean} · {req_label}"
+        return f"SOP: {sop_clean} · Policy: {pol_clean} · {req_label}"
+
+    raw_model = _clean_model_name(getattr(rep.meta, "model", "") if hasattr(rep, "meta") else "")
+    if not raw_model:
+        raw_model = "gemini-3.5-flash-lite"
+    req_label = f"{reqs} AI request" if reqs == 1 else f"{reqs} AI requests"
+    return f"{raw_model} · {req_label}"
+
+
+def display_grade_label(sc: Any) -> str:
+    lbl = getattr(sc, "grade_label", "") or ""
+    if "Critical Infraction" in lbl:
+        has_critical = (
+            getattr(sc, "critical_failure", False)
+            or any("critical" in str(r).lower() for r in getattr(sc, "cap_reasons", []))
+        )
+        if not has_critical:
+            lbl = "Failing"
+    return lbl
+
+
 def report_header(rep: AuditReport, subtitle: str = "Call audit") -> str:
     m = rep.metrics
     pills = [_pill(X.topic_label(rep.topic), "dark"), _pill(f"{m.duration_sec / 60:.1f} min"), _pill(f"{m.agent_turns + m.customer_turns} turns")]
@@ -183,7 +257,7 @@ def report_header(rep: AuditReport, subtitle: str = "Call audit") -> str:
         failed_banner = (f'<div class="aq-banner-risk" style="background:#fef3c7;color:#92400e;border-color:#fde68a">'
                          f'degraded input quality ({esc(deg_reason)})</div>')
     return _one(f'<div class="aq-hdr"><div><div class="aq-tiny" style="letter-spacing:.1em;font-weight:700">{esc(subtitle.upper())}</div><h1>{esc(rep.call_id)}</h1><div style="display:flex;gap:8px;flex-wrap:wrap">{"".join(pills)}</div>{failed_banner}{risk_banner}{real_note}</div>'
-                f'<div class="aq-tiny" style="text-align:right">Generated {esc(rep.generated_at.replace("T", " "))}<br>{esc(rep.meta.model)} · {rep.meta.llm_requests} AI request(s){" · saved result" if rep.meta.cache_hit else ""}</div></div>')
+                f'<div class="aq-tiny" style="text-align:right">Generated {esc(rep.generated_at.replace("T", " "))}<br>{esc(format_models_header(rep))}{" · saved result" if rep.meta.cache_hit else ""}</div></div>')
 
 
 def verdict_banner(rep: AuditReport) -> str:
@@ -206,14 +280,31 @@ def verdict_banner(rep: AuditReport) -> str:
     sc = rep.scores
     tone_pill = {"good": "good", "ok": "ok", "warn": "warn", "bad": "bad"}[v["tone"]]
     reasons = "".join(f'<li><span class="aq-dot {t}"></span><span>{esc(x)}</span></li>' for t, x in v["reasons"])
+
+    is_capped = (bool(sc.cap_reasons) and sc.overall < sc.overall_before_cap) or getattr(sc, "critical_failure", False)
+    cap_banner = ""
+    if is_capped and sc.overall < sc.overall_before_cap:
+        meaningful = [r for r in sc.cap_reasons if not r.startswith("No topic-specific") and not r.startswith("No applicable SOP")]
+        reasons_text = "; ".join(meaningful) if meaningful else "; ".join(sc.cap_reasons)
+        if not reasons_text:
+            reasons_text = "critical rule violation"
+        cap_banner = (
+            f'<div class="aq-banner-risk" style="background:#fee2e2;color:#991b1b;border-color:#fca5a5;margin-bottom:12px;font-weight:600">'
+            f'Score capped at {sc.overall:g} because: {esc(reasons_text)}'
+            f'<span class="aq-tiny" style="display:block;font-weight:normal;margin-top:2px;color:#7f1d1d">'
+            f'Score before the critical-failure cap: {sc.overall_before_cap:g}</span></div>'
+        )
+
     cap = f'<div class="aq-tiny" style="margin-top:6px">Score before the critical-failure cap: {sc.overall_before_cap:g}</div>' if v["capped"] else ""
     deg_note = ""
     if getattr(rep, "status", "ok") == "degraded":
         deg_reason = extract_degraded_reason(rep)
         deg_note = f'<div class="aq-banner-risk" style="background:#fef3c7;color:#92400e;border-color:#fde68a;margin-bottom:12px">degraded input quality ({esc(deg_reason)})</div>'
+
+    badge_label = display_grade_label(sc)
     return _one(
-        f'<div class="aq-card">{deg_note}<div class="aq-verdict"><div class="gauge">{gauge_svg(sc.overall, sc.grade, width=280)}'
-        f'<div style="margin-top:2px"><span class="aq-pill {tone_pill}">Grade {esc(sc.grade)} · {esc(sc.grade_label)}</span></div>{cap}</div>'
+        f'<div class="aq-card">{cap_banner}{deg_note}<div class="aq-verdict"><div class="gauge">{gauge_svg(sc.overall, sc.grade, width=280)}'
+        f'<div style="margin-top:2px"><span class="aq-pill {tone_pill}">Grade {esc(sc.grade)} · {esc(badge_label)}</span></div>{cap}</div>'
         f'<div><div class="aq-vhead">{esc(v["headline"])}</div><div class="aq-vsub">{esc(v["sub"])}</div>'
         f'<ul class="aq-reasons">{reasons}</ul>'
         f'<div class="aq-next"><b>BEST NEXT STEP FOR THE AGENT</b>{esc(v["next_step"])}</div></div></div></div>')

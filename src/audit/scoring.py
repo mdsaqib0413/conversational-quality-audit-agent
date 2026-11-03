@@ -101,6 +101,14 @@ def score_audit(sop: List[SOPResult], policy: List[PolicyResult], empathy_0_5: f
     if not possible:
         reasons.append("No applicable SOP steps were judged; SOP score is 0")
     grade, label = grade_for(overall, rubric)
+    if grade == "D":
+        has_critical = bool(cap_reasons) or any(
+            (p.verdict == "violation" and p.severity == "critical") for p in policy
+        ) or any(
+            (r.critical and r.status == "missed") for r in sop
+        )
+        if not has_critical and label == "Failing / Critical Infraction":
+            label = "Failing"
     return ScoreBreakdown(
         sop_score=round(sop_score, 1), policy_score=round(policy_score, 1), empathy_score=round(empathy, 1),
         communication_score=round(comm, 1), overall_before_cap=round(before, 1), overall=round(overall, 1),

@@ -69,17 +69,17 @@ def verdict(rep: AuditReport) -> dict:
     sc = rep.scores
     crit_missed = [r for r in rep.sop_results if r.critical and r.status == "missed"]
     violations = [p for p in rep.policy_results if p.verdict == "violation"]
-    capped = bool(sc.cap_reasons) and sc.overall < sc.overall_before_cap
+    capped = (bool(sc.cap_reasons) and sc.overall < sc.overall_before_cap) or getattr(sc, "critical_failure", False)
     tone = "good" if sc.grade == "A" else "ok" if sc.grade == "B" else "warn" if sc.grade == "C" else "bad"
     headline = GRADE_HEADLINE.get(sc.grade, sc.grade_label)
-    if sc.critical_failure:
-        headline = "Critical rule broken"
+    if sc.critical_failure or capped:
+        headline = "Critical rule broken" if (sc.critical_failure or sc.overall < 70) else "Score capped"
         tone = "bad" if sc.overall < 70 else "warn"
     sub = {"A": "Everything that mattered was done well.",
            "B": "Solid call. A few things could be polished.",
            "C": "The call solved some things but important parts were missing.",
            "D": "The call fell well below the standard."}.get(sc.grade, "")
-    if sc.critical_failure:
+    if sc.critical_failure or capped:
         sub = "A step or rule the company treats as non-negotiable was not followed, so the score is held back."
 
     reasons: List[Tuple[str, str]] = []

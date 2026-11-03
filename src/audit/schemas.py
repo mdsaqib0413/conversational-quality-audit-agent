@@ -265,6 +265,8 @@ class CoachingItem(BaseModel):
 
 class AuditMeta(BaseModel):
     model: str = ""
+    sop_model: Optional[str] = None
+    policy_model: Optional[str] = None
     llm_requests: int = 0
     diarization_method: str = ""
     transcribe_seconds: float = 0.0
