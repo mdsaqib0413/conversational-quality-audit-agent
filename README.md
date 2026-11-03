@@ -88,6 +88,7 @@ the model may only cite retrieved clause IDs, scoring is code, not LLM.
 `GEMINI_MODEL` + optional `GEMINI_FALLBACK_MODELS` (switched automatically when a model's daily free quota is gone), and an
 optional OpenAI-compatible fallback (Groq, OpenRouter, local Ollama) via `LLM_FALLBACK_PROVIDER=openai_compat`.
 The app sidebar shows the model in use and how many requests were made today.
+- `HF_HUB_OFFLINE=1`: ("set once the model is cached") to eliminate HuggingFace Hub network checks and timeout retries during RAG embedding initialization.
 
 ---
 
@@ -158,7 +159,7 @@ The **Conversational Quality Audit Agent** is an end-to-end QA and compliance pl
 1. **Operating System & Audio Engine:** The system runs on Windows with Python 3.11. Audio files are converted to 16kHz mono WAV internally for uniform processing.
 2. **FFmpeg Requirement:** FFmpeg is assumed to be installed and available on the Windows system `PATH` (essential for `pydub`, `librosa`, and `faster-whisper`).
 3. **LLM Access & Rate Limits:** Gemini API Free Tier has strict requests-per-minute (RPM) limits. The audit pipeline is designed to minimize LLM calls (e.g., batching turn evaluations into concise prompt payloads) and employs exponential backoff retry logic.
-4. **Vector Embeddings:** Uses `BAAI/bge-small-en-v1.5` for RAG chunk embeddings, indexed in Qdrant (embedded local mode, persisted in `data/qdrant_db/`; set `QDRANT_URL` for a server or Qdrant Cloud, or `VECTOR_STORE=numpy` to disable).
+4. **Vector Embeddings:** Uses `BAAI/bge-small-en-v1.5` for RAG chunk embeddings, indexed in Qdrant (embedded local mode, persisted in `data/qdrant_db/`; set `QDRANT_URL` for a server or Qdrant Cloud, or `VECTOR_STORE=numpy` to disable). Set `HF_HUB_OFFLINE=1` ("set once the model is cached") to eliminate HuggingFace Hub network checks and timeout retries.
 5. **PDF Engine:** Uses `xhtml2pdf` alongside `Jinja2` to provide native, cross-platform PDF export on Windows without requiring complex GTK/Cairo binaries.
 6. **Diarization & Audio Pipeline:** If multi-channel audio is not present, speaker attribution relies on `faster-whisper` timestamps combined with speaker energy clustering or turn heuristics. Synthetic call evaluation scripts use `edge-tts` with distinct Indian English voices.
 

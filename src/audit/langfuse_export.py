@@ -41,6 +41,18 @@ from src.audit.tracer import TRACES_DIR, AuditTracer, estimate_cost, get_model_r
 
 logger = logging.getLogger(__name__)
 
+
+SOP_MAX_SCORE = 40.0
+POLICY_MAX_SCORE = 30.0
+EMPATHY_MAX_SCORE = 15.0
+COMMUNICATION_MAX_SCORE = 15.0
+
+
+def _pct_score(val: Any, max_val: float) -> Optional[float]:
+    if val is None or max_val <= 0:
+        return None
+    return round((float(val) / float(max_val)) * 100.0, 2)
+
 DEFAULT_FLUSH_TIMEOUT_SECONDS = 3.0
 
 
@@ -374,14 +386,18 @@ def _export_to_cloud_otel(
 
     _post_score("overall_score", overall_score, comment=f"Grade: {grade}" if grade else None)
     if hasattr(report, "scores"):
-        if getattr(report.scores, "sop_score", None) is not None:
-            _post_score("sop_score", float(report.scores.sop_score))
-        if getattr(report.scores, "policy_score", None) is not None:
-            _post_score("policy_score", float(report.scores.policy_score))
-        if getattr(report.scores, "empathy_score", None) is not None:
-            _post_score("empathy_score", float(report.scores.empathy_score))
-        if getattr(report.scores, "communication_score", None) is not None:
-            _post_score("communication_score", float(report.scores.communication_score))
+        sop_val = getattr(report.scores, "sop_score", None)
+        if sop_val is not None:
+            _post_score("sop_score", _pct_score(sop_val, SOP_MAX_SCORE))
+        pol_val = getattr(report.scores, "policy_score", None)
+        if pol_val is not None:
+            _post_score("policy_score", _pct_score(pol_val, POLICY_MAX_SCORE))
+        emp_val = getattr(report.scores, "empathy_score", None)
+        if emp_val is not None:
+            _post_score("empathy_score", _pct_score(emp_val, EMPATHY_MAX_SCORE))
+        comm_val = getattr(report.scores, "communication_score", None)
+        if comm_val is not None:
+            _post_score("communication_score", _pct_score(comm_val, COMMUNICATION_MAX_SCORE))
 
     logger.info("Successfully exported audit trace %s to Langfuse Cloud via OTLP", trace_id_str)
     return True
@@ -454,8 +470,8 @@ def export_audit_to_langfuse(
             "topic": topic,
             "grade": grade,
             "overall_score": overall_score,
-            "sop_score": float(getattr(report.scores, "sop_score", 0.0)) if hasattr(report, "scores") else 0.0,
-            "policy_score": float(getattr(report.scores, "policy_score", 0.0)) if hasattr(report, "scores") else 0.0,
+            "sop_score": _pct_score(getattr(report.scores, "sop_score", 0.0), SOP_MAX_SCORE) if hasattr(report, "scores") else 0.0,
+            "policy_score": _pct_score(getattr(report.scores, "policy_score", 0.0), POLICY_MAX_SCORE) if hasattr(report, "scores") else 0.0,
             "status": status,
             "source": source,
             "content_captured": capture_content,
@@ -532,14 +548,18 @@ def export_audit_to_langfuse(
 
         _record_score("overall_score", overall_score, comment=f"Grade: {grade}" if grade else None)
         if hasattr(report, "scores"):
-            if getattr(report.scores, "sop_score", None) is not None:
-                _record_score("sop_score", float(report.scores.sop_score))
-            if getattr(report.scores, "policy_score", None) is not None:
-                _record_score("policy_score", float(report.scores.policy_score))
-            if getattr(report.scores, "empathy_score", None) is not None:
-                _record_score("empathy_score", float(report.scores.empathy_score))
-            if getattr(report.scores, "communication_score", None) is not None:
-                _record_score("communication_score", float(report.scores.communication_score))
+            sop_val = getattr(report.scores, "sop_score", None)
+            if sop_val is not None:
+                _record_score("sop_score", _pct_score(sop_val, SOP_MAX_SCORE))
+            pol_val = getattr(report.scores, "policy_score", None)
+            if pol_val is not None:
+                _record_score("policy_score", _pct_score(pol_val, POLICY_MAX_SCORE))
+            emp_val = getattr(report.scores, "empathy_score", None)
+            if emp_val is not None:
+                _record_score("empathy_score", _pct_score(emp_val, EMPATHY_MAX_SCORE))
+            comm_val = getattr(report.scores, "communication_score", None)
+            if comm_val is not None:
+                _record_score("communication_score", _pct_score(comm_val, COMMUNICATION_MAX_SCORE))
 
         for s in raw_steps:
             s_name = getattr(s, "step_name", None) or (s.get("step_name") if isinstance(s, dict) else "unknown_step")

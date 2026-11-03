@@ -210,7 +210,7 @@ def score_cards(rep: AuditReport) -> str:
         col = GOOD if pct >= 85 else (WARN if pct >= 60 else BAD)
         w = walk.get(title)
         calc = f'<details><summary>How was this worked out?</summary><div style="margin-top:6px">{esc(w["formula"])}<br><span class="aq-muted">{esc(w["plain"])}</span></div></details>' if w else ""
-        cards.append(f'<div class="aq-kpi"><div class="t">{esc(title)}</div><div class="v">{val:g}<small> / {mx}</small></div>'
+        cards.append(f'<div class="aq-kpi"><div class="t">{esc(title)}</div><div class="v">{val:g}<small> / {mx}</small> <span class="aq-muted" style="font-size:14px;font-weight:normal">({pct:.0f}%)</span></div>'
                      f'<div class="aq-bar"><i style="width:{pct:.0f}%;background:{col}"></i></div><div class="p">{esc(short)}</div>{calc}<div class="tech">Technical name: {esc(tech)}</div></div>')
     return _one(f'<div class="aq-grid aq-g4">{"".join(cards)}</div>')
 

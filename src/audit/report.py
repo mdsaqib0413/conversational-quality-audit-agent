@@ -83,7 +83,7 @@ Possible scam / social-engineering pattern: {{ r.risk_flags|join(', ') }}. Agent
 <table>
  <tr><th>Category</th><th style="width:12%">Score</th><th style="width:48%">&nbsp;</th></tr>
  {% for name, val, mx in bars %}
- <tr><td>{{ name }}</td><td>{{ val }} / {{ mx }}</td>
+ <tr><td>{{ name }}</td><td>{{ val }} / {{ mx }} ({{ (100*val/mx)|round|int if mx else 0 }}%)</td>
   <td><table style="border:none;width:100%"><tr>
     <td style="border:none;padding:0;background-color:#7c3aed;width:{{ (100*val/mx)|round|int if mx else 0 }}%;height:9px">&nbsp;</td>
     <td style="border:none;padding:0;background-color:#ede9fe;height:9px">&nbsp;</td></tr></table></td></tr>

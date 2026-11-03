@@ -373,10 +373,13 @@ def test_export_metadata_only_when_capture_content_zero(monkeypatch, tmp_path):
     assert tr.session_id == "call_001"
     assert "agent_call_001" in tr.user_id
 
-    # Dimensional scores recorded
+    # Dimensional scores recorded (as percentage of category maximum)
     assert any(sc["name"] == "overall_score" and sc["value"] == 85.0 for sc in tr.scores)
-    assert any(sc["name"] == "sop_score" for sc in tr.scores)
-    assert any(sc["name"] == "policy_score" for sc in tr.scores)
+    assert any(sc["name"] == "sop_score" and sc["value"] == 65.0 for sc in tr.scores)
+    assert any(sc["name"] == "policy_score" and sc["value"] == 100.0 for sc in tr.scores)
+    assert any(sc["name"] == "empathy_score" and sc["value"] == 90.0 for sc in tr.scores)
+    assert tr.metadata["sop_score"] == 65.0
+    assert tr.metadata["policy_score"] == 100.0
 
     # Policy retrieval span marked with retriever observation type
     retriever_span = [s for s in tr.spans if s["name"] == "policy_retrieval"]
