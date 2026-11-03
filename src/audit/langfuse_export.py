@@ -371,8 +371,10 @@ def _export_to_cloud_otel(
         "Content-Type": "application/json",
     }
 
-    def _post_score(score_name: str, score_val: float, comment: Optional[str] = None):
+    def _post_score(score_name: str, score_val: Optional[float], comment: Optional[str] = None):
         try:
+            if score_val is None:
+                return
             body = {
                 "traceId": hex_trace_id,
                 "name": score_name,
@@ -537,8 +539,10 @@ def export_audit_to_langfuse(
                 tags=tags,
             )
 
-        def _record_score(score_name: str, score_val: float, comment: Optional[str] = None) -> None:
+        def _record_score(score_name: str, score_val: Optional[float], comment: Optional[str] = None) -> None:
             try:
+                if score_val is None:
+                    return
                 if hasattr(trace, "score"):
                     trace.score(name=score_name, value=score_val, comment=comment)
                 elif hasattr(client, "score"):

@@ -170,6 +170,20 @@ def _make_dummy_report(call_id: str = "call_001", source: str = "prod") -> Audit
     )
 
 
+def test_get_langfuse_host_prefers_host_over_base_url_and_strips_slashes(monkeypatch):
+    from src.audit.langfuse_export import get_langfuse_host
+
+    monkeypatch.delenv("LANGFUSE_HOST", raising=False)
+    monkeypatch.delenv("LANGFUSE_BASE_URL", raising=False)
+    assert get_langfuse_host() == ""
+
+    monkeypatch.setenv("LANGFUSE_BASE_URL", "https://cloud.langfuse.com/")
+    assert get_langfuse_host() == "https://cloud.langfuse.com"
+
+    monkeypatch.setenv("LANGFUSE_HOST", "https://custom.langfuse.com///")
+    assert get_langfuse_host() == "https://custom.langfuse.com"
+
+
 def test_is_langfuse_enabled_checks_all_three_keys(monkeypatch):
     monkeypatch.delenv("LANGFUSE_PUBLIC_KEY", raising=False)
     monkeypatch.delenv("LANGFUSE_SECRET_KEY", raising=False)
@@ -467,28 +481,45 @@ def test_smoke_test_with_keys_succeeds_and_flushes(monkeypatch, capsys):
     monkeypatch.setenv("LANGFUSE_SECRET_KEY", "sk-smoke-test")
     monkeypatch.setenv("LANGFUSE_BASE_URL", "https://cloud.langfuse.com")
 
-    fake_client = FakeLangfuseClient()
-    # Mock langfuse import inside run_smoke_test
-    import sys
-    import types
+    posted_urls = []
+    class DummyResponse:
+        def __init__(self, status_code=200):
+            self.status_code = status_code
 
-    fake_mod = types.ModuleType("langfuse")
-    fake_mod.Langfuse = lambda *a, **kw: fake_client
-    monkeypatch.setitem(sys.modules, "langfuse", fake_mod)
+    import requests
+    def mock_post(url, *args, **kwargs):
+        posted_urls.append(url)
+        return DummyResponse(200)
+
+    monkeypatch.setattr(requests, "post", mock_post)
 
     code = run_smoke_test()
     assert code == 0
     captured = capsys.readouterr()
-    assert captured.out.strip() == "sent"
-    assert len(fake_client.traces) == 1
-    tr = fake_client.traces[0]
-    assert tr.name == "smoke_test"
-    assert tr.metadata["call_id"] == "call_smoke_000"
-    assert len(tr.spans) == 1
-    assert tr.spans[0]["name"] == "smoke_span"
-    assert len(tr.scores) == 1
-    assert tr.scores[0]["value"] == 1.0
-    assert fake_client.flushed is True
+    assert "OTLP traces: HTTP 200" in captured.out
+    assert "Score: HTTP 200" in captured.out
+    assert "sent" in captured.out
+    assert any("/api/public/otel/v1/traces" in u for u in posted_urls)
+    assert any("/api/public/scores" in u for u in posted_urls)
+
+
+def test_smoke_test_non_2xx_returns_error(monkeypatch, capsys):
+    monkeypatch.setenv("LANGFUSE_PUBLIC_KEY", "pk-smoke-test")
+    monkeypatch.setenv("LANGFUSE_SECRET_KEY", "sk-smoke-test")
+    monkeypatch.setenv("LANGFUSE_BASE_URL", "https://cloud.langfuse.com")
+
+    class DummyResponse:
+        def __init__(self, status_code):
+            self.status_code = status_code
+
+    import requests
+    monkeypatch.setattr(requests, "post", lambda url, *a, **k: DummyResponse(400))
+
+    code = run_smoke_test()
+    assert code == 1
+    captured = capsys.readouterr()
+    assert "HTTP 400" in captured.out
+    assert "Error" in captured.out
 
 
 def test_smoke_test_error_sanitizes_keys(monkeypatch, capsys):
@@ -498,16 +529,11 @@ def test_smoke_test_error_sanitizes_keys(monkeypatch, capsys):
     monkeypatch.setenv("LANGFUSE_SECRET_KEY", sk)
     monkeypatch.setenv("LANGFUSE_HOST", "https://cloud.langfuse.com")
 
-    class ErrorClient:
-        def trace(self, *a, **kw):
-            raise RuntimeError(f"Connection refused while using {pk} and {sk}")
+    import requests
+    def error_post(*a, **kw):
+        raise RuntimeError(f"Connection refused while using {pk} and {sk}")
 
-    import sys
-    import types
-
-    fake_mod = types.ModuleType("langfuse")
-    fake_mod.Langfuse = lambda *a, **kw: ErrorClient()
-    monkeypatch.setitem(sys.modules, "langfuse", fake_mod)
+    monkeypatch.setattr(requests, "post", error_post)
 
     code = run_smoke_test()
     assert code == 1
@@ -516,3 +542,23 @@ def test_smoke_test_error_sanitizes_keys(monkeypatch, capsys):
     assert pk not in captured.out
     assert sk not in captured.out
     assert "[REDACTED]" in captured.out
+
+
+def test_export_skips_null_scores(monkeypatch):
+    monkeypatch.setenv("LANGFUSE_PUBLIC_KEY", "pk-test")
+    monkeypatch.setenv("LANGFUSE_SECRET_KEY", "sk-test")
+    monkeypatch.setenv("LANGFUSE_HOST", "https://custom.langfuse.com")
+    monkeypatch.setenv("LANGFUSE_EXPORT_EVAL", "1")
+
+    fake_client = FakeLangfuseClient()
+    report = _make_dummy_report()
+    report.scores.sop_score = None
+    report.scores.policy_score = None
+
+    result = export_audit_to_langfuse(report, client=fake_client)
+    assert result is True
+    tr = fake_client.traces[0]
+    recorded_names = [sc["name"] for sc in tr.scores]
+    assert "sop_score" not in recorded_names
+    assert "policy_score" not in recorded_names
+    assert "overall_score" in recorded_names
