@@ -528,14 +528,18 @@ def page_report() -> None:
         d1, d2, d3 = st.columns(3)
         # Find item in index for cached downloads
         cur_item = next((x for x in idx if x["call_id"] == rep.call_id), None)
-        item_path = cur_item["path"] if cur_item else str(AUDIT_DIR / f"{rep.call_id}.json")
+        item_path = cur_item["path"] if cur_item else ""
         item_mtime = cur_item["mtime"] if cur_item else 0
         try:
             pdf_bytes = get_cached_pdf_data(item_path, item_mtime)
             d1.download_button("PDF", pdf_bytes, file_name=f"audit_{rep.call_id}.pdf", mime="application/pdf", use_container_width=True)
         except Exception:  # noqa: BLE001
             d1.caption("PDF unavailable")
-        html_str = get_cached_html_data(item_path, item_mtime, dark=st.session_state["dark_mode"])
+        if item_path:
+            html_str = get_cached_html_data(item_path, item_mtime, dark=st.session_state["dark_mode"])
+        else:
+            from src.audit.report import render_html
+            html_str = render_html(rep, dark=st.session_state["dark_mode"])
         d2.download_button("HTML", html_str, file_name=f"audit_{rep.call_id}.html", mime="text/html", use_container_width=True)
         d3.download_button("JSON", rep.model_dump_json(indent=1), file_name=f"audit_{rep.call_id}.json", mime="application/json", use_container_width=True)
 

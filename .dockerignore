@@ -1,50 +1,38 @@
-# Git and version control
+
 .git/
-.gitignore
-
-# Python cache & virtual environments
-__pycache__/
-*.pyc
-*.pyo
-*.pyd
-.Python
-env/
-venv/
 .venv/
-
-# Testing & Coverage
+__pycache__/
+*.py[cod]
 .pytest_cache/
 .coverage
 htmlcov/
 
-# Local cache, traces, and reviews
-cache/
-data/cache/
-data/qdrant_db/
-data/index_cache/
-traces/
-reviews/
-eval/results/
-
-# Raw audio files and proprietary datasets
-*.mp3
-*.wav
-*.flac
-*.m4a
-data/audio/
-data/telugu/
-data/raw/
-
-# Environment files and credentials
 .env
 .env.*
 *.pem
 *.key
 credentials.json
 
-# IDE and OS
 .vscode/
 .idea/
 .DS_Store
 Thumbs.db
 
+# Runtime-generated caches and databases
+data/cache/
+data/index_cache/
+data/qdrant_db/
+data/reviews/
+traces/
+reviews/
+cache/
+eval/results/
+
+# Unneeded development and dataset folders
+data/telugu/
+data/raw/
+call-center-speech-dataset/
+scratch/
+.agents/
+.cadra/
+.streamlit/secrets.toml
