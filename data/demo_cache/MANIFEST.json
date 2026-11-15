@@ -2,7 +2,7 @@
   "audit_key_salt": "audit-v9",
   "sop_model": "gemini-3.5-flash-lite",
   "policy_model": "gemini-3.5-flash",
-  "build_date": "2026-11-04T01:58:37",
+  "build_date": "2026-11-15T12:20:23",
   "calls": [
     {
       "call_id": "call_001",
@@ -141,15 +141,15 @@
     },
     {
       "call_id": "call_105",
-      "overall": 70.0,
-      "grade": "C",
+      "overall": 100.0,
+      "grade": "A",
       "status": "ok",
       "sop_model": "gemini-3.5-flash-lite",
       "policy_model": "gemini-3.5-flash",
       "llm_requests": 2,
       "trace_id": "run_call_105_798184",
       "sizes": {
-        "audit_json_bytes": 51012,
+        "audit_json_bytes": 50298,
         "trace_jsonl_bytes": 39749,
         "transcript_json_bytes": 8113
       }
