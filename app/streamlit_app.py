@@ -36,6 +36,7 @@ from src.audit.review import apply_reviews_to_report, save_review_decision
 from src.audit.schemas import AuditReport, extract_failure_reason, extract_degraded_reason
 from src.audit.topic import detect_topic, get_live_context
 from src.audit.transcript_io import find_transcripts, load_transcript_json
+from src.audit.live import CallSimulator, LiveRules
 from src.live.engine import LiveSession
 from src.live.player import LiveSimulator
 from observability import render_observability_dashboard
@@ -988,11 +989,238 @@ def _live_assist_fragment(tsamples) -> None:
                  f'<div style="font-size:12.5px;color:var(--aq-text-muted,#55554F)">{U.esc(cl["text"][:260])}</div></div>')
 
 
-def page_live() -> None:
-    html(U.page_header("Live Assist", "Real-time co-pilot for active calls. Transcribes speech, surfaces authoritative policy clauses, and alerts on compliance risks as words are spoken. Zero AI requests used."))
-    tab_live, tab_replay = st.tabs(["Live", "Replay (old)"])
+@st.fragment(run_every=1.0)
+def _live_caption_display_fragment(sample_dict: dict, chosen_call: str, speed_label: str) -> None:
+    if st.session_state.get("live_cap_call") != chosen_call:
+        st.session_state["live_cap_call"] = chosen_call
+        sim = CallSimulator(sample_dict[chosen_call])
+        st.session_state["live_cap_events"] = sim.build_events()
+        st.session_state["live_cap_idx"] = 0
+        st.session_state["live_cap_rules"] = LiveRules()
+        st.session_state["live_cap_playing"] = False
 
-    with tab_live:
+    events = st.session_state.get("live_cap_events", [])
+    cur_idx = st.session_state.get("live_cap_idx", 0)
+    rules: LiveRules = st.session_state.get("live_cap_rules", LiveRules())
+    is_playing = st.session_state.get("live_cap_playing", False)
+
+    # Step forward if playing
+    if is_playing and cur_idx < len(events):
+        if speed_label == "Instant":
+            step = len(events) - cur_idx
+        elif speed_label == "10x":
+            step = 10
+        elif speed_label == "5x":
+            step = 5
+        elif speed_label == "2x":
+            step = 2
+        else:
+            step = 1
+        new_idx = min(len(events), cur_idx + step)
+        for i in range(cur_idx, new_idx):
+            rules.process_event(events[i])
+        st.session_state["live_cap_idx"] = new_idx
+        cur_idx = new_idx
+        if cur_idx >= len(events):
+            st.session_state["live_cap_playing"] = False
+            is_playing = False
+
+    # Metrics top bar
+    dur_sec = events[cur_idx - 1].end_sec if cur_idx > 0 and cur_idx <= len(events) else 0.0
+    dur_m, dur_s = int(dur_sec // 60), int(dur_sec % 60)
+    danger_ct = sum(1 for a in rules.alerts if a.severity == "danger")
+    warn_ct = sum(1 for a in rules.alerts if a.severity == "warning")
+    info_ct = sum(1 for a in rules.alerts if a.severity == "info")
+    topic_label = rules.detected_topic.upper()
+    conf_pct = int(rules.topic_confidence * 100)
+
+    # Status badge
+    if not is_playing and cur_idx < len(events):
+        status_badge = '<span class="aq-pill warning" style="font-weight:700">PAUSED</span>'
+    elif is_playing:
+        status_badge = '<span class="aq-pill success" style="font-weight:700">STREAMING</span>'
+    else:
+        status_badge = '<span class="aq-pill" style="font-weight:700">CALL ENDED</span>'
+
+    html(
+        f'<div class="aq-card" style="padding:12px 18px;margin-bottom:14px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px">'
+        f'<div style="display:flex;align-items:center;gap:12px">'
+        f'{status_badge}'
+        f'<span style="font-size:14px;font-weight:700">Time: {dur_m:02d}:{dur_s:02d}</span>'
+        f'<span class="aq-tiny" style="color:var(--aq-text-muted)">Events: {cur_idx} / {len(events)}</span>'
+        f'</div>'
+        f'<div style="display:flex;align-items:center;gap:14px">'
+        f'<span style="font-size:13px">Topic: <b>{U.esc(topic_label)}</b> ({conf_pct}%)</span>'
+        f'<span class="aq-pill danger">🚨 {danger_ct} Danger</span>'
+        f'<span class="aq-pill warning">⚠️ {warn_ct} Warn</span>'
+        f'<span class="aq-pill info">ℹ️ {info_ct} Info</span>'
+        f'<span class="aq-pill" style="font-size:11px">AI: 0 (Deterministic)</span>'
+        f'</div>'
+        f'</div>'
+    )
+
+    # 2 columns layout
+    col_transcript, col_coaching = st.columns([1.1, 1.0])
+
+    with col_transcript:
+        html('<div class="aq-h" style="margin-bottom:8px">💬 Live Transcript Stream</div>')
+        shown_events = events[:cur_idx]
+        if not shown_events:
+            html(U.empty_state("Call ready to start", "Click '▶ Play' or '⏭ Step (+1)' to begin streaming live captions."))
+        else:
+            bubbles = []
+            for ev in shown_events[-14:]:
+                role_class = "agent" if ev.role == "agent" else "customer"
+                role_label = "Agent" if ev.role == "agent" else "Customer"
+                ts = f"{int(ev.start_sec // 60):02d}:{int(ev.start_sec % 60):02d}"
+                bubbles.append(
+                    f'<div class="aq-turn {role_class}" style="margin-bottom:8px">'
+                    f'<div class="meta"><b>{role_label}</b> · {ts} · #{ev.turn_id or ""}</div>'
+                    f'<div class="bub">{U.esc(ev.text)}</div>'
+                    f'</div>'
+                )
+            html(f'<div class="aq-card" style="display:flex;flex-direction:column;max-height:560px;overflow-y:auto">{"".join(bubbles)}</div>')
+
+    with col_coaching:
+        # 1. Checklist
+        html('<div class="aq-h" style="margin-bottom:8px">📋 Compliance Checklist</div>')
+        chk = rules.get_checklist_status()
+        status_styles = {
+            "completed": ("#34D399", "rgba(52,211,153,0.12)", "✓ COMPLETED"),
+            "verified": ("#34D399", "rgba(52,211,153,0.12)", "✓ VERIFIED"),
+            "under_limit": ("#34D399", "rgba(52,211,153,0.12)", "✓ COMPLIANT"),
+            "in_progress": ("#FBBF24", "rgba(251,191,36,0.12)", "⏳ IN PROGRESS"),
+            "active": ("#60A5FA", "rgba(96,165,250,0.12)", "⏱ ON HOLD"),
+            "pending": ("#94A3B8", "rgba(148,163,184,0.10)", "○ PENDING"),
+            "not_applicable": ("#94A3B8", "rgba(148,163,184,0.10)", "— N/A"),
+            "none": ("#94A3B8", "rgba(148,163,184,0.10)", "○ NONE"),
+            "missed": ("#F87171", "rgba(248,113,113,0.15)", "✗ MISSED"),
+            "breached": ("#F87171", "rgba(248,113,113,0.15)", "✗ BREACHED"),
+            "exceeded": ("#F87171", "rgba(248,113,113,0.15)", "✗ EXCEEDED"),
+        }
+
+        chk_items = [
+            ("Call Recording Disclosure (GEN-02)", chk["disclosure"]),
+            ("2FA Identity Verification (GEN-03)", chk["id_verification"]),
+            ("Empathy & De-escalation (ANG-02)", chk["empathy"]),
+            ("Hold Ceiling < 2 Min (HLD-02)", chk["hold_status"]),
+        ]
+        chk_cards = []
+        for name, item in chk_items:
+            color, bg, badge_text = status_styles.get(item["status"], ("#94A3B8", "rgba(148,163,184,0.10)", item["status"].upper()))
+            chk_cards.append(
+                f'<div style="background:{bg};border:1px solid {color};border-radius:8px;padding:8px 12px;margin-bottom:6px;display:flex;justify-content:space-between;align-items:center">'
+                f'<div><b style="font-size:12.5px">{U.esc(name)}</b><div style="font-size:11.5px;color:var(--aq-text-muted)">{U.esc(item["detail"])}</div></div>'
+                f'<span style="background:{color};color:#000;border-radius:12px;padding:2px 8px;font-size:10.5px;font-weight:800;letter-spacing:0.04em">{badge_text}</span>'
+                f'</div>'
+            )
+        html(f'<div class="aq-card" style="padding:10px 12px;margin-bottom:12px">{"".join(chk_cards)}</div>')
+
+        # 2. Alert Feed
+        html('<div class="aq-h" style="margin-bottom:8px">🚨 Real-Time Alerts</div>')
+        if not rules.alerts:
+            html('<div class="aq-card" style="padding:12px;font-size:12.5px;color:var(--aq-text-muted)">No compliance risks detected yet.</div>')
+        else:
+            alert_items = []
+            for a in reversed(rules.alerts[-6:]):
+                color = "#F87171" if a.severity == "danger" else ("#FBBF24" if a.severity == "warning" else "#60A5FA")
+                bg = "rgba(248,113,113,0.12)" if a.severity == "danger" else ("rgba(251,191,36,0.10)" if a.severity == "warning" else "rgba(96,165,250,0.10)")
+                ats = f"{int(a.time_sec // 60):02d}:{int(a.time_sec % 60):02d}"
+                q_line = f'<div style="font-size:11px;font-style:italic;color:var(--aq-text-muted);margin-top:2px">\"{U.esc(a.triggering_quote[:90])}\"</div>' if a.triggering_quote else ""
+                alert_items.append(
+                    f'<div style="background:{bg};border-left:3px solid {color};border-radius:6px;padding:7px 10px;margin-bottom:6px">'
+                    f'<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:2px">'
+                    f'<span style="font-size:11.5px;font-weight:800;color:{color}">{a.severity.upper()} · {U.esc(a.rule_id)}</span>'
+                    f'<span style="font-size:11px;color:var(--aq-text-muted)">{ats}</span>'
+                    f'</div>'
+                    f'<div style="font-size:12px;font-weight:600">{U.esc(a.message)}</div>'
+                    f'{q_line}'
+                    f'</div>'
+                )
+            html(f'<div class="aq-card" style="padding:8px 10px;margin-bottom:12px;max-height:220px;overflow-y:auto">{"".join(alert_items)}</div>')
+
+        # 3. Policy Clause Cards
+        html('<div class="aq-h" style="margin-bottom:8px">📖 Live Policy Guidance</div>')
+        if not rules.active_clauses:
+            html('<div class="aq-card" style="padding:12px;font-size:12.5px;color:var(--aq-text-muted)">Awaiting topic identification to surface relevant policy rules.</div>')
+        else:
+            cards = []
+            for cl in rules.active_clauses[:4]:
+                cards.append(
+                    f'<div class="aq-pol" style="margin-bottom:6px;padding:8px 10px">'
+                    f'<div class="head" style="margin-bottom:3px"><span class="aq-chip">{U.esc(cl["id"])}</span><b style="font-size:12.5px">{U.esc(cl["title"])}</b></div>'
+                    f'<div style="font-size:11.5px;color:var(--aq-text-muted)">{U.esc(cl["text"][:200])}</div>'
+                    f'</div>'
+                )
+            html(f'<div class="aq-card" style="padding:8px 10px;max-height:240px;overflow-y:auto">{"".join(cards)}</div>')
+
+
+def _render_live_caption_assist() -> None:
+    _, _, tsamples = sample_sources()
+    if not tsamples:
+        html(U.empty_state("No transcripts found", "Add transcript files to data/transcripts to run live tracking."))
+        return
+
+    sample_dict = {p.stem: p for p in tsamples}
+    sample_names = sorted(sample_dict.keys())
+    default_ix = sample_names.index("call_105") if "call_105" in sample_names else 0
+
+    c_pick, c_spd, c_play, c_pause, c_step, c_reset = st.columns([3, 1.8, 1, 1, 1.2, 1])
+
+    with c_pick:
+        chosen_call = st.selectbox("Select Call", sample_names, index=default_ix, key="live_cap_call_pick")
+
+    with c_spd:
+        speed_label = st.selectbox("Replay Speed", ["1x", "2x", "5x", "10x", "Instant"], index=0, key="live_cap_speed")
+
+    events = st.session_state.get("live_cap_events", [])
+    cur_idx = st.session_state.get("live_cap_idx", 0)
+    rules: LiveRules = st.session_state.get("live_cap_rules", LiveRules())
+
+    with c_play:
+        st.write("")
+        st.write("")
+        if st.button("▶ Play", key="btn_live_play", type="primary", use_container_width=True):
+            st.session_state["live_cap_playing"] = True
+            st.rerun()
+
+    with c_pause:
+        st.write("")
+        st.write("")
+        if st.button("⏸ Pause", key="btn_live_pause", use_container_width=True):
+            st.session_state["live_cap_playing"] = False
+            st.rerun()
+
+    with c_step:
+        st.write("")
+        st.write("")
+        if st.button("⏭ Step (+1)", key="btn_live_step", use_container_width=True):
+            st.session_state["live_cap_playing"] = False
+            if events and cur_idx < len(events):
+                rules.process_event(events[cur_idx])
+                st.session_state["live_cap_idx"] = cur_idx + 1
+            st.rerun()
+
+    with c_reset:
+        st.write("")
+        st.write("")
+        if st.button("↺ Reset", key="btn_live_reset", use_container_width=True):
+            st.session_state["live_cap_idx"] = 0
+            st.session_state["live_cap_rules"] = LiveRules()
+            st.session_state["live_cap_playing"] = False
+            st.rerun()
+
+    _live_caption_display_fragment(sample_dict, chosen_call, speed_label)
+
+
+def page_live() -> None:
+    html(U.page_header("Live Assist", "Real-time co-pilot for active calls. Replays caption feed, surfaces authoritative policy clauses, and alerts on compliance risks as words are spoken. Deterministic · zero AI requests used."))
+    tab_caption, tab_stream, tab_replay = st.tabs(["Caption Replay (Phase 1)", "Audio Streamer (Whisper)", "Turn Window (old)"])
+
+    with tab_caption:
+        _render_live_caption_assist()
+
+    with tab_stream:
         _live_assist_controls()
         _live_stream_view()
 
