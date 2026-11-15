@@ -140,7 +140,9 @@ def get_audit_dir_mtime() -> int:
 # ------------------------------------------------------------------------------ cached data helpers
 @st.cache_data(show_spinner=False)
 def load_report_cached(path_str: str, mtime: int) -> AuditReport:
-    return AuditReport.model_validate_json(Path(path_str).read_text(encoding="utf-8"))
+    rep = AuditReport.model_validate_json(Path(path_str).read_text(encoding="utf-8"))
+    from src.audit.reconcile import reconcile_report
+    return reconcile_report(rep)
 
 
 HEX_KEY_PATTERN = re.compile(r"^(.+)_([0-9a-f]{16})\.json$")

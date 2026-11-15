@@ -173,6 +173,8 @@ class AuditPipeline:
         if use_cache and cache_path.exists():
             try:
                 cached = AuditReport.model_validate_json(cache_path.read_text(encoding="utf-8"))
+                from .reconcile import reconcile_report
+                cached = reconcile_report(cached, self.kb.rubric)
                 cached.meta.cache_hit = True
                 _emit(progress, "done", 1.0, "Loaded the saved audit for this call (no API requests used).")
                 return apply_reviews_to_report(cached)
@@ -333,6 +335,9 @@ class AuditPipeline:
                 request_count=self.gateway.request_count - req_before_sop,
             )
             completed_steps.append("scorecard_judgment")
+            from .reconcile import reconcile_hld02
+            if reconcile_hld02(sop_results, metrics):
+                tracer.record_warning("HLD-02 overridden to followed based on measured hold duration.")
         except Exception as err:
             logger.error("SOP analysis failed: %s", err)
             tracer.record_step(
