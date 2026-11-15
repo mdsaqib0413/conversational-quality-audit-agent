@@ -2,6 +2,8 @@
 from __future__ import annotations
 
 from dataclasses import asdict, dataclass
+import json
+from pathlib import Path
 import re
 from typing import Any, Dict, List, Optional, Sequence, Set
 
@@ -337,8 +339,19 @@ class LiveRules:
             if kb is not None:
                 query = " ".join(ev.text for ev in self.events[-self.config["topic_window_turns"]:])
                 clauses = kb.retrieve_policies(query, topic=res.topic, k=self.config["clause_top_k"])
+                plain_map = get_policy_plain_map()
                 self.active_clauses = [
-                    {"id": c.id, "title": c.title, "text": c.short(250), "topic": res.topic}
+                    {
+                        "id": c.id,
+                        "title": plain_map.get(c.id, {}).get("title") or c.title,
+                        "severity": getattr(c, "default_severity", "minor"),
+                        "what_to_do": plain_map.get(c.id, {}).get("what_to_do", ""),
+                        "never": plain_map.get(c.id, {}).get("never", ""),
+                        "limit": plain_map.get(c.id, {}).get("limit", "") or (getattr(c, "numeric_limit", "") or ""),
+                        "topics": getattr(c, "topics", []),
+                        "topic": res.topic,
+                        "text": c.text,
+                    }
                     for c in clauses
                 ]
                 if res.topic != "general" and res.confidence >= 0.3:
@@ -422,3 +435,23 @@ class LiveRules:
             "empathy": {"status": emp_status, "detail": emp_desc, "step_id": "ANG-02"},
             "hold_status": {"status": hld_status, "detail": hld_desc, "step_id": "HLD-02"},
         }
+
+_PLAIN_CACHE: Optional[Dict[str, dict]] = None
+
+
+def get_policy_plain_map() -> Dict[str, dict]:
+    global _PLAIN_CACHE
+    if _PLAIN_CACHE is None:
+        p = Path(__file__).resolve().parent.parent.parent.parent / "data" / "live" / "policy_plain.json"
+        if p.exists():
+            try:
+                items = json.loads(p.read_text(encoding="utf-8"))
+                if isinstance(items, list):
+                    _PLAIN_CACHE = {it["id"]: it for it in items}
+                elif isinstance(items, dict):
+                    _PLAIN_CACHE = items
+            except Exception:
+                _PLAIN_CACHE = {}
+        else:
+            _PLAIN_CACHE = {}
+    return _PLAIN_CACHE

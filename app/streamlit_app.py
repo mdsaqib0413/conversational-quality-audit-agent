@@ -1146,15 +1146,44 @@ def _live_caption_display_fragment(sample_dict: dict, chosen_call: str, speed_la
         if not rules.active_clauses:
             html('<div class="aq-card" style="padding:12px;font-size:12.5px;color:var(--aq-text-muted)">Awaiting topic identification to surface relevant policy rules.</div>')
         else:
+            from src.audit.live.rules import get_policy_plain_map
+            plain_map = get_policy_plain_map()
             cards = []
-            for cl in rules.active_clauses[:4]:
+            for cl in rules.active_clauses[:3]:
+                cid = cl.get("id", "")
+                p_info = plain_map.get(cid, {})
+                title = p_info.get("title") or cl.get("title") or cid
+                what_to_do = p_info.get("what_to_do") or cl.get("what_to_do") or ""
+                never = p_info.get("never") or cl.get("never") or ""
+                limit = p_info.get("limit") or cl.get("limit") or ""
+                sev = (cl.get("severity") or "minor").lower()
+                sev_class = "bad" if sev == "critical" else ("warn" if sev == "major" else "info")
+                sev_badge = f'<span class="aq-pill {sev_class}" style="font-size:10.5px;padding:2px 8px;font-weight:700">{U.esc(sev.upper())}</span>'
+                id_chip = f'<span class="aq-chip" style="font-size:11px;font-weight:700">{U.esc(cid)}</span>'
+                matched_topics = cl.get("topics") or ([cl.get("topic")] if cl.get("topic") else ["general"])
+                matched_str = ", ".join(f"'{t}'" for t in matched_topics)
+                raw_text = cl.get("text") or ""
+                never_html = f'<div style="font-size:12px;color:var(--aq-pill-bad-text,#B3342F);margin-bottom:4px">⛔ <b>Never:</b> {U.esc(never)}</div>' if never else ''
+                limit_html = f'<div style="font-size:12px;color:var(--aq-text-muted,#4A4A45);margin-bottom:4px">⏱ <b>Limit:</b> {U.esc(limit)}</div>' if limit else ''
                 cards.append(
-                    f'<div class="aq-pol" style="margin-bottom:6px;padding:8px 10px">'
-                    f'<div class="head" style="margin-bottom:3px"><span class="aq-chip">{U.esc(cl["id"])}</span><b style="font-size:12.5px">{U.esc(cl["title"])}</b></div>'
-                    f'<div style="font-size:11.5px;color:var(--aq-text-muted)">{U.esc(cl["text"][:200])}</div>'
+                    f'<div class="aq-pol" style="margin-bottom:8px;padding:10px 12px;border:1px solid var(--aq-border,#E7E5DC);border-radius:10px;background:var(--aq-card-bg,#fff)">'
+                    f'<div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin-bottom:6px">'
+                    f'{id_chip}{sev_badge}'
+                    f'<b style="font-size:13px;color:var(--aq-text,#111)">{U.esc(title)}</b>'
+                    f'</div>'
+                    f'<div style="font-size:12.5px;line-height:1.45;color:var(--aq-text,#111);margin-bottom:4px">'
+                    f'<b>What to do now:</b> <b>{U.esc(what_to_do)}</b>'
+                    f'</div>'
+                    f'{never_html}'
+                    f'{limit_html}'
+                    f'<div style="font-size:11px;color:var(--aq-text-tiny,#8A897F);font-style:italic;margin-top:4px">why shown: matched {matched_str}</div>'
+                    f'<details style="margin-top:8px;font-size:11.5px">'
+                    f'<summary style="cursor:pointer;color:var(--aq-text-muted,#6B6B66);font-weight:500">Full policy text</summary>'
+                    f'<div style="margin-top:6px;padding:8px 10px;background:var(--aq-next-bg,#F6F5EF);border:1px solid var(--aq-border,#E7E5DC);border-radius:6px;font-size:11px;line-height:1.45;color:var(--aq-text,#222);white-space:pre-wrap">{U.esc(raw_text)}</div>'
+                    f'</details>'
                     f'</div>'
                 )
-            html(f'<div class="aq-card" style="padding:8px 10px;max-height:240px;overflow-y:auto">{"".join(cards)}</div>')
+            html(f'<div class="aq-card" style="padding:10px 12px;max-height:460px;overflow-y:auto">{"".join(cards)}</div>')
 
 
 def _render_live_caption_assist() -> None:

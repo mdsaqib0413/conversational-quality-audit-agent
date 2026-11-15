@@ -1,0 +1,296 @@
+[
+  {
+    "id": "BIL-1.1",
+    "title": "Accepted Payment Methods",
+    "what_to_do": "Accept UPI, Credit or Debit cards, Net Banking, Wallet balances, or COD for eligible carts up to Rs 10,000.",
+    "never": "Never accept cryptocurrency, foreign cash remittances, or post-dated cheques.",
+    "limit": "COD eligible up to Rs 10,000"
+  },
+  {
+    "id": "BIL-1.2",
+    "title": "Failed Transactions and Auto-Reversals",
+    "what_to_do": "Collect the 12-digit Bank Reference Number (UTR or RRN) to check payment logs, and reassure the caller that captured funds auto-refund within 24 hours.",
+    "never": "",
+    "limit": "Funds reflect within 5 to 7 business days"
+  },
+  {
+    "id": "BIL-1.3",
+    "title": "COD Settlement & Identity Verification",
+    "what_to_do": "Perform mandatory identity verification before recording customer bank account or UPI details for COD refunds via NEFT.",
+    "never": "Never promise or permit doorstep cash refunds for Cash on Delivery orders.",
+    "limit": "COD cart value up to Rs 10,000"
+  },
+  {
+    "id": "BIL-2.1",
+    "title": "Duplicate Deductions Reversal",
+    "what_to_do": "Inform the customer that the duplicate charge is auto-flagged and released back to their original payment source within 24 hours.",
+    "never": "",
+    "limit": "Refund reflects in 5 to 7 business days"
+  },
+  {
+    "id": "BIL-2.2",
+    "title": "Frontline Compensation and Adjustment Limit",
+    "what_to_do": "Issue discretionary financial adjustments, convenience compensations, or direct refunds only up to Rs 5,000 per order.",
+    "never": "Never approve compensation, fee waivers, or refunds exceeding Rs 5,000 without supervisor or finance desk sign-off.",
+    "limit": "Maximum Rs 5,000 per order"
+  },
+  {
+    "id": "BIL-2.3",
+    "title": "Price Match Policy",
+    "what_to_do": "Explain that retroactive price matching after order placement is not supported, but offer cancellation and reorder if the parcel has not shipped.",
+    "never": "Never promise retroactive price adjustments or price drop refunds for already placed orders.",
+    "limit": ""
+  },
+  {
+    "id": "BIL-3.1",
+    "title": "GST Invoices and Business Details",
+    "what_to_do": "Provide the customer with their existing downloadable GST tax invoice from their ShopEase order history.",
+    "never": "Never revise or re-issue a tax invoice under an alternate GSTIN once the order has been invoiced.",
+    "limit": ""
+  },
+  {
+    "id": "ESC-1.1",
+    "title": "Mandatory Supervisor Escalation Triggers",
+    "what_to_do": "Initiate a warm supervisor transfer immediately when the customer requests a manager twice, after two failed resolution attempts, or if legal action or abusive threats are raised.",
+    "never": "Never refuse or delay a supervisor transfer when mandatory escalation criteria are met.",
+    "limit": "Customer asks 2 times, or 2 frontline resolution attempts"
+  },
+  {
+    "id": "ESC-1.2",
+    "title": "Monetary Escalation Approval Limits",
+    "what_to_do": "Escalate any request for goodwill vouchers, replacements, or refunds exceeding Rs 5,000 to a supervisor with a summary of the case.",
+    "never": "Never authorize monetary concessions, vouchers, or refunds exceeding Rs 5,000 without supervisor approval.",
+    "limit": "Frontline discretion up to Rs 5,000; Supervisor up to Rs 25,000"
+  },
+  {
+    "id": "ESC-2.1",
+    "title": "Warm Transfer and Courtesy Hold Limits",
+    "what_to_do": "Place the customer on courtesy hold, check in before 2 minutes, and offer a 2 to 4 hour callback SLA if no supervisor is immediately available.",
+    "never": "Never keep a customer on hold for more than 2 minutes without an active check-in.",
+    "limit": "Maximum 2-minute hold ceiling before check-in; callback SLA within 2 to 4 business hours"
+  },
+  {
+    "id": "ESC-2.2",
+    "title": "Prohibition of Cold Transfers and Drop-Offs",
+    "what_to_do": "Introduce the customer and their issue to the receiving agent or supervisor before completing the call transfer.",
+    "never": "Never hang up on, cold drop, or blind transfer a customer call.",
+    "limit": ""
+  },
+  {
+    "id": "ESC-3.1",
+    "title": "Escalation SLA Commitments",
+    "what_to_do": "Quote a 4 operational hour callback SLA for supervisor escalations, 24 business hours for grievance officers, and 48 hours for courier partner tracking.",
+    "never": "Never promise supervisor callbacks faster than the official 4 operational hour SLA.",
+    "limit": "Supervisor callback within 4 operational hours; grievance within 24 business hours; courier partner resolution within 48 hours"
+  },
+  {
+    "id": "ESC-3.2",
+    "title": "Grievance Officer Redressal Rights",
+    "what_to_do": "Provide the ShopEase Nodal Officer escalation contact if the customer requests formal regulatory or consumer grievance registration.",
+    "never": "",
+    "limit": "Nodal acknowledgment within 48 hours; final redressal within 30 days"
+  },
+  {
+    "id": "PRV-1.1",
+    "title": "Two-Factor Identity Verification",
+    "what_to_do": "Authenticate the caller using their Order ID (or registered email) plus the last 4 digits of their registered phone number before disclosing any account details.",
+    "never": "Never reveal order history, address, items, or payment details before completing two-factor verification.",
+    "limit": "Order ID plus last 4 digits of registered phone number"
+  },
+  {
+    "id": "PRV-1.2",
+    "title": "Mandatory Call Recording Disclosure",
+    "what_to_do": "State during the initial greeting within the first two conversation turns that the call is recorded for quality assurance and training.",
+    "never": "Never omit the mandatory recording notification statement in the call greeting.",
+    "limit": "Must be spoken within the first 2 conversation turns"
+  },
+  {
+    "id": "PRV-1.3",
+    "title": "Handling Unauthenticated Callers",
+    "what_to_do": "Direct the caller to the ShopEase mobile app or self-service password reset if they fail identity verification after two attempts.",
+    "never": "Never prompt, guess, or disclose account details to assist an unverified caller.",
+    "limit": "Maximum 2 verification attempts"
+  },
+  {
+    "id": "PRV-2.1",
+    "title": "Sensitive Financial Data Redaction",
+    "what_to_do": "Immediately interrupt and stop the customer if they begin speaking a card number, CVV code, or login OTP.",
+    "never": "Never ask for, write down, or repeat full card numbers, CVV security codes, passwords, or login OTPs.",
+    "limit": ""
+  },
+  {
+    "id": "PRV-2.2",
+    "title": "Delivery Address Partial Masking",
+    "what_to_do": "Confirm delivery addresses by quoting only the recipient's first name, city, and pin code.",
+    "never": "Never recite the full street address or door number out loud unless the customer states it first.",
+    "limit": ""
+  },
+  {
+    "id": "PRV-3.1",
+    "title": "Customer Data Erasure Requests",
+    "what_to_do": "Log account deletion and personal data erasure requests under a Privacy Service Request ticket for Data Protection Officer processing.",
+    "never": "",
+    "limit": "Account deletion processed within 30 calendar days"
+  },
+  {
+    "id": "REF-1.1",
+    "title": "Return Eligibility Time Windows",
+    "what_to_do": "Verify that returns are initiated within 7 calendar days for electronics or 14 calendar days for non-electronics from the recorded delivery date.",
+    "never": "Never approve standard returns requested after 7 days for electronics or after 14 days for non-electronics.",
+    "limit": "7 calendar days for electronics; 14 calendar days for non-electronics"
+  },
+  {
+    "id": "REF-1.2",
+    "title": "Return Condition and Doorstep Verification",
+    "what_to_do": "Advise the customer that items must be unused in original packaging with tags and matching serial numbers for courier doorstep inspection.",
+    "never": "",
+    "limit": ""
+  },
+  {
+    "id": "REF-2.1",
+    "title": "Refund Processing and Bank Timelines",
+    "what_to_do": "Inform the customer that approved refunds process within 5 to 7 business days following pickup and warehouse verification.",
+    "never": "Never promise instant bank credits before the returned product is verified at the warehouse.",
+    "limit": "5 to 7 business days after warehouse verification (UPI or IMPS reflects within 24 to 48 hours)"
+  },
+  {
+    "id": "REF-2.2",
+    "title": "Refund Disbursement Method",
+    "what_to_do": "Disburse refunds strictly to the original payment source, or via NEFT bank transfer or verified UPI for authenticated COD orders.",
+    "never": "Never disburse doorstep physical cash or redirect refunds to third-party bank accounts or alternate wallets.",
+    "limit": ""
+  },
+  {
+    "id": "REF-3.1",
+    "title": "Agent Refund Approval Ceiling",
+    "what_to_do": "Approve eligible refunds independently up to Rs 5,000 per order, and route higher amounts to a supervisor for clearance.",
+    "never": "Never approve refunds exceeding Rs 5,000 independently or split line items across multiple tickets to circumvent the limit.",
+    "limit": "Maximum Rs 5,000 per order"
+  },
+  {
+    "id": "REF-3.2",
+    "title": "Non-Returnable Items and Transit Damage Exception",
+    "what_to_do": "Explain that opened personal hygiene, perishable, and digital software items are non-returnable unless reported as transit damaged or DOA within 48 hours.",
+    "never": "Never accept standard returns on opened personal care, innerwear, perishable food, or digital software goods.",
+    "limit": "Transit damage or defect must be reported within 48 hours of delivery"
+  },
+  {
+    "id": "REF-4.1",
+    "title": "Reverse Pickup and Speed Post Reimbursement",
+    "what_to_do": "Schedule reverse pickup within 48 to 72 hours, or authorize registered Speed Post self-shipping with courier reimbursement up to Rs 200 for remote pin codes.",
+    "never": "",
+    "limit": "Pickup scheduled in 48 to 72 hours; maximum 3 pickup attempts; courier reimbursement up to Rs 200"
+  },
+  {
+    "id": "REF-4.2",
+    "title": "Partial Return of Combo and Bundle Orders",
+    "what_to_do": "Explain that returning part of a combo or bundle prorates the discount and deducts the promotional savings from the refund.",
+    "never": "",
+    "limit": ""
+  },
+  {
+    "id": "SHP-1.1",
+    "title": "Delivery Service Tiers and Transit Times",
+    "what_to_do": "Quote transit SLAs of 3 to 7 business days for Standard Delivery or 1 to 2 business days for Express Delivery in metro areas.",
+    "never": "",
+    "limit": "3 to 7 business days for Standard; 1 to 2 business days for Express"
+  },
+  {
+    "id": "SHP-1.2",
+    "title": "Delivery Charges and Free Shipping Threshold",
+    "what_to_do": "Advise that Standard Delivery is free for orders of Rs 499 or more, while orders under Rs 499 incur a Rs 49 fee and Express costs Rs 99.",
+    "never": "",
+    "limit": "Free standard shipping at Rs 499; Rs 49 fee under Rs 499; Rs 99 for Express"
+  },
+  {
+    "id": "SHP-2.1",
+    "title": "Carrier Delivery Attempts and Return to Origin",
+    "what_to_do": "Explain that couriers attempt delivery up to 3 times before returning the parcel, after which prepaid orders are refunded in 5 to 7 business days.",
+    "never": "",
+    "limit": "Maximum 3 delivery attempts; RTO refund within 5 to 7 business days"
+  },
+  {
+    "id": "SHP-2.2",
+    "title": "Address Changes Post-Dispatch",
+    "what_to_do": "Explain that delivery addresses can only be modified while the order is in Confirmed or Processing status, before shipment dispatch.",
+    "never": "Never modify a delivery address or recipient name once the parcel is in Shipped or Out for Delivery status.",
+    "limit": "Address changes allowed only before 'Shipped' status"
+  },
+  {
+    "id": "SHP-2.3",
+    "title": "Delayed Shipments and Compensation",
+    "what_to_do": "Open a logistics partner investigation ticket and offer a Rs 100 goodwill wallet credit if a shipment is delayed more than 48 hours past its SLA.",
+    "never": "",
+    "limit": "Eligible for Rs 100 wallet credit after 48 hours past SLA; declared lost after 14 days"
+  },
+  {
+    "id": "SHP-3.1",
+    "title": "Delivery Verification OTP Security",
+    "what_to_do": "Remind the customer to provide their 4-digit verification OTP directly to the courier upon delivery for orders over Rs 2,500 and all smartphones.",
+    "never": "Never disclose or read out the delivery verification OTP to any caller over phone support.",
+    "limit": "Mandatory for orders exceeding Rs 2,500 and all smartphones"
+  },
+  {
+    "id": "SHP-3.2",
+    "title": "Damaged Box at Delivery Handover",
+    "what_to_do": "Advise the customer to reject visibly damaged or crushed cartons with the remark 'Damaged Box', or report accepted damage within 48 hours.",
+    "never": "",
+    "limit": "Report transit damage within 48 hours of delivery"
+  },
+  {
+    "id": "SHP-4.1",
+    "title": "Remote and Non-Serviceable Pin Code Delivery",
+    "what_to_do": "Proactively notify customers in remote regions (J&K, Ladakh, North-East) that standard postal transit may require 10 to 12 business days.",
+    "never": "Never promise standard delivery timelines for designated remote pin codes.",
+    "limit": "10 to 12 business days for remote zones"
+  },
+  {
+    "id": "WAR-1.1",
+    "title": "Standard Electronics Manufacturer Warranty",
+    "what_to_do": "Advise the customer that electronic products carry a minimum 12-month manufacturer warranty from delivery date, excluding physical drops or liquid damage.",
+    "never": "Never promise warranty coverage for physical drops, water immersion, or unauthorized dismantling.",
+    "limit": "Minimum 12-month manufacturer warranty"
+  },
+  {
+    "id": "WAR-1.2",
+    "title": "Dead on Arrival and Transit Damage Reporting",
+    "what_to_do": "Initiate a free replacement for dead-on-arrival or transit-damaged items reported within 48 hours of delivery with unboxing photos.",
+    "never": "Never process transit damage claims under DOA replacement after the 48-hour reporting window has expired.",
+    "limit": "Must be reported within 48 hours of delivery"
+  },
+  {
+    "id": "WAR-2.1",
+    "title": "Free Replacement Dispatch and Out-of-Stock Policy",
+    "what_to_do": "Confirm dispatch of the validated replacement within 24 to 48 hours, or offer an alternative model or full refund in 5 to 7 business days if out of stock.",
+    "never": "",
+    "limit": "Replacement dispatched in 24 to 48 hours; out-of-stock refund in 5 to 7 business days"
+  },
+  {
+    "id": "WAR-2.2",
+    "title": "Brand Authorized Service Center Routing",
+    "what_to_do": "Direct the customer to the brand's authorized service center with their toll-free number, local address, and invoice link for issues past the 7-day return window.",
+    "never": "Never accept standard product returns for functional defects reported after the 7-day return window has expired.",
+    "limit": "Applies after the 7-day electronics return window"
+  },
+  {
+    "id": "WAR-2.3",
+    "title": "ShopEase Assured Doorstep Warranty Service",
+    "what_to_do": "Arrange complimentary doorstep pickup and transit for ShopEase Assured items if no brand service center exists within 30 km, with a 14-day turnaround.",
+    "never": "",
+    "limit": "No service center within 30 km; maximum 14 business days resolution or full refund"
+  },
+  {
+    "id": "WAR-3.1",
+    "title": "Extended Warranty and Accidental Protection",
+    "what_to_do": "Explain that extended warranty activates after the initial 12 months, and accidental protection covers one repair per rolling year with a Rs 250 deductible.",
+    "never": "",
+    "limit": "Activates after initial 12 months; 1 claim per 12-month policy year; Rs 250 deductible"
+  },
+  {
+    "id": "WAR-3.2",
+    "title": "Refurbished and Open-Box Warranty Rules",
+    "what_to_do": "Inform the customer that certified refurbished and open-box electronic devices carry a 6-month ShopEase warranty and standard 7-day return eligibility.",
+    "never": "Never promise standard 12-month warranty terms on certified refurbished or open-box merchandise.",
+    "limit": "6-month warranty; 7-day return window; 48-hour damage reporting window"
+  }
+]
