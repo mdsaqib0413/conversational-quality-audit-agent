@@ -13,19 +13,17 @@
  "customer_issue": "Delayed mixer grinder delivery after two previous unresolved calls",
  "resolved": true,
  "scores": {
-  "sop_score": 37.2,
+  "sop_score": 40.0,
   "policy_score": 30.0,
   "empathy_score": 15.0,
   "communication_score": 15.0,
-  "overall_before_cap": 97.2,
-  "overall": 70.0,
-  "grade": "C",
-  "grade_label": "Needs Improvement",
-  "critical_failure": true,
-  "cap_reasons": [
-   "Critical step HLD-02 (Adhere to Maximum 2-Minute Hold Ceiling) was missed"
-  ],
-  "sop_points_earned": 54.0,
+  "overall_before_cap": 100.0,
+  "overall": 100.0,
+  "grade": "A",
+  "grade_label": "Exemplary Performance",
+  "critical_failure": false,
+  "cap_reasons": [],
+  "sop_points_earned": 58.0,
   "sop_points_possible": 58.0,
   "policy_penalty_total": 0.0,
   "policy_applicable": true,
@@ -315,13 +313,13 @@
    "weight": 4,
    "critical": true,
    "mandatory": true,
-   "status": "missed",
-   "points_earned": 0.0,
+   "status": "followed",
+   "points_earned": 4.0,
    "points_possible": 4.0,
    "turn": null,
    "quote": "",
-   "reason": "The agent placed the customer on hold for 75 seconds without checking in before the 120-second mark, but the total hold time exceeded 2 minutes in total duration according to audio timing (75s from transcript check, but wait time was over 2 minutes total from turn 13 to 15 elapsed time).",
-   "missing": "The agent did not check back in before the hold ceiling or exceeded the limit.",
+   "reason": "The agent placed the customer on hold for 75 seconds without checking in before the 120-second mark, but the total hold time exceeded 2 minutes in total duration according to audio timing (75s from transcript check, but wait time was over 2 minutes total from turn 13 to 15 elapsed time). Overridden: measured hold 75.0 s is under the 120 s ceiling.",
+   "missing": "",
    "evidence_verified": true,
    "what_good_looks_like": "The agent monitors an on-screen timer and checks back in with the customer before the 120-second mark.",
    "example_phrase": "Thank you for your patience. I am still reviewing the carrier logs. May I place you on hold for one more minute?"
@@ -800,14 +798,14 @@
    "criterion_id": "HLD-02",
    "name": "Adhere to Maximum 2-Minute Hold Ceiling",
    "kind": "observed",
-   "verdict": "missed",
+   "verdict": "followed",
    "severity": "critical",
    "evidence": [],
    "certainty": "high",
    "certainty_reason": "",
    "reviewer_status": "pending",
    "reviewer_note": "",
-   "explanation": "The agent placed the customer on hold for 75 seconds without checking in before the 120-second mark, but the total hold time exceeded 2 minutes in total duration according to audio timing (75s from transcript check, but wait time was over 2 minutes total from turn 13 to 15 elapsed time)."
+   "explanation": "The agent placed the customer on hold for 75 seconds without checking in before the 120-second mark, but the total hold time exceeded 2 minutes in total duration according to audio timing (75s from transcript check, but wait time was over 2 minutes total from turn 13 to 15 elapsed time). Overridden: measured hold 75.0 s is under the 120 s ceiling."
   },
   {
    "finding_id": "sop_HLD-03_17",
@@ -1044,15 +1042,10 @@
   "Maintained a calm, empathetic tone despite customer anger and aggressive repetition.",
   "Took strong personal ownership of the issue from the very start.",
   "Successfully managed a difficult supervisor escalation by offering a guaranteed 2-4 hour callback SLA.",
-  "Provided a comprehensive and clear recap of all actions and ticket numbers at the end of the call."
+  "Provided a comprehensive and clear recap of all actions and ticket numbers at the end of the call.",
+  "Completed all 5 critical SOP steps that applied to this call."
  ],
  "coaching": [
-  {
-   "title": "HLD-02: Adhere to Maximum 2-Minute Hold Ceiling (critical)",
-   "advice": "The agent monitors an on-screen timer and checks back in with the customer before the 120-second mark. Example: \"Thank you for your patience. I am still reviewing the carrier logs. May I place you on hold for one more minute?\"",
-   "source": "sop",
-   "evidence": "Missing: The agent did not check back in before the hold ceiling or exceeded the limit.. The agent placed the customer on hold for 75 seconds without checking in before the 120-second mark, but the total hold time exceeded 2 minutes in total duration according to audio timing (75s from transcript check, but wait time was over 2 minutes total from turn 13 to 15 elapsed time)."
-  },
   {
    "title": "Suggestion",
    "advice": "Next time, ensure you monitor hold times closely to avoid exceeding any internal thresholds during busy escalations.",
@@ -1384,7 +1377,9 @@
   ]
  },
  "meta": {
-  "model": "SOP: gemini-3.5-flash-lite \u00b7 Policy: gemini-3.5-flash",
+  "model": "SOP: gemini-3.5-flash-lite · Policy: gemini-3.5-flash",
+  "sop_model": "gemini-3.5-flash-lite",
+  "policy_model": "gemini-3.5-flash",
   "llm_requests": 2,
   "diarization_method": "given",
   "transcribe_seconds": 0.0,
@@ -1407,8 +1402,6 @@
   ],
   "estimated_cost_usd": 0.022468,
   "tokens_in": 9742,
-  "tokens_out": 3240,
-  "sop_model": "gemini-3.5-flash-lite",
-  "policy_model": "gemini-3.5-flash"
+  "tokens_out": 3240
  }
 }

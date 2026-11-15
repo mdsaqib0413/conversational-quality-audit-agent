@@ -4,7 +4,7 @@
 Validates that:
 1. Every JSON file loads and parses cleanly into Pydantic AuditReport schema
 2. Specific target scores match expected values:
-   - call_105: 70.0 (Grade C)
+   - call_105: 100.0 (Grade A)
    - call_107: 57.8 (Grade D)
    - call_106: 16.1 (Grade D, degraded)
 3. Header metadata displays both SOP and Policy models without crashing
@@ -87,11 +87,11 @@ def verify_cache() -> None:
         print(f"[PASS] {cid}: score={rep_demo.scores.overall:.1f}, grade={rep_demo.scores.grade}, status={rep_demo.status}, header='{hdr_demo}'")
 
     # 3. Verify specific score targets
-    # call_105: 70.0
+    # call_105: 100.0
     c105 = checked_calls["call_105"]
-    assert abs(c105["overall"] - 70.0) < 0.05, f"call_105 overall expected 70.0, got {c105['overall']}"
-    assert c105["grade"] == "C", f"call_105 grade expected C, got {c105['grade']}"
-    print("\n[VERIFIED] call_105: overall=70.0, grade=C (capped from raw score)")
+    assert abs(c105["overall"] - 100.0) < 0.05, f"call_105 overall expected 100.0, got {c105['overall']}"
+    assert c105["grade"] == "A", f"call_105 grade expected A, got {c105['grade']}"
+    print("\n[VERIFIED] call_105: overall=100.0, grade=A (reconciled HLD-02)")
 
     # call_107: 57.8
     c107 = checked_calls["call_107"]
