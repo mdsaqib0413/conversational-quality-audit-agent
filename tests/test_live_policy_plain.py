@@ -1,7 +1,9 @@
 """Tests for data/live/policy_plain.json and live policy guidance enrichment."""
 
+import glob
 import json
 from pathlib import Path
+import re
 import pytest
 
 from src.audit.rag import KnowledgeBase
@@ -34,44 +36,132 @@ def test_policy_plain_json_exists_and_valid():
         assert "limit" in item, f"Missing limit field in {item['id']}"
 
 
-def test_policy_plain_prohibitions_and_limits():
-    """Verify prohibitions and limits for representative high-risk clauses."""
-    plain_map = get_policy_plain_map()
-    assert len(plain_map) == 42
+def test_policy_plain_strict_fidelity_and_integrity():
+    """Verify every entry is built strictly from its clause section.
 
-    # Prohibitions
-    assert "PRV-1.1" in plain_map
-    assert "Never" in plain_map["PRV-1.1"]["never"]
+    Fails if:
+    1. Any number or duration in what_to_do, never, or limit is missing from its section text.
+    2. Severity differs from Default Severity.
+    3. A must_not_do clause has no Never line.
+    """
+    plain_file = ROOT / "data" / "live" / "policy_plain.json"
+    data = json.loads(plain_file.read_text(encoding="utf-8"))
 
-    assert "PRV-2.1" in plain_map
-    assert "Never" in plain_map["PRV-2.1"]["never"]
+    # Parse sections from markdown
+    policy_files = sorted(glob.glob(str(ROOT / "data" / "policies" / "*.md")))
+    sections = {}
+    metadata = {}
+    for pf in policy_files:
+        content = Path(pf).read_text(encoding="utf-8")
+        parts = re.split(r'(?=^###\s+\[[A-Z]+-\d+\.\d+\])', content, flags=re.M)
+        for part in parts:
+            m = re.match(r'^###\s+\[([A-Z]+-\d+\.\d+)\]\s+(.*)', part.strip())
+            if m:
+                cid = m.group(1)
+                heading = m.group(2).strip()
+                kind_m = re.search(r'-\s+\*\*Kind:\*\*\s*(.*)', part)
+                sev_m = re.search(r'-\s+\*\*Default Severity:\*\*\s*(.*)', part)
+                num_m = re.search(r'-\s+\*\*Numeric Limit:\*\*\s*(.*)', part)
 
-    assert "BIL-2.2" in plain_map
-    assert "Never" in plain_map["BIL-2.2"]["never"]
-    assert "5,000" in plain_map["BIL-2.2"]["limit"]
+                sections[cid] = part.strip()
+                metadata[cid] = {
+                    "heading": heading,
+                    "kind": kind_m.group(1).strip() if kind_m else "",
+                    "severity": sev_m.group(1).strip().lower() if sev_m else "",
+                    "numeric_limit": num_m.group(1).strip() if num_m else "",
+                }
 
-    assert "ESC-2.2" in plain_map
-    assert "Never" in plain_map["ESC-2.2"]["never"]
+    assert len(data) == 42
+    assert len(sections) == 42
 
-    assert "SHP-3.1" in plain_map
-    assert "Never" in plain_map["SHP-3.1"]["never"]
-    assert "2,500" in plain_map["SHP-3.1"]["limit"]
+    duration_units = ["day", "days", "hour", "hours", "minute", "minutes", "month", "months", "second", "seconds"]
 
-    # Limits
-    assert "REF-1.1" in plain_map
-    assert "7" in plain_map["REF-1.1"]["limit"]
+    for entry in data:
+        cid = entry["id"]
+        assert cid in sections, f"Unknown clause ID: {cid}"
+        sec_text = sections[cid]
+        meta = metadata[cid]
 
-    assert "ESC-2.1" in plain_map
-    assert "2" in plain_map["ESC-2.1"]["limit"]
+        # 1. Heading verbatim
+        assert entry["title"] == meta["heading"], (
+            f"[{cid}] Title mismatch: '{entry['title']}' != '{meta['heading']}'"
+        )
 
-    assert "WAR-1.2" in plain_map
-    assert "48" in plain_map["WAR-1.2"]["limit"]
+        # 2. Severity matches Default Severity
+        assert entry["severity"].lower() == meta["severity"].lower(), (
+            f"[{cid}] Severity mismatch: '{entry['severity']}' != '{meta['severity']}'"
+        )
+
+        # 3. must_not_do requires a Never line
+        if meta["kind"] == "must_not_do":
+            assert entry.get("never") and len(entry["never"].strip()) > 0, (
+                f"[{cid}] must_not_do clause has empty Never line"
+            )
+        else:
+            assert entry.get("never") == "", (
+                f"[{cid}] Non-must_not_do clause should have empty Never line, got: {entry.get('never')}"
+            )
+
+        # 4. Limit matches Numeric Limit
+        if meta["numeric_limit"].lower() == "none":
+            assert entry["limit"] == "", f"[{cid}] Expected empty limit for 'none', got '{entry['limit']}'"
+        else:
+            assert entry["limit"] == meta["numeric_limit"], (
+                f"[{cid}] Limit mismatch: '{entry['limit']}' != '{meta['numeric_limit']}'"
+            )
+
+        # 5. All numbers in what_to_do, never, limit must appear in section text
+        combined = f"{entry['what_to_do']} {entry['never']} {entry['limit']}"
+        numbers = re.findall(r'\b\d+(?:,\d+)*(?:\.\d+)?\b', combined)
+        for num in set(numbers):
+            assert num in sec_text, (
+                f"[{cid}] Number '{num}' in entry was not found in source section text!"
+            )
+
+        # 6. All duration words must appear in section text
+        for unit in duration_units:
+            if re.search(r'\b' + unit + r'\b', combined.lower()):
+                assert re.search(r'\b' + unit + r'\b', sec_text.lower()), (
+                    f"[{cid}] Duration unit '{unit}' in entry not found in source section text!"
+                )
+
+    # Specific assertions for the spot-checked clauses
+    # PRV-2.1: Sensitive Personal Data Redaction (must_not_do, critical, OTP/card, no limit)
+    prv21 = next(it for it in data if it["id"] == "PRV-2.1")
+    assert prv21["title"] == "Sensitive Personal Data Redaction"
+    assert prv21["severity"] == "critical"
+    assert "Never" in prv21["never"]
+    assert "OTP" in prv21["what_to_do"] or "OTP" in prv21["never"]
+    assert prv21["limit"] == ""
+
+    # ESC-1.1: Mandatory Supervisor Escalation Triggers (must_say, critical, none)
+    esc11 = next(it for it in data if it["id"] == "ESC-1.1")
+    assert esc11["title"] == "Mandatory Supervisor Escalation Triggers"
+    assert esc11["severity"] == "critical"
+    assert esc11["limit"] == ""
+
+    # REF-1.1: Return Eligibility Windows (major, 7 days)
+    ref11 = next(it for it in data if it["id"] == "REF-1.1")
+    assert ref11["title"] == "Return Eligibility Windows"
+    assert ref11["severity"] == "major"
+    assert ref11["limit"] == "7 days"
+
+    # REF-2.1: Refund Processing Timelines (minor, 5 to 7 business days)
+    ref21 = next(it for it in data if it["id"] == "REF-2.1")
+    assert ref21["title"] == "Refund Processing Timelines"
+    assert ref21["severity"] == "minor"
+    assert ref21["limit"] == "5 to 7 business days"
+
+    # SHP-1.1: Service Tiers and Standard Transit SLAs (minor, 3 to 7 business days)
+    shp11 = next(it for it in data if it["id"] == "SHP-1.1")
+    assert shp11["title"] == "Service Tiers and Standard Transit SLAs"
+    assert shp11["severity"] == "minor"
+    assert shp11["limit"] == "3 to 7 business days"
 
 
 def test_live_rules_populates_enriched_active_clauses():
     """Verify LiveRules surfaces enriched policy clauses with what_to_do and plain limits."""
     rules = LiveRules()
-    # Feed events to detect topic and trigger clause retrieval
     ev1 = CaptionEvent(
         call_id="test",
         peer_id="agent",
